@@ -1,4 +1,9 @@
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import {
+  createTheme,
+  CssBaseline,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 
 const darkTheme = createTheme({
   palette: {
@@ -10,6 +15,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
+      <Typography variant="h1">Relic Browser</Typography>
     </ThemeProvider>
   );
 }
