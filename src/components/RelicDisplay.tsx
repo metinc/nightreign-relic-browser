@@ -80,6 +80,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
             relic.effect4Id,
           ].filter((id) => id !== -1);
           const backgroundColor = getBackgroundColor(validEffects.length);
+          const isSpecialRelic = !itemName.endsWith(" Scene");
 
           return (
             <Grid
@@ -117,7 +118,21 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       mb: 1,
                     }}
                   >
-                    <Typography variant="h6" component="div">
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        ...(isSpecialRelic
+                          ? {
+                              color: "primary.main",
+                              fontWeight: "bold",
+                            }
+                          : { color: "text.secondary" }),
+                      }}
+                    >
                       {itemName}
                     </Typography>
                   </Box>
