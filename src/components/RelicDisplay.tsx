@@ -35,6 +35,21 @@ const getColorChipColor = (color: string | null) => {
   }
 };
 
+const getBackgroundColor = (effectsCound: number) => {
+  switch (effectsCound) {
+    case 1:
+      return "#494a4c";
+    case 2:
+      return "#3a4d5f";
+    case 3:
+      return "#3b3051";
+    case 4:
+      return "#00dd22";
+    default:
+      return "#000000";
+  }
+};
+
 export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   relics,
   getItemName,
@@ -61,11 +76,14 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
         {relics.map((relic, index) => {
           const itemName = getItemName(relic.itemId);
           const itemColor = getItemColor(relic.itemId);
-          const effect1Name = getEffectName(relic.effect1Id);
-          const effect2Name = getEffectName(relic.effect2Id);
-          const effect3Name = getEffectName(relic.effect3Id);
-          const effect4Name = getEffectName(relic.effect4Id);
           const rowNumber = Math.floor(index / 8) + 1;
+          const validEffects = [
+            relic.effect1Id,
+            relic.effect2Id,
+            relic.effect3Id,
+            relic.effect4Id,
+          ].filter((id) => id !== -1);
+          const backgroundColor = getBackgroundColor(validEffects.length);
 
           return (
             <Grid
@@ -86,7 +104,14 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   {rowNumber}
                 </Typography>
               )}
-              <Card variant="outlined" sx={{ height: "fit-content", flex: 1 }}>
+              <Card
+                variant="outlined"
+                sx={{
+                  height: "fit-content",
+                  flex: 1,
+                  background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
+                }}
+              >
                 <CardContent>
                   <Box
                     sx={{
@@ -122,24 +147,17 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                     </Typography>
 
                     <List sx={{ listStyleType: "disc", pl: 2 }}>
-                      {[
-                        { id: relic.effect1Id, name: effect1Name },
-                        { id: relic.effect2Id, name: effect2Name },
-                        { id: relic.effect3Id, name: effect3Name },
-                        { id: relic.effect4Id, name: effect4Name },
-                      ].map(
-                        (effect, effectIndex) =>
-                          effect.name !== "None" && (
-                            <Box
-                              key={effectIndex}
-                              sx={{ mb: 0.5, display: "list-item" }}
-                            >
-                              <Typography variant="body2">
-                                {effect.name ?? `Unknown Effect ${effect.id}`}
-                              </Typography>
-                            </Box>
-                          )
-                      )}
+                      {validEffects.map((effectId) => (
+                        <Box
+                          key={effectId}
+                          sx={{ mb: 0.5, display: "list-item" }}
+                        >
+                          <Typography variant="body2">
+                            {getEffectName(effectId) ??
+                              `Unknown Effect ${effectId}`}
+                          </Typography>
+                        </Box>
+                      ))}
                     </List>
                   </Box>
                 </CardContent>
