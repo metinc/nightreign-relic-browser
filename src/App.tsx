@@ -42,15 +42,24 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Box p={3}>
-        <Typography variant="h1" gutterBottom>
-          Elden Ring Nightreign Relic Browser
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            mb: 3,
+          }}
+        >
+          <Typography variant="h1" gutterBottom>
+            Elden Ring Nightreign Relic Browser
+          </Typography>
 
-        <FileUploader
-          onFileSelect={loadSaveFile}
-          fileName={saveFileData?.fileName}
-          loading={loading}
-        />
+          <FileUploader
+            onFileSelect={loadSaveFile}
+            fileName={saveFileData?.fileName}
+            loading={loading}
+          />
+        </Box>
 
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Box, Typography, styled } from "@mui/material";
+import { Button, Typography, styled, Stack } from "@mui/material";
 import { CloudUpload } from "@mui/icons-material";
 
 const VisuallyHiddenInput = styled("input")({
@@ -33,7 +33,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+    <Stack sx={{ alignItems: "center", gap: 2 }}>
       <Button
         component="label"
         variant="contained"
@@ -53,6 +53,6 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
           File: {fileName}
         </Typography>
       )}
-    </Box>
+    </Stack>
   );
 };
