@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Typography, Chip } from "@mui/material";
+import { Box, Chip, Tabs, Tab } from "@mui/material";
 import type { CharacterSlot } from "../types/SaveFile";
 
 interface SlotSelectorProps {
@@ -14,24 +14,39 @@ export const SlotSelector: React.FC<SlotSelectorProps> = ({
   onSlotSelect,
 }) => {
   const validSlots = slots.filter((slot) => slot.name !== null);
+
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    onSlotSelect(newValue);
+  };
+
   return (
     <Box sx={{ mb: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Character Slots
-      </Typography>
-
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-        {validSlots.map((_, index) => (
-          <Button
+      <Tabs
+        value={currentSlot}
+        onChange={handleTabChange}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}
+      >
+        {validSlots.map((slot, index) => (
+          <Tab
             key={index}
-            variant={currentSlot === index ? "contained" : "outlined"}
-            onClick={() => onSlotSelect(index)}
-            sx={{ minWidth: 120 }}
-          >
-            {slots[index].name}
-          </Button>
+            label={
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {slot.name}
+                <Chip
+                  label={`${slot.relics.length} ${
+                    slot.relics.length === 1 ? "relic" : "relics"
+                  }`}
+                  size="small"
+                  variant="outlined"
+                />
+              </Box>
+            }
+            sx={{ textTransform: "none" }}
+          />
         ))}
-      </Box>
+      </Tabs>
     </Box>
   );
 };
