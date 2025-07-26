@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import type { RelicSlot } from "../types/SaveFile";
 import { highlightSearchTerm } from "../utils/SearchUtils";
+import { getChipColor } from "../utils/RelicColor";
 
 interface RelicCardProps {
   relic: RelicSlot;
@@ -20,23 +21,6 @@ interface RelicCardProps {
   relicMatches: boolean;
   rowNumber: number | null;
 }
-
-const getColorChipColor = (color: string | null) => {
-  switch (color?.toLowerCase()) {
-    case "red":
-      return "error";
-    case "blue":
-      return "primary";
-    case "green":
-      return "success";
-    case "purple":
-      return "secondary";
-    case "yellow":
-      return "warning";
-    default:
-      return "default";
-  }
-};
 
 const getBackgroundColor = (effectsCount: number) => {
   switch (effectsCount) {
@@ -135,8 +119,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               <Chip
                 label={itemColor}
                 size="small"
-                color={getColorChipColor(itemColor)}
-                sx={{ mb: 1 }}
+                color={getChipColor(itemColor)}
               />
             )}
           </Box>

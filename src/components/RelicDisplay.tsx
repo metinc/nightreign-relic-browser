@@ -11,6 +11,7 @@ interface RelicDisplayProps {
   getEffectName: (effectId: number) => string;
   searchTerm?: string;
   filterEnabled?: boolean;
+  selectedColor?: string;
 }
 
 export const RelicDisplay: React.FC<RelicDisplayProps> = ({
@@ -20,6 +21,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   getEffectName,
   searchTerm = "",
   filterEnabled = false,
+  selectedColor = "Any",
 }) => {
   if (relics.length === 0) {
     return (
@@ -36,6 +38,15 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       <Grid container columns={8} spacing={2}>
         {relics
           .filter((relic) => {
+            // Color filter
+            if (selectedColor !== "Any") {
+              const itemColor = getItemColor(relic.itemId);
+              if (itemColor !== selectedColor) {
+                return false;
+              }
+            }
+
+            // Search filter (only apply if enabled)
             if (!filterEnabled) return true;
 
             const itemName = getItemName(relic.itemId);

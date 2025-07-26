@@ -5,14 +5,20 @@ import {
   InputAdornment,
   FormControlLabel,
   Checkbox,
+  ToggleButtonGroup,
+  ToggleButton,
+  Chip,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { getChipColor, relicColors } from "../utils/RelicColor";
 
 interface SearchInputProps {
   searchTerm: string;
   onSearchChange: (searchTerm: string) => void;
   filterEnabled: boolean;
   onFilterChange: (enabled: boolean) => void;
+  selectedColor: string;
+  onColorChange: (color: string) => void;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -20,6 +26,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onSearchChange,
   filterEnabled,
   onFilterChange,
+  selectedColor,
+  onColorChange,
 }) => {
   return (
     <Box
@@ -60,6 +68,27 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         label="Filter non-matching relics"
         sx={{ color: "text.secondary" }}
       />
+
+      <ToggleButtonGroup
+        exclusive
+        aria-label="Relic Color Filter"
+        value={selectedColor}
+        onChange={(_, newColor) => {
+          if (newColor !== null) {
+            onColorChange(newColor);
+          }
+        }}
+      >
+        {["Any", ...relicColors].map((color) => (
+          <ToggleButton
+            key={color}
+            value={color}
+            sx={{ textTransform: "none" }}
+          >
+            <Chip label={color} size="small" color={getChipColor(color)} />
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
     </Box>
   );
 };
