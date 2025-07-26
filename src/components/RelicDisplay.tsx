@@ -68,10 +68,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        {relics.length} {relics.length === 1 ? "relic" : "relics"}:
-      </Typography>
-
       <Grid container columns={8} spacing={2}>
         {relics.map((relic, index) => {
           const itemName = getItemName(relic.itemId);
