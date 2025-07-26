@@ -10,12 +10,14 @@ import {
   List,
 } from "@mui/material";
 import type { RelicSlot } from "../types/SaveFile";
+import { highlightSearchTerm, doesRelicMatch } from "../utils/SearchUtils";
 
 interface RelicDisplayProps {
   relics: RelicSlot[];
   getItemName: (itemId: number) => string;
   getItemColor: (itemId: number) => string | null;
   getEffectName: (effectId: number) => string;
+  searchTerm?: string;
 }
 
 const getColorChipColor = (color: string | null) => {
@@ -55,6 +57,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   getItemName,
   getItemColor,
   getEffectName,
+  searchTerm = "",
 }) => {
   if (relics.length === 0) {
     return (
@@ -82,6 +85,22 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
           const backgroundColor = getBackgroundColor(validEffects.length);
           const isSpecialRelic = !itemName.endsWith(" Scene");
 
+          // Get effect names for search matching
+          const effectNames = validEffects.map(
+            (effectId) =>
+              getEffectName(effectId) ?? `Unknown Effect ${effectId}`
+          );
+
+          // Check if this relic matches the search
+          const relicMatches = doesRelicMatch(
+            itemName,
+            effectNames,
+            searchTerm
+          );
+
+          // Get highlighted text for item name
+          const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
+
           return (
             <Grid
               size={{ xs: 8, sm: 1 }}
@@ -106,6 +125,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                 sx={{
                   flex: 1,
                   background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
+                  opacity: relicMatches ? 1 : 0.4,
+                  transition: "opacity 0.3s ease",
                 }}
               >
                 <CardContent>
@@ -132,7 +153,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                           : { color: "text.secondary" }),
                       }}
                     >
-                      {itemName}
+                      {itemNameHighlight.highlightedText}
                     </Typography>
                   </Box>
 
@@ -148,17 +169,25 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   </Box>
 
                   <List sx={{ listStyleType: "disc", pl: 2 }}>
-                    {validEffects.map((effectId) => (
-                      <Box
-                        key={effectId}
-                        sx={{ mb: 0.5, display: "list-item" }}
-                      >
-                        <Typography variant="body2">
-                          {getEffectName(effectId) ??
-                            `Unknown Effect ${effectId}`}
-                        </Typography>
-                      </Box>
-                    ))}
+                    {validEffects.map((effectId) => {
+                      const effectName =
+                        getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
+                      const effectHighlight = highlightSearchTerm(
+                        effectName,
+                        searchTerm
+                      );
+
+                      return (
+                        <Box
+                          key={effectId}
+                          sx={{ mb: 0.5, display: "list-item" }}
+                        >
+                          <Typography variant="body2">
+                            {effectHighlight.highlightedText}
+                          </Typography>
+                        </Box>
+                      );
+                    })}
                   </List>
                 </CardContent>
               </Card>

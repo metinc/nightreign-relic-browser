@@ -10,6 +10,7 @@ import {
 import { FileUploader } from "./components/FileUploader";
 import { SlotSelector } from "./components/SlotSelector";
 import { RelicDisplay } from "./components/RelicDisplay";
+import { SearchInput } from "./components/SearchInput";
 import { useSaveFile } from "./hooks/useSaveFile";
 
 const darkTheme = createTheme({
@@ -34,6 +35,8 @@ function App() {
     getItemName,
     getItemColor,
     getEffectName,
+    searchTerm,
+    setSearchTerm,
   } = useSaveFile();
 
   const currentSlot = saveFileData?.slots[saveFileData.currentSlot];
@@ -81,12 +84,18 @@ function App() {
               onSlotSelect={selectSlot}
             />
 
+            <SearchInput
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+            />
+
             {currentSlot && (
               <RelicDisplay
                 relics={currentSlot.relics}
                 getItemName={getItemName}
                 getItemColor={getItemColor}
                 getEffectName={getEffectName}
+                searchTerm={searchTerm}
               />
             )}
           </>

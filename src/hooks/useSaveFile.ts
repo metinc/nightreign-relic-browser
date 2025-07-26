@@ -16,6 +16,7 @@ export const useSaveFile = () => {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTermState] = useState<string>("");
 
   // Load JSON data for items and effects
   const loadJsonData = useCallback(async () => {
@@ -134,6 +135,11 @@ export const useSaveFile = () => {
     [effectsData]
   );
 
+  // Set search term
+  const setSearchTerm = useCallback((term: string) => {
+    setSearchTermState(term);
+  }, []);
+
   return {
     saveFileData,
     loading,
@@ -143,5 +149,7 @@ export const useSaveFile = () => {
     getItemName,
     getItemColor,
     getEffectName,
+    searchTerm,
+    setSearchTerm,
   };
 };
