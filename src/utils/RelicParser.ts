@@ -468,7 +468,7 @@ export class RelicParser {
     const validRelics = relics.filter((relic) => relic.sortKey !== undefined);
 
     // Sort relics by sort key
-    validRelics.sort((a, b) => (a.sortKey || 0) - (b.sortKey || 0));
+    validRelics.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
 
     return {
       name: currentName,

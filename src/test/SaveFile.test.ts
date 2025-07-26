@@ -93,7 +93,7 @@ describe("Save File Processing", () => {
     for (let i = 1; i < relicsWithSortKeys.length; i++) {
       const prevSortKey = relicsWithSortKeys[i - 1].sortKey || 0;
       const currentSortKey = relicsWithSortKeys[i].sortKey || 0;
-      expect(currentSortKey).toBeGreaterThanOrEqual(prevSortKey);
+      expect(currentSortKey).toBeLessThanOrEqual(prevSortKey);
     }
   });
 
