@@ -7,6 +7,7 @@ import {
   Chip,
   Paper,
   Grid,
+  List,
 } from "@mui/material";
 import type { RelicSlot } from "../types/SaveFile";
 
@@ -82,31 +83,11 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                     }}
                   >
                     <Typography variant="h6" component="div">
-                      Relic {index + 1}
+                      {itemName}
                     </Typography>
-                    {relic.sortKey !== undefined && (
-                      <Chip
-                        label={`#${relic.sortKey}`}
-                        size="small"
-                        variant="outlined"
-                      />
-                    )}
                   </Box>
 
                   <Box sx={{ mb: 2 }}>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      Item ID: {relic.itemId}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{ fontWeight: "medium", mb: 1 }}
-                    >
-                      {itemName}
-                    </Typography>
                     {itemColor && (
                       <Chip
                         label={itemColor}
@@ -126,21 +107,26 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       Effects:
                     </Typography>
 
-                    {[
-                      { id: relic.effect1Id, name: effect1Name },
-                      { id: relic.effect2Id, name: effect2Name },
-                      { id: relic.effect3Id, name: effect3Name },
-                      { id: relic.effect4Id, name: effect4Name },
-                    ].map(
-                      (effect, effectIndex) =>
-                        effect.name !== "None" && (
-                          <Box key={effectIndex} sx={{ mb: 0.5 }}>
-                            <Typography variant="body2">
-                              <strong>{effect.id}:</strong> {effect.name}
-                            </Typography>
-                          </Box>
-                        )
-                    )}
+                    <List sx={{ listStyleType: "disc", pl: 2 }}>
+                      {[
+                        { id: relic.effect1Id, name: effect1Name },
+                        { id: relic.effect2Id, name: effect2Name },
+                        { id: relic.effect3Id, name: effect3Name },
+                        { id: relic.effect4Id, name: effect4Name },
+                      ].map(
+                        (effect, effectIndex) =>
+                          effect.name !== "None" && (
+                            <Box
+                              key={effectIndex}
+                              sx={{ mb: 0.5, display: "list-item" }}
+                            >
+                              <Typography variant="body2">
+                                {effect.name ?? `Unknown Effect ${effect.id}`}
+                              </Typography>
+                            </Box>
+                          )
+                      )}
+                    </List>
                   </Box>
                 </CardContent>
               </Card>
