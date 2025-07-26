@@ -3,7 +3,6 @@ import {
   CssBaseline,
   ThemeProvider,
   Typography,
-  Container,
   Box,
   Alert,
   CircularProgress,
@@ -16,6 +15,12 @@ import { useSaveFile } from "./hooks/useSaveFile";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
+  },
+  typography: {
+    h1: {
+      fontFamily: "serif",
+      fontSize: "2.5rem",
+    },
   },
 });
 
@@ -37,7 +42,7 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Box p={3}>
-        <Typography variant="h3" component="h1" gutterBottom>
+        <Typography variant="h1" gutterBottom>
           Elden Ring Nightreign Relic Browser
         </Typography>
 
