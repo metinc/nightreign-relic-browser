@@ -406,7 +406,7 @@ export class RelicParser {
   public static parseCharacterSlot(
     sectionNumber: number,
     bnd4Entries: BND4Entry[]
-  ): { name: string; relics: RelicSlot[] } {
+  ): { name: string | null; relics: RelicSlot[] } {
     if (sectionNumber < 1 || sectionNumber > 10) {
       throw new Error(`Invalid section number: ${sectionNumber}`);
     }
@@ -430,8 +430,14 @@ export class RelicParser {
         .join("")
     );
 
-    const characterName = currentName || "Unknown";
-    console.log(`Loaded section ${sectionNumber} with name: ${characterName}`);
+    if (currentName === null) {
+      return {
+        name: currentName,
+        relics: [],
+      };
+    }
+
+    console.log(`Loaded section ${sectionNumber} with name: ${currentName}`);
 
     // Find pattern boundaries for relic parsing
     const fixedPatternOffset = this.findHexOffset(
@@ -465,7 +471,7 @@ export class RelicParser {
     validRelics.sort((a, b) => (a.sortKey || 0) - (b.sortKey || 0));
 
     return {
-      name: characterName,
+      name: currentName,
       relics: validRelics,
     };
   }

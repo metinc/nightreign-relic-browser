@@ -53,7 +53,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
-        Found {relics.length} relics:
+        {relics.length} {relics.length === 1 ? "relic" : "relics"}:
       </Typography>
 
       <Grid container columns={8} spacing={2}>

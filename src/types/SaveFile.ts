@@ -35,7 +35,7 @@ export interface EffectData {
 }
 
 export interface CharacterSlot {
-  name: string;
+  name: string | null;
   relics: RelicSlot[];
 }
 

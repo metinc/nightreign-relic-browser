@@ -71,7 +71,6 @@ export const useSaveFile = () => {
             slots.push(slotData);
           } catch (err) {
             console.error(`Error parsing slot ${i}:`, err);
-            slots.push({ name: `Slot ${i} (Error)`, relics: [] });
           }
         }
 
