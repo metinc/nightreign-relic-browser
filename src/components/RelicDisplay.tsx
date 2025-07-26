@@ -148,29 +148,19 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                     )}
                   </Box>
 
-                  <Box>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      Effects:
-                    </Typography>
-
-                    <List sx={{ listStyleType: "disc", pl: 2 }}>
-                      {validEffects.map((effectId) => (
-                        <Box
-                          key={effectId}
-                          sx={{ mb: 0.5, display: "list-item" }}
-                        >
-                          <Typography variant="body2">
-                            {getEffectName(effectId) ??
-                              `Unknown Effect ${effectId}`}
-                          </Typography>
-                        </Box>
-                      ))}
-                    </List>
-                  </Box>
+                  <List sx={{ listStyleType: "disc", pl: 2 }}>
+                    {validEffects.map((effectId) => (
+                      <Box
+                        key={effectId}
+                        sx={{ mb: 0.5, display: "list-item" }}
+                      >
+                        <Typography variant="body2">
+                          {getEffectName(effectId) ??
+                            `Unknown Effect ${effectId}`}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </List>
                 </CardContent>
               </Card>
             </Grid>
