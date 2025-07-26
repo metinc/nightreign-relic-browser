@@ -1,0 +1,472 @@
+import type { BND4Entry, RelicSlot } from "../types/SaveFile";
+
+export class RelicParser {
+  /**
+   * Finds the offset of a hex pattern in data
+   */
+  private static findHexOffset(
+    data: Uint8Array,
+    hexPattern: string
+  ): number | null {
+    try {
+      const pattern = hexPattern.replace(/\s+/g, "").toLowerCase();
+      const patternBytes = new Uint8Array(
+        pattern.match(/.{2}/g)?.map((byte) => parseInt(byte, 16)) || []
+      );
+
+      for (let i = 0; i <= data.length - patternBytes.length; i++) {
+        let match = true;
+        for (let j = 0; j < patternBytes.length; j++) {
+          if (data[i + j] !== patternBytes[j]) {
+            match = false;
+            break;
+          }
+        }
+        if (match) return i;
+      }
+      return null;
+    } catch (error) {
+      console.error("Failed to find hex pattern:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Locates a character name from the names entry using UTF-16LE encoding
+   */
+  private static locateName(
+    namesEntry: Uint8Array,
+    offset: number,
+    size: number
+  ): Uint8Array {
+    const raw = namesEntry.slice(offset, offset + size);
+    try {
+      // Find the first null terminator (0x00 0x00 for UTF-16LE)
+      let endIndex = raw.length;
+      for (let i = 0; i < raw.length - 1; i += 2) {
+        if (raw[i] === 0x00 && raw[i + 1] === 0x00) {
+          endIndex = i;
+          break;
+        }
+      }
+
+      const trimmed = raw.slice(0, endIndex);
+
+      // Convert UTF-16LE to string and back to UTF-8 bytes
+      const decoder = new TextDecoder("utf-16le");
+      const decoded = decoder.decode(trimmed);
+      const encoder = new TextEncoder();
+      return encoder.encode(decoded);
+    } catch (error) {
+      console.error("Unicode decode error:", error);
+      return raw;
+    }
+  }
+
+  /**
+   * Gets the character name from the given offset
+   */
+  private static getName(
+    offset: number,
+    currentEntry: Uint8Array,
+    namesEntry: Uint8Array
+  ): { nameBytes: Uint8Array; currentName: string | null } {
+    // Try different sizes to find the name
+    const sizes = [32, 15, 6];
+
+    for (const size of sizes) {
+      const nameBytes = this.locateName(namesEntry, offset, size);
+      const hexString = Array.from(nameBytes)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("")
+        .toLowerCase();
+
+      console.log(`Trying hex pattern: ${hexString}`);
+      const nameOffset = this.findHexOffset(currentEntry, hexString);
+
+      if (nameOffset !== null) {
+        console.log(`Found name pattern at offset ${nameOffset}`);
+        const currentName = this.findCharacterName(currentEntry, nameOffset);
+        console.log(`Decoded name: ${currentName}`);
+        if (currentName && currentName !== "Unknown") {
+          return { nameBytes, currentName };
+        }
+      }
+    }
+
+    // If no proper name found, try to decode the name bytes directly
+    const nameBytes = this.locateName(namesEntry, offset, 32);
+    let directName: string | null = null;
+
+    try {
+      // Try ASCII decode first since the hex suggests ASCII encoding
+      if (nameBytes.length > 0) {
+        const decoder = new TextDecoder("ascii");
+        const asciiResult = decoder.decode(nameBytes).replace(/\0/g, "").trim();
+        console.log(`ASCII decode result: ${asciiResult}`);
+        if (
+          asciiResult &&
+          asciiResult.length > 0 &&
+          /^[a-zA-Z0-9\s]+$/.test(asciiResult)
+        ) {
+          directName = asciiResult;
+        } else {
+          // Try UTF-16LE decoding on the name bytes themselves
+          const decoder16 = new TextDecoder("utf-16le");
+          directName = decoder16.decode(nameBytes).replace(/\0/g, "").trim();
+          console.log(`UTF-16LE decode result: ${directName}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error decoding name bytes:", error);
+      directName = null;
+    }
+
+    return { nameBytes, currentName: directName };
+  }
+
+  /**
+   * Finds the character name at a specific offset
+   */
+  private static findCharacterName(
+    sectionData: Uint8Array,
+    offset: number
+  ): string | null {
+    const BYTE_SIZE = 32;
+    try {
+      const valueBytes = sectionData.slice(offset, offset + BYTE_SIZE);
+
+      // Try to decode as UTF-16LE first
+      try {
+        // Look for null terminator (0x00 0x00 for UTF-16LE)
+        let endIndex = valueBytes.length;
+        for (let i = 0; i < valueBytes.length - 1; i += 2) {
+          if (valueBytes[i] === 0x00 && valueBytes[i + 1] === 0x00) {
+            endIndex = i;
+            break;
+          }
+        }
+
+        const trimmed = valueBytes.slice(0, endIndex);
+        if (trimmed.length > 0 && trimmed.length % 2 === 0) {
+          const decoder = new TextDecoder("utf-16le");
+          const decoded = decoder.decode(trimmed);
+          if (decoded && decoded.trim()) {
+            return decoded.trim();
+          }
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        // Fall back to ASCII parsing
+      }
+
+      // Fallback to ASCII parsing
+      const nameChars: string[] = [];
+      for (let i = 0; i < valueBytes.length; i += 2) {
+        const charByte = valueBytes[i];
+        if (charByte === 0) break;
+
+        if (charByte >= 32 && charByte <= 126) {
+          nameChars.push(String.fromCharCode(charByte));
+        } else {
+          nameChars.push(".");
+        }
+      }
+
+      const name = nameChars.join("");
+      return name || null;
+    } catch (error) {
+      console.error("Error finding character name:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Reads a little-endian integer from bytes
+   */
+  private static readIntLE(bytes: Uint8Array): number {
+    let result = 0;
+    for (let i = 0; i < bytes.length; i++) {
+      result |= bytes[i] << (8 * i);
+    }
+    return result;
+  }
+
+  /**
+   * Parses relics from the save data
+   */
+  private static parseRelics(
+    currentEntry: Uint8Array,
+    patternOffsetStart: number,
+    patternOffsetEnd: number
+  ): RelicSlot[] {
+    const foundSlots: RelicSlot[] = [];
+    const currentEntryOffset = currentEntry.slice(
+      patternOffsetStart,
+      patternOffsetEnd
+    );
+
+    const getSlotSize = (b4: number): number | null => {
+      switch (b4) {
+        case 0xc0:
+          return 72;
+        case 0x90:
+          return 16;
+        case 0x80:
+          return 80;
+        default:
+          return null;
+      }
+    };
+
+    const validB3Values = new Set([0x80, 0x83, 0x81, 0x82, 0x84, 0x85]);
+    const validB4Values = new Set([0x80, 0x90, 0xc0]);
+
+    console.log(
+      `Loaded section of ${currentEntryOffset.length} bytes from ${patternOffsetStart} to ${patternOffsetEnd}`
+    );
+
+    // Find alignment point by scanning for valid slots
+    const isValidSlotStart = (
+      pos: number
+    ): { valid: boolean; slotSize: number | null } => {
+      if (pos + 4 > currentEntryOffset.length) {
+        return { valid: false, slotSize: null };
+      }
+
+      const b3 = currentEntryOffset[pos + 2];
+      const b4 = currentEntryOffset[pos + 3];
+
+      if (validB3Values.has(b3) && validB4Values.has(b4)) {
+        const slotSize = getSlotSize(b4);
+        if (slotSize && pos + slotSize <= currentEntryOffset.length) {
+          return { valid: true, slotSize };
+        }
+      }
+      return { valid: false, slotSize: null };
+    };
+
+    // Find the first valid slot
+    let startOffset: number | null = null;
+    for (let i = 0; i < currentEntryOffset.length - 8; i++) {
+      const { valid, slotSize: firstSlotSize } = isValidSlotStart(i);
+      if (valid && firstSlotSize) {
+        // Check if the next position after this slot also starts a valid slot
+        const nextPos = i + firstSlotSize;
+        const { valid: validNext } = isValidSlotStart(nextPos);
+
+        // Or check if it's an empty slot
+        const isEmptyNext =
+          nextPos + 8 <= currentEntryOffset.length &&
+          currentEntryOffset
+            .slice(nextPos, nextPos + 8)
+            .every((byte, idx) => (idx < 4 ? byte === 0x00 : byte === 0xff));
+
+        if (validNext || isEmptyNext) {
+          startOffset = i;
+          console.log(`Found valid slot alignment at offset ${i}`);
+          break;
+        }
+      }
+    }
+
+    if (startOffset === null) {
+      console.error("[ERROR] No valid slot alignment found.");
+      return foundSlots;
+    }
+
+    // Process all slots from alignment with variable slot sizes
+    let emptySlotCount = 0;
+    let i = startOffset;
+
+    while (i < currentEntryOffset.length - 4) {
+      // Check if this is a valid slot
+      if (i + 4 <= currentEntryOffset.length) {
+        const b3 = currentEntryOffset[i + 2];
+        const b4 = currentEntryOffset[i + 3];
+
+        if (validB3Values.has(b3) && validB4Values.has(b4)) {
+          const slotSize = getSlotSize(b4);
+
+          if (slotSize && i + slotSize <= currentEntryOffset.length) {
+            if (b4 === 0xc0) {
+              const slotData = currentEntryOffset.slice(i, i + slotSize);
+              const id = slotData.slice(0, 4);
+
+              // Extract item ID (bytes 4-6)
+              const itemIdBytes = slotData.slice(4, 7);
+              const itemId = this.readIntLE(itemIdBytes);
+
+              // Extract effect IDs
+              const effect1Bytes = slotData.slice(16, 20);
+              const effect2Bytes = slotData.slice(20, 24);
+              const effect3Bytes = slotData.slice(24, 28);
+              const effect4Bytes = slotData.slice(28, 32);
+
+              const effect1Id = this.readIntLE(effect1Bytes);
+              const effect2Id = this.readIntLE(effect2Bytes);
+              const effect3Id = this.readIntLE(effect3Bytes);
+              const effect4Id = this.readIntLE(effect4Bytes);
+
+              const slotInfo: RelicSlot = {
+                id,
+                size: slotSize,
+                data: Array.from(slotData)
+                  .map((b) => b.toString(16).padStart(2, "0"))
+                  .join(""),
+                rawData: slotData,
+                itemId,
+                effect1Id,
+                effect2Id,
+                effect3Id,
+                effect4Id,
+              };
+              foundSlots.push(slotInfo);
+            }
+
+            i += slotSize;
+            continue;
+          }
+        }
+      }
+
+      // Check for empty slots
+      if (i + 8 <= currentEntryOffset.length) {
+        const emptyPattern = currentEntryOffset.slice(i, i + 8);
+        const isEmptySlot =
+          emptyPattern.slice(0, 4).every((b) => b === 0x00) &&
+          emptyPattern.slice(4, 8).every((b) => b === 0xff);
+
+        if (isEmptySlot) {
+          emptySlotCount++;
+          i += 8; // Empty slots are typically 8 bytes
+          continue;
+        }
+      }
+
+      // If we reach here, this position doesn't match any known pattern
+      i += 1;
+    }
+
+    console.log(`Found ${emptySlotCount} empty slots`);
+    console.log(`Found ${foundSlots.length} slots with b4=0xC0`);
+
+    return foundSlots;
+  }
+
+  /**
+   * Assigns sort keys to relics based on their order data
+   */
+  private static assignSortKeys(
+    relics: RelicSlot[],
+    currentEntry: Uint8Array
+  ): void {
+    const relicsOrderBytes = "80 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00";
+    const relicsOrderOffset = this.findHexOffset(
+      currentEntry,
+      relicsOrderBytes
+    );
+
+    console.log(`Relics order offset: ${relicsOrderOffset}`);
+    if (relicsOrderOffset !== null) {
+      for (let i = 0; i < 1024; i++) {
+        const sectionOffset = relicsOrderOffset + 14 * i;
+        if (sectionOffset + 10 > currentEntry.length) break;
+
+        const slotId = currentEntry.slice(sectionOffset, sectionOffset + 4);
+
+        for (const relic of relics) {
+          if (this.arraysEqual(relic.id, slotId)) {
+            const sortKey = currentEntry.slice(
+              sectionOffset + 8,
+              sectionOffset + 10
+            );
+            relic.sortKey = this.readIntLE(sortKey);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Compares two Uint8Arrays for equality
+   */
+  private static arraysEqual(a: Uint8Array, b: Uint8Array): boolean {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
+  /**
+   * Main function to parse a character slot and extract relics
+   */
+  public static parseCharacterSlot(
+    sectionNumber: number,
+    bnd4Entries: BND4Entry[]
+  ): { name: string; relics: RelicSlot[] } {
+    if (sectionNumber < 1 || sectionNumber > 10) {
+      throw new Error(`Invalid section number: ${sectionNumber}`);
+    }
+
+    const currentEntry = bnd4Entries[sectionNumber - 1].cleanData;
+    const namesEntry = bnd4Entries[10].cleanData;
+
+    // Section 1 starts at 0xA01AA2, each section offset is 632 (0x278) bytes apart
+    const baseOffset = 0xa01aa2 - 0xa00140 - 4;
+    const offset = baseOffset + (sectionNumber - 1) * 0x278;
+
+    const { nameBytes, currentName } = this.getName(
+      offset,
+      currentEntry,
+      namesEntry
+    );
+    console.log(
+      "Name bytes:",
+      Array.from(nameBytes)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("")
+    );
+
+    const characterName = currentName || "Unknown";
+    console.log(`Loaded section ${sectionNumber} with name: ${characterName}`);
+
+    // Find pattern boundaries for relic parsing
+    const fixedPatternOffset = this.findHexOffset(
+      currentEntry,
+      Array.from(nameBytes)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("")
+    );
+
+    if (fixedPatternOffset === null) {
+      console.warn(
+        "Character name not found in data, results may be unreliable"
+      );
+    }
+
+    // Parse relics from the data - scan the entire entry
+    // The relics data is stored throughout the current entry, not just in a small section
+    const relics = this.parseRelics(
+      currentEntry,
+      32,
+      currentEntry.length - 32 // Scan almost the entire entry
+    );
+
+    // Assign sort keys to relics
+    this.assignSortKeys(relics, currentEntry);
+
+    // Filter to only include relics that have sort keys (these are the actual equipped/owned relics)
+    const validRelics = relics.filter((relic) => relic.sortKey !== undefined);
+
+    // Sort relics by sort key
+    validRelics.sort((a, b) => (a.sortKey || 0) - (b.sortKey || 0));
+
+    return {
+      name: characterName,
+      relics: validRelics,
+    };
+  }
+}
