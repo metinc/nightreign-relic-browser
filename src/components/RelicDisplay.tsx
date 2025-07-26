@@ -54,7 +54,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
           })
           .map((relic, index) => {
             const itemName = getItemName(relic.itemId);
-            const rowNumber = Math.floor(index / 8) + 1;
+            const showRowNumber = index % 8 === 0;
+            const rowNumber = showRowNumber ? Math.floor(index / 8) + 1 : null;
             const validEffects = [
               relic.effect1Id,
               relic.effect2Id,
@@ -76,33 +77,15 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
             );
 
             return (
-              <Grid
-                size={{ xs: 8, sm: 1 }}
-                key={relic.id}
-                sx={{ display: "flex", gap: 1 }}
-              >
-                {index % 8 === 0 && (
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      minWidth: "24px",
-                      textAlign: "center",
-                      color: "text.secondary",
-                      display: { xs: "none", sm: "block", alignSelf: "center" },
-                    }}
-                  >
-                    {rowNumber}
-                  </Typography>
-                )}
-                <RelicCard
-                  relic={relic}
-                  getItemName={getItemName}
-                  getItemColor={getItemColor}
-                  getEffectName={getEffectName}
-                  searchTerm={searchTerm}
-                  relicMatches={relicMatches}
-                />
-              </Grid>
+              <RelicCard
+                relic={relic}
+                getItemName={getItemName}
+                getItemColor={getItemColor}
+                getEffectName={getEffectName}
+                searchTerm={searchTerm}
+                relicMatches={relicMatches}
+                rowNumber={rowNumber}
+              />
             );
           })}
       </Grid>
