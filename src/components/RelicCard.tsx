@@ -112,9 +112,6 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
             >
               {itemNameHighlight.highlightedText}
             </Typography>
-          </Box>
-
-          <Box sx={{ mb: 2 }}>
             {itemColor && (
               <Chip
                 label={itemColor}
