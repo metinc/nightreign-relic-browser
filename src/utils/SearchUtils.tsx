@@ -36,9 +36,8 @@ export const highlightSearchTerm = (
           style={{
             backgroundColor: "#ffd700",
             color: "#000",
-            fontWeight: "bold",
-            padding: "0 2px",
-            borderRadius: "2px",
+            paddingTop: "1px",
+            paddingBottom: "1px",
           }}
         >
           {part}
