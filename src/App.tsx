@@ -36,7 +36,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Box p={3}>
         <Typography variant="h3" component="h1" gutterBottom>
           Elden Ring Nightreign Relic Browser
         </Typography>
@@ -77,7 +77,7 @@ function App() {
             )}
           </>
         )}
-      </Container>
+      </Box>
     </ThemeProvider>
   );
 }
