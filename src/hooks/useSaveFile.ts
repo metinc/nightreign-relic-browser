@@ -128,8 +128,8 @@ export const useSaveFile = () => {
 
   // Get effect name by ID
   const getEffectName = useCallback(
-    (effectId: number): string => {
-      return effectsData[effectId.toString()]?.name || "None";
+    (effectId: number) => {
+      return effectsData[effectId.toString()]?.name;
     },
     [effectsData]
   );
