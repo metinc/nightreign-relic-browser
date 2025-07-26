@@ -17,6 +17,7 @@ export const useSaveFile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTermState] = useState<string>("");
+  const [filterEnabled, setFilterEnabledState] = useState<boolean>(false);
 
   // Load JSON data for items and effects
   const loadJsonData = useCallback(async () => {
@@ -140,6 +141,11 @@ export const useSaveFile = () => {
     setSearchTermState(term);
   }, []);
 
+  // Set filter enabled
+  const setFilterEnabled = useCallback((enabled: boolean) => {
+    setFilterEnabledState(enabled);
+  }, []);
+
   return {
     saveFileData,
     loading,
@@ -151,5 +157,7 @@ export const useSaveFile = () => {
     getEffectName,
     searchTerm,
     setSearchTerm,
+    filterEnabled,
+    setFilterEnabled,
   };
 };

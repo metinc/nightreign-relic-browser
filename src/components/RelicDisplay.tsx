@@ -18,6 +18,7 @@ interface RelicDisplayProps {
   getItemColor: (itemId: number) => string | null;
   getEffectName: (effectId: number) => string;
   searchTerm?: string;
+  filterEnabled?: boolean;
 }
 
 const getColorChipColor = (color: string | null) => {
@@ -58,6 +59,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   getItemColor,
   getEffectName,
   searchTerm = "",
+  filterEnabled = false,
 }) => {
   if (relics.length === 0) {
     return (
@@ -72,128 +74,147 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   return (
     <Box>
       <Grid container columns={8} spacing={2}>
-        {relics.map((relic, index) => {
-          const itemName = getItemName(relic.itemId);
-          const itemColor = getItemColor(relic.itemId);
-          const rowNumber = Math.floor(index / 8) + 1;
-          const validEffects = [
-            relic.effect1Id,
-            relic.effect2Id,
-            relic.effect3Id,
-            relic.effect4Id,
-          ].filter((id) => id !== -1);
-          const backgroundColor = getBackgroundColor(validEffects.length);
-          const isSpecialRelic = !itemName.endsWith(" Scene");
+        {relics
+          .filter((relic) => {
+            if (!filterEnabled) return true;
 
-          // Get effect names for search matching
-          const effectNames = validEffects.map(
-            (effectId) =>
-              getEffectName(effectId) ?? `Unknown Effect ${effectId}`
-          );
+            const itemName = getItemName(relic.itemId);
+            const validEffects = [
+              relic.effect1Id,
+              relic.effect2Id,
+              relic.effect3Id,
+              relic.effect4Id,
+            ].filter((id) => id !== -1);
+            const effectNames = validEffects.map(
+              (effectId) =>
+                getEffectName(effectId) ?? `Unknown Effect ${effectId}`
+            );
 
-          // Check if this relic matches the search
-          const relicMatches = doesRelicMatch(
-            itemName,
-            effectNames,
-            searchTerm
-          );
+            return doesRelicMatch(itemName, effectNames, searchTerm);
+          })
+          .map((relic, index) => {
+            const itemName = getItemName(relic.itemId);
+            const itemColor = getItemColor(relic.itemId);
+            const rowNumber = Math.floor(index / 8) + 1;
+            const validEffects = [
+              relic.effect1Id,
+              relic.effect2Id,
+              relic.effect3Id,
+              relic.effect4Id,
+            ].filter((id) => id !== -1);
+            const backgroundColor = getBackgroundColor(validEffects.length);
+            const isSpecialRelic = !itemName.endsWith(" Scene");
 
-          // Get highlighted text for item name
-          const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
+            // Get effect names for search matching
+            const effectNames = validEffects.map(
+              (effectId) =>
+                getEffectName(effectId) ?? `Unknown Effect ${effectId}`
+            );
 
-          return (
-            <Grid
-              size={{ xs: 8, sm: 1 }}
-              key={index}
-              sx={{ display: "flex", gap: 1 }}
-            >
-              {index % 8 === 0 && (
-                <Typography
-                  variant="h6"
-                  sx={{
-                    minWidth: "24px",
-                    textAlign: "center",
-                    color: "text.secondary",
-                    display: { xs: "none", sm: "block", alignSelf: "center" },
-                  }}
-                >
-                  {rowNumber}
-                </Typography>
-              )}
-              <Card
-                variant="outlined"
-                sx={{
-                  flex: 1,
-                  background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
-                  opacity: relicMatches ? 1 : 0.4,
-                  transition: "opacity 0.3s ease",
-                }}
+            // Check if this relic matches the search
+            const relicMatches = doesRelicMatch(
+              itemName,
+              effectNames,
+              searchTerm
+            );
+
+            // Get highlighted text for item name
+            const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
+
+            return (
+              <Grid
+                size={{ xs: 8, sm: 1 }}
+                key={index}
+                sx={{ display: "flex", gap: 1 }}
               >
-                <CardContent>
-                  <Box
+                {index % 8 === 0 && (
+                  <Typography
+                    variant="h6"
                     sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      mb: 1,
+                      minWidth: "24px",
+                      textAlign: "center",
+                      color: "text.secondary",
+                      display: { xs: "none", sm: "block", alignSelf: "center" },
                     }}
                   >
-                    <Typography
-                      variant="h6"
-                      component="div"
+                    {rowNumber}
+                  </Typography>
+                )}
+                <Card
+                  variant="outlined"
+                  sx={{
+                    flex: 1,
+                    background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
+                    opacity: relicMatches ? 1 : 0.4,
+                    transition: "opacity 0.3s ease",
+                  }}
+                >
+                  <CardContent>
+                    <Box
                       sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        ...(isSpecialRelic
-                          ? {
-                              color: "primary.main",
-                              fontWeight: "bold",
-                            }
-                          : { color: "text.secondary" }),
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 1,
                       }}
                     >
-                      {itemNameHighlight.highlightedText}
-                    </Typography>
-                  </Box>
+                      <Typography
+                        variant="h6"
+                        component="div"
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          ...(isSpecialRelic
+                            ? {
+                                color: "primary.main",
+                                fontWeight: "bold",
+                              }
+                            : { color: "text.secondary" }),
+                        }}
+                      >
+                        {itemNameHighlight.highlightedText}
+                      </Typography>
+                    </Box>
 
-                  <Box sx={{ mb: 2 }}>
-                    {itemColor && (
-                      <Chip
-                        label={itemColor}
-                        size="small"
-                        color={getColorChipColor(itemColor)}
-                        sx={{ mb: 1 }}
-                      />
-                    )}
-                  </Box>
+                    <Box sx={{ mb: 2 }}>
+                      {itemColor && (
+                        <Chip
+                          label={itemColor}
+                          size="small"
+                          color={getColorChipColor(itemColor)}
+                          sx={{ mb: 1 }}
+                        />
+                      )}
+                    </Box>
 
-                  <List sx={{ listStyleType: "disc", pl: 2 }}>
-                    {validEffects.map((effectId) => {
-                      const effectName =
-                        getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
-                      const effectHighlight = highlightSearchTerm(
-                        effectName,
-                        searchTerm
-                      );
+                    <List sx={{ listStyleType: "disc", pl: 2 }}>
+                      {validEffects.map((effectId) => {
+                        const effectName =
+                          getEffectName(effectId) ??
+                          `Unknown Effect ${effectId}`;
+                        const effectHighlight = highlightSearchTerm(
+                          effectName,
+                          searchTerm
+                        );
 
-                      return (
-                        <Box
-                          key={effectId}
-                          sx={{ mb: 0.5, display: "list-item" }}
-                        >
-                          <Typography variant="body2">
-                            {effectHighlight.highlightedText}
-                          </Typography>
-                        </Box>
-                      );
-                    })}
-                  </List>
-                </CardContent>
-              </Card>
-            </Grid>
-          );
-        })}
+                        return (
+                          <Box
+                            key={effectId}
+                            sx={{ mb: 0.5, display: "list-item" }}
+                          >
+                            <Typography variant="body2">
+                              {effectHighlight.highlightedText}
+                            </Typography>
+                          </Box>
+                        );
+                      })}
+                    </List>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
       </Grid>
     </Box>
   );

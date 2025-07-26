@@ -37,6 +37,8 @@ function App() {
     getEffectName,
     searchTerm,
     setSearchTerm,
+    filterEnabled,
+    setFilterEnabled,
   } = useSaveFile();
 
   const currentSlot = saveFileData?.slots[saveFileData.currentSlot];
@@ -87,6 +89,8 @@ function App() {
             <SearchInput
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
+              filterEnabled={filterEnabled}
+              onFilterChange={setFilterEnabled}
             />
 
             {currentSlot && (
@@ -96,6 +100,7 @@ function App() {
                 getItemColor={getItemColor}
                 getEffectName={getEffectName}
                 searchTerm={searchTerm}
+                filterEnabled={filterEnabled}
               />
             )}
           </>
