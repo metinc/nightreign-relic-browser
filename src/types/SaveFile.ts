@@ -13,7 +13,7 @@ export interface BND4Entry {
 }
 
 export interface RelicSlot {
-  id: Uint8Array;
+  id: number;
   size: number;
   data: string;
   rawData: Uint8Array;

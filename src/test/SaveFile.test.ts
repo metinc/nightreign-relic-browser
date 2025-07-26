@@ -70,7 +70,7 @@ describe("Save File Processing", () => {
     expect(firstRelic.size).toBe(72); // C0 type slots should be 72 bytes
     expect(firstRelic.rawData).toBeDefined();
     expect(firstRelic.id).toBeDefined();
-    expect(firstRelic.id.length).toBe(4); // ID should be 4 bytes
+    expect(firstRelic.id).toBeTypeOf("number");
   });
 
   it("should handle UTF-16LE character names correctly", () => {

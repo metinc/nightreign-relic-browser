@@ -78,7 +78,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
             return (
               <Grid
                 size={{ xs: 8, sm: 1 }}
-                key={index}
+                key={relic.id}
                 sx={{ display: "flex", gap: 1 }}
               >
                 {index % 8 === 0 && (

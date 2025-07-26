@@ -28,9 +28,9 @@ export const SlotSelector: React.FC<SlotSelectorProps> = ({
         scrollButtons="auto"
         sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}
       >
-        {validSlots.map((slot, index) => (
+        {validSlots.map((slot) => (
           <Tab
-            key={index}
+            key={slot.name}
             label={
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {slot.name}

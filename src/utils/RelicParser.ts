@@ -291,7 +291,7 @@ export class RelicParser {
           if (slotSize && i + slotSize <= currentEntryOffset.length) {
             if (b4 === 0xc0) {
               const slotData = currentEntryOffset.slice(i, i + slotSize);
-              const id = slotData.slice(0, 4);
+              const id = this.readIntLE(slotData.slice(0, 4));
 
               // Extract item ID (bytes 4-6)
               const itemIdBytes = slotData.slice(4, 7);
@@ -373,10 +373,12 @@ export class RelicParser {
         const sectionOffset = relicsOrderOffset + 14 * i;
         if (sectionOffset + 10 > currentEntry.length) break;
 
-        const slotId = currentEntry.slice(sectionOffset, sectionOffset + 4);
+        const slotId = this.readIntLE(
+          currentEntry.slice(sectionOffset, sectionOffset + 4)
+        );
 
         for (const relic of relics) {
-          if (this.arraysEqual(relic.id, slotId)) {
+          if (relic.id === slotId) {
             const sortKey = currentEntry.slice(
               sectionOffset + 8,
               sectionOffset + 10
