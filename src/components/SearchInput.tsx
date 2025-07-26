@@ -38,12 +38,14 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         onChange={(e) => onSearchChange(e.target.value)}
         variant="outlined"
         sx={{ maxWidth: 500 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search />
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+          },
         }}
       />
 
