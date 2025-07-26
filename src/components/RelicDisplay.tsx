@@ -65,14 +65,28 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
           const effect2Name = getEffectName(relic.effect2Id);
           const effect3Name = getEffectName(relic.effect3Id);
           const effect4Name = getEffectName(relic.effect4Id);
+          const rowNumber = Math.floor(index / 8) + 1;
 
           return (
-            <Grid size={1}>
-              <Card
-                variant="outlined"
-                sx={{ height: "fit-content" }}
-                key={index}
-              >
+            <Grid
+              size={{ xs: 8, sm: 1 }}
+              key={index}
+              sx={{ display: "flex", gap: 1 }}
+            >
+              {index % 8 === 0 && (
+                <Typography
+                  variant="h6"
+                  sx={{
+                    minWidth: "24px",
+                    textAlign: "center",
+                    color: "text.secondary",
+                    display: { xs: "none", sm: "block", alignSelf: "center" },
+                  }}
+                >
+                  {rowNumber}
+                </Typography>
+              )}
+              <Card variant="outlined" sx={{ height: "fit-content", flex: 1 }}>
                 <CardContent>
                   <Box
                     sx={{
