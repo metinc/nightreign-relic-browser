@@ -104,7 +104,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
               <Card
                 variant="outlined"
                 sx={{
-                  height: "fit-content",
                   flex: 1,
                   background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
                 }}
