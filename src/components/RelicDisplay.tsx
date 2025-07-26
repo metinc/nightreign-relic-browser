@@ -89,6 +89,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
             return (
               <RelicCard
+                key={relic.id}
                 relic={relic}
                 getItemName={getItemName}
                 getItemColor={getItemColor}
