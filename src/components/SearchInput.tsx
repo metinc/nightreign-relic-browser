@@ -19,6 +19,7 @@ interface SearchInputProps {
   onFilterChange: (enabled: boolean) => void;
   selectedColor: string;
   onColorChange: (color: string) => void;
+  matchingRelicsCount?: number;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -28,6 +29,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onFilterChange,
   selectedColor,
   onColorChange,
+  matchingRelicsCount,
 }) => {
   return (
     <Box
@@ -46,6 +48,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         onChange={(e) => onSearchChange(e.target.value)}
         variant="outlined"
         sx={{ maxWidth: 500 }}
+        helperText={
+          searchTerm.trim() ? `${matchingRelicsCount} matching relics` : " "
+        }
         slotProps={{
           input: {
             startAdornment: (

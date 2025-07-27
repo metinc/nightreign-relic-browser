@@ -29,6 +29,8 @@ function App() {
     setFilterEnabled,
     selectedColor,
     setSelectedColor,
+    matchingRelicsCount,
+    handleMatchingRelicsCountChange,
   } = useSaveFile();
 
   const currentSlot = saveFileData?.slots[saveFileData.currentSlot];
@@ -92,6 +94,7 @@ function App() {
               onFilterChange={setFilterEnabled}
               selectedColor={selectedColor}
               onColorChange={setSelectedColor}
+              matchingRelicsCount={matchingRelicsCount}
             />
 
             <SlotSelector
@@ -110,6 +113,7 @@ function App() {
                   searchTerm={searchTerm}
                   filterEnabled={filterEnabled}
                   selectedColor={selectedColor}
+                  onMatchCountChange={handleMatchingRelicsCountChange}
                 />
               </Box>
             )}

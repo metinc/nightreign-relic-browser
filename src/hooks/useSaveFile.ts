@@ -19,6 +19,7 @@ export const useSaveFile = () => {
   const [searchTerm, setSearchTermState] = useState<string>("");
   const [filterEnabled, setFilterEnabledState] = useState<boolean>(false);
   const [selectedColor, setSelectedColorState] = useState<string>("Any");
+  const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
 
   // Load JSON data for items and effects
   const loadJsonData = useCallback(async () => {
@@ -152,6 +153,11 @@ export const useSaveFile = () => {
     setSelectedColorState(color);
   }, []);
 
+  // Set matching relics count
+  const handleMatchingRelicsCountChange = useCallback((count: number) => {
+    setMatchingRelicsCount(count);
+  }, []);
+
   return {
     saveFileData,
     loading,
@@ -167,5 +173,7 @@ export const useSaveFile = () => {
     setFilterEnabled,
     selectedColor,
     setSelectedColor,
+    matchingRelicsCount,
+    handleMatchingRelicsCountChange,
   };
 };

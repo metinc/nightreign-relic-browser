@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import { Box, Typography, Paper, Grid } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { RelicSlot } from "../types/SaveFile";
@@ -13,6 +13,7 @@ interface RelicDisplayProps {
   searchTerm?: string;
   filterEnabled?: boolean;
   selectedColor?: string;
+  onMatchCountChange?: (count: number) => void;
 }
 
 export const RelicDisplay: React.FC<RelicDisplayProps> = ({
@@ -23,6 +24,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   searchTerm = "",
   filterEnabled = false,
   selectedColor = "Any",
+  onMatchCountChange,
 }) => {
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +58,29 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     getItemColor,
     getEffectName,
   ]);
+
+  // Calculate matching relics count (search matches only, ignoring color filter)
+  const matchingRelicsCount = useMemo(() => {
+    if (!searchTerm.trim()) {
+      return relics.length; // If no search filter, all relics match
+    }
+
+    return relics.filter((relic) => {
+      const itemName = getItemName(relic.itemId);
+      const effectNames = relic.effects.map(
+        (effectId) => getEffectName(effectId) ?? `Unknown Effect ${effectId}`
+      );
+
+      return doesRelicMatch(itemName, effectNames, searchTerm);
+    }).length;
+  }, [relics, searchTerm, getItemName, getEffectName]);
+
+  // Report the matching count to parent component
+  useEffect(() => {
+    if (onMatchCountChange) {
+      onMatchCountChange(matchingRelicsCount);
+    }
+  }, [matchingRelicsCount, onMatchCountChange]);
 
   // Group relics into rows of 8
   const relicRows = useMemo(() => {
