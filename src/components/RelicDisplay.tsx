@@ -34,7 +34,13 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   }
 
   return (
-    <Box>
+    <Box
+      sx={{
+        height: "100%",
+        overflowY: "auto",
+        p: 2,
+      }}
+    >
       <Grid container columns={8} spacing={2}>
         {relics
           .filter((relic) => {

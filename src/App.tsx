@@ -48,12 +48,20 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Box p={3}>
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            pt: 3,
+            px: 1,
             mb: 3,
           }}
         >
@@ -98,15 +106,17 @@ function App() {
             />
 
             {currentSlot && (
-              <RelicDisplay
-                relics={currentSlot.relics}
-                getItemName={getItemName}
-                getItemColor={getItemColor}
-                getEffectName={getEffectName}
-                searchTerm={searchTerm}
-                filterEnabled={filterEnabled}
-                selectedColor={selectedColor}
-              />
+              <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+                <RelicDisplay
+                  relics={currentSlot.relics}
+                  getItemName={getItemName}
+                  getItemColor={getItemColor}
+                  getEffectName={getEffectName}
+                  searchTerm={searchTerm}
+                  filterEnabled={filterEnabled}
+                  selectedColor={selectedColor}
+                />
+              </Box>
             )}
           </>
         )}

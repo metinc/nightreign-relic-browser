@@ -20,33 +20,30 @@ export const SlotSelector: React.FC<SlotSelectorProps> = ({
   };
 
   return (
-    <Box sx={{ mb: 3 }}>
-      <Tabs
-        value={currentSlot}
-        onChange={handleTabChange}
-        variant="scrollable"
-        scrollButtons="auto"
-        sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}
-      >
-        {validSlots.map((slot) => (
-          <Tab
-            key={slot.name}
-            label={
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                {slot.name}
-                <Chip
-                  label={`${slot.relics.length} ${
-                    slot.relics.length === 1 ? "relic" : "relics"
-                  }`}
-                  size="small"
-                  variant="outlined"
-                />
-              </Box>
-            }
-            sx={{ textTransform: "none" }}
-          />
-        ))}
-      </Tabs>
-    </Box>
+    <Tabs
+      value={currentSlot}
+      onChange={handleTabChange}
+      sx={{ borderBottom: 1, borderColor: "divider" }}
+      centered
+    >
+      {validSlots.map((slot) => (
+        <Tab
+          key={slot.name}
+          label={
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {slot.name}
+              <Chip
+                label={`${slot.relics.length} ${
+                  slot.relics.length === 1 ? "relic" : "relics"
+                }`}
+                size="small"
+                variant="outlined"
+              />
+            </Box>
+          }
+          sx={{ textTransform: "none" }}
+        />
+      ))}
+    </Tabs>
   );
 };
