@@ -1,0 +1,35 @@
+{
+  "name": "Elden Ring Nightreign Relic Browser",
+  "short_name": "Nightreign Relics",
+  "description": "Browse and manage your Elden Ring Nightreign relics and save files",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#1976d2",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "utilities", "productivity"],
+  "lang": "en",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Upload Save File",
+      "short_name": "Upload",
+      "description": "Upload your Elden Ring Nightreign save file",
+      "url": "/?action=upload",
+      "icons": [
+        {
+          "src": "/favicon.png",
+          "sizes": "32x32"
+        }
+      ]
+    }
+  ]
+}

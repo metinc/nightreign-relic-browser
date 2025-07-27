@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://relicbrowser.com/sitemap.xml
+
+# Disallow sensitive areas (if any)
+# Disallow: /admin/
+# Disallow: /private/

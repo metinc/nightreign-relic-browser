@@ -38,6 +38,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box
+        component="main"
         sx={{
           height: "100vh",
           display: "flex",
@@ -45,6 +46,7 @@ function App() {
         }}
       >
         <Box
+          component="header"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -55,6 +57,7 @@ function App() {
           }}
         >
           <Typography
+            component="h1"
             variant="h1"
             gutterBottom
             sx={{
@@ -73,19 +76,23 @@ function App() {
         </Box>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity="error" sx={{ mb: 2 }} role="alert">
             {error}
           </Alert>
         )}
 
         {loading && (
-          <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "center", my: 4 }}
+            role="status"
+            aria-label="Loading"
+          >
             <CircularProgress />
           </Box>
         )}
 
         {saveFileData && !loading && (
-          <>
+          <Box component="section" aria-label="Relic management interface">
             <SearchInput
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
@@ -101,7 +108,11 @@ function App() {
             />
 
             {currentSlot && (
-              <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+              <Box
+                sx={{ flexGrow: 1, minHeight: 0 }}
+                component="section"
+                aria-label="Relic display"
+              >
                 <RelicDisplay
                   relics={currentSlot.relics}
                   getItemName={getItemName}
@@ -113,10 +124,11 @@ function App() {
                 />
               </Box>
             )}
-          </>
+          </Box>
         )}
 
         <Box
+          component="footer"
           sx={{
             mt: "auto",
             py: 1,

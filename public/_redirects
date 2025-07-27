@@ -1,0 +1,12 @@
+# Single Page Application routing
+/*    /index.html   200
+
+# Redirect common misspellings and variations
+/relics              /    301
+/relic-browser       /    301
+/elden-ring          /    301
+/nightreign          /    301
+
+# Redirect old URLs if any exist
+/home                /    301
+/browse              /    301
