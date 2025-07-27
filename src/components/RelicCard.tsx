@@ -61,7 +61,14 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           transition: "opacity 0.3s ease",
         }}
       >
-        <CardContent>
+        <CardContent
+          sx={{
+            "&:last-child": {
+              paddingBottom: 1,
+            },
+            pt: 1,
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -96,7 +103,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
             )}
           </Box>
 
-          <List sx={{ listStyleType: "disc", pl: 2 }}>
+          <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
             {relic.effects.map((effectId) => {
               const effectName =
                 getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
