@@ -51,7 +51,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
 
   return (
-    <Grid size={{ xs: 33, sm: 4 }} key={relic.id}>
+    <Grid size={{ xs: 33, sm: 4 }} key={relic.id} py={1}>
       <Card
         variant="outlined"
         sx={{
