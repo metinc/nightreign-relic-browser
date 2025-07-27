@@ -3,8 +3,6 @@ import {
   Box,
   TextField,
   InputAdornment,
-  FormControlLabel,
-  Checkbox,
   ToggleButtonGroup,
   ToggleButton,
   Chip,
@@ -15,8 +13,6 @@ import { getChipColor, relicColors } from "../utils/RelicColor";
 interface SearchInputProps {
   searchTerm: string;
   onSearchChange: (searchTerm: string) => void;
-  filterEnabled: boolean;
-  onFilterChange: (enabled: boolean) => void;
   selectedColor: string;
   onColorChange: (color: string) => void;
   matchingRelicsCount?: number;
@@ -25,8 +21,6 @@ interface SearchInputProps {
 export const SearchInput: React.FC<SearchInputProps> = ({
   searchTerm,
   onSearchChange,
-  filterEnabled,
-  onFilterChange,
   selectedColor,
   onColorChange,
   matchingRelicsCount,
@@ -60,18 +54,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             ),
           },
         }}
-      />
-
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={filterEnabled}
-            onChange={(e) => onFilterChange(e.target.checked)}
-            color="primary"
-          />
-        }
-        label="Filter non-matching relics"
-        sx={{ color: "text.secondary" }}
       />
 
       <ToggleButtonGroup

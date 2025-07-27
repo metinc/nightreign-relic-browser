@@ -9,5 +9,8 @@ export const theme = createTheme({
       fontFamily: "serif",
       fontSize: "2.5rem",
     },
+    h6: {
+      lineHeight: 1,
+    },
   },
 });

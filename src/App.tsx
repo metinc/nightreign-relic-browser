@@ -25,8 +25,6 @@ function App() {
     getEffectName,
     searchTerm,
     setSearchTerm,
-    filterEnabled,
-    setFilterEnabled,
     selectedColor,
     setSelectedColor,
     matchingRelicsCount,
@@ -90,8 +88,6 @@ function App() {
             <SearchInput
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
-              filterEnabled={filterEnabled}
-              onFilterChange={setFilterEnabled}
               selectedColor={selectedColor}
               onColorChange={setSelectedColor}
               matchingRelicsCount={matchingRelicsCount}
@@ -111,7 +107,6 @@ function App() {
                   getItemColor={getItemColor}
                   getEffectName={getEffectName}
                   searchTerm={searchTerm}
-                  filterEnabled={filterEnabled}
                   selectedColor={selectedColor}
                   onMatchCountChange={handleMatchingRelicsCountChange}
                 />

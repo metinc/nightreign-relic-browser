@@ -18,7 +18,6 @@ interface RelicCardProps {
   getItemColor: (itemId: number) => string | null;
   getEffectName: (effectId: number) => string;
   searchTerm: string;
-  relicMatches: boolean;
 }
 
 const getBackgroundColor = (effectsCount: number) => {
@@ -42,7 +41,6 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   getItemColor,
   getEffectName,
   searchTerm,
-  relicMatches,
 }) => {
   const itemName = getItemName(relic.itemId);
   const itemColor = getItemColor(relic.itemId);
@@ -57,7 +55,6 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         sx={{
           height: "100%",
           background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
-          opacity: relicMatches ? 1 : 0.4,
           transition: "opacity 0.3s ease",
         }}
       >
@@ -135,8 +132,7 @@ export const RelicCard = React.memo(
       prevProps.relic !== nextProps.relic ||
       prevProps.getItemName !== nextProps.getItemName ||
       prevProps.getItemColor !== nextProps.getItemColor ||
-      prevProps.getEffectName !== nextProps.getEffectName ||
-      prevProps.relicMatches !== nextProps.relicMatches
+      prevProps.getEffectName !== nextProps.getEffectName
     ) {
       return false;
     }

@@ -17,7 +17,6 @@ export const useSaveFile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTermState] = useState<string>("");
-  const [filterEnabled, setFilterEnabledState] = useState<boolean>(false);
   const [selectedColor, setSelectedColorState] = useState<string>("Any");
   const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
 
@@ -143,11 +142,6 @@ export const useSaveFile = () => {
     setSearchTermState(term);
   }, []);
 
-  // Set filter enabled
-  const setFilterEnabled = useCallback((enabled: boolean) => {
-    setFilterEnabledState(enabled);
-  }, []);
-
   // Set selected color
   const setSelectedColor = useCallback((color: string) => {
     setSelectedColorState(color);
@@ -169,8 +163,6 @@ export const useSaveFile = () => {
     getEffectName,
     searchTerm,
     setSearchTerm,
-    filterEnabled,
-    setFilterEnabled,
     selectedColor,
     setSelectedColor,
     matchingRelicsCount,

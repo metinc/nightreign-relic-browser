@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useEffect } from "react";
-import { Box, Typography, Paper, Grid } from "@mui/material";
+import { Box, Typography, Paper, Grid, Divider } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { RelicSlot } from "../types/SaveFile";
 import { doesRelicMatch } from "../utils/SearchUtils";
@@ -11,7 +11,6 @@ interface RelicDisplayProps {
   getItemColor: (itemId: number) => string | null;
   getEffectName: (effectId: number) => string;
   searchTerm?: string;
-  filterEnabled?: boolean;
   selectedColor?: string;
   onMatchCountChange?: (count: number) => void;
 }
@@ -22,7 +21,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   getItemColor,
   getEffectName,
   searchTerm = "",
-  filterEnabled = false,
   selectedColor = "Any",
   onMatchCountChange,
 }) => {
@@ -40,24 +38,9 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       }
 
       // Search filter (only apply if enabled)
-      if (!filterEnabled) return true;
-
-      const itemName = getItemName(relic.itemId);
-      const effectNames = relic.effects.map(
-        (effectId) => getEffectName(effectId) ?? `Unknown Effect ${effectId}`
-      );
-
-      return doesRelicMatch(itemName, effectNames, searchTerm);
+      return true;
     });
-  }, [
-    relics,
-    selectedColor,
-    filterEnabled,
-    searchTerm,
-    getItemName,
-    getItemColor,
-    getEffectName,
-  ]);
+  }, [getItemColor, relics, selectedColor]);
 
   // Calculate matching relics count (search matches only, ignoring color filter)
   const matchingRelicsCount = useMemo(() => {
@@ -182,6 +165,15 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                     searchTerm
                   );
 
+                  // If there's a search term and this relic doesn't match, show placeholder
+                  if (searchTerm.trim() && !relicMatches) {
+                    return (
+                      <Grid key={relic.id} size={4} alignContent={"center"}>
+                        <Divider />
+                      </Grid>
+                    );
+                  }
+
                   return (
                     <RelicCard
                       key={relic.id}
@@ -190,7 +182,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       getItemColor={getItemColor}
                       getEffectName={getEffectName}
                       searchTerm={searchTerm}
-                      relicMatches={relicMatches}
                     />
                   );
                 })}
