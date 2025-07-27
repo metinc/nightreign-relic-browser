@@ -1,5 +1,4 @@
 import {
-  createTheme,
   CssBaseline,
   ThemeProvider,
   Typography,
@@ -12,18 +11,7 @@ import { SlotSelector } from "./components/SlotSelector";
 import { RelicDisplay } from "./components/RelicDisplay";
 import { SearchInput } from "./components/SearchInput";
 import { useSaveFile } from "./hooks/useSaveFile";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-  typography: {
-    h1: {
-      fontFamily: "serif",
-      fontSize: "2.5rem",
-    },
-  },
-});
+import { theme } from "./theme";
 
 function App() {
   const {
@@ -46,7 +34,7 @@ function App() {
   const currentSlot = saveFileData?.slots[saveFileData.currentSlot];
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box
         sx={{
