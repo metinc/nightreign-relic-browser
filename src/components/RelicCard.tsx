@@ -19,7 +19,6 @@ interface RelicCardProps {
   getEffectName: (effectId: number) => string;
   searchTerm: string;
   relicMatches: boolean;
-  rowNumber: number | null;
 }
 
 const getBackgroundColor = (effectsCount: number) => {
@@ -44,7 +43,6 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   getEffectName,
   searchTerm,
   relicMatches,
-  rowNumber,
 }) => {
   const itemName = getItemName(relic.itemId);
   const itemColor = getItemColor(relic.itemId);
@@ -59,28 +57,11 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
 
   return (
-    <Grid
-      size={{ xs: 8, sm: 1 }}
-      key={relic.id}
-      sx={{ display: "flex", gap: 1 }}
-    >
-      {rowNumber !== null && (
-        <Typography
-          variant="h6"
-          sx={{
-            minWidth: "24px",
-            textAlign: "center",
-            color: "text.secondary",
-            display: { xs: "none", sm: "block", alignSelf: "center" },
-          }}
-        >
-          {rowNumber}
-        </Typography>
-      )}
+    <Grid size={{ xs: 33, sm: 4 }} key={relic.id}>
       <Card
         variant="outlined"
         sx={{
-          flex: 1,
+          height: "100%",
           background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
           opacity: relicMatches ? 1 : 0.4,
           transition: "opacity 0.3s ease",

@@ -41,7 +41,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
         p: 2,
       }}
     >
-      <Grid container columns={8} spacing={2}>
+      <Grid container columns={33} spacing={2}>
         {relics
           .filter((relic) => {
             // Color filter
@@ -71,8 +71,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
           })
           .map((relic, index) => {
             const itemName = getItemName(relic.itemId);
-            const showRowNumber = index % 8 === 0;
-            const rowNumber = showRowNumber ? Math.floor(index / 8) + 1 : null;
+            const isFirstInRow = index % 8 === 0;
+            const rowNumber = Math.floor(index / 8) + 1;
             const validEffects = [
               relic.effect1Id,
               relic.effect2Id,
@@ -94,16 +94,37 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
             );
 
             return (
-              <RelicCard
-                key={relic.id}
-                relic={relic}
-                getItemName={getItemName}
-                getItemColor={getItemColor}
-                getEffectName={getEffectName}
-                searchTerm={searchTerm}
-                relicMatches={relicMatches}
-                rowNumber={rowNumber}
-              />
+              <React.Fragment key={relic.id}>
+                {isFirstInRow && (
+                  <Grid
+                    size={1}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: "text.secondary",
+                        fontWeight: "bold",
+                        display: { xs: "none", sm: "block" },
+                      }}
+                    >
+                      {rowNumber}
+                    </Typography>
+                  </Grid>
+                )}
+                <RelicCard
+                  relic={relic}
+                  getItemName={getItemName}
+                  getItemColor={getItemColor}
+                  getEffectName={getEffectName}
+                  searchTerm={searchTerm}
+                  relicMatches={relicMatches}
+                />
+              </React.Fragment>
             );
           })}
       </Grid>
