@@ -65,7 +65,14 @@ function App() {
             mb: 3,
           }}
         >
-          <Typography variant="h1" gutterBottom>
+          <Typography
+            variant="h1"
+            gutterBottom
+            sx={{
+              textAlign: "center",
+              display: { xs: "none", sm: "block" },
+            }}
+          >
             Elden Ring Nightreign Relic Browser
           </Typography>
 
