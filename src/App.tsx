@@ -10,6 +10,7 @@ import { FileUploader } from "./components/FileUploader";
 import { SlotSelector } from "./components/SlotSelector";
 import { RelicDisplay } from "./components/RelicDisplay";
 import { SearchInput } from "./components/SearchInput";
+import { Impressum } from "./components/Impressum";
 import { useSaveFile } from "./hooks/useSaveFile";
 import { theme } from "./theme";
 
@@ -114,6 +115,72 @@ function App() {
             )}
           </>
         )}
+
+        <Box
+          sx={{
+            mt: "auto",
+            py: 1,
+            px: 2,
+            textAlign: "center",
+            borderTop: "1px solid",
+            borderColor: "divider",
+            backgroundColor: "background.paper",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Typography
+            component="a"
+            href="https://discord.gg/XUMJrhqyhw"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+              color: "text.secondary",
+              fontSize: "0.75rem",
+              textDecoration: "none",
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            }}
+          >
+            Discord
+          </Typography>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              fontSize: "0.75rem",
+            }}
+          >
+            •
+          </Typography>
+          <Typography
+            component="a"
+            href="https://buymeacoffee.com/metincelikw"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+              color: "text.secondary",
+              fontSize: "0.75rem",
+              textDecoration: "none",
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            }}
+          >
+            Buy me a coffee
+          </Typography>
+          <Typography
+            sx={{
+              color: "text.secondary",
+              fontSize: "0.75rem",
+            }}
+          >
+            •
+          </Typography>
+          <Impressum />
+        </Box>
       </Box>
     </ThemeProvider>
   );
