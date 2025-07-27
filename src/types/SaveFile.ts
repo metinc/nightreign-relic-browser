@@ -18,10 +18,7 @@ export interface RelicSlot {
   data: string;
   rawData: Uint8Array;
   itemId: number;
-  effect1Id: number;
-  effect2Id: number;
-  effect3Id: number;
-  effect4Id: number;
+  effects: number[];
   sortKey?: number;
 }
 

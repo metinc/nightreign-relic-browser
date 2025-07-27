@@ -56,13 +56,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
             if (!filterEnabled) return true;
 
             const itemName = getItemName(relic.itemId);
-            const validEffects = [
-              relic.effect1Id,
-              relic.effect2Id,
-              relic.effect3Id,
-              relic.effect4Id,
-            ].filter((id) => id !== -1);
-            const effectNames = validEffects.map(
+            const effectNames = relic.effects.map(
               (effectId) =>
                 getEffectName(effectId) ?? `Unknown Effect ${effectId}`
             );
@@ -73,15 +67,9 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
             const itemName = getItemName(relic.itemId);
             const isFirstInRow = index % 8 === 0;
             const rowNumber = Math.floor(index / 8) + 1;
-            const validEffects = [
-              relic.effect1Id,
-              relic.effect2Id,
-              relic.effect3Id,
-              relic.effect4Id,
-            ].filter((id) => id !== -1);
 
             // Get effect names for search matching
-            const effectNames = validEffects.map(
+            const effectNames = relic.effects.map(
               (effectId) =>
                 getEffectName(effectId) ?? `Unknown Effect ${effectId}`
             );

@@ -46,13 +46,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
 }) => {
   const itemName = getItemName(relic.itemId);
   const itemColor = getItemColor(relic.itemId);
-  const validEffects = [
-    relic.effect1Id,
-    relic.effect2Id,
-    relic.effect3Id,
-    relic.effect4Id,
-  ].filter((id) => id !== -1);
-  const backgroundColor = getBackgroundColor(validEffects.length);
+  const backgroundColor = getBackgroundColor(relic.effects.length);
   const isSpecialRelic = !itemName.endsWith(" Scene");
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
 
@@ -103,7 +97,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           </Box>
 
           <List sx={{ listStyleType: "disc", pl: 2 }}>
-            {validEffects.map((effectId) => {
+            {relic.effects.map((effectId) => {
               const effectName =
                 getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
               const effectHighlight = highlightSearchTerm(
@@ -163,15 +157,8 @@ export const RelicCard = React.memo(
       return false;
     }
 
-    const validEffects = [
-      prevProps.relic.effect1Id,
-      prevProps.relic.effect2Id,
-      prevProps.relic.effect3Id,
-      prevProps.relic.effect4Id,
-    ].filter((id) => id !== -1);
-
     // Check if any effect highlighting changed
-    for (const effectId of validEffects) {
+    for (const effectId of prevProps.relic.effects) {
       const effectName =
         prevProps.getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
       const prevEffectHighlight = highlightSearchTerm(

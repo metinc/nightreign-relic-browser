@@ -303,10 +303,12 @@ export class RelicParser {
               const effect3Bytes = slotData.slice(24, 28);
               const effect4Bytes = slotData.slice(28, 32);
 
-              const effect1Id = this.readIntLE(effect1Bytes);
-              const effect2Id = this.readIntLE(effect2Bytes);
-              const effect3Id = this.readIntLE(effect3Bytes);
-              const effect4Id = this.readIntLE(effect4Bytes);
+              const effects = [
+                this.readIntLE(effect1Bytes),
+                this.readIntLE(effect2Bytes),
+                this.readIntLE(effect3Bytes),
+                this.readIntLE(effect4Bytes),
+              ].filter((id) => id !== -1);
 
               const slotInfo: RelicSlot = {
                 id,
@@ -316,10 +318,7 @@ export class RelicParser {
                   .join(""),
                 rawData: slotData,
                 itemId,
-                effect1Id,
-                effect2Id,
-                effect3Id,
-                effect4Id,
+                effects,
               };
               foundSlots.push(slotInfo);
             }
