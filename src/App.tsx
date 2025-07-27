@@ -82,12 +82,6 @@ function App() {
 
         {saveFileData && !loading && (
           <>
-            <SlotSelector
-              slots={saveFileData.slots}
-              currentSlot={saveFileData.currentSlot}
-              onSlotSelect={selectSlot}
-            />
-
             <SearchInput
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
@@ -95,6 +89,12 @@ function App() {
               onFilterChange={setFilterEnabled}
               selectedColor={selectedColor}
               onColorChange={setSelectedColor}
+            />
+
+            <SlotSelector
+              slots={saveFileData.slots}
+              currentSlot={saveFileData.currentSlot}
+              onSlotSelect={selectSlot}
             />
 
             {currentSlot && (
