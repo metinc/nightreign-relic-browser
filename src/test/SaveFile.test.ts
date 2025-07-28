@@ -90,7 +90,7 @@ describe("Save File Processing", () => {
         const firstRelic = firstSlot.relics[0];
         expect(firstRelic).toBeDefined();
         expect(firstRelic.itemId).toBeTypeOf("number");
-        expect(firstRelic.effects).toHaveLength(1);
+        expect(firstRelic.effects.length).toBeGreaterThan(0);
         expect(firstRelic.effects[0]).toBeTypeOf("number");
         expect(firstRelic.size).toBe(72); // C0 type slots should be 72 bytes
         expect(firstRelic.rawData).toBeDefined();

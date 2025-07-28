@@ -318,7 +318,8 @@ export class RelicParser {
     relics: RelicSlot[],
     currentEntry: Uint8Array
   ): void {
-    const relicsOrderBytes = "80 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00";
+    const relicsOrderBytes =
+      "90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00";
     const relicsOrderOffset = this.findHexOffset(
       currentEntry,
       relicsOrderBytes
@@ -326,8 +327,9 @@ export class RelicParser {
 
     console.log(`Relics order offset: ${relicsOrderOffset}`);
     if (relicsOrderOffset !== null) {
+      const adjustedOffset = relicsOrderOffset - 1;
       for (let i = 0; i < 1024; i++) {
-        const sectionOffset = relicsOrderOffset + 14 * i;
+        const sectionOffset = adjustedOffset + 14 * i;
         if (sectionOffset + 10 > currentEntry.length) break;
 
         const slotId = this.readIntLE(
