@@ -22,6 +22,9 @@ export function Introduction({ onLoadDemo, loading }: IntroductionProps) {
         Ring Nightreign save file (.sl2). Unlike the limited in-game filtering
         options, this browser allows you to search and filter your entire relic
         collection with powerful tools to find exactly what you're looking for.
+        The relics are sorted using the same "Order Found" sorting as in-game,
+        and you can use the line numbers on the left side of the table to easily
+        locate them in your inventory.
       </Typography>
 
       <Box sx={{ mb: 3, p: 2, bgcolor: "action.hover", borderRadius: 1 }}>
