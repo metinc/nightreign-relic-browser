@@ -270,11 +270,6 @@ export class RelicParser {
 
               const slotInfo: RelicSlot = {
                 id,
-                size: slotSize,
-                data: Array.from(slotData)
-                  .map((b) => b.toString(16).padStart(2, "0"))
-                  .join(""),
-                rawData: slotData,
                 itemId,
                 effects,
               };

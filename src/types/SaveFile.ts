@@ -14,9 +14,6 @@ export interface BND4Entry {
 
 export interface RelicSlot {
   id: number;
-  size: number;
-  data: string;
-  rawData: Uint8Array;
   itemId: number;
   effects: number[];
   sortKey?: number;
