@@ -184,7 +184,16 @@ function App() {
         )}
 
         {saveFileData && !loading && (
-          <Box component="section" aria-label="Relic management interface">
+          <Box
+            component="section"
+            aria-label="Relic management interface"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flexGrow: 1,
+              minHeight: 0,
+            }}
+          >
             <SearchInput
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
