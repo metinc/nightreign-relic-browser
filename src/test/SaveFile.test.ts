@@ -21,6 +21,7 @@ const testData: TestData = [
       { name: "qwertzuiopasdfgh", relics: 1 },
     ],
   },
+  { name: "player.sl2", slots: [{ name: "Player", relics: 651 }] },
 ];
 
 describe("Save File Processing", () => {
