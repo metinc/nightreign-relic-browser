@@ -5,6 +5,7 @@ import {
   Box,
   Alert,
   CircularProgress,
+  Button,
 } from "@mui/material";
 import { FileUploader } from "./components/FileUploader";
 import { SlotSelector } from "./components/SlotSelector";
@@ -20,6 +21,7 @@ function App() {
     loading,
     error,
     loadSaveFile,
+    loadDemoData,
     selectSlot,
     getItemName,
     getItemColor,
@@ -152,6 +154,32 @@ function App() {
               </Typography>{" "}
               to get in touch with the developer and other users.
             </Typography>
+
+            <Box sx={{ mt: 3 }}>
+              <Button
+                variant="outlined"
+                onClick={loadDemoData}
+                disabled={loading}
+                sx={{
+                  textTransform: "none",
+                  px: 3,
+                  py: 1,
+                }}
+              >
+                Try Demo Data
+              </Button>
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "block",
+                  mt: 1,
+                  color: "text.secondary",
+                  textAlign: "center",
+                }}
+              >
+                Load sample relics to explore the interface
+              </Typography>
+            </Box>
           </Box>
         )}
 

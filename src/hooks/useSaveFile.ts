@@ -43,6 +43,46 @@ export const useSaveFile = () => {
     }
   }, []);
 
+  // Load demo data
+  const loadDemoData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Load JSON data if not already loaded
+      if (Object.keys(itemsData).length === 0) {
+        await loadJsonData();
+      }
+
+      const demoResponse = await fetch("/demo.json");
+      if (!demoResponse.ok) {
+        throw new Error("Failed to load demo data");
+      }
+
+      const demoData = await demoResponse.json();
+
+      // Create a single character slot with the demo data
+      const demoSlot: CharacterSlot = {
+        name: demoData.name || "Demo Character",
+        relics: demoData.relics || [],
+      };
+
+      const saveData: SaveFileData = {
+        fileName: "demo.json",
+        filePath: "demo.json",
+        slots: [demoSlot],
+        currentSlot: 0,
+      };
+
+      setSaveFileData(saveData);
+    } catch (err) {
+      console.error("Error loading demo data:", err);
+      setError(err instanceof Error ? err.message : "Failed to load demo data");
+    } finally {
+      setLoading(false);
+    }
+  }, [itemsData, loadJsonData]);
+
   // Load and parse save file
   const loadSaveFile = useCallback(
     async (file: File) => {
@@ -157,6 +197,7 @@ export const useSaveFile = () => {
     loading,
     error,
     loadSaveFile,
+    loadDemoData,
     selectSlot,
     getItemName,
     getItemColor,
