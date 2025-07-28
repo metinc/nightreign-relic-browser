@@ -85,8 +85,13 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
                   ? {
                       color: "primary.main",
                       fontWeight: "bold",
+                      textShadow: "0 0 8px rgba(33, 150, 243, 0.8)",
+                      padding: "8px 8px",
+                      margin: "-8px -8px",
                     }
-                  : { color: "text.secondary" }),
+                  : {
+                      color: "text.secondary",
+                    }),
               }}
             >
               {itemNameHighlight.highlightedText}
