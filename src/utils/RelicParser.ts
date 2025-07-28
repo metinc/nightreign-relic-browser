@@ -40,27 +40,7 @@ export class RelicParser {
     size: number
   ): Uint8Array {
     const raw = namesEntry.slice(offset, offset + size);
-    try {
-      // Find the first null terminator (0x00 0x00 for UTF-16LE)
-      let endIndex = raw.length;
-      for (let i = 0; i < raw.length - 1; i += 2) {
-        if (raw[i] === 0x00 && raw[i + 1] === 0x00) {
-          endIndex = i;
-          break;
-        }
-      }
-
-      const trimmed = raw.slice(0, endIndex);
-
-      // Convert UTF-16LE to string and back to UTF-8 bytes
-      const decoder = new TextDecoder("utf-16le");
-      const decoded = decoder.decode(trimmed);
-      const encoder = new TextEncoder();
-      return encoder.encode(decoded);
-    } catch (error) {
-      console.error("Unicode decode error:", error);
-      return raw;
-    }
+    return raw;
   }
 
   /**
@@ -81,7 +61,6 @@ export class RelicParser {
         .join("")
         .toLowerCase();
 
-      console.log(`Trying hex pattern: ${hexString}`);
       const nameOffset = this.findHexOffset(currentEntry, hexString);
 
       if (nameOffset !== null) {
@@ -94,35 +73,10 @@ export class RelicParser {
       }
     }
 
-    // If no proper name found, try to decode the name bytes directly
+    // If no valid name pattern found, return null (like Python version)
+    // This prevents interpreting garbage data as a name when no save slot exists
     const nameBytes = this.locateName(namesEntry, offset, 32);
-    let directName: string | null = null;
-
-    try {
-      // Try ASCII decode first since the hex suggests ASCII encoding
-      if (nameBytes.length > 0) {
-        const decoder = new TextDecoder("ascii");
-        const asciiResult = decoder.decode(nameBytes).replace(/\0/g, "").trim();
-        console.log(`ASCII decode result: ${asciiResult}`);
-        if (
-          asciiResult &&
-          asciiResult.length > 0 &&
-          /^[a-zA-Z0-9\s]+$/.test(asciiResult)
-        ) {
-          directName = asciiResult;
-        } else {
-          // Try UTF-16LE decoding on the name bytes themselves
-          const decoder16 = new TextDecoder("utf-16le");
-          directName = decoder16.decode(nameBytes).replace(/\0/g, "").trim();
-          console.log(`UTF-16LE decode result: ${directName}`);
-        }
-      }
-    } catch (error) {
-      console.error("Error decoding name bytes:", error);
-      directName = null;
-    }
-
-    return { nameBytes, currentName: directName };
+    return { nameBytes, currentName: null };
   }
 
   /**
@@ -160,7 +114,7 @@ export class RelicParser {
         // Fall back to ASCII parsing
       }
 
-      // Fallback to ASCII parsing
+      // Fallback to ASCII parsing (like Python version)
       const nameChars: string[] = [];
       for (let i = 0; i < valueBytes.length; i += 2) {
         const charByte = valueBytes[i];
@@ -174,7 +128,11 @@ export class RelicParser {
       }
 
       const name = nameChars.join("");
-      return name || null;
+      // Return null if name is empty or only contains dots (like Python version)
+      if (!name || name.replace(/\./g, "").trim() === "") {
+        return null;
+      }
+      return name;
     } catch (error) {
       console.error("Error finding character name:", error);
       return null;
