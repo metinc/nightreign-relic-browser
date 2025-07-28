@@ -1,6 +1,19 @@
 {
   "10000": { "name": "FP Restoration on Successive Attacks" },
   "10001": { "name": "Taking attacks improves attack power" },
+  "10002": { "name": "Switching Weapons Boosts Attack Power" },
+  "11002": {
+    "name": "[Wylder] Art gauge greatly filled when ability is activated"
+  },
+  "12002": {
+    "name": "[Guardian] Slowly restores nearby allies' HP while Art is active"
+  },
+  "16002": {
+    "name": "[Revenant] Expend own HP to fully heal nearby allies when activating Art"
+  },
+  "17002": {
+    "name": "[Recluse] Suffer blood loss and increase attack power upon Art activation"
+  },
   "310000": { "name": "Increased Maximum HP" },
   "310100": { "name": "Increased Maximum FP" },
   "310200": { "name": "Increased Maximum Stamina" },
@@ -162,8 +175,10 @@
   "7003500": { "name": "Improved Frost Resistance" },
   "7003600": { "name": "Improved Madness Resistance" },
   "7005600": { "name": "Partial HP Restoration upon Post-Damage Attacks" },
+  "7006001": { "name": "Improved Stance-Breaking when Two-Handing" },
   "7006000": { "name": "Improved Stance-Breaking when Two-Handing" },
   "7006100": { "name": "Improved Stance-Breaking when Wielding Two Armaments" },
+  "7006101": { "name": "Improved Stance-Breaking when Wielding Two Armaments" },
   "7010000": { "name": "[Guardian] Improved Character Skill range" },
   "7010200": { "name": "Flask Also Heals Allies" },
   "7010500": { "name": "[Wylder] Art activation spreads fire in area" },
