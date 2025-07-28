@@ -96,100 +96,144 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   }
 
   return (
-    <Box
-      ref={parentRef}
-      sx={{
-        height: "100%",
-        overflowY: "auto",
-        p: 2,
-      }}
-    >
-      <div
-        style={{
-          height: `${virtualizer.getTotalSize()}px`,
-          width: "100%",
-          position: "relative",
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      {/* Fixed header with column numbers */}
+      <Box
+        sx={{
+          p: 2,
+          pb: 1,
+          backgroundColor: "#191919",
+          borderBottom: 1,
+          borderColor: "divider",
         }}
       >
-        {virtualizer.getVirtualItems().map((virtualItem) => {
-          const rowRelics = relicRows[virtualItem.index];
-          const rowNumber = virtualItem.index + 1;
+        <Grid container columns={33} spacing={2}>
+          {/* Empty space for row number column */}
+          <Grid size={1} />
 
-          return (
-            <div
-              key={virtualItem.key}
-              data-index={virtualItem.index}
-              ref={virtualizer.measureElement}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                transform: `translateY(${virtualItem.start}px)`,
+          {/* Column numbers */}
+          {Array.from({ length: 8 }, (_, i) => (
+            <Grid
+              key={i}
+              size={4}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Grid container columns={33} spacing={2}>
-                {/* Row number */}
-                <Grid
-                  size={1}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "text.secondary",
+                  fontWeight: "bold",
+                  display: { xs: "none", sm: "block" },
+                }}
+              >
+                {i + 1}
+              </Typography>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+      {/* Scrollable content */}
+      <Box
+        ref={parentRef}
+        sx={{
+          flex: 1,
+          overflowY: "auto",
+          px: 2,
+          pb: 2,
+        }}
+      >
+        <div
+          style={{
+            height: `${virtualizer.getTotalSize()}px`,
+            width: "100%",
+            position: "relative",
+          }}
+        >
+          {virtualizer.getVirtualItems().map((virtualItem) => {
+            const rowRelics = relicRows[virtualItem.index];
+            const rowNumber = virtualItem.index + 1;
+
+            return (
+              <div
+                key={virtualItem.key}
+                data-index={virtualItem.index}
+                ref={virtualizer.measureElement}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  transform: `translateY(${virtualItem.start}px)`,
+                }}
+              >
+                <Grid container columns={33} spacing={2}>
+                  {/* Row number */}
+                  <Grid
+                    size={1}
                     sx={{
-                      color: "text.secondary",
-                      fontWeight: "bold",
-                      display: { xs: "none", sm: "block" },
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    {rowNumber}
-                  </Typography>
-                </Grid>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: "text.secondary",
+                        fontWeight: "bold",
+                        display: { xs: "none", sm: "block" },
+                      }}
+                    >
+                      {rowNumber}
+                    </Typography>
+                  </Grid>
 
-                {/* Relics in this row */}
-                {rowRelics.map((relic) => {
-                  const itemName = getItemName(relic.itemId);
-                  const effectNames = relic.effects.map(
-                    (effectId) =>
-                      getEffectName(effectId) ?? `Unknown Effect ${effectId}`
-                  );
-
-                  // Check if this relic matches the search
-                  const relicMatches = doesRelicMatch(
-                    itemName,
-                    effectNames,
-                    searchTerm
-                  );
-
-                  // If there's a search term and this relic doesn't match, show placeholder
-                  if (searchTerm.trim() && !relicMatches) {
-                    return (
-                      <Grid key={relic.id} size={4} alignContent={"center"}>
-                        <Divider />
-                      </Grid>
+                  {/* Relics in this row */}
+                  {rowRelics.map((relic) => {
+                    const itemName = getItemName(relic.itemId);
+                    const effectNames = relic.effects.map(
+                      (effectId) =>
+                        getEffectName(effectId) ?? `Unknown Effect ${effectId}`
                     );
-                  }
 
-                  return (
-                    <RelicCard
-                      key={relic.id}
-                      relic={relic}
-                      getItemName={getItemName}
-                      getItemColor={getItemColor}
-                      getEffectName={getEffectName}
-                      searchTerm={searchTerm}
-                    />
-                  );
-                })}
-              </Grid>
-            </div>
-          );
-        })}
-      </div>
+                    // Check if this relic matches the search
+                    const relicMatches = doesRelicMatch(
+                      itemName,
+                      effectNames,
+                      searchTerm
+                    );
+
+                    // If there's a search term and this relic doesn't match, show placeholder
+                    if (searchTerm.trim() && !relicMatches) {
+                      return (
+                        <Grid key={relic.id} size={4} alignContent={"center"}>
+                          <Divider />
+                        </Grid>
+                      );
+                    }
+
+                    return (
+                      <RelicCard
+                        key={relic.id}
+                        relic={relic}
+                        getItemName={getItemName}
+                        getItemColor={getItemColor}
+                        getEffectName={getEffectName}
+                        searchTerm={searchTerm}
+                      />
+                    );
+                  })}
+                </Grid>
+              </div>
+            );
+          })}
+        </div>
+      </Box>
     </Box>
   );
 };
