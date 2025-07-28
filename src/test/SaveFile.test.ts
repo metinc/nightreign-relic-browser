@@ -11,7 +11,7 @@ describe("Save File Processing", () => {
 
   beforeAll(async () => {
     // Load the test save file directly from filesystem
-    const filePath = path.join(__dirname, "NR0000.sl2");
+    const filePath = path.join(__dirname, "metin.sl2");
     const fileBuffer = fs.readFileSync(filePath);
     saveFileBuffer = fileBuffer.buffer.slice(
       fileBuffer.byteOffset,
