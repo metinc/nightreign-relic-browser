@@ -1,4 +1,13 @@
-import { Box, Typography, Alert, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Alert,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface IntroductionProps {
   onLoadDemo: () => void;
@@ -11,7 +20,7 @@ export function Introduction({ onLoadDemo, loading }: IntroductionProps) {
       component="section"
       sx={{
         mx: "auto",
-        maxWidth: 756,
+        maxWidth: 1000,
         px: 3,
         py: 4,
         textAlign: "center",
@@ -39,6 +48,49 @@ export function Introduction({ onLoadDemo, loading }: IntroductionProps) {
           <li>Fast and responsive interface</li>
         </Typography>
       </Box>
+
+      <Accordion sx={{ mb: 3 }}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="video-instructions-content"
+          id="video-instructions-header"
+        >
+          <Typography variant="h6">📹 Watch Video Instructions</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
+              Learn how to use the relic browser with this step-by-step video
+              guide
+            </Typography>
+            <Box
+              component="video"
+              controls
+              preload="metadata"
+              sx={{
+                width: "100%",
+                height: "auto",
+                borderRadius: 1,
+                bgcolor: "black",
+              }}
+            >
+              <source src="/instructions.webm" type="video/webm" />
+              <source src="/instructions.mp4" type="video/mp4" />
+              Your browser does not support the video tag. You can{" "}
+              <Typography
+                component="a"
+                href="/instructions.webm"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ color: "primary.main" }}
+              >
+                download the video
+              </Typography>{" "}
+              instead.
+            </Box>
+          </Box>
+        </AccordionDetails>
+      </Accordion>
 
       <Alert severity="info" sx={{ mb: 3, textAlign: "left" }}>
         <Typography variant="body2">
