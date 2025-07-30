@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { Impressum } from "./Impressum";
+import packageJson from "../../package.json";
 
 export function Footer() {
   return (
@@ -14,60 +15,79 @@ export function Footer() {
         borderColor: "divider",
         backgroundColor: "background.paper",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
-        gap: 2,
       }}
     >
+      <Box sx={{ flex: 1 }} />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <Typography
+          component="a"
+          href="https://discord.gg/XUMJrhqyhw"
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            color: "text.secondary",
+            fontSize: "0.75rem",
+            textDecoration: "none",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
+        >
+          Discord
+        </Typography>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            fontSize: "0.75rem",
+          }}
+        >
+          •
+        </Typography>
+        <Typography
+          component="a"
+          href="https://buymeacoffee.com/metincelikw"
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            color: "text.secondary",
+            fontSize: "0.75rem",
+            textDecoration: "none",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
+        >
+          Buy me a coffee
+        </Typography>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            fontSize: "0.75rem",
+          }}
+        >
+          •
+        </Typography>
+        <Impressum />
+      </Box>
       <Typography
-        component="a"
-        href="https://discord.gg/XUMJrhqyhw"
-        target="_blank"
-        rel="noopener noreferrer"
         sx={{
           color: "text.secondary",
           fontSize: "0.75rem",
-          textDecoration: "none",
-          "&:hover": {
-            textDecoration: "underline",
-          },
+          flex: 1,
+          textAlign: "right",
         }}
       >
-        Discord
+        v{packageJson.version}
       </Typography>
-      <Typography
-        sx={{
-          color: "text.secondary",
-          fontSize: "0.75rem",
-        }}
-      >
-        •
-      </Typography>
-      <Typography
-        component="a"
-        href="https://buymeacoffee.com/metincelikw"
-        target="_blank"
-        rel="noopener noreferrer"
-        sx={{
-          color: "text.secondary",
-          fontSize: "0.75rem",
-          textDecoration: "none",
-          "&:hover": {
-            textDecoration: "underline",
-          },
-        }}
-      >
-        Buy me a coffee
-      </Typography>
-      <Typography
-        sx={{
-          color: "text.secondary",
-          fontSize: "0.75rem",
-        }}
-      >
-        •
-      </Typography>
-      <Impressum />
     </Box>
   );
 }
