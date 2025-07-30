@@ -2,6 +2,7 @@
   "10000": { "name": "FP Restoration on Successive Attacks" },
   "10001": { "name": "Taking attacks improves attack power" },
   "10002": { "name": "Switching Weapons Boosts Attack Power" },
+  "11000": { "name": "[Wylder] +1 additional Character Skill use" },
   "11002": {
     "name": "[Wylder] Art gauge greatly filled when ability is activated"
   },
@@ -314,6 +315,7 @@
   "7035700": { "name": "Switching Weapons Adds an Affinity Attack" },
   "7035800": { "name": "Boosts Attack Power of Added Affinity Attacks" },
   "7035900": { "name": "Switching Weapons Boosts Attack Power" },
+  "7036000": { "name": "FP Restoration upon Successive Attacks" },
   "7036100": { "name": "HP Recovery from Successful Guarding" },
   "7040000": { "name": "Improved Initial Standard Attack" },
   "7040100": { "name": "Improved Guard Counters" },
