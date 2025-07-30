@@ -17,6 +17,7 @@ export interface RelicSlot {
   itemId: number;
   effects: number[];
   sortKey?: number;
+  idBytes?: Uint8Array;
 }
 
 export interface ItemData {

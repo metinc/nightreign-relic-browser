@@ -22,6 +22,7 @@ const testData: TestData = [
     ],
   },
   { name: "player.sl2", slots: [{ name: "Player", relics: 651 }] },
+  { name: "teru.sl2", slots: [{ name: "Teru", relics: 254 }] },
 ];
 
 describe("Save File Processing", () => {
@@ -45,8 +46,7 @@ describe("Save File Processing", () => {
 
       it("should successfully decrypt the save file", () => {
         expect(bnd4Entries).toBeDefined();
-        expect(bnd4Entries.length).toBeGreaterThan(0);
-        expect(bnd4Entries.length).toBe(14); // Expected 14 BND4 entries
+        expect(bnd4Entries.length).toBe(14);
       });
 
       testEntry.slots.forEach((slotData, slotIndex) => {
@@ -58,7 +58,7 @@ describe("Save File Processing", () => {
           expect(slot).toBeDefined();
           expect(slot.name).toBe(slotData.name);
           expect(slot.relics).toBeDefined();
-          expect(slot.relics.length).toBeGreaterThan(0); // Should have some relics
+          expect(slot.relics.length).toBe(slotData.relics);
         });
 
         it(`should find exactly ${slotData.relics} relics for ${slotData.name}`, () => {
@@ -76,7 +76,7 @@ describe("Save File Processing", () => {
         for (const entry of bnd4Entries) {
           expect(entry.decrypted).toBe(true);
           expect(entry.cleanData).toBeDefined();
-          expect(entry.cleanData.length).toBeGreaterThan(0);
+          expect(entry.cleanData.length).toBeGreaterThan(14);
         }
       });
 
@@ -109,16 +109,22 @@ describe("Save File Processing", () => {
       it("should assign sort keys to relics", () => {
         const firstSlot = RelicParser.parseCharacterSlot(1, bnd4Entries);
 
-        // At least some relics should have sort keys
-        const relicsWithSortKeys = firstSlot.relics.filter(
-          (relic) => relic.sortKey !== undefined
-        );
-        expect(relicsWithSortKeys.length).toBeGreaterThan(0);
+        // Every relic should have a sort key assigned
+        expect(
+          firstSlot.relics.every((relic) => relic.sortKey !== undefined)
+        ).toBe(true);
 
         // Check that the relics are sorted by their sort keys
-        for (let i = 1; i < relicsWithSortKeys.length; i++) {
-          const prevSortKey = relicsWithSortKeys[i - 1].sortKey || 0;
-          const currentSortKey = relicsWithSortKeys[i].sortKey || 0;
+        for (let i = 1; i < firstSlot.relics.length; i++) {
+          const prevSortKey = firstSlot.relics[i - 1].sortKey!;
+          const currentSortKey = firstSlot.relics[i].sortKey!;
+          expect(currentSortKey).toBeLessThanOrEqual(prevSortKey);
+        }
+
+        // Check that the relics are sorted by their sort keys
+        for (let i = 1; i < firstSlot.relics.length; i++) {
+          const prevSortKey = firstSlot.relics[i - 1].sortKey || 0;
+          const currentSortKey = firstSlot.relics[i].sortKey || 0;
           expect(currentSortKey).toBeLessThanOrEqual(prevSortKey);
         }
       });

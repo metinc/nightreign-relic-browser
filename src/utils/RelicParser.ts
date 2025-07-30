@@ -156,7 +156,8 @@ export class RelicParser {
   private static parseRelics(
     currentEntry: Uint8Array,
     patternOffsetStart: number,
-    patternOffsetEnd: number
+    patternOffsetEnd: number,
+    sortKeyLookupEnd?: number
   ): RelicSlot[] {
     const foundSlots: RelicSlot[] = [];
     const currentEntryOffset = currentEntry.slice(
@@ -249,7 +250,8 @@ export class RelicParser {
           if (slotSize && i + slotSize <= currentEntryOffset.length) {
             if (b4 === 0xc0) {
               const slotData = currentEntryOffset.slice(i, i + slotSize);
-              const id = this.readIntLE(slotData.slice(0, 4));
+              const idBytes = slotData.slice(0, 4);
+              const id = this.readIntLE(idBytes);
 
               // Extract item ID (bytes 4-6)
               const itemIdBytes = slotData.slice(4, 7);
@@ -272,6 +274,7 @@ export class RelicParser {
                 id,
                 itemId,
                 effects,
+                idBytes,
               };
               foundSlots.push(slotInfo);
             }
@@ -300,49 +303,38 @@ export class RelicParser {
       i += 1;
     }
 
+    // Use the sortKeyLookupEnd if provided, otherwise fall back to patternOffsetEnd
+    const sortKeyEnd = sortKeyLookupEnd ?? patternOffsetEnd;
+    const currentEntryOffsetEnd = currentEntry.slice(sortKeyEnd);
+    const validSlots: RelicSlot[] = [];
+
+    for (const slot of foundSlots) {
+      if (!slot.idBytes) continue;
+
+      const hexPattern = Array.from(slot.idBytes)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      const sortKeyOffset = this.findHexOffset(
+        currentEntryOffsetEnd,
+        hexPattern
+      );
+      if (sortKeyOffset !== null) {
+        const sortKeyBytes = currentEntryOffsetEnd.slice(
+          sortKeyOffset + 8,
+          sortKeyOffset + 10
+        );
+        slot.sortKey = this.readIntLE(sortKeyBytes);
+        validSlots.push(slot);
+      }
+    }
+
+    foundSlots.length = 0;
+    foundSlots.push(...validSlots);
+
     console.log(`Found ${emptySlotCount} empty slots`);
     console.log(`Found ${foundSlots.length} slots with b4=0xC0`);
 
     return foundSlots;
-  }
-
-  /**
-   * Assigns sort keys to relics based on their order data
-   */
-  private static assignSortKeys(
-    relics: RelicSlot[],
-    currentEntry: Uint8Array
-  ): void {
-    const relicsOrderBytes =
-      "90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00";
-    const relicsOrderOffset = this.findHexOffset(
-      currentEntry,
-      relicsOrderBytes
-    );
-
-    console.log(`Relics order offset: ${relicsOrderOffset}`);
-    if (relicsOrderOffset !== null) {
-      const adjustedOffset = relicsOrderOffset - 1;
-      for (let i = 0; i < 1024; i++) {
-        const sectionOffset = adjustedOffset + 14 * i;
-        if (sectionOffset + 10 > currentEntry.length) break;
-
-        const slotId = this.readIntLE(
-          currentEntry.slice(sectionOffset, sectionOffset + 4)
-        );
-
-        for (const relic of relics) {
-          if (relic.id === slotId) {
-            const sortKey = currentEntry.slice(
-              sectionOffset + 8,
-              sectionOffset + 10
-            );
-            relic.sortKey = this.readIntLE(sortKey);
-            break;
-          }
-        }
-      }
-    }
   }
 
   /**
@@ -396,18 +388,46 @@ export class RelicParser {
       console.warn(
         "Character name not found in data, results may be unreliable"
       );
+      return {
+        name: currentName,
+        relics: [],
+      };
     }
 
-    // Parse relics from the data - scan the entire entry
-    // The relics data is stored throughout the current entry, not just in a small section
+    // Find the end pattern like in Python code
+    const hexPatternEnd = "ffffffff"; // "FF FF FF FF" pattern
+    const searchStartPosition = fixedPatternOffset + 1000;
+
+    if (searchStartPosition >= currentEntry.length) {
+      console.log("Search start position beyond section data.");
+      return {
+        name: currentName,
+        relics: [],
+      };
+    }
+
+    let fixedPatternOffsetEnd = this.findHexOffset(
+      currentEntry.slice(searchStartPosition),
+      hexPatternEnd
+    );
+
+    if (fixedPatternOffsetEnd !== null) {
+      fixedPatternOffsetEnd += searchStartPosition;
+    } else {
+      console.log("End pattern not found");
+      return {
+        name: currentName,
+        relics: [],
+      };
+    }
+
+    // Parse relics using the same parameters as Python version
     const relics = this.parseRelics(
       currentEntry,
       32,
-      currentEntry.length - 32 // Scan almost the entire entry
+      fixedPatternOffset - 100,
+      fixedPatternOffsetEnd
     );
-
-    // Assign sort keys to relics
-    this.assignSortKeys(relics, currentEntry);
 
     // Filter to only include relics that have sort keys (these are the actual equipped/owned relics)
     const validRelics = relics.filter((relic) => relic.sortKey !== undefined);
