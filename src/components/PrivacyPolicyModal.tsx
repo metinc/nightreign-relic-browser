@@ -61,7 +61,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Typography variant="h6" component="h3" gutterBottom>
             1. Verantwortlicher
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             Verantwortlich für diese Website ist:
             <br />
             Metin Celik
@@ -73,7 +73,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Typography variant="h6" component="h3" gutterBottom>
             2. Google Consent Mode V2
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             Diese Website verwendet Google Analytics 4 mit dem Google Consent
             Mode V2. Dies bedeutet, dass auch bei abgelehnten Cookies
             anonymisierte Statistiken erhoben werden können, um die Website zu
@@ -83,13 +83,13 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Typography variant="h6" component="h3" gutterBottom>
             3. Google Analytics
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             Diese Website nutzt Google Analytics, einen Webanalysedienst der
             Google LLC ("Google"). Google Analytics verwendet verschiedene
             Technologien, um die Nutzung der Website zu analysieren.
           </Typography>
 
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             <strong>Bei abgelehnten Cookies:</strong>
             <br />
             • Anonyme Seitenaufrufe werden weiterhin gezählt (ohne Cookies)
@@ -98,7 +98,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             <br />• Grundlegende Statistiken für Website-Verbesserungen
           </Typography>
 
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             <strong>Bei akzeptierten Analytics-Cookies:</strong>
             <br />
             • Detaillierte Nutzungsanalysen mit Cookies
@@ -107,7 +107,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             <br />• Alle Daten werden anonymisiert verarbeitet
           </Typography>
 
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             <strong>IP-Anonymisierung:</strong> Wir haben die IP-Anonymisierung
             auf dieser Website aktiviert. Dadurch wird Ihre IP-Adresse von
             Google innerhalb von Mitgliedstaaten der Europäischen Union oder in
@@ -118,17 +118,17 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Typography variant="h6" component="h3" gutterBottom>
             4. Cookie-Kategorien
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             <strong>Notwendige Cookies:</strong> Diese sind für das
             Funktionieren der Website erforderlich und können nicht deaktiviert
             werden.
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             <strong>Analyse-Cookies:</strong> Helfen uns zu verstehen, wie
             Besucher mit der Website interagieren. Diese können Sie über unseren
             Cookie-Banner steuern.
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             <strong>Marketing-Cookies:</strong> Aktuell nicht verwendet, aber
             für zukünftige Werbemaßnahmen vorgesehen.
           </Typography>
@@ -136,7 +136,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Typography variant="h6" component="h3" gutterBottom>
             5. Cookie-Einstellungen verwalten
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             Sie können Ihre Cookie-Einstellungen jederzeit ändern:
             <br />
             • Über die Browsereinstellungen
@@ -148,7 +148,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Typography variant="h6" component="h3" gutterBottom>
             6. Ihre Rechte nach DSGVO
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             Sie haben das Recht:
           </Typography>
           <Box component="ul" sx={{ pl: 3, mt: 1 }}>
@@ -176,7 +176,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Typography variant="h6" component="h3" gutterBottom>
             7. Datenspeicherung
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             Ihre Cookie-Einstellungen werden lokal in Ihrem Browser gespeichert.
             Analytics-Daten werden entsprechend den Google Analytics
             Aufbewahrungsrichtlinien verarbeitet (standardmäßig 26 Monate).
@@ -185,7 +185,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <Typography variant="h6" component="h3" gutterBottom>
             8. Kontakt
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" component={"p"}>
             Bei Fragen zum Datenschutz können Sie sich über das Impressum an uns
             wenden. Für Beschwerden können Sie sich auch an die zuständige
             Datenschutzbehörde wenden.
