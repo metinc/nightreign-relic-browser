@@ -39,7 +39,6 @@ function App() {
   };
 
   const handleClearSaveFile = () => {
-    clearSaveFile();
     navigate("/");
   };
 
@@ -114,6 +113,7 @@ function App() {
                   handleMatchingRelicsCountChange={
                     handleMatchingRelicsCountChange
                   }
+                  clearSaveFile={clearSaveFile}
                 />
               }
             />
@@ -137,6 +137,7 @@ function App() {
                   handleMatchingRelicsCountChange={
                     handleMatchingRelicsCountChange
                   }
+                  clearSaveFile={clearSaveFile}
                 />
               }
             />

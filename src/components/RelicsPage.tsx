@@ -1,4 +1,5 @@
 import { Box, Alert, CircularProgress } from "@mui/material";
+import { useEffect } from "react";
 import { SlotSelector } from "./SlotSelector";
 import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
@@ -18,6 +19,7 @@ interface RelicsPageProps {
   setSelectedColor: (color: string) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
+  clearSaveFile: () => void;
 }
 
 export function RelicsPage({
@@ -34,8 +36,16 @@ export function RelicsPage({
   setSelectedColor,
   matchingRelicsCount,
   handleMatchingRelicsCountChange,
+  clearSaveFile,
 }: RelicsPageProps) {
   const currentSlot = saveFileData?.slots[saveFileData.currentSlot];
+
+  // Clear save file when component unmounts (leaving /relics route)
+  useEffect(() => {
+    return () => {
+      clearSaveFile();
+    };
+  }, [clearSaveFile]);
 
   if (error) {
     return (

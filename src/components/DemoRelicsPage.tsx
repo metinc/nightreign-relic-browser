@@ -17,6 +17,7 @@ interface DemoRelicsPageProps {
   setSelectedColor: (color: string) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
+  clearSaveFile: () => void;
 }
 
 export function DemoRelicsPage({
