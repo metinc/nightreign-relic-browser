@@ -11,6 +11,8 @@ interface RelicCardProps {
   getEffectName: (effectId: number) => string;
   searchTerm: string;
   relicMatches: boolean;
+  rowIndex: number | null;
+  colIndex: number | null;
 }
 
 const getBackgroundColor = (effectsCount: number) => {
@@ -35,6 +37,8 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   getEffectName,
   searchTerm,
   relicMatches,
+  rowIndex,
+  colIndex,
 }) => {
   const [itemId, ...effects] = relic;
   const itemName = getItemName(itemId);
@@ -51,6 +55,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
         transition: "0.3s ease",
         overflow: "hidden",
+        position: "relative",
       }}
     >
       <CardContent
@@ -116,6 +121,23 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
             );
           })}
         </List>
+
+        {/* Row and Column indices in lower right corner */}
+        {(rowIndex !== undefined || colIndex !== undefined) && (
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 4,
+              right: 8,
+              fontSize: "0.7rem",
+              color: "text.disabled",
+            }}
+          >
+            {rowIndex !== null &&
+              colIndex !== null &&
+              `Row ${rowIndex + 1}, Column ${colIndex + 1}`}
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
@@ -129,7 +151,9 @@ export const RelicCard = React.memo(
       prevProps.relic !== nextProps.relic ||
       prevProps.getItemName !== nextProps.getItemName ||
       prevProps.getItemColor !== nextProps.getItemColor ||
-      prevProps.getEffectName !== nextProps.getEffectName
+      prevProps.getEffectName !== nextProps.getEffectName ||
+      prevProps.rowIndex !== nextProps.rowIndex ||
+      prevProps.colIndex !== nextProps.colIndex
     ) {
       return false;
     }

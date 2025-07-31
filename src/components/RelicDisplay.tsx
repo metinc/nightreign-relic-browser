@@ -224,6 +224,11 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       searchTerm
                     );
 
+                    const rowIndex = !bigScreen
+                      ? Math.floor(index / RELICS_PER_ROW)
+                      : null;
+                    const colIndex = !bigScreen ? index % RELICS_PER_ROW : null;
+
                     return (
                       <Grid
                         size={{ xs: COLUMNS, md: COLUMNS_PER_RELIC }}
@@ -237,6 +242,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                           getEffectName={getEffectName}
                           searchTerm={searchTerm}
                           relicMatches={!searchTerm.trim() || relicMatches}
+                          rowIndex={rowIndex}
+                          colIndex={colIndex}
                         />
                       </Grid>
                     );
