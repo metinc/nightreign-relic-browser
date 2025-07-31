@@ -8,12 +8,12 @@ import {
   List,
   Grid,
 } from "@mui/material";
-import type { RelicSlot } from "../types/SaveFile";
+import type { CompactRelicSlot } from "../types/SaveFile";
 import { highlightSearchTerm } from "../utils/SearchUtils";
 import { getChipColor } from "../utils/RelicColor";
 
 interface RelicCardProps {
-  relic: RelicSlot;
+  relic: CompactRelicSlot;
   getItemName: (itemId: number) => string;
   getItemColor: (itemId: number) => string | null;
   getEffectName: (effectId: number) => string;
@@ -42,14 +42,15 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   getEffectName,
   searchTerm,
 }) => {
-  const itemName = getItemName(relic.itemId);
-  const itemColor = getItemColor(relic.itemId);
-  const backgroundColor = getBackgroundColor(relic.effects.length);
+  const [itemId, ...effects] = relic;
+  const itemName = getItemName(itemId);
+  const itemColor = getItemColor(itemId);
+  const backgroundColor = getBackgroundColor(effects.length);
   const isSpecialRelic = !itemName.endsWith(" Scene");
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
 
   return (
-    <Grid size={{ xs: 33, sm: 4 }} key={relic.id} py={1}>
+    <Grid size={{ xs: 33, sm: 4 }} py={1}>
       <Card
         variant="outlined"
         sx={{
@@ -106,7 +107,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           </Box>
 
           <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
-            {relic.effects.map((effectId) => {
+            {effects.map((effectId) => {
               const effectName =
                 getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
               const effectHighlight = highlightSearchTerm(
@@ -148,7 +149,8 @@ export const RelicCard = React.memo(
     }
 
     // Check if highlighting results actually changed
-    const itemName = prevProps.getItemName(prevProps.relic.itemId);
+    const [itemId, ...effects] = prevProps.relic;
+    const itemName = prevProps.getItemName(itemId);
     const prevItemHighlight = highlightSearchTerm(
       itemName,
       prevProps.searchTerm
@@ -166,7 +168,7 @@ export const RelicCard = React.memo(
     }
 
     // Check if any effect highlighting changed
-    for (const effectId of prevProps.relic.effects) {
+    for (const effectId of effects) {
       const effectName =
         prevProps.getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
       const prevEffectHighlight = highlightSearchTerm(

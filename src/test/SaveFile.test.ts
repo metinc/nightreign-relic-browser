@@ -88,12 +88,11 @@ describe("Save File Processing", () => {
 
         // Check the structure of the first relic
         const firstRelic = firstSlot.relics[0];
+        const [itemId, ...effects] = firstRelic;
         expect(firstRelic).toBeDefined();
-        expect(firstRelic.itemId).toBeTypeOf("number");
-        expect(firstRelic.effects.length).toBeGreaterThan(0);
-        expect(firstRelic.effects[0]).toBeTypeOf("number");
-        expect(firstRelic.id).toBeDefined();
-        expect(firstRelic.id).toBeTypeOf("number");
+        expect(itemId).toBeTypeOf("number");
+        expect(firstRelic.length).toBeGreaterThan(1); // Should have at least itemId and one effect
+        expect(effects).toBeTypeOf("number");
       });
 
       it("should handle UTF-16LE character names correctly", () => {
@@ -104,29 +103,6 @@ describe("Save File Processing", () => {
           );
           expect(slot.name).toBe(slotData.name);
         });
-      });
-
-      it("should assign sort keys to relics", () => {
-        const firstSlot = RelicParser.parseCharacterSlot(1, bnd4Entries);
-
-        // Every relic should have a sort key assigned
-        expect(
-          firstSlot.relics.every((relic) => relic.sortKey !== undefined)
-        ).toBe(true);
-
-        // Check that the relics are sorted by their sort keys
-        for (let i = 1; i < firstSlot.relics.length; i++) {
-          const prevSortKey = firstSlot.relics[i - 1].sortKey!;
-          const currentSortKey = firstSlot.relics[i].sortKey!;
-          expect(currentSortKey).toBeLessThanOrEqual(prevSortKey);
-        }
-
-        // Check that the relics are sorted by their sort keys
-        for (let i = 1; i < firstSlot.relics.length; i++) {
-          const prevSortKey = firstSlot.relics[i - 1].sortKey || 0;
-          const currentSortKey = firstSlot.relics[i].sortKey || 0;
-          expect(currentSortKey).toBeLessThanOrEqual(prevSortKey);
-        }
       });
 
       it("should parse all 10 character slots without errors", () => {

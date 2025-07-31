@@ -1,4 +1,4 @@
-import type { BND4Entry, RelicSlot } from "../types/SaveFile";
+import type { BND4Entry, RelicSlot, CompactRelicSlot } from "../types/SaveFile";
 
 export class RelicParser {
   /**
@@ -158,7 +158,7 @@ export class RelicParser {
     patternOffsetStart: number,
     patternOffsetEnd: number,
     sortKeyLookupEnd?: number
-  ): RelicSlot[] {
+  ): CompactRelicSlot[] {
     const foundSlots: RelicSlot[] = [];
     const currentEntryOffset = currentEntry.slice(
       patternOffsetStart,
@@ -231,7 +231,7 @@ export class RelicParser {
 
     if (startOffset === null) {
       console.error("[ERROR] No valid slot alignment found.");
-      return foundSlots;
+      return [];
     }
 
     // Process all slots from alignment with variable slot sizes
@@ -334,7 +334,19 @@ export class RelicParser {
     console.log(`Found ${emptySlotCount} empty slots`);
     console.log(`Found ${foundSlots.length} slots with b4=0xC0`);
 
-    return foundSlots;
+    // Filter to only include relics that have sort keys (these are the actual equipped/owned relics)
+    const finalValidSlots = foundSlots.filter(
+      (relic) => relic.sortKey !== undefined
+    );
+
+    // Sort relics by sort key
+    finalValidSlots.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
+
+    // Convert RelicSlot[] to CompactRelicSlot[]
+    return finalValidSlots.map(
+      (relic): CompactRelicSlot =>
+        [relic.itemId, ...relic.effects.slice(0, 3)] as CompactRelicSlot
+    );
   }
 
   /**
@@ -343,7 +355,7 @@ export class RelicParser {
   public static parseCharacterSlot(
     sectionNumber: number,
     bnd4Entries: BND4Entry[]
-  ): { name: string | null; relics: RelicSlot[] } {
+  ): { name: string | null; relics: CompactRelicSlot[] } {
     if (sectionNumber < 1 || sectionNumber > 10) {
       throw new Error(`Invalid section number: ${sectionNumber}`);
     }
@@ -429,15 +441,9 @@ export class RelicParser {
       fixedPatternOffsetEnd
     );
 
-    // Filter to only include relics that have sort keys (these are the actual equipped/owned relics)
-    const validRelics = relics.filter((relic) => relic.sortKey !== undefined);
-
-    // Sort relics by sort key
-    validRelics.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
-
     return {
       name: currentName,
-      relics: validRelics,
+      relics,
     };
   }
 }

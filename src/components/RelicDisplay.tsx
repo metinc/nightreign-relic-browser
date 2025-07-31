@@ -1,12 +1,12 @@
 import React, { useMemo, useRef, useEffect } from "react";
 import { Box, Typography, Paper, Grid, Divider } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import type { RelicSlot } from "../types/SaveFile";
+import type { CompactRelicSlot } from "../types/SaveFile";
 import { doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
 
 interface RelicDisplayProps {
-  relics: RelicSlot[];
+  relics: CompactRelicSlot[];
   getItemName: (itemId: number) => string;
   getItemColor: (itemId: number) => string | null;
   getEffectName: (effectId: number) => string;
@@ -28,10 +28,10 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
   // Filter relics based on search and color criteria
   const filteredRelics = useMemo(() => {
-    return relics.filter((relic) => {
+    return relics.filter(([itemId]) => {
       // Color filter
       if (selectedColor !== "Any") {
-        const itemColor = getItemColor(relic.itemId);
+        const itemColor = getItemColor(itemId);
         if (itemColor !== selectedColor) {
           return false;
         }
@@ -48,9 +48,9 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       return relics.length; // If no search filter, all relics match
     }
 
-    return relics.filter((relic) => {
-      const itemName = getItemName(relic.itemId);
-      const effectNames = relic.effects.map(
+    return relics.filter(([itemId, ...effects]) => {
+      const itemName = getItemName(itemId);
+      const effectNames = effects.map(
         (effectId) => getEffectName(effectId) ?? `Unknown Effect ${effectId}`
       );
 
@@ -67,7 +67,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
   // Group relics into rows of 8
   const relicRows = useMemo(() => {
-    const rows: RelicSlot[][] = [];
+    const rows: CompactRelicSlot[][] = [];
     for (let i = 0; i < filteredRelics.length; i += 8) {
       rows.push(filteredRelics.slice(i, i + 8));
     }
@@ -194,9 +194,10 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   </Grid>
 
                   {/* Relics in this row */}
-                  {rowRelics.map((relic) => {
-                    const itemName = getItemName(relic.itemId);
-                    const effectNames = relic.effects.map(
+                  {rowRelics.map((relic, index) => {
+                    const [itemId, ...effects] = relic;
+                    const itemName = getItemName(itemId);
+                    const effectNames = effects.map(
                       (effectId) =>
                         getEffectName(effectId) ?? `Unknown Effect ${effectId}`
                     );
@@ -211,7 +212,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                     // If there's a search term and this relic doesn't match, show placeholder
                     if (searchTerm.trim() && !relicMatches) {
                       return (
-                        <Grid key={relic.id} size={4} alignContent={"center"}>
+                        <Grid key={index} size={4} alignContent={"center"}>
                           <Divider />
                         </Grid>
                       );
@@ -219,7 +220,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
                     return (
                       <RelicCard
-                        key={relic.id}
+                        key={index}
                         relic={relic}
                         getItemName={getItemName}
                         getItemColor={getItemColor}
