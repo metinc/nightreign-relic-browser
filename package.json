@@ -27,7 +27,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "type-check": "tsc --project tsconfig.app.json --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
