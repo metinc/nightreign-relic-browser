@@ -10,7 +10,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { CloudUpload, Close, FileUpload } from "@mui/icons-material";
+import { CloudUpload, Close, FileUpload, Clear } from "@mui/icons-material";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -57,7 +57,9 @@ const modalStyle = {
 
 interface FileUploaderProps {
   onFileSelect: (file: File) => void;
+  onClear?: () => void;
   loading?: boolean;
+  hasFile?: boolean;
 }
 
 const SAVE_PATH_LINUX = [
@@ -80,7 +82,9 @@ const SAVE_PATH_WINDOWS = ["%APPDATA%", "Nightreign"] as const;
 
 export const FileUploader: React.FC<FileUploaderProps> = ({
   onFileSelect,
+  onClear,
   loading = false,
+  hasFile = false,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -173,14 +177,25 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
 
   return (
     <>
-      <Button
-        variant="contained"
-        startIcon={<CloudUpload />}
-        disabled={loading}
-        onClick={() => setIsModalOpen(true)}
-      >
-        {loading ? "Loading..." : "Open Save File"}
-      </Button>
+      {hasFile ? (
+        <Button
+          variant="outlined"
+          startIcon={<Clear />}
+          disabled={loading}
+          onClick={onClear}
+        >
+          Clear
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          startIcon={<CloudUpload />}
+          disabled={loading}
+          onClick={() => setIsModalOpen(true)}
+        >
+          {loading ? "Loading..." : "Open Save File"}
+        </Button>
+      )}
 
       <Modal
         open={isModalOpen}

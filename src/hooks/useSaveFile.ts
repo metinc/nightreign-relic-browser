@@ -190,6 +190,15 @@ export const useSaveFile = () => {
     setMatchingRelicsCount(count);
   }, []);
 
+  // Clear save file data
+  const clearSaveFile = useCallback(() => {
+    setSaveFileData(null);
+    setSearchTermState("");
+    setSelectedColorState("Any");
+    setMatchingRelicsCount(0);
+    setError(null);
+  }, []);
+
   return {
     saveFileData,
     loading,
@@ -206,5 +215,6 @@ export const useSaveFile = () => {
     setSelectedColor,
     matchingRelicsCount,
     handleMatchingRelicsCountChange,
+    clearSaveFile,
   };
 };

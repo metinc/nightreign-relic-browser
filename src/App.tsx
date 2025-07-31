@@ -26,6 +26,7 @@ function App() {
     setSelectedColor,
     matchingRelicsCount,
     handleMatchingRelicsCountChange,
+    clearSaveFile,
   } = useSaveFile();
 
   const handleLoadSaveFile = (file: File) => {
@@ -36,6 +37,11 @@ function App() {
   const handleLoadDemo = () => {
     loadDemoData();
     navigate("/relics/demo");
+  };
+
+  const handleClearSaveFile = () => {
+    clearSaveFile();
+    navigate("/");
   };
 
   return (
@@ -73,7 +79,12 @@ function App() {
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <FileUploader onFileSelect={handleLoadSaveFile} loading={loading} />
+            <FileUploader
+              onFileSelect={handleLoadSaveFile}
+              onClear={handleClearSaveFile}
+              loading={loading}
+              hasFile={!!saveFileData}
+            />
           </Box>
         </Box>
 
