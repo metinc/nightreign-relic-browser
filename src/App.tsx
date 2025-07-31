@@ -71,7 +71,7 @@ function App() {
       <Box
         component="main"
         sx={{
-          minHeight: "100vh",
+          height: "100vh",
           display: "flex",
           flexDirection: "column",
         }}
@@ -109,7 +109,14 @@ function App() {
           </Box>
         </Box>
 
-        <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+            minHeight: 0,
+          }}
+        >
           <Routes>
             <Route
               path="/"
