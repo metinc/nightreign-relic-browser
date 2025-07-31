@@ -1,21 +1,15 @@
-import {
-  CssBaseline,
-  ThemeProvider,
-  Typography,
-  Box,
-  Alert,
-  CircularProgress,
-} from "@mui/material";
+import { CssBaseline, ThemeProvider, Typography, Box } from "@mui/material";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { FileUploader } from "./components/FileUploader";
-import { SlotSelector } from "./components/SlotSelector";
-import { RelicDisplay } from "./components/RelicDisplay";
-import { SearchInput } from "./components/SearchInput";
-import { Introduction } from "./components/Introduction";
+import { HomePage } from "./components/HomePage";
+import { RelicsPage } from "./components/RelicsPage";
+import { DemoRelicsPage } from "./components/DemoRelicsPage";
 import { Footer } from "./components/Footer";
 import { useSaveFile } from "./hooks/useSaveFile";
 import { theme } from "./theme";
 
 function App() {
+  const navigate = useNavigate();
   const {
     saveFileData,
     loading,
@@ -34,7 +28,15 @@ function App() {
     handleMatchingRelicsCountChange,
   } = useSaveFile();
 
-  const currentSlot = saveFileData?.slots[saveFileData.currentSlot];
+  const handleLoadSaveFile = (file: File) => {
+    loadSaveFile(file);
+    navigate("/relics");
+  };
+
+  const handleLoadDemo = () => {
+    loadDemoData();
+    navigate("/relics/demo");
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -42,7 +44,7 @@ function App() {
       <Box
         component="main"
         sx={{
-          height: "100vh",
+          minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
         }}
@@ -70,77 +72,70 @@ function App() {
             Elden Ring Nightreign Relic Browser
           </Typography>
 
-          <FileUploader
-            onFileSelect={loadSaveFile}
-            fileName={saveFileData?.fileName}
-            loading={loading}
-          />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <FileUploader
+              onFileSelect={handleLoadSaveFile}
+              fileName={saveFileData?.fileName}
+              loading={loading}
+            />
+          </Box>
         </Box>
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }} role="alert">
-            {error}
-          </Alert>
-        )}
-
-        {loading && (
-          <Box
-            sx={{ display: "flex", justifyContent: "center", my: 4 }}
-            role="status"
-            aria-label="Loading"
-          >
-            <CircularProgress />
-          </Box>
-        )}
-
-        {!saveFileData && !loading && !error && (
-          <Introduction onLoadDemo={loadDemoData} loading={loading} />
-        )}
-
-        {saveFileData && !loading && (
-          <Box
-            component="section"
-            aria-label="Relic management interface"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              flexGrow: 1,
-              minHeight: 0,
-            }}
-          >
-            <SearchInput
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              selectedColor={selectedColor}
-              onColorChange={setSelectedColor}
-              matchingRelicsCount={matchingRelicsCount}
+        <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <HomePage onLoadDemo={handleLoadDemo} loading={loading} />
+              }
             />
-
-            <SlotSelector
-              slots={saveFileData.slots}
-              currentSlot={saveFileData.currentSlot}
-              onSlotSelect={selectSlot}
-            />
-
-            {currentSlot && (
-              <Box
-                sx={{ flexGrow: 1, minHeight: 0 }}
-                component="section"
-                aria-label="Relic display"
-              >
-                <RelicDisplay
-                  relics={currentSlot.relics}
+            <Route
+              path="/relics"
+              element={
+                <RelicsPage
+                  saveFileData={saveFileData}
+                  loading={loading}
+                  error={error}
+                  selectSlot={selectSlot}
                   getItemName={getItemName}
                   getItemColor={getItemColor}
                   getEffectName={getEffectName}
                   searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
                   selectedColor={selectedColor}
-                  onMatchCountChange={handleMatchingRelicsCountChange}
+                  setSelectedColor={setSelectedColor}
+                  matchingRelicsCount={matchingRelicsCount}
+                  handleMatchingRelicsCountChange={
+                    handleMatchingRelicsCountChange
+                  }
                 />
-              </Box>
-            )}
-          </Box>
-        )}
+              }
+            />
+            <Route
+              path="/relics/demo"
+              element={
+                <DemoRelicsPage
+                  saveFileData={saveFileData}
+                  loading={loading}
+                  error={error}
+                  loadDemoData={loadDemoData}
+                  selectSlot={selectSlot}
+                  getItemName={getItemName}
+                  getItemColor={getItemColor}
+                  getEffectName={getEffectName}
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  selectedColor={selectedColor}
+                  setSelectedColor={setSelectedColor}
+                  matchingRelicsCount={matchingRelicsCount}
+                  handleMatchingRelicsCountChange={
+                    handleMatchingRelicsCountChange
+                  }
+                />
+              }
+            />
+          </Routes>
+        </Box>
 
         <Footer />
       </Box>

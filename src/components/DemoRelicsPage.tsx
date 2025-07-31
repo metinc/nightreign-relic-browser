@@ -1,0 +1,34 @@
+import { useEffect } from "react";
+import { RelicsPage } from "./RelicsPage";
+import type { SaveFileData } from "../types/SaveFile";
+
+interface DemoRelicsPageProps {
+  saveFileData: SaveFileData | null;
+  loading: boolean;
+  error: string | null;
+  loadDemoData: () => void;
+  selectSlot: (slotIndex: number) => void;
+  getItemName: (itemId: number) => string;
+  getItemColor: (itemId: number) => string | null;
+  getEffectName: (effectId: number) => string;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+  matchingRelicsCount: number;
+  handleMatchingRelicsCountChange: (count: number) => void;
+}
+
+export function DemoRelicsPage({
+  loadDemoData,
+  ...props
+}: DemoRelicsPageProps) {
+  useEffect(() => {
+    // Load demo data when component mounts if no data is loaded
+    if (!props.saveFileData) {
+      loadDemoData();
+    }
+  }, [loadDemoData, props.saveFileData]);
+
+  return <RelicsPage {...props} />;
+}
