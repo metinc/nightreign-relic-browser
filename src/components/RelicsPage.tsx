@@ -1,5 +1,6 @@
 import { Box, Alert, CircularProgress } from "@mui/material";
 import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SlotSelector } from "./SlotSelector";
 import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
@@ -39,6 +40,8 @@ export function RelicsPage({
   clearSaveFile,
 }: RelicsPageProps) {
   const currentSlot = saveFileData?.slots[saveFileData.currentSlot];
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Clear save file when component unmounts (leaving /relics route)
   useEffect(() => {
@@ -46,6 +49,13 @@ export function RelicsPage({
       clearSaveFile();
     };
   }, [clearSaveFile]);
+
+  // Navigate to home if no save file data (but not for demo route)
+  useEffect(() => {
+    if (!loading && !saveFileData && !location.pathname.includes("/demo")) {
+      navigate("/");
+    }
+  }, [saveFileData, loading, navigate, location.pathname]);
 
   if (error) {
     return (
@@ -68,12 +78,8 @@ export function RelicsPage({
   }
 
   if (!saveFileData) {
-    return (
-      <Alert severity="info" sx={{ mb: 2 }}>
-        No save file loaded. Please go back to the home page to load a save file
-        or try the demo.
-      </Alert>
-    );
+    // Navigation is handled by useEffect above
+    return null;
   }
 
   return (
