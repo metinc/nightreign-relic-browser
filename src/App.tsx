@@ -35,7 +35,6 @@ function App() {
   };
 
   const handleLoadDemo = () => {
-    loadDemoData();
     navigate("/relics/demo");
   };
 
