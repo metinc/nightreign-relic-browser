@@ -200,8 +200,8 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: 2 }}>
-        <Button onClick={onClose} variant="outlined" fullWidth>
+      <DialogActions>
+        <Button onClick={onClose} autoFocus>
           Close
         </Button>
       </DialogActions>

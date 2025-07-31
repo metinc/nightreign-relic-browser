@@ -126,7 +126,7 @@ export const Impressum: React.FC = () => {
 
         <DialogActions>
           <Button onClick={handleClose} autoFocus>
-            Schließen
+            Close
           </Button>
         </DialogActions>
       </Dialog>
