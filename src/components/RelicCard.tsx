@@ -10,6 +10,7 @@ interface RelicCardProps {
   getItemColor: (itemId: number) => string | null;
   getEffectName: (effectId: number) => string;
   searchTerm: string;
+  relicMatches: boolean;
 }
 
 const getBackgroundColor = (effectsCount: number) => {
@@ -33,6 +34,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   getItemColor,
   getEffectName,
   searchTerm,
+  relicMatches,
 }) => {
   const [itemId, ...effects] = relic;
   const itemName = getItemName(itemId);
@@ -45,9 +47,10 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
     <Card
       variant="outlined"
       sx={{
-        height: "100%",
+        height: relicMatches ? "100%" : "2px",
         background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
-        transition: "opacity 0.3s ease",
+        transition: "0.3s ease",
+        overflow: "hidden",
       }}
     >
       <CardContent

@@ -1,12 +1,5 @@
 import React, { useMemo, useRef, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Paper,
-  Grid,
-  Divider,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Typography, Paper, Grid, useMediaQuery } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { CompactRelicSlot } from "../types/SaveFile";
 import { doesRelicMatch } from "../utils/SearchUtils";
@@ -185,6 +178,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   left: 0,
                   width: "100%",
                   transform: `translateY(${virtualItem.start}px)`,
+                  transition: "0.3s ease",
                 }}
               >
                 <Grid
@@ -230,19 +224,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       searchTerm
                     );
 
-                    // If there's a search term and this relic doesn't match, show placeholder
-                    if (searchTerm.trim() && !relicMatches) {
-                      return (
-                        <Grid
-                          key={index}
-                          size={COLUMNS_PER_RELIC}
-                          alignContent={"center"}
-                        >
-                          <Divider />
-                        </Grid>
-                      );
-                    }
-
                     return (
                       <Grid
                         size={{ xs: COLUMNS, md: COLUMNS_PER_RELIC }}
@@ -255,6 +236,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                           getItemColor={getItemColor}
                           getEffectName={getEffectName}
                           searchTerm={searchTerm}
+                          relicMatches={!searchTerm.trim() || relicMatches}
                         />
                       </Grid>
                     );
