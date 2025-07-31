@@ -9,7 +9,7 @@ export default defineConfig({
     minify: "esbuild",
   },
   esbuild: {
-    drop: ["console", "debugger"],
+    drop: process.env.NODE_ENV === "production" ? ["console", "debugger"] : [],
   },
   test: {
     environment: "jsdom",
