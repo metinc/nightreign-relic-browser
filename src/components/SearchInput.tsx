@@ -6,8 +6,9 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Chip,
+  IconButton,
 } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { Search, Clear } from "@mui/icons-material";
 import { getChipColor, relicColors } from "../utils/RelicColor";
 
 interface SearchInputProps {
@@ -50,6 +51,18 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             startAdornment: (
               <InputAdornment position="start">
                 <Search />
+              </InputAdornment>
+            ),
+            endAdornment: searchTerm.trim() && (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="clear search"
+                  onClick={() => onSearchChange("")}
+                  edge="end"
+                  size="small"
+                >
+                  <Clear />
+                </IconButton>
               </InputAdornment>
             ),
           },
