@@ -40,7 +40,6 @@ export interface CharacterSlot {
 }
 
 export interface SaveFileData {
-  fileName: string;
   filePath: string;
   slots: CharacterSlot[];
   currentSlot: number;

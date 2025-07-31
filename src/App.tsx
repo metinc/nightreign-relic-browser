@@ -73,11 +73,7 @@ function App() {
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <FileUploader
-              onFileSelect={handleLoadSaveFile}
-              fileName={saveFileData?.fileName}
-              loading={loading}
-            />
+            <FileUploader onFileSelect={handleLoadSaveFile} loading={loading} />
           </Box>
         </Box>
 

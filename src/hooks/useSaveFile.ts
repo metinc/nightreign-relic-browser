@@ -63,12 +63,11 @@ export const useSaveFile = () => {
 
       // Create a single character slot with the demo data
       const demoSlot: CharacterSlot = {
-        name: demoData.name || "Demo Character",
+        name: demoData.name,
         relics: demoData.relics || [],
       };
 
       const saveData: SaveFileData = {
-        fileName: "demo.json",
         filePath: "demo.json",
         slots: [demoSlot],
         currentSlot: 0,
@@ -118,8 +117,7 @@ export const useSaveFile = () => {
         }
 
         const saveData: SaveFileData = {
-          fileName: file.name,
-          filePath: file.name, // In browser context, we don't have full path
+          filePath: file.name,
           slots,
           currentSlot: 0,
         };

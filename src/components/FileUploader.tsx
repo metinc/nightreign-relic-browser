@@ -57,7 +57,6 @@ const modalStyle = {
 
 interface FileUploaderProps {
   onFileSelect: (file: File) => void;
-  fileName?: string;
   loading?: boolean;
 }
 
@@ -81,7 +80,6 @@ const SAVE_PATH_WINDOWS = ["%APPDATA%", "Nightreign"] as const;
 
 export const FileUploader: React.FC<FileUploaderProps> = ({
   onFileSelect,
-  fileName,
   loading = false,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -175,22 +173,14 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
 
   return (
     <>
-      <Stack sx={{ alignItems: "center", gap: 2 }}>
-        <Button
-          variant="contained"
-          startIcon={<CloudUpload />}
-          disabled={loading}
-          onClick={() => setIsModalOpen(true)}
-        >
-          {loading ? "Loading..." : "Open Save File"}
-        </Button>
-
-        {fileName && (
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            File: {fileName}
-          </Typography>
-        )}
-      </Stack>
+      <Button
+        variant="contained"
+        startIcon={<CloudUpload />}
+        disabled={loading}
+        onClick={() => setIsModalOpen(true)}
+      >
+        {loading ? "Loading..." : "Open Save File"}
+      </Button>
 
       <Modal
         open={isModalOpen}
