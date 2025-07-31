@@ -31,11 +31,13 @@
     "type-check": "tsc --project tsconfig.app.json --noEmit"
   },
   "dependencies": {
+    "@analytics/google-analytics": "^1.1.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
     "@tanstack/react-virtual": "^3.13.12",
+    "analytics": "^0.8.16",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.7.1"

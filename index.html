@@ -132,7 +132,24 @@
       }
       gtag("js", new Date());
 
-      gtag("config", "G-YME15T0XQY");
+      // Set default consent to denied (Consent Mode V2)
+      gtag("consent", "default", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        functionality_storage: "denied",
+        personalization_storage: "denied",
+        security_storage: "granted", // Always granted for security
+        wait_for_update: 500,
+      });
+
+      // Initialize gtag configuration (this will still collect anonymous pings)
+      gtag("config", "G-YME15T0XQY", {
+        send_page_view: true, // Allow anonymous page views
+        anonymize_ip: true,
+        allow_google_signals: false,
+      });
     </script>
   </head>
   <body>

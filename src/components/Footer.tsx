@@ -1,8 +1,12 @@
 import { Box, Typography } from "@mui/material";
+import { useState } from "react";
 import { Impressum } from "./Impressum";
+import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
 import packageJson from "../../package.json";
 
 export function Footer() {
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+
   return (
     <Box
       component="footer"
@@ -76,6 +80,31 @@ export function Footer() {
         >
           •
         </Typography>
+        <Typography
+          component="button"
+          onClick={() => setPrivacyModalOpen(true)}
+          sx={{
+            color: "text.secondary",
+            fontSize: "0.75rem",
+            textDecoration: "none",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
+        >
+          Datenschutz
+        </Typography>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            fontSize: "0.75rem",
+          }}
+        >
+          •
+        </Typography>
         <Impressum />
       </Box>
       <Typography
@@ -88,6 +117,11 @@ export function Footer() {
       >
         v{packageJson.version}
       </Typography>
+
+      <PrivacyPolicyModal
+        open={privacyModalOpen}
+        onClose={() => setPrivacyModalOpen(false)}
+      />
     </Box>
   );
 }
