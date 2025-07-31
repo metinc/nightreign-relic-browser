@@ -1,9 +1,22 @@
 import React, { useMemo, useRef, useEffect } from "react";
-import { Box, Typography, Paper, Grid, Divider } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  Divider,
+  useMediaQuery,
+} from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { CompactRelicSlot } from "../types/SaveFile";
 import { doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
+
+const RELICS_PER_ROW = 8;
+const COLUMNS_PER_RELIC = 6;
+const COLUMNS_PER_ROW_NUMBER = 1;
+const COLUMNS = RELICS_PER_ROW * COLUMNS_PER_RELIC;
+const COLUMNS_BIG_SCREEN = COLUMNS + COLUMNS_PER_ROW_NUMBER * 2;
 
 interface RelicDisplayProps {
   relics: CompactRelicSlot[];
@@ -25,6 +38,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   onMatchCountChange,
 }) => {
   const parentRef = useRef<HTMLDivElement>(null);
+
+  const bigScreen = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   // Filter relics based on search and color criteria
   const filteredRelics = useMemo(() => {
@@ -98,6 +113,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   return (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       {/* Fixed header with column numbers */}
+
       <Box
         sx={{
           p: 2,
@@ -105,17 +121,18 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
           backgroundColor: "#191919",
           borderBottom: 1,
           borderColor: "divider",
+          display: { xs: "none", md: "block" },
         }}
       >
-        <Grid container columns={33} spacing={2}>
+        <Grid container columns={COLUMNS_BIG_SCREEN} spacing={2}>
           {/* Empty space for row number column */}
-          <Grid size={1} />
+          <Grid size={COLUMNS_PER_ROW_NUMBER} />
 
           {/* Column numbers */}
           {Array.from({ length: 8 }, (_, i) => (
             <Grid
               key={i}
-              size={4}
+              size={COLUMNS_PER_RELIC}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -127,7 +144,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                 sx={{
                   color: "text.secondary",
                   fontWeight: "bold",
-                  display: { xs: "none", sm: "block" },
                 }}
               >
                 {i + 1}
@@ -171,27 +187,32 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   transform: `translateY(${virtualItem.start}px)`,
                 }}
               >
-                <Grid container columns={33} spacing={2}>
+                <Grid
+                  container
+                  columns={bigScreen ? COLUMNS_BIG_SCREEN : COLUMNS}
+                  spacing={bigScreen ? 2 : 0}
+                >
                   {/* Row number */}
-                  <Grid
-                    size={1}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
+                  {bigScreen && (
+                    <Grid
+                      size={COLUMNS_PER_ROW_NUMBER}
                       sx={{
-                        color: "text.secondary",
-                        fontWeight: "bold",
-                        display: { xs: "none", sm: "block" },
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
-                      {rowNumber}
-                    </Typography>
-                  </Grid>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          color: "text.secondary",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {rowNumber}
+                      </Typography>
+                    </Grid>
+                  )}
 
                   {/* Relics in this row */}
                   {rowRelics.map((relic, index) => {
@@ -212,21 +233,30 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                     // If there's a search term and this relic doesn't match, show placeholder
                     if (searchTerm.trim() && !relicMatches) {
                       return (
-                        <Grid key={index} size={4} alignContent={"center"}>
+                        <Grid
+                          key={index}
+                          size={COLUMNS_PER_RELIC}
+                          alignContent={"center"}
+                        >
                           <Divider />
                         </Grid>
                       );
                     }
 
                     return (
-                      <RelicCard
-                        key={index}
-                        relic={relic}
-                        getItemName={getItemName}
-                        getItemColor={getItemColor}
-                        getEffectName={getEffectName}
-                        searchTerm={searchTerm}
-                      />
+                      <Grid
+                        size={{ xs: COLUMNS, md: COLUMNS_PER_RELIC }}
+                        py={1}
+                      >
+                        <RelicCard
+                          key={index}
+                          relic={relic}
+                          getItemName={getItemName}
+                          getItemColor={getItemColor}
+                          getEffectName={getEffectName}
+                          searchTerm={searchTerm}
+                        />
+                      </Grid>
                     );
                   })}
                 </Grid>

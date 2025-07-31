@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  Chip,
-  List,
-  Grid,
-} from "@mui/material";
+import { Box, Typography, Card, CardContent, Chip, List } from "@mui/material";
 import type { CompactRelicSlot } from "../types/SaveFile";
 import { highlightSearchTerm } from "../utils/SearchUtils";
 import { getChipColor } from "../utils/RelicColor";
@@ -50,83 +42,79 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
 
   return (
-    <Grid size={{ xs: 33, sm: 4 }} py={1}>
-      <Card
-        variant="outlined"
+    <Card
+      variant="outlined"
+      sx={{
+        height: "100%",
+        background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
+        transition: "opacity 0.3s ease",
+      }}
+    >
+      <CardContent
         sx={{
-          height: "100%",
-          background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
-          transition: "opacity 0.3s ease",
+          "&:last-child": {
+            paddingBottom: 1,
+          },
+          pt: 1,
         }}
       >
-        <CardContent
+        <Box
           sx={{
-            "&:last-child": {
-              paddingBottom: 1,
-            },
-            pt: 1,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 1,
           }}
         >
-          <Box
+          <Typography
+            variant="h6"
+            component="div"
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 1,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              ...(isSpecialRelic
+                ? {
+                    color: "primary.main",
+                    fontWeight: "bold",
+                    textShadow: "0 0 8px rgba(33, 150, 243, 0.8)",
+                    padding: "8px 8px",
+                    margin: "-8px -8px",
+                  }
+                : {
+                    color: "text.secondary",
+                  }),
             }}
           >
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                ...(isSpecialRelic
-                  ? {
-                      color: "primary.main",
-                      fontWeight: "bold",
-                      textShadow: "0 0 8px rgba(33, 150, 243, 0.8)",
-                      padding: "8px 8px",
-                      margin: "-8px -8px",
-                    }
-                  : {
-                      color: "text.secondary",
-                    }),
-              }}
-            >
-              {itemNameHighlight.highlightedText}
-            </Typography>
-            {itemColor && (
-              <Chip
-                label={itemColor}
-                size="small"
-                color={getChipColor(itemColor)}
-              />
-            )}
-          </Box>
+            {itemNameHighlight.highlightedText}
+          </Typography>
+          {itemColor && (
+            <Chip
+              label={itemColor}
+              size="small"
+              color={getChipColor(itemColor)}
+              sx={{ overflow: "hidden" }}
+            />
+          )}
+        </Box>
 
-          <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
-            {effects.map((effectId) => {
-              const effectName =
-                getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
-              const effectHighlight = highlightSearchTerm(
-                effectName,
-                searchTerm
-              );
+        <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
+          {effects.map((effectId) => {
+            const effectName =
+              getEffectName(effectId) ?? `Unknown Effect ${effectId}`;
+            const effectHighlight = highlightSearchTerm(effectName, searchTerm);
 
-              return (
-                <Box key={effectId} sx={{ mb: 0.5, display: "list-item" }}>
-                  <Typography variant="body2">
-                    {effectHighlight.highlightedText}
-                  </Typography>
-                </Box>
-              );
-            })}
-          </List>
-        </CardContent>
-      </Card>
-    </Grid>
+            return (
+              <Box key={effectId} sx={{ mb: 0.5, display: "list-item" }}>
+                <Typography variant="body2">
+                  {effectHighlight.highlightedText}
+                </Typography>
+              </Box>
+            );
+          })}
+        </List>
+      </CardContent>
+    </Card>
   );
 };
 
