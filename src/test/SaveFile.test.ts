@@ -92,7 +92,7 @@ describe("Save File Processing", () => {
         expect(firstRelic).toBeDefined();
         expect(itemId).toBeTypeOf("number");
         expect(firstRelic.length).toBeGreaterThan(1); // Should have at least itemId and one effect
-        expect(effects).toBeTypeOf("number");
+        expect(effects.length).toBeGreaterThan(0);
       });
 
       it("should handle UTF-16LE character names correctly", () => {
