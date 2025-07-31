@@ -228,9 +228,9 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       <Grid
                         size={{ xs: COLUMNS, md: COLUMNS_PER_RELIC }}
                         py={1}
+                        key={index}
                       >
                         <RelicCard
-                          key={index}
                           relic={relic}
                           getItemName={getItemName}
                           getItemColor={getItemColor}
