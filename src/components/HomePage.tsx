@@ -1,4 +1,6 @@
 import { Box, Typography, Alert, Button, Paper } from "@mui/material";
+import { useState, useRef } from "react";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 interface HomePageProps {
   onLoadDemo: () => void;
@@ -6,6 +8,15 @@ interface HomePageProps {
 }
 
 export function HomePage({ onLoadDemo, loading }: HomePageProps) {
+  const [showOverlay, setShowOverlay] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handlePlayVideo = () => {
+    setShowOverlay(false);
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+  };
   return (
     <Box
       component="section"
@@ -49,31 +60,109 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
         </Typography>
         <Box sx={{ textAlign: "center" }}>
           <Box
-            component="video"
-            controls
-            preload="metadata"
             sx={{
+              position: "relative",
+              display: "inline-block",
               width: "100%",
-              height: "auto",
-              borderRadius: 1,
-              bgcolor: "black",
             }}
-            border={1}
-            borderColor={"grey.800"}
           >
-            <source src="/instructions.webm" type="video/webm" />
-            <source src="/instructions.mp4" type="video/mp4" />
-            Your browser does not support the video tag. You can{" "}
-            <Typography
-              component="a"
-              href="/instructions.webm"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{ color: "primary.main" }}
+            <Box
+              component="video"
+              ref={videoRef}
+              controls={!showOverlay}
+              preload="metadata"
+              poster="/instructions_thumb.jpg"
+              sx={{
+                width: "100%",
+                height: "auto",
+                borderRadius: 1,
+                bgcolor: "black",
+              }}
+              border={1}
+              borderColor={"grey.800"}
             >
-              download the video
-            </Typography>{" "}
-            instead.
+              <source src="/instructions.webm" type="video/webm" />
+              Your browser does not support the video tag. You can{" "}
+              <Typography
+                component="a"
+                href="/instructions.webm"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ color: "primary.main" }}
+              >
+                download the video
+              </Typography>{" "}
+              instead.
+            </Box>
+
+            {showOverlay && (
+              <Box
+                onClick={handlePlayVideo}
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  backgroundColor: "rgba(0, 0, 0, 0.7)",
+                  cursor: "pointer",
+                  borderRadius: 1,
+                  transition: "background-color 0.3s ease",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    py: 2,
+                    borderTop: "1px solid white",
+                    borderBottom: "1px solid white",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    position: "absolute",
+                    top: "33%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    right: 0,
+                    display: { xs: "none", md: "block" },
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color: "white",
+                      fontWeight: "bold",
+                      letterSpacing: "0.1em",
+                      textShadow: "2px 2px 4px rgba(0,0,0,0.8)",
+                      lineHeight: 1,
+                      position: "relative",
+                      top: "0.1em",
+                    }}
+                  >
+                    HOW TO USE
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <PlayArrowIcon
+                    sx={{
+                      fontSize: "4rem",
+                      color: "white",
+                      opacity: 0.9,
+                    }}
+                  />
+                </Box>
+              </Box>
+            )}
           </Box>
         </Box>
       </Paper>
