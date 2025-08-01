@@ -175,7 +175,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     fileInputRef.current?.click();
   };
 
-  const minWidth = 150;
+  const minWidth = 200;
 
   return (
     <>
