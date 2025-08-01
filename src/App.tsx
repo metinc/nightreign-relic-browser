@@ -171,9 +171,9 @@ function App() {
               }
             />
           </Routes>
-        </Box>
 
-        <Footer />
+          <Footer />
+        </Box>
       </Box>
 
       {/* Cookie Consent Banner */}
