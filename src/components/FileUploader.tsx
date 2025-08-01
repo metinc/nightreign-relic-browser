@@ -216,9 +216,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                 alignItems: "center",
               }}
             >
-              <Typography variant="h6" component="h2">
-                Select Save File
-              </Typography>
+              <Typography variant="h6">Select Save File</Typography>
               <IconButton
                 onClick={() => setIsModalOpen(false)}
                 aria-label="close"

@@ -12,12 +12,12 @@ export const PrivacyPolicy: React.FC = () => {
       </Button>
 
       <Paper sx={{ p: 4 }}>
-        <Typography variant="h3" component="h1" gutterBottom>
+        <Typography variant="h3" gutterBottom>
           Datenschutzerklärung
         </Typography>
 
         <Box sx={{ mt: 3 }}>
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             1. Verantwortlicher
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -29,7 +29,7 @@ export const PrivacyPolicy: React.FC = () => {
             Kontakt: über das Impressum dieser Website
           </Typography>
 
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             2. Erhebung und Verarbeitung personenbezogener Daten
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -38,7 +38,7 @@ export const PrivacyPolicy: React.FC = () => {
             über Ihre Nutzung der Website zu sammeln.
           </Typography>
 
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             3. Google Analytics
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -61,7 +61,7 @@ export const PrivacyPolicy: React.FC = () => {
             Wirtschaftsraum vor der Übertragung in die USA gekürzt.
           </Typography>
 
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             4. Cookie-Einstellungen
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -71,7 +71,7 @@ export const PrivacyPolicy: React.FC = () => {
             Einstellungen wird der Cookie-Banner erneut angezeigt.
           </Typography>
 
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             5. Ihre Rechte
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -96,7 +96,7 @@ export const PrivacyPolicy: React.FC = () => {
             </Typography>
           </Typography>
 
-          <Typography variant="h5" component="h2" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             6. Kontakt
           </Typography>
           <Typography variant="body1" component={"p"}>

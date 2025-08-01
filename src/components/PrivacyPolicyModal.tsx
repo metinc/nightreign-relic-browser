@@ -42,9 +42,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           justifyContent: "space-between",
         }}
       >
-        <Typography variant="h5" component="h2">
-          Datenschutzerklärung
-        </Typography>
+        <Typography variant="h5">Datenschutzerklärung</Typography>
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -58,7 +56,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
 
       <DialogContent dividers>
         <Box sx={{ mt: 1 }}>
-          <Typography variant="h6" component="h3" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             1. Verantwortlicher
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -70,7 +68,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             Kontakt: über das Impressum dieser Website
           </Typography>
 
-          <Typography variant="h6" component="h3" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             2. Google Consent Mode V2
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -80,7 +78,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             verbessern.
           </Typography>
 
-          <Typography variant="h6" component="h3" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             3. Google Analytics
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -115,7 +113,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             Wirtschaftsraum vor der Übertragung in die USA gekürzt.
           </Typography>
 
-          <Typography variant="h6" component="h3" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             4. Cookie-Kategorien
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -133,7 +131,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             für zukünftige Werbemaßnahmen vorgesehen.
           </Typography>
 
-          <Typography variant="h6" component="h3" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             5. Cookie-Einstellungen verwalten
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -145,7 +143,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             <br />• Kontaktieren Sie uns für individuelle Anfragen
           </Typography>
 
-          <Typography variant="h6" component="h3" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             6. Ihre Rechte nach DSGVO
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -173,7 +171,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             </Typography>
           </Box>
 
-          <Typography variant="h6" component="h3" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             7. Datenspeicherung
           </Typography>
           <Typography variant="body1" component={"p"}>
@@ -182,7 +180,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             Aufbewahrungsrichtlinien verarbeitet (standardmäßig 26 Monate).
           </Typography>
 
-          <Typography variant="h6" component="h3" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             8. Kontakt
           </Typography>
           <Typography variant="body1" component={"p"}>

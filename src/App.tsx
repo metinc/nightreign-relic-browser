@@ -88,7 +88,6 @@ function App() {
           }}
         >
           <Typography
-            component="h1"
             variant="h1"
             gutterBottom
             sx={{

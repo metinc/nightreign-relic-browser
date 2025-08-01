@@ -105,20 +105,24 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
   return (
     <Dialog
       open={open}
-      maxWidth="md"
-      fullWidth
+      maxWidth="sm"
       disableEscapeKeyDown
-      PaperProps={{
-        sx: {
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          margin: 0,
-          maxWidth: "none",
-          maxHeight: "90vh",
-          borderRadius: "16px 16px 0 0",
-          width: "100%",
+      slotProps={{
+        paper: {
+          sx: {
+            position: "fixed",
+            bottom: 16,
+            left: "50%",
+            transform: "translateX(-50%)",
+            margin: 0,
+            maxWidth: "480px",
+            maxHeight: "90vh",
+            borderRadius: "16px",
+            width: "calc(100% - 32px)",
+            "@media (min-width: 512px)": {
+              width: "480px",
+            },
+          },
         },
       }}
       sx={{
@@ -128,9 +132,7 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
       }}
     >
       <DialogTitle>
-        <Typography variant="h6" component="h2">
-          🍪 Cookie-Einstellungen
-        </Typography>
+        <Typography variant="h6">🍪 Cookie-Einstellungen</Typography>
       </DialogTitle>
 
       <DialogContent>
