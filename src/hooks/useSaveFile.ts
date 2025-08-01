@@ -7,6 +7,7 @@ import type {
 } from "../types/SaveFile";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
+import type { RelicColor } from "../utils/RelicColor";
 
 export const useSaveFile = () => {
   const [saveFileData, setSaveFileData] = useState<SaveFileData | null>(null);
@@ -17,7 +18,9 @@ export const useSaveFile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTermState] = useState<string>("");
-  const [selectedColor, setSelectedColorState] = useState<string>("Any");
+  const [selectedColor, setSelectedColorState] = useState<RelicColor | "Any">(
+    "Any"
+  );
   const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
 
   // Load JSON data for items and effects
@@ -161,8 +164,13 @@ export const useSaveFile = () => {
 
   // Get item color by ID
   const getItemColor = useCallback(
-    (itemId: number): string | null => {
-      return itemsData[itemId.toString()]?.color || null;
+    (itemId: number): RelicColor => {
+      const color = itemsData[itemId.toString()]?.color;
+      if (color === null) {
+        console.error(`Item ${itemId} has no color defined`);
+        return "Red";
+      }
+      return color as RelicColor;
     },
     [itemsData]
   );
@@ -181,7 +189,7 @@ export const useSaveFile = () => {
   }, []);
 
   // Set selected color
-  const setSelectedColor = useCallback((color: string) => {
+  const setSelectedColor = useCallback((color: RelicColor) => {
     setSelectedColorState(color);
   }, []);
 

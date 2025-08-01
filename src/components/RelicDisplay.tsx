@@ -4,6 +4,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import type { CompactRelicSlot } from "../types/SaveFile";
 import { doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
+import type { RelicColor } from "../utils/RelicColor";
 
 const RELICS_PER_ROW = 8;
 const COLUMNS_PER_RELIC = 6;
@@ -14,10 +15,10 @@ const COLUMNS_BIG_SCREEN = COLUMNS + COLUMNS_PER_ROW_NUMBER * 2;
 interface RelicDisplayProps {
   relics: CompactRelicSlot[];
   getItemName: (itemId: number) => string;
-  getItemColor: (itemId: number) => string | null;
+  getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   searchTerm?: string;
-  selectedColor?: string;
+  selectedColor: RelicColor | "Any";
   onMatchCountChange?: (count: number) => void;
 }
 
@@ -27,28 +28,12 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   getItemColor,
   getEffectName,
   searchTerm = "",
-  selectedColor = "Any",
+  selectedColor,
   onMatchCountChange,
 }) => {
   const parentRef = useRef<HTMLDivElement>(null);
 
   const bigScreen = useMediaQuery((theme) => theme.breakpoints.up("md"));
-
-  // Filter relics based on search and color criteria
-  const filteredRelics = useMemo(() => {
-    return relics.filter(([itemId]) => {
-      // Color filter
-      if (selectedColor !== "Any") {
-        const itemColor = getItemColor(itemId);
-        if (itemColor !== selectedColor) {
-          return false;
-        }
-      }
-
-      // Search filter (only apply if enabled)
-      return true;
-    });
-  }, [getItemColor, relics, selectedColor]);
 
   // Calculate matching relics count (search matches only, ignoring color filter)
   const matchingRelicsCount = useMemo(() => {
@@ -61,10 +46,24 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       const effectNames = effects.map(
         (effectId) => getEffectName(effectId) ?? `Unknown Effect ${effectId}`
       );
+      const itemColor = getItemColor(itemId);
 
-      return doesRelicMatch(itemName, effectNames, searchTerm);
+      return doesRelicMatch(
+        itemName,
+        effectNames,
+        itemColor,
+        selectedColor,
+        searchTerm
+      );
     }).length;
-  }, [relics, searchTerm, getItemName, getEffectName]);
+  }, [
+    getEffectName,
+    getItemColor,
+    getItemName,
+    relics,
+    searchTerm,
+    selectedColor,
+  ]);
 
   // Report the matching count to parent component
   useEffect(() => {
@@ -76,11 +75,11 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   // Group relics into rows of 8
   const relicRows = useMemo(() => {
     const rows: CompactRelicSlot[][] = [];
-    for (let i = 0; i < filteredRelics.length; i += 8) {
-      rows.push(filteredRelics.slice(i, i + 8));
+    for (let i = 0; i < relics.length; i += 8) {
+      rows.push(relics.slice(i, i + 8));
     }
     return rows;
-  }, [filteredRelics]);
+  }, [relics]);
 
   // Virtual list setup
   const virtualizer = useVirtualizer({
@@ -93,7 +92,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     },
   });
 
-  if (filteredRelics.length === 0) {
+  if (relics.length === 0) {
     return (
       <Paper sx={{ p: 3, textAlign: "center" }}>
         <Typography variant="h6" color="text.secondary">
@@ -217,10 +216,14 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                         getEffectName(effectId) ?? `Unknown Effect ${effectId}`
                     );
 
+                    const itemColor = getItemColor(itemId);
+
                     // Check if this relic matches the search
                     const relicMatches = doesRelicMatch(
                       itemName,
                       effectNames,
+                      itemColor,
+                      selectedColor,
                       searchTerm
                     );
 
@@ -241,7 +244,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                           getItemColor={getItemColor}
                           getEffectName={getEffectName}
                           searchTerm={searchTerm}
-                          relicMatches={!searchTerm.trim() || relicMatches}
+                          relicMatches={relicMatches}
                           rowIndex={rowIndex}
                           colIndex={colIndex}
                         />

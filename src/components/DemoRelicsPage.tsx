@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { RelicsPage } from "./RelicsPage";
 import type { SaveFileData } from "../types/SaveFile";
+import type { RelicColor } from "../utils/RelicColor";
 
 interface DemoRelicsPageProps {
   saveFileData: SaveFileData | null;
@@ -9,12 +10,12 @@ interface DemoRelicsPageProps {
   loadDemoData: () => void;
   selectSlot: (slotIndex: number) => void;
   getItemName: (itemId: number) => string;
-  getItemColor: (itemId: number) => string | null;
+  getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  selectedColor: string;
-  setSelectedColor: (color: string) => void;
+  selectedColor: RelicColor | "Any";
+  setSelectedColor: (color: RelicColor) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
   clearSaveFile: () => void;

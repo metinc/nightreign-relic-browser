@@ -9,13 +9,17 @@ import {
   IconButton,
 } from "@mui/material";
 import { Search, Clear } from "@mui/icons-material";
-import { getChipColor, relicColors } from "../utils/RelicColor";
+import {
+  getChipColor,
+  relicColors,
+  type RelicColor,
+} from "../utils/RelicColor";
 
 interface SearchInputProps {
   searchTerm: string;
   onSearchChange: (searchTerm: string) => void;
   selectedColor: string;
-  onColorChange: (color: string) => void;
+  onColorChange: (color: RelicColor) => void;
   matchingRelicsCount?: number;
 }
 

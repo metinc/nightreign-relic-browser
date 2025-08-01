@@ -5,6 +5,7 @@ import { SlotSelector } from "./SlotSelector";
 import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
 import type { SaveFileData } from "../types/SaveFile";
+import type { RelicColor } from "../utils/RelicColor";
 
 interface RelicsPageProps {
   saveFileData: SaveFileData | null;
@@ -12,12 +13,12 @@ interface RelicsPageProps {
   error: string | null;
   selectSlot: (index: number) => void;
   getItemName: (id: number) => string;
-  getItemColor: (id: number) => string | null;
+  getItemColor: (id: number) => RelicColor;
   getEffectName: (id: number) => string;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  selectedColor: string;
-  setSelectedColor: (color: string) => void;
+  selectedColor: RelicColor | "Any";
+  setSelectedColor: (color: RelicColor) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
   clearSaveFile: () => void;

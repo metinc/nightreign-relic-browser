@@ -153,7 +153,8 @@ export const RelicCard = React.memo(
       prevProps.getItemColor !== nextProps.getItemColor ||
       prevProps.getEffectName !== nextProps.getEffectName ||
       prevProps.rowIndex !== nextProps.rowIndex ||
-      prevProps.colIndex !== nextProps.colIndex
+      prevProps.colIndex !== nextProps.colIndex ||
+      prevProps.relicMatches !== nextProps.relicMatches
     ) {
       return false;
     }
