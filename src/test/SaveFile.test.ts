@@ -23,6 +23,8 @@ const testData: TestData = [
   },
   { name: "player.sl2", slots: [{ name: "Player", relics: 651 }] },
   { name: "teru.sl2", slots: [{ name: "Teru", relics: 254 }] },
+  { name: "stluna.sl2", slots: [{ name: "ST. Luna", relics: 403 }] },
+  { name: "eonacat.sl2", slots: [{ name: "EonaCat", relics: 743 }] },
 ];
 
 describe("Save File Processing", () => {
