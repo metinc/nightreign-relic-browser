@@ -64,9 +64,7 @@ export class RelicParser {
       const nameOffset = this.findHexOffset(currentEntry, hexString);
 
       if (nameOffset !== null) {
-        console.log(`Found name pattern at offset ${nameOffset}`);
         const currentName = this.findCharacterName(currentEntry, nameOffset);
-        console.log(`Decoded name: ${currentName}`);
         if (currentName && currentName !== "Unknown") {
           return { nameBytes, currentName };
         }
@@ -309,7 +307,10 @@ export class RelicParser {
     const validSlots: RelicSlot[] = [];
 
     for (const slot of foundSlots) {
-      if (!slot.idBytes) continue;
+      if (!slot.idBytes) {
+        console.error(`Slot ${slot.id} has no ID bytes, skipping`);
+        continue;
+      }
 
       const hexPattern = Array.from(slot.idBytes)
         .map((b) => b.toString(16).padStart(2, "0"))
@@ -325,6 +326,9 @@ export class RelicParser {
         );
         slot.sortKey = this.readIntLE(sortKeyBytes);
         validSlots.push(slot);
+      } else {
+        // maybe the relic was sold?!
+        console.warn(`Sort key for slot ${slot.id} not found`);
       }
     }
 
@@ -371,12 +375,6 @@ export class RelicParser {
       offset,
       currentEntry,
       namesEntry
-    );
-    console.log(
-      "Name bytes:",
-      Array.from(nameBytes)
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")
     );
 
     if (currentName === null) {
