@@ -77,6 +77,11 @@ export const useSaveFile = () => {
       };
 
       setSaveFileData(saveData);
+
+      // Track demo view
+      window.dataLayer.push({
+        event: "demo_viewed",
+      });
     } catch (err) {
       console.error("Error loading demo data:", err);
       setError(err instanceof Error ? err.message : "Failed to load demo data");
@@ -126,6 +131,14 @@ export const useSaveFile = () => {
         };
 
         setSaveFileData(saveData);
+
+        // Track successful file load
+        window.dataLayer.push({
+          event: "save_file_opened",
+          file_name: file.name,
+          file_size: file.size,
+          relics_per_slot: slots.map((slot) => slot.relics.length),
+        });
       } catch (err) {
         console.error("Error loading save file:", err);
         setError(

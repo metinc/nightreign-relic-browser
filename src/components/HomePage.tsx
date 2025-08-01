@@ -1,5 +1,5 @@
 import { Box, Typography, Alert, Button, Paper, Grid } from "@mui/material";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 interface HomePageProps {
@@ -11,11 +11,34 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
   const [showOverlay, setShowOverlay] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Set up video event listeners
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleVideoEnded = () => {
+      window.dataLayer.push({
+        event: "tutorial_complete",
+      });
+    };
+
+    video.addEventListener("ended", handleVideoEnded);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      video.removeEventListener("ended", handleVideoEnded);
+    };
+  }, []);
+
   const handlePlayVideo = () => {
     setShowOverlay(false);
     if (videoRef.current) {
       videoRef.current.play();
     }
+
+    window.dataLayer.push({
+      event: "tutorial_begin",
+    });
   };
   return (
     <Box

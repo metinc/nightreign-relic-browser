@@ -1,17 +1,12 @@
 import { CssBaseline, ThemeProvider, Typography, Box } from "@mui/material";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { FileUploader } from "./components/FileUploader";
 import { HomePage } from "./components/HomePage";
 import { RelicsPage } from "./components/RelicsPage";
 import { DemoRelicsPage } from "./components/DemoRelicsPage";
 import { Footer } from "./components/Footer";
-import { CookieConsent } from "./components/CookieConsent";
 import { useSaveFile } from "./hooks/useSaveFile";
 import { theme } from "./theme";
-import { initializeAnalytics, updateAnalyticsConsent } from "./utils/Analytics";
-import { hasAnalyticsConsent } from "./utils/ConsentUtils";
-import type { ConsentPreferences } from "./utils/ConsentUtils";
 
 function App() {
   const navigate = useNavigate();
@@ -34,12 +29,6 @@ function App() {
     clearSaveFile,
   } = useSaveFile();
 
-  // Initialize analytics based on existing consent on app start
-  useEffect(() => {
-    const hasConsent = hasAnalyticsConsent();
-    initializeAnalytics(hasConsent);
-  }, []);
-
   const handleLoadSaveFile = (file: File) => {
     loadSaveFile(file);
     navigate("/relics");
@@ -51,18 +40,6 @@ function App() {
 
   const handleClearSaveFile = () => {
     navigate("/");
-  };
-
-  const handleAcceptAllCookies = () => {
-    updateAnalyticsConsent(true);
-  };
-
-  const handleAcceptSelectedCookies = (preferences: ConsentPreferences) => {
-    updateAnalyticsConsent(preferences.analytics);
-  };
-
-  const handleRejectAllCookies = () => {
-    updateAnalyticsConsent(false);
   };
 
   return (
@@ -175,13 +152,6 @@ function App() {
           <Footer />
         </Box>
       </Box>
-
-      {/* Cookie Consent Banner */}
-      <CookieConsent
-        onAcceptAll={handleAcceptAllCookies}
-        onAcceptSelected={handleAcceptSelectedCookies}
-        onRejectAll={handleRejectAllCookies}
-      />
     </ThemeProvider>
   );
 }
