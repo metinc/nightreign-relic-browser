@@ -267,6 +267,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                           relicMatches={relicMatches}
                           rowIndex={rowIndex}
                           colIndex={colIndex}
+                          selectedColor={selectedColor}
                         />
                       </Grid>
                     );

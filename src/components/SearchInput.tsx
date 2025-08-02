@@ -117,7 +117,11 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             value={color}
             sx={{ textTransform: "none" }}
           >
-            <Chip label={color} size="small" color={getChipColor(color)} />
+            <Chip
+              label={color}
+              size="small"
+              color={getChipColor(color) ?? "default"}
+            />
           </ToggleButton>
         ))}
       </ToggleButtonGroup>

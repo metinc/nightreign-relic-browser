@@ -1,7 +1,7 @@
 export const relicColors = ["Red", "Blue", "Yellow", "Green"] as const;
 export type RelicColor = (typeof relicColors)[number];
 
-export const getChipColor = (color: string | null) => {
+export const getChipColor = (color: string) => {
   switch (color) {
     case "Red":
       return "error";
@@ -12,6 +12,6 @@ export const getChipColor = (color: string | null) => {
     case "Green":
       return "success";
     default:
-      return "default";
+      return undefined;
   }
 };

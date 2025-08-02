@@ -1,18 +1,28 @@
 import React from "react";
-import { Box, Typography, Card, CardContent, Chip, List } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Chip,
+  List,
+  Tooltip,
+  useTheme,
+} from "@mui/material";
 import type { CompactRelicSlot } from "../types/SaveFile";
 import { highlightSearchTerm } from "../utils/SearchUtils";
-import { getChipColor } from "../utils/RelicColor";
+import { getChipColor, type RelicColor } from "../utils/RelicColor";
 
 interface RelicCardProps {
   relic: CompactRelicSlot;
   getItemName: (itemId: number) => string;
-  getItemColor: (itemId: number) => string | null;
+  getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   searchTerm: string;
   relicMatches: boolean;
   rowIndex: number | null;
   colIndex: number | null;
+  selectedColor: RelicColor | "Any";
 }
 
 const getBackgroundColor = (effectsCount: number) => {
@@ -39,14 +49,33 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   relicMatches,
   rowIndex,
   colIndex,
+  selectedColor,
 }) => {
+  const { palette } = useTheme();
   const [itemId, ...effects] = relic;
   const itemName = getItemName(itemId);
   const itemColor = getItemColor(itemId);
+  const chipColor = getChipColor(itemColor);
   const backgroundColor = getBackgroundColor(effects.length);
   const isSpecialRelic =
     !itemName.endsWith(" Scene") && itemName !== "Unknown Item";
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
+  const selectedChipColor = getChipColor(selectedColor);
+
+  const tooltipContent = selectedChipColor ? (
+    <span>
+      These coordinates can be used ingame to find the relic when sorted by
+      'Order Found' and filtered by{" "}
+      <span
+        style={{ color: palette[selectedChipColor].main, fontWeight: "bold" }}
+      >
+        {selectedColor.toLowerCase()}
+      </span>
+      .
+    </span>
+  ) : (
+    "These coordinates can be used ingame to find the relic when sorted by 'Order Found'."
+  );
 
   return (
     <Card
@@ -103,7 +132,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
             <Chip
               label={itemColor}
               size="small"
-              color={getChipColor(itemColor)}
+              color={chipColor}
               sx={{ overflow: "clip" }}
             />
           )}
@@ -126,19 +155,22 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
 
         {/* Row and Column indices in lower right corner */}
         {(rowIndex !== undefined || colIndex !== undefined) && (
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              right: 3,
-              fontSize: "0.7rem",
-              color: "text.disabled",
-            }}
-          >
-            {rowIndex !== null &&
-              colIndex !== null &&
-              `Row ${rowIndex + 1}, Column ${colIndex + 1}`}
-          </Box>
+          <Tooltip title={tooltipContent} placement="top" arrow>
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 0,
+                right: 3,
+                fontSize: "0.7rem",
+                color: "text.disabled",
+                cursor: "help",
+              }}
+            >
+              {rowIndex !== null &&
+                colIndex !== null &&
+                `Row ${rowIndex + 1}, Column ${colIndex + 1}`}
+            </Box>
+          </Tooltip>
         )}
       </CardContent>
     </Card>
