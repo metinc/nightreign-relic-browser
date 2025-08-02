@@ -64,7 +64,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           "&:last-child": {
             paddingBottom: 1,
           },
-          pt: 1,
+          p: 1,
         }}
       >
         <Box
@@ -129,8 +129,8 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           <Box
             sx={{
               position: "absolute",
-              bottom: 4,
-              right: 8,
+              bottom: 0,
+              right: 3,
               fontSize: "0.7rem",
               color: "text.disabled",
             }}
