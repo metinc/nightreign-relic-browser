@@ -44,7 +44,8 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const itemName = getItemName(itemId);
   const itemColor = getItemColor(itemId);
   const backgroundColor = getBackgroundColor(effects.length);
-  const isSpecialRelic = !itemName.endsWith(" Scene");
+  const isSpecialRelic =
+    !itemName.endsWith(" Scene") && itemName !== "Unknown Item";
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
 
   return (
