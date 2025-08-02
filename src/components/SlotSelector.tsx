@@ -6,12 +6,14 @@ interface SlotSelectorProps {
   slots: CharacterSlot[];
   currentSlot: number;
   onSlotSelect: (slotIndex: number) => void;
+  matchingRelicsCount: number;
 }
 
 export const SlotSelector: React.FC<SlotSelectorProps> = ({
   slots,
   currentSlot,
   onSlotSelect,
+  matchingRelicsCount,
 }) => {
   const validSlots = slots.filter((slot) => slot.name !== null);
 
@@ -27,18 +29,21 @@ export const SlotSelector: React.FC<SlotSelectorProps> = ({
         sx={{ borderBottom: 1, borderColor: "divider" }}
         centered
       >
-        {validSlots.map((slot) => (
+        {validSlots.map((slot, index) => (
           <Tab
             key={slot.name}
             label={
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {slot.name}
                 <Chip
-                  label={`${slot.relics.length} ${
-                    slot.relics.length === 1 ? "relic" : "relics"
-                  }`}
+                  label={`${
+                    currentSlot === index
+                      ? matchingRelicsCount
+                      : slot.relics.length
+                  } ${slot.relics.length === 1 ? "Relic" : "Relics"}`}
                   size="small"
                   variant="outlined"
+                  sx={{ minWidth: "82px" }}
                 />
               </Box>
             }

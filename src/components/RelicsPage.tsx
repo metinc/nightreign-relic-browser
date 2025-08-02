@@ -105,13 +105,13 @@ export function RelicsPage({
         onColorChange={setSelectedColor}
         showPlaceholders={showPlaceholders}
         onShowPlaceholdersChange={setShowPlaceholders}
-        matchingRelicsCount={matchingRelicsCount}
       />
 
       <SlotSelector
         slots={saveFileData.slots}
         currentSlot={saveFileData.currentSlot}
         onSlotSelect={selectSlot}
+        matchingRelicsCount={matchingRelicsCount}
       />
 
       {currentSlot && (
