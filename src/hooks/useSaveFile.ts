@@ -8,6 +8,7 @@ import type {
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
 import type { RelicColor } from "../utils/RelicColor";
+import { getItemName, getItemColor, getEffectName } from "../utils/DataUtils";
 
 export const useSaveFile = () => {
   const [saveFileData, setSaveFileData] = useState<SaveFileData | null>(null);
@@ -165,30 +166,25 @@ export const useSaveFile = () => {
   );
 
   // Get item name by ID
-  const getItemName = useCallback(
+  const getItemNameMemo = useCallback(
     (itemId: number): string => {
-      return itemsData[itemId.toString()]?.name || "Unknown Item";
+      return getItemName(itemId, itemsData);
     },
     [itemsData]
   );
 
   // Get item color by ID
-  const getItemColor = useCallback(
+  const getItemColorMemo = useCallback(
     (itemId: number): RelicColor => {
-      const color = itemsData[itemId.toString()]?.color;
-      if (color === null) {
-        console.error(`Item ${itemId} has no color defined`);
-        return "Red";
-      }
-      return color as RelicColor;
+      return getItemColor(itemId, itemsData);
     },
     [itemsData]
   );
 
   // Get effect name by ID
-  const getEffectName = useCallback(
+  const getEffectNameMemo = useCallback(
     (effectId: number) => {
-      return effectsData[effectId.toString()]?.name;
+      return getEffectName(effectId, effectsData);
     },
     [effectsData]
   );
@@ -224,9 +220,9 @@ export const useSaveFile = () => {
     loadSaveFile,
     loadDemoData,
     selectSlot,
-    getItemName,
-    getItemColor,
-    getEffectName,
+    getItemName: getItemNameMemo,
+    getItemColor: getItemColorMemo,
+    getEffectName: getEffectNameMemo,
     searchTerm,
     setSearchTerm,
     selectedColor,
