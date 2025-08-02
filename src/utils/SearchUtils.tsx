@@ -54,20 +54,19 @@ export const highlightSearchTerm = (
   };
 };
 
+export const doesRelicColorMatch = (
+  itemColor: RelicColor,
+  selectedColor: RelicColor | "Any"
+) => selectedColor === "Any" || selectedColor === itemColor;
+
 /**
- * Checks if a relic matches the filter color and search term in either its name or effects
+ * Checks if a relic matches the search term in either its name or effects
  */
 export const doesRelicMatch = (
   itemName: string,
   effectNames: string[],
-  itemColor: RelicColor,
-  selectedColor: RelicColor | "Any",
   searchTerm: string
 ): boolean => {
-  if (selectedColor !== "Any" && selectedColor !== itemColor) {
-    return false;
-  }
-
   if (!searchTerm.trim()) {
     return true; // No search term means everything matches
   }

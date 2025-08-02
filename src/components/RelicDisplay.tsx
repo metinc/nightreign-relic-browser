@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useEffect } from "react";
 import { Box, Typography, Paper, Grid, useMediaQuery } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { CompactRelicSlot } from "../types/SaveFile";
-import { doesRelicMatch } from "../utils/SearchUtils";
+import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
 import type { RelicColor } from "../utils/RelicColor";
 
@@ -37,8 +37,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
   // Calculate matching relics count (search matches only, ignoring color filter)
   const matchingRelicsCount = useMemo(() => {
-    if (!searchTerm.trim()) {
-      return relics.length; // If no search filter, all relics match
+    if (!searchTerm.trim() && selectedColor === "Any") {
+      return relics.length;
     }
 
     return relics.filter(([itemId, ...effects]) => {
@@ -48,13 +48,11 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       );
       const itemColor = getItemColor(itemId);
 
-      return doesRelicMatch(
-        itemName,
-        effectNames,
-        itemColor,
-        selectedColor,
-        searchTerm
-      );
+      if (!doesRelicColorMatch(itemColor, selectedColor)) {
+        return false;
+      }
+
+      return doesRelicMatch(itemName, effectNames, searchTerm);
     }).length;
   }, [
     getEffectName,
@@ -74,12 +72,16 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
   // Group relics into rows of 8
   const relicRows = useMemo(() => {
+    const filteredRelics = relics.filter(([itemId]) => {
+      const itemColor = getItemColor(itemId);
+      return doesRelicColorMatch(itemColor, selectedColor);
+    });
     const rows: CompactRelicSlot[][] = [];
-    for (let i = 0; i < relics.length; i += 8) {
-      rows.push(relics.slice(i, i + 8));
+    for (let i = 0; i < filteredRelics.length; i += 8) {
+      rows.push(filteredRelics.slice(i, i + 8));
     }
     return rows;
-  }, [relics]);
+  }, [getItemColor, relics, selectedColor]);
 
   // Virtual list setup
   const virtualizer = useVirtualizer({
@@ -208,7 +210,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   )}
 
                   {/* Relics in this row */}
-                  {rowRelics.map((relic, index) => {
+                  {rowRelics.flatMap((relic, index) => {
                     const [itemId, ...effects] = relic;
                     const itemName = getItemName(itemId);
                     const effectNames = effects.map(
@@ -216,14 +218,10 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                         getEffectName(effectId) ?? `Unknown Effect ${effectId}`
                     );
 
-                    const itemColor = getItemColor(itemId);
-
                     // Check if this relic matches the search
                     const relicMatches = doesRelicMatch(
                       itemName,
                       effectNames,
-                      itemColor,
-                      selectedColor,
                       searchTerm
                     );
 
