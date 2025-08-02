@@ -158,6 +158,7 @@ export const useSaveFile = () => {
         slotIndex >= 0 &&
         slotIndex < saveFileData.slots.length
       ) {
+        setMatchingRelicsCount(saveFileData.slots[slotIndex].relics.length);
         setSaveFileData((prev) =>
           prev ? { ...prev, currentSlot: slotIndex } : null
         );
@@ -205,11 +206,6 @@ export const useSaveFile = () => {
     setShowPlaceholdersState(show);
   }, []);
 
-  // Set matching relics count
-  const handleMatchingRelicsCountChange = useCallback((count: number) => {
-    setMatchingRelicsCount(count);
-  }, []);
-
   // Clear save file data
   const clearSaveFile = useCallback(() => {
     setSaveFileData(null);
@@ -237,7 +233,7 @@ export const useSaveFile = () => {
     showPlaceholders,
     setShowPlaceholders,
     matchingRelicsCount,
-    handleMatchingRelicsCountChange,
+    handleMatchingRelicsCountChange: setMatchingRelicsCount,
     clearSaveFile,
   };
 };
