@@ -7,8 +7,12 @@ import {
   Chip,
   IconButton,
   Box,
+  FormControlLabel,
+  Checkbox,
+  Tooltip,
+  Paper,
 } from "@mui/material";
-import { Search, Clear } from "@mui/icons-material";
+import { Search, Clear, Info } from "@mui/icons-material";
 import {
   getChipColor,
   relicColors,
@@ -20,6 +24,8 @@ interface SearchInputProps {
   onSearchChange: (searchTerm: string) => void;
   selectedColor: string;
   onColorChange: (color: RelicColor) => void;
+  showPlaceholders: boolean;
+  onShowPlaceholdersChange: (show: boolean) => void;
   matchingRelicsCount?: number;
 }
 
@@ -28,6 +34,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onSearchChange,
   selectedColor,
   onColorChange,
+  showPlaceholders,
+  onShowPlaceholdersChange,
   matchingRelicsCount,
 }) => {
   return (
@@ -72,6 +80,30 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           },
         }}
       />
+
+      <Paper
+        variant="outlined"
+        sx={{
+          height: 56,
+          display: "flex",
+          alignItems: "center",
+          px: 2,
+        }}
+      >
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showPlaceholders}
+              onChange={(e) => onShowPlaceholdersChange(e.target.checked)}
+            />
+          }
+          label="Show Placeholders"
+          sx={{ alignSelf: "center" }}
+        />
+        <Tooltip title="When enabled, placeholders will appear for non-matching cards so that the grid matches the in-game view">
+          <Info sx={{ color: "info.main" }} />
+        </Tooltip>
+      </Paper>
 
       <ToggleButtonGroup
         exclusive

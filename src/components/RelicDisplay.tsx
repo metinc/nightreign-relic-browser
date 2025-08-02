@@ -19,16 +19,18 @@ interface RelicDisplayProps {
   getEffectName: (effectId: number) => string;
   searchTerm?: string;
   selectedColor: RelicColor | "Any";
+  showPlaceholders: boolean;
   onMatchCountChange?: (count: number) => void;
 }
 
 export const RelicDisplay: React.FC<RelicDisplayProps> = ({
-  relics,
+  relics: allRelics,
   getItemName,
   getItemColor,
   getEffectName,
   searchTerm = "",
   selectedColor,
+  showPlaceholders,
   onMatchCountChange,
 }) => {
   const parentRef = useRef<HTMLDivElement>(null);
@@ -36,12 +38,12 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   const bigScreen = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   // Calculate matching relics count (search matches only, ignoring color filter)
-  const matchingRelicsCount = useMemo(() => {
+  const matchingRelics = useMemo(() => {
     if (!searchTerm.trim() && selectedColor === "Any") {
-      return relics.length;
+      return allRelics;
     }
 
-    return relics.filter(([itemId, ...effects]) => {
+    return allRelics.filter(([itemId, ...effects]) => {
       const itemName = getItemName(itemId);
       const effectNames = effects.map((effectId) => getEffectName(effectId));
       const itemColor = getItemColor(itemId);
@@ -51,15 +53,17 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       }
 
       return doesRelicMatch(itemName, effectNames, searchTerm);
-    }).length;
+    });
   }, [
     getEffectName,
     getItemColor,
     getItemName,
-    relics,
+    allRelics,
     searchTerm,
     selectedColor,
   ]);
+
+  const matchingRelicsCount = matchingRelics.length;
 
   // Report the matching count to parent component
   useEffect(() => {
@@ -70,16 +74,28 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
   // Group relics into rows of 8
   const relicRows = useMemo(() => {
-    const filteredRelics = relics.filter(([itemId]) => {
-      const itemColor = getItemColor(itemId);
-      return doesRelicColorMatch(itemColor, selectedColor);
-    });
+    // Use matchingRelics when showPlaceholders is false, otherwise use all relics filtered by color
+    const relics = showPlaceholders ? allRelics : matchingRelics;
+
+    const filteredRelics = showPlaceholders
+      ? relics.filter(([itemId]) => {
+          const itemColor = getItemColor(itemId);
+          return doesRelicColorMatch(itemColor, selectedColor);
+        })
+      : relics; // matchingRelics already includes color filtering
+
     const rows: CompactRelicSlot[][] = [];
     for (let i = 0; i < filteredRelics.length; i += 8) {
       rows.push(filteredRelics.slice(i, i + 8));
     }
     return rows;
-  }, [getItemColor, relics, selectedColor]);
+  }, [
+    getItemColor,
+    allRelics,
+    matchingRelics,
+    selectedColor,
+    showPlaceholders,
+  ]);
 
   // Virtual list setup
   const virtualizer = useVirtualizer({
@@ -92,7 +108,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     },
   });
 
-  if (relics.length === 0) {
+  if (allRelics.length === 0) {
     return (
       <Paper sx={{ p: 3, textAlign: "center" }}>
         <Typography variant="h6" color="text.secondary">
@@ -208,7 +224,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   )}
 
                   {/* Relics in this row */}
-                  {rowRelics.flatMap((relic, index) => {
+                  {rowRelics.flatMap((relic) => {
                     const [itemId, ...effects] = relic;
                     const itemName = getItemName(itemId);
                     const effectNames = effects.map((effectId) =>
@@ -221,6 +237,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       effectNames,
                       searchTerm
                     );
+
+                    const index = allRelics.indexOf(relic);
 
                     const rowIndex = !bigScreen
                       ? Math.floor(index / RELICS_PER_ROW)

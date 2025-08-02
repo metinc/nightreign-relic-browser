@@ -24,6 +24,8 @@ function App() {
     setSearchTerm,
     selectedColor,
     setSelectedColor,
+    showPlaceholders,
+    setShowPlaceholders,
     matchingRelicsCount,
     handleMatchingRelicsCountChange,
     clearSaveFile,
@@ -115,6 +117,8 @@ function App() {
                   setSearchTerm={setSearchTerm}
                   selectedColor={selectedColor}
                   setSelectedColor={setSelectedColor}
+                  showPlaceholders={showPlaceholders}
+                  setShowPlaceholders={setShowPlaceholders}
                   matchingRelicsCount={matchingRelicsCount}
                   handleMatchingRelicsCountChange={
                     handleMatchingRelicsCountChange
@@ -139,6 +143,8 @@ function App() {
                   setSearchTerm={setSearchTerm}
                   selectedColor={selectedColor}
                   setSelectedColor={setSelectedColor}
+                  showPlaceholders={showPlaceholders}
+                  setShowPlaceholders={setShowPlaceholders}
                   matchingRelicsCount={matchingRelicsCount}
                   handleMatchingRelicsCountChange={
                     handleMatchingRelicsCountChange

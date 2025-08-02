@@ -16,6 +16,8 @@ interface DemoRelicsPageProps {
   setSearchTerm: (term: string) => void;
   selectedColor: RelicColor | "Any";
   setSelectedColor: (color: RelicColor) => void;
+  showPlaceholders: boolean;
+  setShowPlaceholders: (show: boolean) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
   clearSaveFile: () => void;

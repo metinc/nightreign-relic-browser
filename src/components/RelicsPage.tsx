@@ -19,6 +19,8 @@ interface RelicsPageProps {
   setSearchTerm: (term: string) => void;
   selectedColor: RelicColor | "Any";
   setSelectedColor: (color: RelicColor) => void;
+  showPlaceholders: boolean;
+  setShowPlaceholders: (show: boolean) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
   clearSaveFile: () => void;
@@ -36,6 +38,8 @@ export function RelicsPage({
   setSearchTerm,
   selectedColor,
   setSelectedColor,
+  showPlaceholders,
+  setShowPlaceholders,
   matchingRelicsCount,
   handleMatchingRelicsCountChange,
   clearSaveFile,
@@ -99,6 +103,8 @@ export function RelicsPage({
         onSearchChange={setSearchTerm}
         selectedColor={selectedColor}
         onColorChange={setSelectedColor}
+        showPlaceholders={showPlaceholders}
+        onShowPlaceholdersChange={setShowPlaceholders}
         matchingRelicsCount={matchingRelicsCount}
       />
 
@@ -121,6 +127,7 @@ export function RelicsPage({
             getEffectName={getEffectName}
             searchTerm={searchTerm}
             selectedColor={selectedColor}
+            showPlaceholders={showPlaceholders}
             onMatchCountChange={handleMatchingRelicsCountChange}
           />
         </Box>

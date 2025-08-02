@@ -23,6 +23,7 @@ export const useSaveFile = () => {
     "Any"
   );
   const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
+  const [showPlaceholders, setShowPlaceholdersState] = useState<boolean>(false);
 
   // Load JSON data for items and effects
   const loadJsonData = useCallback(async () => {
@@ -199,6 +200,11 @@ export const useSaveFile = () => {
     setSelectedColorState(color);
   }, []);
 
+  // Set show placeholders
+  const setShowPlaceholders = useCallback((show: boolean) => {
+    setShowPlaceholdersState(show);
+  }, []);
+
   // Set matching relics count
   const handleMatchingRelicsCountChange = useCallback((count: number) => {
     setMatchingRelicsCount(count);
@@ -209,6 +215,7 @@ export const useSaveFile = () => {
     setSaveFileData(null);
     setSearchTermState("");
     setSelectedColorState("Any");
+    setShowPlaceholdersState(false);
     setMatchingRelicsCount(0);
     setError(null);
   }, []);
@@ -227,6 +234,8 @@ export const useSaveFile = () => {
     setSearchTerm,
     selectedColor,
     setSelectedColor,
+    showPlaceholders,
+    setShowPlaceholders,
     matchingRelicsCount,
     handleMatchingRelicsCountChange,
     clearSaveFile,
