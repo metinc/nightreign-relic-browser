@@ -118,48 +118,52 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     );
   }
 
+  const showRelicCoordinates = !bigScreen || !showPlaceholders;
+
   return (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       {/* Fixed header with column numbers */}
 
-      <Box
-        sx={{
-          p: 2,
-          pb: 1,
-          backgroundColor: "#191919",
-          borderBottom: 1,
-          borderColor: "divider",
-          display: { xs: "none", md: "block" },
-        }}
-      >
-        <Grid container columns={COLUMNS_BIG_SCREEN} spacing={2}>
-          {/* Empty space for row number column */}
-          <Grid size={COLUMNS_PER_ROW_NUMBER} />
+      {!showRelicCoordinates && (
+        <Box
+          sx={{
+            p: 2,
+            pb: 1,
+            backgroundColor: "#191919",
+            borderBottom: 1,
+            borderColor: "divider",
+            display: { xs: "none", md: "block" },
+          }}
+        >
+          <Grid container columns={COLUMNS_BIG_SCREEN} spacing={2}>
+            {/* Empty space for row number column */}
+            <Grid size={COLUMNS_PER_ROW_NUMBER} />
 
-          {/* Column numbers */}
-          {Array.from({ length: 8 }, (_, i) => (
-            <Grid
-              key={i}
-              size={COLUMNS_PER_RELIC}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography
-                variant="h6"
+            {/* Column numbers */}
+            {Array.from({ length: 8 }, (_, i) => (
+              <Grid
+                key={i}
+                size={COLUMNS_PER_RELIC}
                 sx={{
-                  color: "text.secondary",
-                  fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                {i + 1}
-              </Typography>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: "text.secondary",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {i + 1}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      )}
 
       {/* Scrollable content */}
       <Box
@@ -198,11 +202,12 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
               >
                 <Grid
                   container
-                  columns={bigScreen ? COLUMNS_BIG_SCREEN : COLUMNS}
-                  spacing={bigScreen ? 2 : 0}
+                  columns={!showRelicCoordinates ? COLUMNS_BIG_SCREEN : COLUMNS}
+                  columnSpacing={2}
+                  rowSpacing={!showRelicCoordinates ? 2 : 0}
                 >
                   {/* Row number */}
-                  {bigScreen && (
+                  {!showRelicCoordinates && (
                     <Grid
                       size={COLUMNS_PER_ROW_NUMBER}
                       sx={{
@@ -240,10 +245,12 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
                     const index = allRelics.indexOf(relic);
 
-                    const rowIndex = !bigScreen
+                    const rowIndex = showRelicCoordinates
                       ? Math.floor(index / RELICS_PER_ROW)
                       : null;
-                    const colIndex = !bigScreen ? index % RELICS_PER_ROW : null;
+                    const colIndex = showRelicCoordinates
+                      ? index % RELICS_PER_ROW
+                      : null;
 
                     return (
                       <Grid
