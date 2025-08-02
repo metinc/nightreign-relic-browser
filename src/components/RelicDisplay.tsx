@@ -43,9 +43,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
     return relics.filter(([itemId, ...effects]) => {
       const itemName = getItemName(itemId);
-      const effectNames = effects.map(
-        (effectId) => getEffectName(effectId) ?? `Unknown Effect ${effectId}`
-      );
+      const effectNames = effects.map((effectId) => getEffectName(effectId));
       const itemColor = getItemColor(itemId);
 
       if (!doesRelicColorMatch(itemColor, selectedColor)) {
@@ -213,9 +211,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   {rowRelics.flatMap((relic, index) => {
                     const [itemId, ...effects] = relic;
                     const itemName = getItemName(itemId);
-                    const effectNames = effects.map(
-                      (effectId) =>
-                        getEffectName(effectId) ?? `Unknown Effect ${effectId}`
+                    const effectNames = effects.map((effectId) =>
+                      getEffectName(effectId)
                     );
 
                     // Check if this relic matches the search

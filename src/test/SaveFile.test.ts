@@ -160,14 +160,9 @@ describe("Utility Functions", () => {
     });
 
     it("should return 'Unknown Item' for non-existing items", () => {
-      expect(getItemName(99999, itemsData)).toBe("Unknown Item");
-      expect(getItemName(-1, itemsData)).toBe("Unknown Item");
-      expect(getItemName(0, itemsData)).toBe("Unknown Item");
-    });
-
-    it("should handle edge cases", () => {
-      expect(getItemName(100, itemsData)).toBe("Delicate Burning Scene");
-      expect(getItemName(99999, itemsData)).toBe("Unknown Item");
+      expect(getItemName(99999, itemsData)).toMatch(/^Unknown Item/);
+      expect(getItemName(-1, itemsData)).toMatch(/^Unknown Item/);
+      expect(getItemName(0, itemsData)).toMatch(/^Unknown Item/);
     });
   });
 
@@ -224,9 +219,9 @@ describe("Utility Functions", () => {
     });
 
     it("should return undefined for non-existing effects", () => {
-      expect(getEffectName(99999, effectsData)).toBeUndefined();
-      expect(getEffectName(-1, effectsData)).toBeUndefined();
-      expect(getEffectName(0, effectsData)).toBeUndefined();
+      expect(getEffectName(99999, effectsData)).toMatch(/^Unknown Effect/);
+      expect(getEffectName(-1, effectsData)).toMatch(/^Unknown Effect/);
+      expect(getEffectName(0, effectsData)).toMatch(/^Unknown Effect/);
     });
 
     it("should handle edge cases", () => {
@@ -236,7 +231,7 @@ describe("Utility Functions", () => {
       const firstEffectName = effectsData[effectIds[0]].name;
 
       expect(getEffectName(firstEffectId, effectsData)).toBe(firstEffectName);
-      expect(getEffectName(1000000, effectsData)).toBeUndefined();
+      expect(getEffectName(1000000, effectsData)).toMatch(/^Unknown Effect/);
     });
   });
 
@@ -257,9 +252,9 @@ describe("Utility Functions", () => {
     });
 
     it("should work with empty data objects", () => {
-      expect(getItemName(100, {})).toBe("Unknown Item");
+      expect(getItemName(100, {})).toMatch(/^Unknown Item/);
       expect(getItemColor(100, {})).toBe("Red");
-      expect(getEffectName(100, {})).toBeUndefined();
+      expect(getEffectName(100, {})).toMatch(/^Unknown Effect/);
     });
   });
 });

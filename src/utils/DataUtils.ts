@@ -8,7 +8,10 @@ export const getItemName = (
   itemId: number,
   itemsData: Record<string, ItemData>
 ): string => {
-  return itemsData[itemId.toString()]?.name || "Unknown Item";
+  if (!Object.hasOwn(itemsData, itemId.toString())) {
+    return `Unknown Item ${itemId}`;
+  }
+  return itemsData[itemId.toString()].name;
 };
 
 /**
@@ -37,6 +40,9 @@ export const getItemColor = (
 export const getEffectName = (
   effectId: number,
   effectsData: Record<string, EffectData>
-) => {
-  return effectsData[effectId.toString()]?.name;
+): string => {
+  if (!Object.hasOwn(effectsData, effectId.toString())) {
+    return `Unknown Effect ${effectId}`;
+  }
+  return effectsData[effectId.toString()].name;
 };
