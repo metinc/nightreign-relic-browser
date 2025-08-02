@@ -180,6 +180,9 @@
   "7006000": { "name": "Improved Stance-Breaking when Two-Handing" },
   "7006100": { "name": "Improved Stance-Breaking when Wielding Two Armaments" },
   "7006101": { "name": "Improved Stance-Breaking when Wielding Two Armaments" },
+  "7006200": {
+    "name": "Changes compatible armament's skill to Chilling Mist at start of expedition"
+  },
   "7010000": { "name": "[Guardian] Improved Character Skill range" },
   "7010200": { "name": "Flask Also Heals Allies" },
   "7010500": { "name": "[Wylder] Art activation spreads fire in area" },
@@ -506,6 +509,12 @@
     "name": "Changes compatible armament's skill to Rain of Arrows at start of expedition"
   },
   "7126000": {
+    "name": "Starlight Shards in possession at start of expedition"
+  },
+  "7126001": {
+    "name": "Starlight Shards in possession at start of expedition"
+  },
+  "7126002": {
     "name": "Starlight Shards in possession at start of expedition"
   },
   "7150000": { "name": "Guard counter is given a boost based on current HP" },
