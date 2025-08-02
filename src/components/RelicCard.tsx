@@ -82,6 +82,8 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
+              letterSpacing: 0,
+              fontSize: ".9rem",
               ...(isSpecialRelic
                 ? {
                     color: "primary.main",
