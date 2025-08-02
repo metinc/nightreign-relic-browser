@@ -52,10 +52,7 @@ export const useSaveFile = () => {
     setError(null);
 
     try {
-      // Load JSON data if not already loaded
-      if (Object.keys(itemsData).length === 0) {
-        await loadJsonData();
-      }
+      await loadJsonData();
 
       const demoResponse = await fetch("/demo.json");
       if (!demoResponse.ok) {
@@ -88,7 +85,7 @@ export const useSaveFile = () => {
     } finally {
       setLoading(false);
     }
-  }, [itemsData, loadJsonData]);
+  }, [loadJsonData]);
 
   // Load and parse save file
   const loadSaveFile = useCallback(
