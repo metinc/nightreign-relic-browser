@@ -102,7 +102,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               label={itemColor}
               size="small"
               color={getChipColor(itemColor)}
-              sx={{ overflow: "hidden" }}
+              sx={{ overflow: "clip" }}
             />
           )}
         </Box>
