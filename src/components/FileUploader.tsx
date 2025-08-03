@@ -266,8 +266,11 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
 
             <Alert severity="info">
               <AlertTitle>Can't find your save file?</AlertTitle>
-              You can download it from Steam Cloud:{" "}
-              <Link href="https://store.steampowered.com/account/remotestorageapp/?appid=2622380">
+              You can download it from{" "}
+              <Link
+                href="https://store.steampowered.com/account/remotestorageapp/?appid=2622380"
+                target="_blank"
+              >
                 Steam Cloud
               </Link>
             </Alert>
