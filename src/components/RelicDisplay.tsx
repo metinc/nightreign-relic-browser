@@ -4,7 +4,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import type { CompactRelicSlot } from "../types/SaveFile";
 import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
-import type { RelicColor } from "../utils/RelicColor";
+import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
 
 const RELICS_PER_ROW = 8;
 const COLUMNS_PER_RELIC = 6;
@@ -18,7 +18,7 @@ interface RelicDisplayProps {
   getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   searchTerm?: string;
-  selectedColor: RelicColor | "Any";
+  selectedColor: RelicSlotColor;
   showPlaceholders: boolean;
   onMatchCountChange?: (count: number) => void;
 }

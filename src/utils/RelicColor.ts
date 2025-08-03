@@ -1,6 +1,9 @@
 export const relicColors = ["Red", "Blue", "Yellow", "Green"] as const;
 export type RelicColor = (typeof relicColors)[number];
 
+export const relicSlotColors = ["Any", ...relicColors] as const;
+export type RelicSlotColor = (typeof relicSlotColors)[number];
+
 export const getChipColor = (color: string) => {
   switch (color) {
     case "Red":

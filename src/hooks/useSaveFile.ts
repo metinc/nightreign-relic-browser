@@ -7,7 +7,7 @@ import type {
 } from "../types/SaveFile";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
-import type { RelicColor } from "../utils/RelicColor";
+import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
 import { getItemName, getItemColor, getEffectName } from "../utils/DataUtils";
 
 export const useSaveFile = () => {
@@ -19,9 +19,8 @@ export const useSaveFile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTermState] = useState<string>("");
-  const [selectedColor, setSelectedColorState] = useState<RelicColor | "Any">(
-    "Any"
-  );
+  const [selectedColor, setSelectedColorState] =
+    useState<RelicSlotColor>("Any");
   const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
   const [showPlaceholders, setShowPlaceholdersState] = useState<boolean>(false);
 

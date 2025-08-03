@@ -11,7 +11,11 @@ import {
 } from "@mui/material";
 import type { CompactRelicSlot } from "../types/SaveFile";
 import { highlightSearchTerm } from "../utils/SearchUtils";
-import { getChipColor, type RelicColor } from "../utils/RelicColor";
+import {
+  getChipColor,
+  type RelicColor,
+  type RelicSlotColor,
+} from "../utils/RelicColor";
 
 interface RelicCardProps {
   relic: CompactRelicSlot;
@@ -22,7 +26,7 @@ interface RelicCardProps {
   relicMatches: boolean;
   rowIndex: number | null;
   colIndex: number | null;
-  selectedColor: RelicColor | "Any";
+  selectedColor: RelicSlotColor;
 }
 
 const getBackgroundColor = (effectsCount: number) => {

@@ -15,7 +15,7 @@ import {
 import { Search, Clear, Info } from "@mui/icons-material";
 import {
   getChipColor,
-  relicColors,
+  relicSlotColors,
   type RelicColor,
 } from "../utils/RelicColor";
 
@@ -111,7 +111,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           }
         }}
       >
-        {["Any", ...relicColors].map((color) => (
+        {relicSlotColors.map((color) => (
           <ToggleButton
             key={color}
             value={color}
