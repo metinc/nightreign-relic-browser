@@ -1,10 +1,5 @@
 import { useState, useCallback } from "react";
-import type {
-  SaveFileData,
-  CharacterSlot,
-  ItemData,
-  EffectData,
-} from "../types/SaveFile";
+import type { SaveFileData, CharacterSlot } from "../types/SaveFile";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
@@ -12,10 +7,6 @@ import { getItemName, getItemColor, getEffectName } from "../utils/DataUtils";
 
 export const useSaveFile = () => {
   const [saveFileData, setSaveFileData] = useState<SaveFileData | null>(null);
-  const [itemsData, setItemsData] = useState<Record<string, ItemData>>({});
-  const [effectsData, setEffectsData] = useState<Record<string, EffectData>>(
-    {}
-  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTermState] = useState<string>("");
@@ -24,37 +15,12 @@ export const useSaveFile = () => {
   const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
   const [showPlaceholders, setShowPlaceholdersState] = useState<boolean>(false);
 
-  // Load JSON data for items and effects
-  const loadJsonData = useCallback(async () => {
-    try {
-      const [itemsResponse, effectsResponse] = await Promise.all([
-        fetch("/items.json"),
-        fetch("/effects.json"),
-      ]);
-
-      if (!itemsResponse.ok || !effectsResponse.ok) {
-        throw new Error("Failed to load JSON data files");
-      }
-
-      const items = await itemsResponse.json();
-      const effects = await effectsResponse.json();
-
-      setItemsData(items);
-      setEffectsData(effects);
-    } catch (err) {
-      console.error("Error loading JSON data:", err);
-      setError("Failed to load items and effects data");
-    }
-  }, []);
-
   // Load demo data
   const loadDemoData = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      await loadJsonData();
-
       const demoResponse = await fetch("/demo.json");
       if (!demoResponse.ok) {
         throw new Error("Failed to load demo data");
@@ -86,68 +52,58 @@ export const useSaveFile = () => {
     } finally {
       setLoading(false);
     }
-  }, [loadJsonData]);
+  }, []);
 
   // Load and parse save file
-  const loadSaveFile = useCallback(
-    async (file: File) => {
-      setLoading(true);
-      setError(null);
+  const loadSaveFile = useCallback(async (file: File) => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        // Load JSON data if not already loaded
-        if (Object.keys(itemsData).length === 0) {
-          await loadJsonData();
-        }
+    try {
+      const fileBuffer = await file.arrayBuffer();
+      const bnd4Entries = await SaveFileDecryptor.decryptSaveFile(fileBuffer);
 
-        const fileBuffer = await file.arrayBuffer();
-        const bnd4Entries = await SaveFileDecryptor.decryptSaveFile(fileBuffer);
-
-        if (bnd4Entries.length === 0) {
-          throw new Error("No BND4 entries found in save file");
-        }
-
-        if (bnd4Entries.length !== 14) {
-          console.warn(`Expected 14 BND4 entries, found ${bnd4Entries.length}`);
-        }
-
-        // Parse all character slots (1-10)
-        const slots: CharacterSlot[] = [];
-        for (let i = 1; i <= 10; i++) {
-          try {
-            const slotData = RelicParser.parseCharacterSlot(i, bnd4Entries);
-            slots.push(slotData);
-          } catch (err) {
-            console.error(`Error parsing slot ${i}:`, err);
-          }
-        }
-
-        const saveData: SaveFileData = {
-          filePath: file.name,
-          slots,
-          currentSlot: 0,
-        };
-
-        setSaveFileData(saveData);
-
-        // Track successful file load
-        window.dataLayer.push({
-          event: "save_file_opened",
-          file_name: file.name,
-          file_size: file.size,
-          relics_per_slot: slots.map((slot) => slot.relics.length),
-        });
-      } catch (err) {
-        console.error("Error loading save file:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load save file"
-        );
-      } finally {
-        setLoading(false);
+      if (bnd4Entries.length === 0) {
+        throw new Error("No BND4 entries found in save file");
       }
-    },
-    [itemsData, loadJsonData]
-  );
+
+      if (bnd4Entries.length !== 14) {
+        console.warn(`Expected 14 BND4 entries, found ${bnd4Entries.length}`);
+      }
+
+      // Parse all character slots (1-10)
+      const slots: CharacterSlot[] = [];
+      for (let i = 1; i <= 10; i++) {
+        try {
+          const slotData = RelicParser.parseCharacterSlot(i, bnd4Entries);
+          slots.push(slotData);
+        } catch (err) {
+          console.error(`Error parsing slot ${i}:`, err);
+        }
+      }
+
+      const saveData: SaveFileData = {
+        filePath: file.name,
+        slots,
+        currentSlot: 0,
+      };
+
+      setSaveFileData(saveData);
+
+      // Track successful file load
+      window.dataLayer.push({
+        event: "save_file_opened",
+        file_name: file.name,
+        file_size: file.size,
+        relics_per_slot: slots.map((slot) => slot.relics.length),
+      });
+    } catch (err) {
+      console.error("Error loading save file:", err);
+      setError(err instanceof Error ? err.message : "Failed to load save file");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // Select a character slot
   const selectSlot = useCallback(
@@ -167,28 +123,19 @@ export const useSaveFile = () => {
   );
 
   // Get item name by ID
-  const getItemNameMemo = useCallback(
-    (itemId: number): string => {
-      return getItemName(itemId, itemsData);
-    },
-    [itemsData]
-  );
+  const getItemNameMemo = useCallback((itemId: number): string => {
+    return getItemName(itemId);
+  }, []);
 
   // Get item color by ID
-  const getItemColorMemo = useCallback(
-    (itemId: number): RelicColor => {
-      return getItemColor(itemId, itemsData);
-    },
-    [itemsData]
-  );
+  const getItemColorMemo = useCallback((itemId: number): RelicColor => {
+    return getItemColor(itemId);
+  }, []);
 
   // Get effect name by ID
-  const getEffectNameMemo = useCallback(
-    (effectId: number) => {
-      return getEffectName(effectId, effectsData);
-    },
-    [effectsData]
-  );
+  const getEffectNameMemo = useCallback((effectId: number) => {
+    return getEffectName(effectId);
+  }, []);
 
   // Set search term
   const setSearchTerm = useCallback((term: string) => {

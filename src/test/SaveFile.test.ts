@@ -2,11 +2,9 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
 import { getItemName, getItemColor, getEffectName } from "../utils/DataUtils";
-import type { BND4Entry, ItemData, EffectData } from "../types/SaveFile";
+import type { BND4Entry } from "../types/SaveFile";
 import fs from "fs";
 import path from "path";
-import itemsDataJson from "../../public/items.json";
-import effectsDataJson from "../../public/effects.json";
 
 type TestData = {
   name: string;
@@ -120,17 +118,17 @@ describe("Save File Processing", () => {
 
           slot.relics.forEach((relic) => {
             const [itemId, ...effects] = relic;
-            const itemName = getItemName(itemId, itemsDataJson);
+            const itemName = getItemName(itemId);
             expect(itemName).toBeDefined();
             expect(itemName).toBeTypeOf("string");
             expect(itemName).not.toBe("Unknown Item");
 
-            const itemColor = getItemColor(itemId, itemsDataJson);
+            const itemColor = getItemColor(itemId);
             expect(itemColor).toBeDefined();
             expect(itemColor).toBeTypeOf("string");
 
             const effectNames = effects.map((effectId) =>
-              getEffectName(effectId, effectsDataJson)
+              getEffectName(effectId)
             );
             effectNames.forEach((effectName, index) => {
               expect(
@@ -148,28 +146,24 @@ describe("Save File Processing", () => {
 });
 
 describe("Utility Functions", () => {
-  // Use actual items and effects data
-  const itemsData = itemsDataJson as Record<string, ItemData>;
-  const effectsData = effectsDataJson as Record<string, EffectData>;
-
   describe("getItemName", () => {
     it("should return the correct item name for existing items", () => {
-      expect(getItemName(100, itemsData)).toBe("Delicate Burning Scene");
-      expect(getItemName(101, itemsData)).toBe("Polished Burning Scene");
-      expect(getItemName(11, itemsData)).toBe("Sovereign Sigil");
+      expect(getItemName(100)).toBe("Delicate Burning Scene");
+      expect(getItemName(101)).toBe("Polished Burning Scene");
+      expect(getItemName(11)).toBe("Sovereign Sigil");
     });
 
     it("should return 'Unknown Item' for non-existing items", () => {
-      expect(getItemName(99999, itemsData)).toMatch(/^Unknown Item/);
-      expect(getItemName(-1, itemsData)).toMatch(/^Unknown Item/);
-      expect(getItemName(0, itemsData)).toMatch(/^Unknown Item/);
+      expect(getItemName(99999)).toMatch(/^Unknown Item/);
+      expect(getItemName(-1)).toMatch(/^Unknown Item/);
+      expect(getItemName(0)).toMatch(/^Unknown Item/);
     });
   });
 
   describe("getItemColor", () => {
     it("should return the correct color for items with defined colors", () => {
-      expect(getItemColor(100, itemsData)).toBe("Red");
-      expect(getItemColor(101, itemsData)).toBe("Red");
+      expect(getItemColor(100)).toBe("Red");
+      expect(getItemColor(101)).toBe("Red");
     });
 
     it("should return 'Red' as default for items with null color", () => {
@@ -177,7 +171,7 @@ describe("Utility Functions", () => {
       const originalError = console.error;
       console.error = () => {};
 
-      expect(getItemColor(11, itemsData)).toBe("Red");
+      expect(getItemColor(11)).toBe("Red");
 
       // Restore console.error
       console.error = originalError;
@@ -187,8 +181,8 @@ describe("Utility Functions", () => {
       const originalError = console.error;
       console.error = () => {};
 
-      expect(getItemColor(99999, itemsData)).toBe("Red");
-      expect(getItemColor(-1, itemsData)).toBe("Red");
+      expect(getItemColor(99999)).toBe("Red");
+      expect(getItemColor(-1)).toBe("Red");
 
       console.error = originalError;
     });
@@ -200,7 +194,7 @@ describe("Utility Functions", () => {
         errorCalled = true;
       };
 
-      getItemColor(11, itemsData);
+      getItemColor(11);
       expect(errorCalled).toBe(true);
 
       console.error = originalError;
@@ -209,52 +203,34 @@ describe("Utility Functions", () => {
 
   describe("getEffectName", () => {
     it("should return the correct effect name for existing effects", () => {
-      expect(getEffectName(10000, effectsData)).toBe(
-        "FP Restoration on Successive Attacks"
-      );
-      expect(getEffectName(10001, effectsData)).toBe(
-        "Taking attacks improves attack power"
-      );
-      expect(getEffectName(310000, effectsData)).toBe("Increased Maximum HP");
+      expect(getEffectName(10000)).toBe("FP Restoration on Successive Attacks");
+      expect(getEffectName(10001)).toBe("Taking attacks improves attack power");
+      expect(getEffectName(310000)).toBe("Increased Maximum HP");
     });
 
     it("should return undefined for non-existing effects", () => {
-      expect(getEffectName(99999, effectsData)).toMatch(/^Unknown Effect/);
-      expect(getEffectName(-1, effectsData)).toMatch(/^Unknown Effect/);
-      expect(getEffectName(0, effectsData)).toMatch(/^Unknown Effect/);
+      expect(getEffectName(99999)).toMatch(/^Unknown Effect/);
+      expect(getEffectName(-1)).toMatch(/^Unknown Effect/);
+      expect(getEffectName(0)).toMatch(/^Unknown Effect/);
     });
 
     it("should handle edge cases", () => {
-      // Find a valid effect ID from the actual data
-      const effectIds = Object.keys(effectsData);
-      const firstEffectId = parseInt(effectIds[0]);
-      const firstEffectName = effectsData[effectIds[0]].name;
-
-      expect(getEffectName(firstEffectId, effectsData)).toBe(firstEffectName);
-      expect(getEffectName(1000000, effectsData)).toMatch(/^Unknown Effect/);
+      // Test with a known effect from the new TypeScript data
+      expect(getEffectName(7000000)).toBe("Vigor +1");
+      expect(getEffectName(1000000)).toMatch(/^Unknown Effect/);
     });
   });
 
   describe("Integration with real data structure", () => {
-    it("should handle string keys correctly", () => {
-      // Test that numeric IDs are properly converted to strings for lookup
-      const testItem = { "123": { name: "Test Item", color: "Green" } };
-      expect(getItemName(123, testItem)).toBe("Test Item");
-      expect(getItemColor(123, testItem)).toBe("Green");
-    });
-
     it("should handle large numeric IDs", () => {
-      const testData = {
-        "999999": { name: "Large ID Item", color: "Purple" },
-      };
-      expect(getItemName(999999, testData)).toBe("Large ID Item");
-      expect(getItemColor(999999, testData)).toBe("Purple");
+      expect(getItemName(1007322)).toBe("Grand Tranquil Scene");
+      expect(getItemColor(1007322)).toBe("Green");
     });
 
-    it("should work with empty data objects", () => {
-      expect(getItemName(100, {})).toMatch(/^Unknown Item/);
-      expect(getItemColor(100, {})).toBe("Red");
-      expect(getEffectName(100, {})).toMatch(/^Unknown Effect/);
+    it("should work with non-existing data", () => {
+      expect(getItemName(999999999)).toMatch(/^Unknown Item/);
+      expect(getItemColor(999999999)).toBe("Red");
+      expect(getEffectName(999999999)).toMatch(/^Unknown Effect/);
     });
   });
 });

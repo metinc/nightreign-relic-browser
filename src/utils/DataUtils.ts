@@ -1,29 +1,26 @@
-import type { ItemData, EffectData } from "../types/SaveFile";
 import type { RelicColor } from "./RelicColor";
+import { items } from "../resources/items";
+import { effects } from "../resources/effects";
+import i18n from "../i18n";
 
 /**
- * Get item name by ID from items data
+ * Get item name by ID using TypeScript resources and i18n
  */
-export const getItemName = (
-  itemId: number,
-  itemsData: Record<string, ItemData>
-): string => {
-  if (!Object.hasOwn(itemsData, itemId.toString())) {
+export const getItemName = (itemId: number): string => {
+  const item = items.get(itemId);
+  if (!item) {
     return `Unknown Item ${itemId}`;
   }
-  return itemsData[itemId.toString()].name;
+  return i18n.t(`items.${item.key}`, { defaultValue: item.key });
 };
 
 /**
- * Get item color by ID from items data
+ * Get item color by ID using TypeScript resources
  */
-export const getItemColor = (
-  itemId: number,
-  itemsData: Record<string, ItemData>
-): RelicColor => {
-  const item = itemsData[itemId.toString()];
+export const getItemColor = (itemId: number): RelicColor => {
+  const item = items.get(itemId);
   if (!item) {
-    console.error(`Item ${itemId} has no color defined`);
+    console.error(`Item ${itemId} not found`);
     return "Red";
   }
   const color = item.color;
@@ -35,14 +32,12 @@ export const getItemColor = (
 };
 
 /**
- * Get effect name by ID from effects data
+ * Get effect name by ID using TypeScript resources and i18n
  */
-export const getEffectName = (
-  effectId: number,
-  effectsData: Record<string, EffectData>
-): string => {
-  if (!Object.hasOwn(effectsData, effectId.toString())) {
+export const getEffectName = (effectId: number): string => {
+  const effect = effects.get(effectId);
+  if (!effect) {
     return `Unknown Effect ${effectId}`;
   }
-  return effectsData[effectId.toString()].name;
+  return i18n.t(`effects.${effect.key}`, { defaultValue: effect.key });
 };
