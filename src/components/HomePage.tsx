@@ -1,6 +1,7 @@
 import { Box, Typography, Alert, Button, Paper, Grid } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { useTranslation } from "react-i18next";
 
 interface HomePageProps {
   onLoadDemo: () => void;
@@ -8,6 +9,7 @@ interface HomePageProps {
 }
 
 export function HomePage({ onLoadDemo, loading }: HomePageProps) {
+  const { t } = useTranslation();
   const [showOverlay, setShowOverlay] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -69,7 +71,7 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
         <Grid size={{ xs: 12, sm: 6 }}>
           <Paper sx={{ p: 2, height: "100%" }}>
             <Typography variant="h6" gutterBottom>
-              Features
+              {t("features")}
             </Typography>
             <Typography component="ul" sx={{ pl: 2 }}>
               <li>Browse all relics across multiple character slots</li>
@@ -91,11 +93,9 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
             }}
           >
             <Typography variant="h6" gutterBottom>
-              Demo
+              {t("demo")}
             </Typography>
-            <Typography sx={{ mb: 2 }}>
-              Load sample relics to explore the interface
-            </Typography>
+            <Typography sx={{ mb: 2 }}>{t("demoDescription")}</Typography>
             <Box
               sx={{
                 flexGrow: 1,
@@ -114,7 +114,7 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
                   py: 1,
                 }}
               >
-                Try Demo Data
+                {t("tryDemo")}
               </Button>
             </Box>
           </Paper>
