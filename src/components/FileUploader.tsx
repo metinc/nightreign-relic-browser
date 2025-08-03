@@ -27,23 +27,22 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const DropZone = styled(Box)<{ isDragOver: boolean }>(
-  ({ theme, isDragOver }) => ({
-    border: `2px dashed ${
-      isDragOver ? theme.palette.primary.main : theme.palette.divider
-    }`,
-    borderRadius: theme.spacing(1),
-    padding: theme.spacing(4),
-    textAlign: "center",
-    backgroundColor: isDragOver ? theme.palette.action.hover : "transparent",
-    transition: "all 0.2s ease-in-out",
-    cursor: "pointer",
-    "&:hover": {
-      borderColor: theme.palette.primary.main,
-      backgroundColor: theme.palette.action.hover,
-    },
-  })
-);
+const DropZone = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isDragOver",
+})<{ isDragOver: boolean }>(({ theme, isDragOver }) => ({
+  border: `2px dashed ${
+    isDragOver ? theme.palette.primary.main : theme.palette.divider
+  }`,
+  borderRadius: theme.spacing(1),
+  padding: theme.spacing(4),
+  textAlign: "center",
+  backgroundColor: isDragOver ? theme.palette.action.hover : "transparent",
+  transition: "all 0.2s ease-in-out",
+  cursor: "pointer",
+  "&:hover": {
+    borderColor: theme.palette.primary.main,
+  },
+}));
 
 const modalStyle = {
   position: "absolute" as const,
