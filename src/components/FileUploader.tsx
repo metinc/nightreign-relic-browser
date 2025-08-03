@@ -9,6 +9,8 @@ import {
   IconButton,
   Snackbar,
   Alert,
+  Link,
+  AlertTitle,
 } from "@mui/material";
 import { CloudUpload, Close, FileUpload, Clear } from "@mui/icons-material";
 
@@ -261,6 +263,14 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
             <Box sx={{ mt: 2, p: 2, bgcolor: "action.hover", borderRadius: 1 }}>
               {getHelperText()}
             </Box>
+
+            <Alert severity="info">
+              <AlertTitle>Can't find your save file?</AlertTitle>
+              You can download it from Steam Cloud:{" "}
+              <Link href="https://store.steampowered.com/account/remotestorageapp/?appid=2622380">
+                Steam Cloud
+              </Link>
+            </Alert>
           </Stack>
         </Box>
       </Modal>
