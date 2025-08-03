@@ -1,2361 +1,2353 @@
 interface EffectArrayElement {
-  name: string;
+  key: string;
   ids: number[];
 }
 
 const effectsArray: EffectArrayElement[] = [
   {
-    name: "[Duchess] Become difficult to spot and silence footsteps after landing critical from behind",
+    key: "duchessBecomeStealthyAfterCritFromBehind",
     ids: [7031800],
   },
   {
-    name: "[Duchess] Character Skill inflicts sleep upon enemies",
+    key: "duchessCharacterSkillInflictsSleep",
     ids: [7300000],
   },
   {
-    name: "[Duchess] Dagger chain attack reprises event upon nearby enemies",
+    key: "duchessDaggerChainAttackReprises",
     ids: [7010700],
   },
   {
-    name: "[Duchess] Defeating enemies while Art is active ups attack power",
+    key: "duchessDefeatingEnemiesWhileArtActiveUpsAttack",
     ids: [7032700],
   },
   {
-    name: "[Duchess] Duration of Ultimate Art extended",
+    key: "duchessDurationOfUltimateArtExtended",
     ids: [7033600],
   },
   {
-    name: "[Duchess] Improved Character Skill Attack Power",
+    key: "duchessImprovedCharacterSkillAttackPower",
     ids: [7290000],
   },
   {
-    name: "[Executor] Attack power up while Ultimate Art is active",
+    key: "executorAttackPowerUpWhileUltimateArtActive",
     ids: [7034200],
   },
   {
-    name: "[Executor] Character Skill Boosts Attack but Attacking Drains HP",
+    key: "executorCharacterSkillBoostsAttackButDrainsHP",
     ids: [7034400],
   },
   {
-    name: "[Executor] Improves effect of ability but lowers resistance to status ailments",
+    key: "executorImprovesEffectButLowersResistance",
     ids: [7034300],
   },
   {
-    name: "[Executor] Roaring restores HP while Art is active",
+    key: "executorRoaringRestoresHPWhileArtActive",
     ids: [7011700],
   },
   {
-    name: "[Executor] While Character Skill is active, unlocking use of cursed sword restores HP",
+    key: "executorUnlockingCursedSwordRestoresHP",
     ids: [7034500],
   },
   {
-    name: "[Guardian] Become the target of enemy aggression when ability is activated",
+    key: "guardianBecomeTargetOfEnemyAggression",
     ids: [7033300],
   },
   {
-    name: "[Guardian] Character Skill inflicts Holy damage",
+    key: "guardianCharacterSkillInflictsHolyDamage",
     ids: [7011900],
   },
   {
-    name: "[Guardian] Creates whirlwind when charging halberd attacks",
+    key: "guardianCreatesWhirlwindWhenChargingHalberd",
     ids: [7011600],
   },
   {
-    name: "[Guardian] Damage negation for allies improved when using Ultimate Art",
+    key: "guardianDamageNegationForAlliesImproved",
     ids: [7011100],
   },
   {
-    name: "[Guardian] Improved Character Skill range",
+    key: "guardianImprovedCharacterSkillRange",
     ids: [7010000],
   },
   {
-    name: "[Guardian] Increased duration for Character Skill",
+    key: "guardianIncreasedDurationForCharacterSkill",
     ids: [7011000],
   },
   {
-    name: "[Guardian] Reflect a portion of damage received when ability is activated",
+    key: "guardianReflectPortionOfDamageReceived",
     ids: [7033400],
   },
   {
-    name: "[Guardian] Restores allies' HP when Character Skill is used",
+    key: "guardianRestoresAlliesHPWhenCharacterSkillUsed",
     ids: [7011400],
   },
   {
-    name: "[Guardian] Slowly restores nearby allies' HP while Art is active",
+    key: "guardianSlowlyRestoresNearbyAlliesHP",
     ids: [12002, 7012000],
   },
   {
-    name: "[Ironeye] +1 additional Character Skill use",
+    key: "ironeyeAdditionalCharacterSkillUse",
     ids: [7270100],
   },
   {
-    name: "[Ironeye] Art Charge Activation Adds Poison Effect",
+    key: "ironeyeArtChargeActivationAddsPoisonEffect",
     ids: [7034600],
   },
   {
-    name: "[Ironeye] Boosts thrusting counterattacks after executing Art",
+    key: "ironeyeBoostsThrustingCounterattacksAfterArt",
     ids: [7034700],
   },
   {
-    name: "[Ironeye] Extends duration of weak point",
+    key: "ironeyeExtendsDurationOfWeakPoint",
     ids: [7280000],
   },
   {
-    name: "[Raider] Character Skill damage up, damage negation impaired during use",
+    key: "raiderCharacterSkillDamageUp",
     ids: [7010800],
   },
   {
-    name: "[Raider] Damage taken while using Character Skill improves attack power and stamina",
+    key: "raiderDamageTakenWhileUsingCharacterSkillImprovesAttack",
     ids: [7031300],
   },
   {
-    name: "[Raider] Duration of Ultimate Art extended",
+    key: "raiderDurationOfUltimateArtExtended",
     ids: [7310000],
   },
   {
-    name: "[Raider] Permanently increase attack power when performing Character Skill's final attack",
+    key: "raiderPermanentlyIncreaseAttackPower",
     ids: [7033800],
   },
   {
-    name: "[Recluse] Activating Ultimate Art raises Max HP",
+    key: "recluseActivatingUltimateArtRaisesMaxHP",
     ids: [7034100],
   },
   {
-    name: "[Recluse] Collecting 4 Affinity Residues Improves Affinity Attack Power",
+    key: "recluseCollecting4AffinityResiduesImprovesAffinityAttackPower",
     ids: [7034000],
   },
   {
-    name: "[Recluse] Collecting affinity residue activates Terra Magica",
+    key: "recluseCollectingAffinityResidueActivatesTerraMagica",
     ids: [7032800],
   },
   {
-    name: "[Recluse] Extends duration of blood sigils",
+    key: "recluseExtendsDurationOfBloodSigils",
     ids: [7033900],
   },
   {
-    name: "[Recluse] Suffer blood loss and increase attack power upon Art activation",
+    key: "recluseSufferBloodLossAndIncreaseAttackPower",
     ids: [17002, 7032900],
   },
   {
-    name: "[Revenant] Ability activation chance increased",
+    key: "revenantAbilityActivationChanceIncreased",
     ids: [7320000],
   },
   {
-    name: "[Revenant] Expend own HP to fully heal nearby allies when activating Art",
+    key: "revenantExpendOwnHPToFullyHealNearbyAllies",
     ids: [16002, 7010900],
   },
   {
-    name: "[Revenant] Power up while fighting alongside family",
+    key: "revenantPowerUpWhileFightingAlongsideFamily",
     ids: [7220000],
   },
   {
-    name: "[Revenant] Strengthens family and allies when Ultimate Art is activated",
+    key: "revenantStrengthensFamilyAndAlliesWhenUltimateArtActivated",
     ids: [7031200],
   },
   {
-    name: "[Revenant] Trigger ghostflame explosion during Ultimate Art activation",
+    key: "revenantTriggerGhostflameExplosionDuringUltimateArtActivation",
     ids: [7011200],
   },
   {
-    name: "[Runes] 60k at start, 30k on death",
+    key: "runes60kAtStart30kOnDeath",
     ids: [8500102],
   },
   {
-    name: "[Wylder] +1 additional Character Skill use",
+    key: "wylderAdditionalCharacterSkillUse",
     ids: [11000, 7033200],
   },
   {
-    name: "[Wylder] Art activation spreads fire in area",
+    key: "wylderArtActivationSpreadsFireInArea",
     ids: [7010500],
   },
   {
-    name: "[Wylder] Art gauge greatly filled when ability is activated",
+    key: "wylderArtGaugeGreatlyFilledWhenAbilityActivated",
     ids: [11002, 7032400],
   },
   {
-    name: "[Wylder] Character Skill inflicts Blood Loss",
+    key: "wylderCharacterSkillInflictsBloodLoss",
     ids: [7011500],
   },
   {
-    name: "[Wylder] Follow-up attacks possible when using Character Skill (greatsword only)",
+    key: "wylderFollowUpAttacksPossibleWhenUsingCharacterSkill",
     ids: [7020000],
   },
   {
-    name: "[Wylder] Impaired damage negation, improved attack power & stamina after Art activation",
+    key: "wylderImpairedDamageNegationImprovedAttackPowerStaminaAfterArtActivation",
     ids: [7030500],
   },
   {
-    name: "[Wylder] Improved attack power when ability is activated",
+    key: "wylderImprovedAttackPowerWhenAbilityActivated",
     ids: [7033000],
   },
   {
-    name: "[Wylder] Improved attack power when Character Skill is activated",
+    key: "wylderImprovedAttackPowerWhenCharacterSkillActivated",
     ids: [7032300],
   },
   {
-    name: "[Wylder] Reduced cooldown time for Character Skill",
+    key: "wylderReducedCooldownTimeForCharacterSkill",
     ids: [7031400],
   },
   {
-    name: "Acid Mist upon Charged Thrust",
+    key: "acidMistUponChargedThrust",
     ids: [8882200],
   },
   {
-    name: "Add Fire to Weapon",
+    key: "addFireToWeapon",
     ids: [8110700],
   },
   {
-    name: "Add Holy to Weapon",
+    key: "addHolyToWeapon",
     ids: [8111000],
   },
   {
-    name: "Add Lightning to Weapon",
+    key: "addLightningToWeapon",
     ids: [8110900],
   },
   {
-    name: "Add Magic to Weapon",
+    key: "addMagicToWeapon",
     ids: [8110800],
   },
   {
-    name: "Arcane +1",
+    key: "arcanePlus1",
     ids: [7000700],
   },
   {
-    name: "Arcane +2",
+    key: "arcanePlus2",
     ids: [7000701],
   },
   {
-    name: "Arcane +3",
+    key: "arcanePlus3",
     ids: [7000702],
   },
   {
-    name: "Armament deals fire damage +1 at start of expedition",
+    key: "armamentDealsFireDamagePlus1AtStartOfExpedition",
     ids: [7120101],
   },
   {
-    name: "Art gauge charged from successful guarding",
+    key: "artGaugeChargedFromSuccessfulGuarding",
     ids: [7030600],
   },
   {
-    name: "Art gauge fills moderately upon critical hit",
+    key: "artGaugeFillsModeratelyUponCriticalHit",
     ids: [7030800],
   },
   {
-    name: "Attack Boost [Dragons]",
+    key: "attackBoostDragons",
     ids: [8150300],
   },
   {
-    name: "Attack Boost [Lifeforms Born of Falling Stars]",
+    key: "attackBoostLifeformsBornOfFallingStars",
     ids: [8150000],
   },
   {
-    name: "Attack Boost [Those Who Live in Death]",
+    key: "attackBoostThoseWhoLiveInDeath",
     ids: [8150100],
   },
   {
-    name: "Attack Boost from Nearby Allies",
+    key: "attackBoostFromNearbyAllies",
     ids: [7012600],
   },
   {
-    name: "Attack power increases after using grease items",
+    key: "attackPowerIncreasesAfterUsingGreaseItems",
     ids: [7030900],
   },
   {
-    name: "Attack power permanently increased for each evergaol prisoner defeated",
+    key: "attackPowerPermanentlyIncreasedForEachEvergaolPrisonerDefeated",
     ids: [7060000],
   },
   {
-    name: "Attack power up after defeating a Night Invader",
+    key: "attackPowerUpAfterDefeatingANightInvader",
     ids: [7060200],
   },
   {
-    name: "Attack power up when facing frostbite-afflicted enemy",
+    key: "attackPowerUpWhenFacingFrostbiteAfflictedEnemy",
     ids: [7260400],
   },
   {
-    name: "Attack power up when facing poison-afflicted enemy",
+    key: "attackPowerUpWhenFacingPoisonAfflictedEnemy",
     ids: [7260000],
   },
   {
-    name: "Attack power up when facing scarlet rot-afflicted enemy",
+    key: "attackPowerUpWhenFacingScarletRotAfflictedEnemy",
     ids: [7260300],
   },
   {
-    name: "Attack power up when facing sleep-afflicted enemy",
+    key: "attackPowerUpWhenFacingSleepAfflictedEnemy",
     ids: [7260200],
   },
   {
-    name: "Attack Up when Wielding Two Armaments",
+    key: "attackUpWhenWieldingTwoArmaments",
     ids: [8310000],
   },
   {
-    name: "Attacks Create Magic Bursts Versus Sleeping Enemies",
+    key: "attacksCreateMagicBurstsVersusSleepingEnemies",
     ids: [7260600],
   },
   {
-    name: "Attacks Inflict Blood Loss",
+    key: "attacksInflictBloodLoss",
     ids: [7002000, 8110100],
   },
   {
-    name: "Attacks Inflict Blood Loss +1",
+    key: "attacksInflictBloodLossPlus1",
     ids: [7002001],
   },
   {
-    name: "Attacks Inflict Blood Loss +2",
+    key: "attacksInflictBloodLossPlus2",
     ids: [7002002],
   },
   {
-    name: "Attacks Inflict Death Blight",
+    key: "attacksInflictDeathBlight",
     ids: [7002200, 8110300],
   },
   {
-    name: "Attacks Inflict Frost",
+    key: "attacksInflictFrost",
     ids: [7002400, 8110500],
   },
   {
-    name: "Attacks Inflict Frost +1",
+    key: "attacksInflictFrostPlus1",
     ids: [7002401],
   },
   {
-    name: "Attacks Inflict Frost +2",
+    key: "attacksInflictFrostPlus2",
     ids: [7002402],
   },
   {
-    name: "Attacks Inflict Frost +3",
+    key: "attacksInflictFrostPlus3",
     ids: [7002403],
   },
   {
-    name: "Attacks Inflict Madness",
+    key: "attacksInflictMadness",
     ids: [7002500, 8110600],
   },
   {
-    name: "Attacks Inflict Poison",
+    key: "attacksInflictPoison",
     ids: [7001900, 8110000],
   },
   {
-    name: "Attacks Inflict Poison +1",
+    key: "attacksInflictPoisonPlus1",
     ids: [7001901],
   },
   {
-    name: "Attacks Inflict Poison +2",
+    key: "attacksInflictPoisonPlus2",
     ids: [7001902],
   },
   {
-    name: "Attacks Inflict Rot",
+    key: "attacksInflictRot",
     ids: [8110400],
   },
   {
-    name: "Attacks Inflict Scarlet Rot",
+    key: "attacksInflictScarletRot",
     ids: [7002300],
   },
   {
-    name: "Attacks Inflict Scarlet Rot +1",
+    key: "attacksInflictScarletRotPlus1",
     ids: [7002301],
   },
   {
-    name: "Attacks Inflict Scarlet Rot +2",
+    key: "attacksInflictScarletRotPlus2",
     ids: [7002302],
   },
   {
-    name: "Attacks Inflict Sleep",
+    key: "attacksInflictSleep",
     ids: [7002100, 8110200],
   },
   {
-    name: "Attacks Inflict Sleep +1",
+    key: "attacksInflictSleepPlus1",
     ids: [7002101],
   },
   {
-    name: "Attacks Inflict Sleep +2",
+    key: "attacksInflictSleepPlus2",
     ids: [7002102],
   },
   {
-    name: "Attacks Inflict Sleep +3",
+    key: "attacksInflictSleepPlus3",
     ids: [7002103],
   },
   {
-    name: "Bewitching Branches in possession at start of expedition",
+    key: "bewitchingBranchesInPossessionAtStartOfExpedition",
     ids: [7122000],
   },
   {
-    name: "Black Flames upon Charged Slash",
+    key: "blackFlamesUponChargedSlash",
     ids: [8880200],
   },
   {
-    name: "Blood Loss Crit: Thorns of Punishment",
+    key: "bloodLossCritThornsOfPunishment",
     ids: [8640800],
   },
   {
-    name: "Blood Loss in Vicinity Increases Attack Power",
+    key: "bloodLossInVicinityIncreasesAttackPower",
     ids: [321600],
   },
   {
-    name: "Blood Loss Increases Attack Power",
+    key: "bloodLossIncreasesAttackPower",
     ids: [8710000],
   },
   {
-    name: "Bloodflies upon Precision Aiming",
+    key: "bloodfliesUponPrecisionAiming",
     ids: [8883400],
   },
   {
-    name: "Boosts Attack Power of Added Affinity Attacks",
+    key: "boostsAttackPowerOfAddedAffinityAttacks",
     ids: [7035800],
   },
   {
-    name: "Broken Stance Activates Endure",
+    key: "brokenStanceActivatesEndure",
     ids: [8884300],
   },
   {
-    name: "Changed Strong Attacks",
+    key: "changedStrongAttacks",
     ids: [8960100],
   },
   {
-    name: "Changes compatible armament's skill to Blood Blade at start of expedition",
+    key: "changesCompatibleArmamentsSkillToBloodBladeAtStartOfExpedition",
     ids: [7123700],
   },
   {
-    name: "Changes compatible armament's skill to Chilling Mist at start of expedition",
+    key: "changesCompatibleArmamentsSkillToChillingMistAtStartOfExpedition",
     ids: [7006200, 7123900],
   },
   {
-    name: "Changes compatible armament's skill to Determination at start of expedition",
+    key: "changesCompatibleArmamentsSkillToDeterminationAtStartOfExpedition",
     ids: [7124600],
   },
   {
-    name: "Changes compatible armament's skill to Endure at start of expedition",
+    key: "changesCompatibleArmamentsSkillToEndureAtStartOfExpedition",
     ids: [7124300],
   },
   {
-    name: "Changes compatible armament's skill to Eruption at start of expedition",
+    key: "changesCompatibleArmamentsSkillToEruptionAtStartOfExpedition",
     ids: [7123000],
   },
   {
-    name: "Changes compatible armament's skill to Flaming Strike at start of expedition",
+    key: "changesCompatibleArmamentsSkillToFlamingStrikeAtStartOfExpedition",
     ids: [7122900],
   },
   {
-    name: "Changes compatible armament's skill to Glintblade Phalanx at start of expedition",
+    key: "changesCompatibleArmamentsSkillToGlintbladePhalanxAtStartOfExpedition",
     ids: [7122700],
   },
   {
-    name: "Changes compatible armament's skill to Gravitas at start of expedition",
+    key: "changesCompatibleArmamentsSkillToGravitasAtStartOfExpedition",
     ids: [7122800],
   },
   {
-    name: "Changes compatible armament's skill to Hoarfrost Stomp at start of expedition",
+    key: "changesCompatibleArmamentsSkillToHoarfrostStompAtStartOfExpedition",
     ids: [7124000],
   },
   {
-    name: "Changes compatible armament's skill to Lightning Slash at start of expedition",
+    key: "changesCompatibleArmamentsSkillToLightningSlashAtStartOfExpedition",
     ids: [7123200],
   },
   {
-    name: "Changes compatible armament's skill to Poison Moth Flight at start of expedition",
+    key: "changesCompatibleArmamentsSkillToPoisonMothFlightAtStartOfExpedition",
     ids: [7123600],
   },
   {
-    name: "Changes compatible armament's skill to Poisonous Mist at start of expedition",
+    key: "changesCompatibleArmamentsSkillToPoisonousMistAtStartOfExpedition",
     ids: [7123500],
   },
   {
-    name: "Changes compatible armament's skill to Prayerful Strike at start of expedition",
+    key: "changesCompatibleArmamentsSkillToPrayerfulStrikeAtStartOfExpedition",
     ids: [7123400],
   },
   {
-    name: "Changes compatible armament's skill to Quickstep at start of expedition",
+    key: "changesCompatibleArmamentsSkillToQuickstepAtStartOfExpedition",
     ids: [7124400],
   },
   {
-    name: "Changes compatible armament's skill to Rain of Arrows at start of expedition",
+    key: "changesCompatibleArmamentsSkillToRainOfArrowsAtStartOfExpedition",
     ids: [7124700],
   },
   {
-    name: "Changes compatible armament's skill to Sacred Blade at start of expedition",
+    key: "changesCompatibleArmamentsSkillToSacredBladeAtStartOfExpedition",
     ids: [7123300],
   },
   {
-    name: "Changes compatible armament's skill to Seppuku at start of expedition",
+    key: "changesCompatibleArmamentsSkillToSeppukuAtStartOfExpedition",
     ids: [7123800],
   },
   {
-    name: "Changes compatible armament's skill to Storm Stomp at start of expedition",
+    key: "changesCompatibleArmamentsSkillToStormStompAtStartOfExpedition",
     ids: [7124500],
   },
   {
-    name: "Changes compatible armament's skill to Thunderbolt at start of expedition",
+    key: "changesCompatibleArmamentsSkillToThunderboltAtStartOfExpedition",
     ids: [7123100],
   },
   {
-    name: "Changes compatible armament's skill to White Shadow's Lure at start of expedition",
+    key: "changesCompatibleArmamentsSkillToWhiteShadowsLureAtStartOfExpedition",
     ids: [7124100],
   },
   {
-    name: "Character Skill Cooldown Reduction",
+    key: "characterSkillCooldownReduction",
     ids: [8370000],
   },
   {
-    name: "Character Skill Cooldown Reduction +1",
+    key: "characterSkillCooldownReductionPlus1",
     ids: [7000800],
   },
   {
-    name: "Character Skill Cooldown Reduction +2",
+    key: "characterSkillCooldownReductionPlus2",
     ids: [7000801],
   },
   {
-    name: "Character Skill Cooldown Reduction +3",
+    key: "characterSkillCooldownReductionPlus3",
     ids: [7000802],
   },
   {
-    name: "Charged Thrust Invokes Sleep Mist",
+    key: "chargedThrustInvokesSleepMist",
     ids: [8882500],
   },
   {
-    name: "Colossal armaments are coated in rock when performing charged attacks",
+    key: "colossalArmamentsCoatedInRockWhenPerformingChargedAttacks",
     ids: [7033700],
   },
   {
-    name: "Communion Grants Anti-Dragon Effect",
+    key: "communionGrantsAntiDragonEffect",
     ids: [8330700],
   },
   {
-    name: "Consecutive Guards Harden Skin",
+    key: "consecutiveGuardsHardenSkin",
     ids: [7035200],
   },
   {
-    name: "Continuous HP Loss",
-    ids: [370002],
-  },
-  {
-    name: "Continuous HP Recovery",
+    key: "continuousHPRecovery",
     ids: [350200, 7001100, 8540000],
   },
   {
-    name: "Creates Holy Ground at Low HP",
+    key: "createsHolyGroundAtLowHP",
     ids: [8660300],
   },
   {
-    name: "Critical Hit Adds Lightning Effect",
+    key: "criticalHitAddsLightningEffect",
     ids: [7035000],
   },
   {
-    name: "Critical Hit Boosts Stamina Recovery Speed",
+    key: "criticalHitBoostsStaminaRecoverySpeed",
     ids: [7035100],
   },
   {
-    name: "Critical Hit Creates Sleep Mist",
+    key: "criticalHitCreatesSleepMist",
     ids: [7035300],
   },
   {
-    name: "Critical Hit FP Restoration",
+    key: "criticalHitFPRestoration",
     ids: [350600, 8640100],
   },
   {
-    name: "Critical Hit HP Restoration",
+    key: "criticalHitHPRestoration",
     ids: [350500, 7034900, 8640000],
   },
   {
-    name: "Critical Hits Boost Attack Power",
+    key: "criticalHitsBoostAttackPower",
     ids: [8921400],
   },
   {
-    name: "Critical hits deal huge damage on poisoned enemies",
+    key: "criticalHitsDealHugeDamageOnPoisonedEnemies",
     ids: [7100000],
   },
   {
-    name: "Critical Hits Earn Runes",
+    key: "criticalHitsEarnRunes",
     ids: [7031900],
   },
   {
-    name: "Critical Hits Inflict Blood Loss",
+    key: "criticalHitsInflictBloodLoss",
     ids: [8660200],
   },
   {
-    name: "Crystal Darts in possession at start of expedition",
+    key: "crystalDartsInPossessionAtStartOfExpedition",
     ids: [7121600],
   },
   {
-    name: "Crystal Shards upon Magic Critical Hit",
+    key: "crystalShardsUponMagicCriticalHit",
     ids: [8640600],
   },
   {
-    name: "Damage Boosted after Critical Hit",
+    key: "damageBoostedAfterCriticalHit",
     ids: [8640200],
   },
   {
-    name: "Darkness Conceals Caster While Walking",
+    key: "darknessConcealsCasterWhileWalking",
     ids: [8460000],
   },
   {
-    name: "Death Crit. Hit Calls Death Lightning",
+    key: "deathCritHitCallsDeathLightning",
     ids: [8641200],
   },
   {
-    name: "Defeating enemies fills more of the Art gauge",
+    key: "defeatingEnemiesFillsMoreOfTheArtGauge",
     ids: [7090000],
   },
   {
-    name: "Defeating enemies near Totem Stela restores HP",
+    key: "defeatingEnemiesNearTotemStelaRestoresHP",
     ids: [7090300],
   },
   {
-    name: "Defeating Enemies Restores FP",
+    key: "defeatingEnemiesRestoresFP",
     ids: [361100, 8630100],
   },
   {
-    name: "Defeating Enemies Restores HP",
+    key: "defeatingEnemiesRestoresHP",
     ids: [350300, 8630000],
   },
   {
-    name: "Defeating enemies restores HP for allies but not for self",
+    key: "defeatingEnemiesRestoresHPForAlliesButNotForSelf",
     ids: [7090100],
   },
   {
-    name: "Defeating Group Calls Vengeful Spirits",
+    key: "defeatingGroupCallsVengefulSpirits",
     ids: [8630400],
   },
   {
-    name: "Defeating Group Fires Golden Shockwave",
+    key: "defeatingGroupFiresGoldenShockwave",
     ids: [8630800],
   },
   {
-    name: "Defeating Group Releases Mist of Charm",
+    key: "defeatingGroupReleasesMistOfCharm",
     ids: [8630300],
   },
   {
-    name: "Defeating Group Releases Mist of Frost",
+    key: "defeatingGroupReleasesMistOfFrost",
     ids: [8630600],
   },
   {
-    name: "Defeating Group Summons Wraiths",
+    key: "defeatingGroupSummonsWraiths",
     ids: [8630200],
   },
   {
-    name: "Defeating Group Unleashes Lightning",
+    key: "defeatingGroupUnleashesLightning",
     ids: [8630700],
   },
   {
-    name: "Dexterity +1",
+    key: "dexterityPlus1",
     ids: [7000400],
   },
   {
-    name: "Dexterity +2",
+    key: "dexterityPlus2",
     ids: [7000401],
   },
   {
-    name: "Dexterity +3",
+    key: "dexterityPlus3",
     ids: [7000402],
   },
   {
-    name: "Dmg Negation Up While Casting Spells",
+    key: "dmgNegationUpWhileCastingSpells",
     ids: [8330900],
   },
   {
-    name: "Dmg Negation Up while Charging Attacks",
+    key: "dmgNegationUpWhileChargingAttacks",
     ids: [8320400],
   },
   {
-    name: "Draw enemy attention while guarding",
+    key: "drawEnemyAttentionWhileGuarding",
     ids: [7030700],
   },
   {
-    name: "Endurance +1",
+    key: "endurancePlus1",
     ids: [7000200],
   },
   {
-    name: "Endurance +2",
+    key: "endurancePlus2",
     ids: [7000201],
   },
   {
-    name: "Endurance +3",
+    key: "endurancePlus3",
     ids: [7000202],
   },
   {
-    name: "Extended Spell Duration",
+    key: "extendedSpellDuration",
     ids: [330600, 8330500],
   },
   {
-    name: "Failing to Cast Sorcery Restores FP",
+    key: "failingToCastSorceryRestoresFP",
     ids: [8885100],
   },
   {
-    name: "Faith +1",
+    key: "faithPlus1",
     ids: [7000600],
   },
   {
-    name: "Faith +2",
+    key: "faithPlus2",
     ids: [7000601],
   },
   {
-    name: "Faith +3",
+    key: "faithPlus3",
     ids: [7000602],
   },
   {
-    name: "Fire Attack Follows Charge Attacks",
+    key: "fireAttackFollowsChargeAttacks",
     ids: [8610400],
   },
   {
-    name: "Fire Attack Power Up",
+    key: "fireAttackPowerUp",
     ids: [7001600],
   },
   {
-    name: "Fire Attack Power Up +1",
+    key: "fireAttackPowerUpPlus1",
     ids: [7001601],
   },
   {
-    name: "Fire Attack Power Up +2",
+    key: "fireAttackPowerUpPlus2",
     ids: [7001602],
   },
   {
-    name: "Fire Critical Hit Grants Max Stamina Boost",
+    key: "fireCriticalHitGrantsMaxStaminaBoost",
     ids: [7034800],
   },
   {
-    name: "Fire Damage Negation Up",
+    key: "fireDamageNegationUp",
     ids: [7002700],
   },
   {
-    name: "Fire Grease in possession at start of expedition",
+    key: "fireGreaseInPossessionAtStartOfExpedition",
     ids: [7122200],
   },
   {
-    name: "Fire Pots in possession at start of expedition",
+    key: "firePotsInPossessionAtStartOfExpedition",
     ids: [7121100],
   },
   {
-    name: "Flame of Frenzy While Walking",
+    key: "flameOfFrenzyWhileWalking",
     ids: [8460200],
   },
   {
-    name: "Flask Also Heals Allies",
+    key: "flaskAlsoHealsAllies",
     ids: [7010200, 8440100],
   },
   {
-    name: "Flask Healing Also Restores FP",
+    key: "flaskHealingAlsoRestoresFP",
     ids: [8885000],
   },
   {
-    name: "FP Recovery From Successful Guarding",
+    key: "fpRecoveryFromSuccessfulGuarding",
     ids: [8650100],
   },
   {
-    name: "FP Restoration on Successive Attacks",
+    key: "fpRestorationOnSuccessiveAttacks",
     ids: [10000],
   },
   {
-    name: "FP Restoration upon Attacks",
+    key: "fpRestorationUponAttacks",
     ids: [8600200],
   },
   {
-    name: "FP Restoration upon Axe Attacks",
+    key: "fpRestorationUponAxeAttacks",
     ids: [7351000],
   },
   {
-    name: "FP Restoration upon Bow Attacks",
+    key: "fpRestorationUponBowAttacks",
     ids: [7352400],
   },
   {
-    name: "FP Restoration upon Claw Attacks",
+    key: "fpRestorationUponClawAttacks",
     ids: [7352100],
   },
   {
-    name: "FP Restoration upon Colossal Sword Attacks",
+    key: "fpRestorationUponColossalSwordAttacks",
     ids: [7350300],
   },
   {
-    name: "FP Restoration upon Colossal Weapon Attacks",
+    key: "fpRestorationUponColossalWeaponAttacks",
     ids: [7352300],
   },
   {
-    name: "FP Restoration upon Curved Greatsword Attacks",
+    key: "fpRestorationUponCurvedGreatswordAttacks",
     ids: [7350500],
   },
   {
-    name: "FP Restoration upon Curved Sword Attacks",
+    key: "fpRestorationUponCurvedSwordAttacks",
     ids: [7350400],
   },
   {
-    name: "FP Restoration upon Dagger Attacks",
+    key: "fpRestorationUponDaggerAttacks",
     ids: [7350000],
   },
   {
-    name: "FP Restoration upon Fist Attacks",
+    key: "fpRestorationUponFistAttacks",
     ids: [7352000],
   },
   {
-    name: "FP Restoration upon Flail Attacks",
+    key: "fpRestorationUponFlailAttacks",
     ids: [7351400],
   },
   {
-    name: "FP Restoration upon Great Hammer Attacks",
+    key: "fpRestorationUponGreatHammerAttacks",
     ids: [7351300],
   },
   {
-    name: "FP Restoration upon Great Spear Attacks",
+    key: "fpRestorationUponGreatSpearAttacks",
     ids: [7351700],
   },
   {
-    name: "FP Restoration upon Greataxe Attacks",
+    key: "fpRestorationUponGreataxeAttacks",
     ids: [7351100],
   },
   {
-    name: "FP Restoration upon Greatsword Attacks",
+    key: "fpRestorationUponGreatswordAttacks",
     ids: [7350200],
   },
   {
-    name: "FP Restoration upon Halberd Attacks",
+    key: "fpRestorationUponHalberdAttacks",
     ids: [7351800],
   },
   {
-    name: "FP Restoration upon Hammer Attacks",
+    key: "fpRestorationUponHammerAttacks",
     ids: [7351200],
   },
   {
-    name: "FP Restoration upon Heavy Thrusting Sword Attacks",
+    key: "fpRestorationUponHeavyThrustingSwordAttacks",
     ids: [7350900],
   },
   {
-    name: "FP Restoration upon Katana Attacks",
+    key: "fpRestorationUponKatanaAttacks",
     ids: [7350600],
   },
   {
-    name: "FP Restoration upon Pike Attacks",
+    key: "fpRestorationUponPikeAttacks",
     ids: [7351600],
   },
   {
-    name: "FP Restoration upon Reaper Attacks",
+    key: "fpRestorationUponReaperAttacks",
     ids: [7351900],
   },
   {
-    name: "FP Restoration upon Spear Attacks",
+    key: "fpRestorationUponSpearAttacks",
     ids: [7351500],
   },
   {
-    name: "FP Restoration upon Straight Sword Attacks",
+    key: "fpRestorationUponStraightSwordAttacks",
     ids: [7350100],
   },
   {
-    name: "FP Restoration upon Successive Attacks",
+    key: "fpRestorationUponSuccessiveAttacks",
     ids: [7036000, 8610100],
   },
   {
-    name: "FP Restoration upon Thrusting Sword Attacks",
+    key: "fpRestorationUponThrustingSwordAttacks",
     ids: [7350800],
   },
   {
-    name: "FP Restoration upon Twinblade Attacks",
+    key: "fpRestorationUponTwinbladeAttacks",
     ids: [7350700],
   },
   {
-    name: "FP Restoration upon Whip Attacks",
+    key: "fpRestorationUponWhipAttacks",
     ids: [7352200],
   },
   {
-    name: "Frostbite Increases Attack Power",
+    key: "frostbiteIncreasesAttackPower",
     ids: [8740000],
   },
   {
-    name: "Frostbite Produces a Mist of Frost",
+    key: "frostbiteProducesAMistOfFrost",
     ids: [8690300],
   },
   {
-    name: "Gesture Crossed Legs Builds Up Madness",
+    key: "gestureCrossedLegsBuildsUpMadness",
     ids: [7035400],
   },
   {
-    name: "Glintstone Scraps in possession at start of expedition",
+    key: "glintstoneScrapsInPossessionAtStartOfExpedition",
     ids: [7121800],
   },
   {
-    name: "Gradual Restoration by Flask",
+    key: "gradualRestorationByFlask",
     ids: [8440200],
   },
   {
-    name: "Gravity Stone Chunks in possession at start of expedition",
+    key: "gravityStoneChunksInPossessionAtStartOfExpedition",
     ids: [7121900],
   },
   {
-    name: "Guard counter is given a boost based on current HP",
+    key: "guardCounterIsGivenABoostBasedOnCurrentHP",
     ids: [7150000],
   },
   {
-    name: "Guard Counters Activate Holy Attacks",
+    key: "guardCountersActivateHolyAttacks",
     ids: [8420100],
   },
   {
-    name: "Guard Counters Cast Light Pillar",
+    key: "guardCountersCastLightPillar",
     ids: [7012700],
   },
   {
-    name: "Guard Counters Launch Summoning Attack",
+    key: "guardCountersLaunchSummoningAttack",
     ids: [8420200],
   },
   {
-    name: "Guarding Ups Attack & Casting Speeds",
+    key: "guardingUpsAttackAndCastingSpeeds",
     ids: [8885200],
   },
   {
-    name: "Holy Attack Follows Charge Attacks",
+    key: "holyAttackFollowsChargeAttacks",
     ids: [8610600],
   },
   {
-    name: "Holy Attack Power Up",
+    key: "holyAttackPowerUp",
     ids: [7001800],
   },
   {
-    name: "Holy Attack Power Up +1",
+    key: "holyAttackPowerUpPlus1",
     ids: [7001801],
   },
   {
-    name: "Holy Attack Power Up +2",
+    key: "holyAttackPowerUpPlus2",
     ids: [7001802],
   },
   {
-    name: "Holy Damage Negation Up",
+    key: "holyDamageNegationUp",
     ids: [7002900],
   },
   {
-    name: "Holy Grease in possession at start of expedition",
+    key: "holyGreaseInPossessionAtStartOfExpedition",
     ids: [7122500],
   },
   {
-    name: "Holy Shockwave upon Charged Strike",
+    key: "holyShockwaveUponChargedStrike",
     ids: [8881000],
   },
   {
-    name: "Holy Water Pots in possession at start of expedition",
+    key: "holyWaterPotsInPossessionAtStartOfExpedition",
     ids: [7121400],
   },
   {
-    name: "HP Recovery from Successful Guarding",
+    key: "hpRecoveryFromSuccessfulGuarding",
     ids: [7036100],
   },
   {
-    name: "HP Recovery From Successful Guarding",
+    key: "hpRecoveryFromSuccessfulGuardingPlus",
     ids: [8650000],
   },
   {
-    name: "HP Restoration upon Attacks",
+    key: "hpRestorationUponAttacks",
     ids: [8600100],
   },
   {
-    name: "HP Restoration upon Axe Attacks",
+    key: "hpRestorationUponAxeAttacks",
     ids: [7341000],
   },
   {
-    name: "HP Restoration upon Bow Attacks",
+    key: "hpRestorationUponBowAttacks",
     ids: [7342400],
   },
   {
-    name: "HP Restoration upon Claw Attacks",
+    key: "hpRestorationUponClawAttacks",
     ids: [7342100],
   },
   {
-    name: "HP Restoration upon Colossal Sword Attacks",
+    key: "hpRestorationUponColossalSwordAttacks",
     ids: [7340300],
   },
   {
-    name: "HP Restoration upon Colossal Weapon Attacks",
+    key: "hpRestorationUponColossalWeaponAttacks",
     ids: [7342300],
   },
   {
-    name: "HP Restoration upon Curved Greatsword Attacks",
+    key: "hpRestorationUponCurvedGreatswordAttacks",
     ids: [7340500],
   },
   {
-    name: "HP Restoration upon Curved Sword Attacks",
+    key: "hpRestorationUponCurvedSwordAttacks",
     ids: [7340400],
   },
   {
-    name: "HP Restoration upon Dagger Attacks",
+    key: "hpRestorationUponDaggerAttacks",
     ids: [7340000],
   },
   {
-    name: "HP Restoration upon Fist Attacks",
+    key: "hpRestorationUponFistAttacks",
     ids: [7342000],
   },
   {
-    name: "HP Restoration upon Flail Attacks",
+    key: "hpRestorationUponFlailAttacks",
     ids: [7341400],
   },
   {
-    name: "HP Restoration upon Great Hammer Attacks",
+    key: "hpRestorationUponGreatHammerAttacks",
     ids: [7341300],
   },
   {
-    name: "HP Restoration upon Great Spear Attacks",
+    key: "hpRestorationUponGreatSpearAttacks",
     ids: [7341700],
   },
   {
-    name: "HP Restoration upon Greataxe Attacks",
+    key: "hpRestorationUponGreataxeAttacks",
     ids: [7341100],
   },
   {
-    name: "HP Restoration upon Greatsword Attacks",
+    key: "hpRestorationUponGreatswordAttacks",
     ids: [7340200],
   },
   {
-    name: "HP Restoration upon Halberd Attacks",
+    key: "hpRestorationUponHalberdAttacks",
     ids: [7341800],
   },
   {
-    name: "HP Restoration upon Hammer Attacks",
+    key: "hpRestorationUponHammerAttacks",
     ids: [7341200],
   },
   {
-    name: "HP Restoration upon Heavy Thrusting Sword Attacks",
+    key: "hpRestorationUponHeavyThrustingSwordAttacks",
     ids: [7340900],
   },
   {
-    name: "HP Restoration upon Katana Attacks",
+    key: "hpRestorationUponKatanaAttacks",
     ids: [7340600],
   },
   {
-    name: "HP Restoration upon Pike Attacks",
+    key: "hpRestorationUponPikeAttacks",
     ids: [7341600],
   },
   {
-    name: "HP Restoration upon Reaper Attacks",
+    key: "hpRestorationUponReaperAttacks",
     ids: [7341900],
   },
   {
-    name: "HP Restoration upon Spear Attacks",
+    key: "hpRestorationUponSpearAttacks",
     ids: [7341500],
   },
   {
-    name: "HP Restoration upon Straight Sword Attacks",
+    key: "hpRestorationUponStraightSwordAttacks",
     ids: [7340100],
   },
   {
-    name: "HP Restoration upon Successive Attacks",
+    key: "hpRestorationUponSuccessiveAttacks",
     ids: [8610000],
   },
   {
-    name: "HP Restoration upon Thrusting Counterattack",
+    key: "hpRestorationUponThrustingCounterattack",
     ids: [7160000],
   },
   {
-    name: "HP Restoration upon Thrusting Sword Attacks",
+    key: "hpRestorationUponThrustingSwordAttacks",
     ids: [7340800],
   },
   {
-    name: "HP Restoration upon Twinblade Attacks",
+    key: "hpRestorationUponTwinbladeAttacks",
     ids: [7340700],
   },
   {
-    name: "HP Restoration upon Whip Attacks",
+    key: "hpRestorationUponWhipAttacks",
     ids: [7342200],
   },
   {
-    name: "HP Restoration with Head Shots",
+    key: "hpRestorationWithHeadShots",
     ids: [7200000],
   },
   {
-    name: "HP restored when using cured meats, medicinal boluses, etc.",
+    key: "hpRestoredWhenUsingCuredMeatsMedicinalBolusesEtc",
     ids: [7030200],
   },
   {
-    name: "Huge rune discount for shop purchases while on expedition",
+    key: "hugeRuneDiscountForShopPurchasesWhileOnExpedition",
     ids: [7230001],
   },
   {
-    name: "Ice Storm Surge Sprint",
+    key: "iceStormSurgeSprint",
     ids: [8450100],
   },
   {
-    name: "Ice Storm upon Charged Slash",
+    key: "iceStormUponChargedSlash",
     ids: [8880000],
   },
   {
-    name: "Ice Storm upon Critical Hit with Frost",
+    key: "iceStormUponCriticalHitWithFrost",
     ids: [8641000],
   },
   {
-    name: "Impaired Damage Negation",
+    key: "impairedDamageNegation",
     ids: [340701],
   },
   {
-    name: "Impaired Physical Damage Negation",
+    key: "impairedPhysicalDamageNegation",
     ids: [320001, 320101, 320201, 320301],
   },
   {
-    name: "Improved Attack Power at Full HP",
+    key: "improvedAttackPowerAtFullHP",
     ids: [320500, 8670000],
   },
   {
-    name: "Improved Attack Power at Low HP",
+    key: "improvedAttackPowerAtLowHP",
     ids: [320400, 8660000],
   },
   {
-    name: "Improved Attack Power when Two-Handing",
+    key: "improvedAttackPowerWhenTwoHanding",
     ids: [8300000],
   },
   {
-    name: "Improved Attack Power with 3+ Axes Equipped",
+    key: "improvedAttackPowerWith3PlusAxesEquipped",
     ids: [7081000],
   },
   {
-    name: "Improved Attack Power with 3+ Bows Equipped",
+    key: "improvedAttackPowerWith3PlusBowsEquipped",
     ids: [7082400],
   },
   {
-    name: "Improved Attack Power with 3+ Claws Equipped",
+    key: "improvedAttackPowerWith3PlusClawsEquipped",
     ids: [7082100],
   },
   {
-    name: "Improved Attack Power with 3+ Colossal Swords Equipped",
+    key: "improvedAttackPowerWith3PlusColossalSwordsEquipped",
     ids: [7080300],
   },
   {
-    name: "Improved Attack Power with 3+ Colossal Weapons Equipped",
+    key: "improvedAttackPowerWith3PlusColossalWeaponsEquipped",
     ids: [7082300],
   },
   {
-    name: "Improved Attack Power with 3+ Curved Greatswords Equipped",
+    key: "improvedAttackPowerWith3PlusCurvedGreatswordsEquipped",
     ids: [7080500],
   },
   {
-    name: "Improved Attack Power with 3+ Curved Swords Equipped",
+    key: "improvedAttackPowerWith3PlusCurvedSwordsEquipped",
     ids: [7080400],
   },
   {
-    name: "Improved Attack Power with 3+ Daggers Equipped",
+    key: "improvedAttackPowerWith3PlusDaggersEquipped",
     ids: [7080000],
   },
   {
-    name: "Improved Attack Power with 3+ Fists Equipped",
+    key: "improvedAttackPowerWith3PlusFistsEquipped",
     ids: [7082000],
   },
   {
-    name: "Improved Attack Power with 3+ Flails Equipped",
+    key: "improvedAttackPowerWith3PlusFlailsEquipped",
     ids: [7081400],
   },
   {
-    name: "Improved Attack Power with 3+ Great Hammers Equipped",
+    key: "improvedAttackPowerWith3PlusGreatHammersEquipped",
     ids: [7081300],
   },
   {
-    name: "Improved Attack Power with 3+ Great Spears Equipped",
+    key: "improvedAttackPowerWith3PlusGreatSpearsEquipped",
     ids: [7081700],
   },
   {
-    name: "Improved Attack Power with 3+ Greataxes Equipped",
+    key: "improvedAttackPowerWith3PlusGreataxesEquipped",
     ids: [7081100],
   },
   {
-    name: "Improved Attack Power with 3+ Greatswords Equipped",
+    key: "improvedAttackPowerWith3PlusGreatswordsEquipped",
     ids: [7080200],
   },
   {
-    name: "Improved Attack Power with 3+ Halberds Equipped",
+    key: "improvedAttackPowerWith3PlusHalberdsEquipped",
     ids: [7081800],
   },
   {
-    name: "Improved Attack Power with 3+ Hammers Equipped",
+    key: "improvedAttackPowerWith3PlusHammersEquipped",
     ids: [7081200],
   },
   {
-    name: "Improved Attack Power with 3+ Heavy Thrusting Swords Equipped",
+    key: "improvedAttackPowerWith3PlusHeavyThrustingSwordsEquipped",
     ids: [7080900],
   },
   {
-    name: "Improved Attack Power with 3+ Katana Equipped",
+    key: "improvedAttackPowerWith3PlusKatanaEquipped",
     ids: [7080600],
   },
   {
-    name: "Improved Attack Power with 3+ Reapers Equipped",
+    key: "improvedAttackPowerWith3PlusReapersEquipped",
     ids: [7081900],
   },
   {
-    name: "Improved Attack Power with 3+ Spears Equipped",
+    key: "improvedAttackPowerWith3PlusSpearsEquipped",
     ids: [7081500],
   },
   {
-    name: "Improved Attack Power with 3+ Straight Swords Equipped",
+    key: "improvedAttackPowerWith3PlusStraightSwordsEquipped",
     ids: [7080100],
   },
   {
-    name: "Improved Attack Power with 3+ Thrusting Swords Equipped",
+    key: "improvedAttackPowerWith3PlusThrustingSwordsEquipped",
     ids: [7080800],
   },
   {
-    name: "Improved Attack Power with 3+ Twinblades Equipped",
+    key: "improvedAttackPowerWith3PlusTwinbladesEquipped",
     ids: [7080700],
   },
   {
-    name: "Improved Attack Power with 3+ Whips Equipped",
+    key: "improvedAttackPowerWith3PlusWhipsEquipped",
     ids: [7082200],
   },
   {
-    name: "Improved Axe Attack Power",
+    key: "improvedAxeAttackPower",
     ids: [7331000],
   },
   {
-    name: "Improved Bestial Incantations",
+    key: "improvedBestialIncantations",
     ids: [7044400],
   },
   {
-    name: "Improved Blood Loss & Frost Resistance",
+    key: "improvedBloodLossAndFrostResistance",
     ids: [312001],
   },
   {
-    name: "Improved Blood Loss Resistance",
+    key: "improvedBloodLossResistance",
     ids: [311600, 7003100, 8210100],
   },
   {
-    name: "Improved Bow Attack Power",
+    key: "improvedBowAttackPower",
     ids: [7332400],
   },
   {
-    name: "Improved Carian Sword Sorcery",
+    key: "improvedCarianSwordSorcery",
     ids: [7043300],
   },
   {
-    name: "Improved Chain Attack Finishers",
+    key: "improvedChainAttackFinishers",
     ids: [321200, 8320000],
   },
   {
-    name: "Improved Charge Attacks",
+    key: "improvedChargeAttacks",
     ids: [321300, 8320100],
   },
   {
-    name: "Improved Charged Incantation",
+    key: "improvedChargedIncantation",
     ids: [8330300],
   },
   {
-    name: "Improved Charged Skill Attack Power",
+    key: "improvedChargedSkillAttackPower",
     ids: [8350100],
   },
   {
-    name: "Improved Charged Sorceries",
+    key: "improvedChargedSorceries",
     ids: [8330200],
   },
   {
-    name: "Improved Charged Spells & Skills",
+    key: "improvedChargedSpellsAndSkills",
     ids: [330900],
   },
   {
-    name: "Improved Claw Attack Power",
+    key: "improvedClawAttackPower",
     ids: [7332100],
   },
   {
-    name: "Improved Colossal Sword Attack Power",
+    key: "improvedColossalSwordAttackPower",
     ids: [7330300],
   },
   {
-    name: "Improved Colossal Weapon Attack Power",
+    key: "improvedColossalWeaponAttackPower",
     ids: [7332300],
   },
   {
-    name: "Improved Critical Hits",
+    key: "improvedCriticalHits",
     ids: [320900, 7040200, 8130000],
   },
   {
-    name: "Improved Critical Hits +1",
+    key: "improvedCriticalHitsPlus1",
     ids: [7040201, 7040290],
   },
   {
-    name: "Improved Crystalian sorcery",
+    key: "improvedCrystalianSorcery",
     ids: [7043600],
   },
   {
-    name: "Improved Curved Greatsword Attack Power",
+    key: "improvedCurvedGreatswordAttackPower",
     ids: [7330500],
   },
   {
-    name: "Improved Curved Sword Attack Power",
+    key: "improvedCurvedSwordAttackPower",
     ids: [7330400],
   },
   {
-    name: "Improved Dagger Attack Power",
+    key: "improvedDaggerAttackPower",
     ids: [7330000],
   },
   {
-    name: "Improved Damage Negation at Full HP",
+    key: "improvedDamageNegationAtFullHP",
     ids: [340900, 8670101],
   },
   {
-    name: "Improved Damage Negation at Low HP",
+    key: "improvedDamageNegationAtLowHP",
     ids: [340800, 7012300, 8660101],
   },
   {
-    name: "Improved Death Blight Resistance",
+    key: "improvedDeathBlightResistance",
     ids: [311900, 7003300, 8210300],
   },
   {
-    name: "Improved Dexterity",
+    key: "improvedDexterity",
     ids: [312500],
   },
   {
-    name: "Improved Dodging",
+    key: "improvedDodging",
     ids: [340700, 8410000],
   },
   {
-    name: "Improved Dragon Communion Incantations",
+    key: "improvedDragonCommunionIncantations",
     ids: [7044600],
   },
   {
-    name: "Improved Dragon Cult Incantations",
+    key: "improvedDragonCultIncantations",
     ids: [7044100],
   },
   {
-    name: "Improved Fire Attack Power",
+    key: "improvedFireAttackPower",
     ids: [320200, 8100200],
   },
   {
-    name: "Improved Fire Damage Negation",
+    key: "improvedFireDamageNegation",
     ids: [340200, 8200200],
   },
   {
-    name: "Improved Fist Attack Power",
+    key: "improvedFistAttackPower",
     ids: [7332000],
   },
   {
-    name: "Improved Flail Attack Power",
+    key: "improvedFlailAttackPower",
     ids: [7331400],
   },
   {
-    name: "Improved Flask HP Restoration",
+    key: "improvedFlaskHPRecovery",
     ids: [350000, 8440000],
   },
   {
-    name: "Improved Frenzied Flame Incantations",
+    key: "improvedFrenziedFlameIncantations",
     ids: [7044500],
   },
   {
-    name: "Improved Frost Resistance",
+    key: "improvedFrostResistance",
     ids: [311601, 7003500, 8210500],
   },
   {
-    name: "Improved Fundamentalist Incantations",
+    key: "improvedFundamentalistIncantations",
     ids: [7044000],
   },
   {
-    name: "Improved Giants' Flame Incantations",
+    key: "improvedGiantsFlameIncantations",
     ids: [7044200],
   },
   {
-    name: "Improved Glintblade Sorcery",
+    key: "improvedGlintbladeSorcery",
     ids: [7043400],
   },
   {
-    name: "Improved Godslayer Incantations",
+    key: "improvedGodslayerIncantations",
     ids: [7044300],
   },
   {
-    name: "Improved Gravity Sorcery",
+    key: "improvedGravitySorcery",
     ids: [7043700],
   },
   {
-    name: "Improved Great Hammer Attack Power",
+    key: "improvedGreatHammerAttackPower",
     ids: [7331300],
   },
   {
-    name: "Improved Great Spear Attack Power",
+    key: "improvedGreatSpearAttackPower",
     ids: [7331700],
   },
   {
-    name: "Improved Greataxe Attack Power",
+    key: "improvedGreataxeAttackPower",
     ids: [7331100],
   },
   {
-    name: "Improved Greatsword Attack Power",
+    key: "improvedGreatswordAttackPower",
     ids: [7330200],
   },
   {
-    name: "Improved Guard Breaking",
+    key: "improvedGuardBreaking",
     ids: [320700, 8140000],
   },
   {
-    name: "Improved Guard Counters",
+    key: "improvedGuardCounters",
     ids: [322000, 7040100, 8420000],
   },
   {
-    name: "Improved Guarding Ability",
+    key: "improvedGuardingAbility",
     ids: [341000, 8220000],
   },
   {
-    name: "Improved Guarding Ability +1",
+    key: "improvedGuardingAbilityPlus1",
     ids: [8220001],
   },
   {
-    name: "Improved Guarding Ability +2",
+    key: "improvedGuardingAbilityPlus2",
     ids: [8220002],
   },
   {
-    name: "Improved Halberd Attack Power",
+    key: "improvedHalberdAttackPower",
     ids: [7331800],
   },
   {
-    name: "Improved Hammer Attack Power",
+    key: "improvedHammerAttackPower",
     ids: [7331200],
   },
   {
-    name: "Improved Heavy Thrusting Sword Attack Power",
+    key: "improvedHeavyThrustingSwordAttackPower",
     ids: [7330900],
   },
   {
-    name: "Improved Holy Attack Power",
+    key: "improvedHolyAttackPower",
     ids: [320300, 8100400],
   },
   {
-    name: "Improved Holy Damage Negation",
+    key: "improvedHolyDamageNegation",
     ids: [340400, 8200400],
   },
   {
-    name: "Improved Incantations",
+    key: "improvedIncantations",
     ids: [330400, 8330100],
   },
   {
-    name: "Improved Initial Standard Attack",
+    key: "improvedInitialStandardAttack",
     ids: [7040000],
   },
   {
-    name: "Improved Invisibility Sorcery",
+    key: "improvedInvisibilitySorcery",
     ids: [7043500],
   },
   {
-    name: "Improved Item Discovery",
+    key: "improvedItemDiscovery",
     ids: [311000, 370000, 8510000],
   },
   {
-    name: "Improved Jump Attacks",
+    key: "improvedJumpAttacks",
     ids: [321800, 8320300],
   },
   {
-    name: "Improved Katana Attack Power",
+    key: "improvedKatanaAttackPower",
     ids: [7330600],
   },
   {
-    name: "Improved Lightning Attack Power",
+    key: "improvedLightningAttackPower",
     ids: [320100, 8100300],
   },
   {
-    name: "Improved Lightning Damage Negation",
+    key: "improvedLightningDamageNegation",
     ids: [340300, 8200300],
   },
   {
-    name: "Improved Madness Resistance",
+    key: "improvedMadnessResistance",
     ids: [311801, 7003600, 8210600],
   },
   {
-    name: "Improved Magic Attack Power",
+    key: "improvedMagicAttackPower",
     ids: [320000, 8100100],
   },
   {
-    name: "Improved Magic Damage Negation",
+    key: "improvedMagicDamageNegation",
     ids: [340100, 8200100],
   },
   {
-    name: "Improved Night Sorcery",
+    key: "improvedNightSorcery",
     ids: [7043900],
   },
   {
-    name: "Improved Non-Physical Attack Power",
+    key: "improvedNonPhysicalAttackPower",
     ids: [8920100],
   },
   {
-    name: "Improved Non-Physical Damage Negation",
+    key: "improvedNonPhysicalDamageNegation",
     ids: [340500, 8200500],
   },
   {
-    name: "Improved Perfuming Arts",
+    key: "improvedPerfumingArts",
     ids: [322200, 7043100, 8400000],
   },
   {
-    name: "Improved Physical Attack Power",
+    key: "improvedPhysicalAttackPower",
     ids: [8100000],
   },
   {
-    name: "Improved Physical Damage Negation",
+    key: "improvedPhysicalDamageNegation",
     ids: [340000, 8200000],
   },
   {
-    name: "Improved Pike Attack Power",
+    key: "improvedPikeAttackPower",
     ids: [7331600],
   },
   {
-    name: "Improved Poise",
+    key: "improvedPoise",
     ids: [312100, 8230000],
   },
   {
-    name: "Improved Poise & Damage Negation When Knocked Back by Damage",
+    key: "improvedPoiseDamageNegationWhenKnockedBackByDamage",
     ids: [7240000],
   },
   {
-    name: "Improved Poise Near Totem Stela",
+    key: "improvedPoiseNearTotemStela",
     ids: [7030000],
   },
   {
-    name: "Improved Poison & Rot Resistance",
+    key: "improvedPoisonRotResistance",
     ids: [312000],
   },
   {
-    name: "Improved Poison Resistance",
+    key: "improvedPoisonResistance",
     ids: [311700, 7003000, 8210000],
   },
   {
-    name: "Improved Ranged Weapon Attacks",
+    key: "improvedRangedWeaponAttacks",
     ids: [321500, 8340000],
   },
   {
-    name: "Improved Reaper Attack Power",
+    key: "improvedReaperAttackPower",
     ids: [7331900],
   },
   {
-    name: "Improved Roar & Breath Attacks",
+    key: "improvedRoarBreathAttacks",
     ids: [321900, 7043000, 8380000],
   },
   {
-    name: "Improved Rot Resistance",
+    key: "improvedRotResistance",
     ids: [311701, 7003400, 8210400],
   },
   {
-    name: "Improved Skill Attack Power",
+    key: "improvedSkillAttackPower",
     ids: [312300, 8350000],
   },
   {
-    name: "Improved Sleep & Madness Resistance",
+    key: "improvedSleepMadnessResistance",
     ids: [312002],
   },
   {
-    name: "Improved Sleep Resistance",
+    key: "improvedSleepResistance",
     ids: [311800, 7003200, 8210200],
   },
   {
-    name: "Improved Sorceries",
+    key: "improvedSorceries",
     ids: [330000, 8330000],
   },
   {
-    name: "Improved Spear Attack Power",
+    key: "improvedSpearAttackPower",
     ids: [7331500],
   },
   {
-    name: "Improved Spell Casting Speed",
+    key: "improvedSpellCastingSpeed",
     ids: [330700, 8330400],
   },
   {
-    name: "Improved Stamina Recovery",
+    key: "improvedStaminaRecovery",
     ids: [311500, 8020200],
   },
   {
-    name: "Improved stamina recovery +1",
+    key: "improvedStaminaRecoveryPlus1",
     ids: [8020201],
   },
   {
-    name: "Improved Stance-Breaking",
+    key: "improvedStanceBreaking",
     ids: [8120000],
   },
   {
-    name: "Improved Stance-Breaking when Two-Handing",
+    key: "improvedStanceBreakingWhenTwoHanding",
     ids: [7006000, 7006001, 8300100],
   },
   {
-    name: "Improved Stance-Breaking when Wielding Two Armaments",
+    key: "improvedStanceBreakingWhenWieldingTwoArmaments",
     ids: [7006100, 7006101, 8310100],
   },
   {
-    name: "Improved Stance-Breaking with Head Shots",
+    key: "improvedStanceBreakingWithHeadShots",
     ids: [7200100],
   },
   {
-    name: "Improved Stonedigger Sorcery",
+    key: "improvedStonediggerSorcery",
     ids: [7043200],
   },
   {
-    name: "Improved Straight Sword Attack Power",
+    key: "improvedStraightSwordAttackPower",
     ids: [7330100],
   },
   {
-    name: "Improved Thorn Sorcery",
+    key: "improvedThornSorcery",
     ids: [7043800],
   },
   {
-    name: "Improved Throwing Knife Damage",
+    key: "improvedThrowingKnifeDamage",
     ids: [7040400],
   },
   {
-    name: "Improved Throwing Pot Damage",
+    key: "improvedThrowingPotDamage",
     ids: [7040300],
   },
   {
-    name: "Improved Throwing Pots",
+    key: "improvedThrowingPots",
     ids: [322100, 8390000],
   },
   {
-    name: "Improved Throwing Stone Damage",
+    key: "improvedThrowingStoneDamage",
     ids: [7040500],
   },
   {
-    name: "Improved Thrusting Counterattack",
+    key: "improvedThrustingCounterattack",
     ids: [320600, 8430000],
   },
   {
-    name: "Improved Thrusting Sword Attack Power",
+    key: "improvedThrustingSwordAttackPower",
     ids: [7330800],
   },
   {
-    name: "Improved Twinblade Attack Power",
+    key: "improvedTwinbladeAttackPower",
     ids: [7330700],
   },
   {
-    name: "Improved Whip Attack Power",
+    key: "improvedWhipAttackPower",
     ids: [7332200],
   },
   {
-    name: "Increased Maximum FP",
+    key: "increasedMaximumFP",
     ids: [310100, 7000190, 8010000],
   },
   {
-    name: "Increased Maximum HP",
+    key: "increasedMaximumHP",
     ids: [310000, 310400, 7000090, 8000000],
   },
   {
-    name: "Increased Maximum Stamina",
+    key: "increasedMaximumStamina",
     ids: [310200, 310401, 7000290, 8020000],
   },
   {
-    name: "Increased rune acquisition for self and allies",
+    key: "increasedRuneAcquisitionForSelfAndAllies",
     ids: [7110000],
   },
   {
-    name: "Intelligence +1",
+    key: "intelligencePlus1",
     ids: [7000500],
   },
   {
-    name: "Intelligence +2",
+    key: "intelligencePlus2",
     ids: [7000501],
   },
   {
-    name: "Intelligence +3",
+    key: "intelligencePlus3",
     ids: [7000502],
   },
   {
-    name: "Items confer effect to all nearby allies",
+    key: "itemsConferEffectToAllNearbyAllies",
     ids: [7050100],
   },
   {
-    name: "Jumping Conjures Magic Projectiles",
+    key: "jumpingConjuresMagicProjectiles",
     ids: [7012500],
   },
   {
-    name: "Less Likely to Be Targeted",
+    key: "lessLikelyToBeTargeted",
     ids: [8520000],
   },
   {
-    name: "Lightning Attack Power Up",
+    key: "lightningAttackPowerUp",
     ids: [7001700],
   },
   {
-    name: "Lightning Attack Power Up +1",
+    key: "lightningAttackPowerUpPlus1",
     ids: [7001701],
   },
   {
-    name: "Lightning Attack Power Up +2",
+    key: "lightningAttackPowerUpPlus2",
     ids: [7001702],
   },
   {
-    name: "Lightning Critical Hit Imbues Armament",
+    key: "lightningCriticalHitImbuesArmament",
     ids: [8640500],
   },
   {
-    name: "Lightning Damage Negation Up",
+    key: "lightningDamageNegationUp",
     ids: [7002800],
   },
   {
-    name: "Lightning Follows Charge Attacks",
+    key: "lightningFollowsChargeAttacks",
     ids: [8610500],
   },
   {
-    name: "Lightning Grease in possession at start of expedition",
+    key: "lightningGreaseInPossessionAtStartOfExpedition",
     ids: [7122400],
   },
   {
-    name: "Lightning Pots in possession at start of expedition",
+    key: "lightningPotsInPossessionAtStartOfExpedition",
     ids: [7121300],
   },
   {
-    name: "Lightning upon Charged Thrust",
+    key: "lightningUponChargedThrust",
     ids: [8882100],
   },
   {
-    name: "Lightning upon Dodging",
+    key: "lightningUponDodging",
     ids: [8410100],
   },
   {
-    name: "Lightning upon Precision Aiming",
+    key: "lightningUponPrecisionAiming",
     ids: [8883100],
   },
   {
-    name: "Low HP Crit. Hit Fully Restores HP",
+    key: "lowHpCritHitFullyRestoresHP",
     ids: [8660400],
   },
   {
-    name: "Luring Enemies upon Charged Strike",
+    key: "luringEnemiesUponChargedStrike",
     ids: [8881200],
   },
   {
-    name: "Madness Continually Recovers FP",
+    key: "madnessContinuallyRecoversFP",
     ids: [7035500],
   },
   {
-    name: "Madness Crit. Hit Fires Frenzied Flame",
+    key: "madnessCritHitFiresFrenziedFlame",
     ids: [8641100],
   },
   {
-    name: "Madness Increases Attack Power",
+    key: "madnessIncreasesAttackPower",
     ids: [8750000],
   },
   {
-    name: "Madness Produces a Flame of Frenzy",
+    key: "madnessProducesAFlameOfFrenzy",
     ids: [8690100],
   },
   {
-    name: "Magic Attack Follows Charge Attacks",
+    key: "magicAttackFollowsChargeAttacks",
     ids: [8610300],
   },
   {
-    name: "Magic Attack Power Up",
+    key: "magicAttackPowerUp",
     ids: [7001500],
   },
   {
-    name: "Magic Attack Power Up +1",
+    key: "magicAttackPowerUpPlus1",
     ids: [7001501],
   },
   {
-    name: "Magic Attack Power Up +2",
+    key: "magicAttackPowerUpPlus2",
     ids: [7001502],
   },
   {
-    name: "Magic Bubbles upon Charged Strike",
+    key: "magicBubblesUponChargedStrike",
     ids: [8881600],
   },
   {
-    name: "Magic Damage Negation Up",
+    key: "magicDamageNegationUp",
     ids: [7002600],
   },
   {
-    name: "Magic Grease in possession at start of expedition",
+    key: "magicGreaseInPossessionAtStartOfExpedition",
     ids: [7122300],
   },
   {
-    name: "Magic Pots in possession at start of expedition",
+    key: "magicPotsInPossessionAtStartOfExpedition",
     ids: [7121200],
   },
   {
-    name: "Magma Surge Sprint",
+    key: "magmaSurgeSprint",
     ids: [8450000],
   },
   {
-    name: "Magma upon Charged Strike",
+    key: "magmaUponChargedStrike",
     ids: [8881500],
   },
   {
-    name: "Magma upon Defeating Multiple Enemies",
+    key: "magmaUponDefeatingMultipleEnemies",
     ids: [8630500],
   },
   {
-    name: "Magma upon Fire Critical Hit",
+    key: "magmaUponFireCriticalHit",
     ids: [8640400],
   },
   {
-    name: "Many Periodical Glintblades",
+    key: "manyPeriodicalGlintblades",
     ids: [8530100],
   },
   {
-    name: "Max FP permanently increased after releasing Sorcerer's Rise mechanism",
+    key: "maxFpPermanentlyIncreasedAfterReleasingSorcerersRiseMechanism",
     ids: [7060100],
   },
   {
-    name: "Max FP Up with 3+ Sacred Seals Equipped",
+    key: "maxFpUpWith3PlusSacredSealsEquipped",
     ids: [7082600],
   },
   {
-    name: "Max FP Up with 3+ Staves Equipped",
+    key: "maxFpUpWith3PlusStavesEquipped",
     ids: [7082500],
   },
   {
-    name: "Max HP Up with 3+ Greatshields Equipped",
+    key: "maxHpUpWith3PlusGreatshieldsEquipped",
     ids: [7082900],
   },
   {
-    name: "Max HP Up with 3+ Medium Shields Equipped",
+    key: "maxHpUpWith3PlusMediumShieldsEquipped",
     ids: [7082800],
   },
   {
-    name: "Max HP Up with 3+ Small Shields Equipped",
+    key: "maxHpUpWith3PlusSmallShieldsEquipped",
     ids: [7082700],
   },
   {
-    name: "Maximum HP Down",
+    key: "maximumHpDown",
     ids: [330801],
   },
   {
-    name: "Mind +1",
+    key: "mindPlus1",
     ids: [7000100],
   },
   {
-    name: "Mind +2",
+    key: "mindPlus2",
     ids: [7000101],
   },
   {
-    name: "Mind +3",
+    key: "mindPlus3",
     ids: [7000102],
   },
   {
-    name: "More Runes From Defeated Enemies",
+    key: "moreRunesFromDefeatedEnemies",
     ids: [311100, 370001, 8500000],
   },
   {
-    name: "Multiple Periodical Glintblades",
+    key: "multiplePeriodicalGlintblades",
     ids: [8530000],
   },
   {
-    name: "Nearby Frostbite Conceals Self",
+    key: "nearbyFrostbiteConcealsSeIf",
     ids: [7260700],
   },
   {
-    name: "No Rune Loss or Level Down Upon Death",
+    key: "noRuneLossOrLevelDownUponDeath",
     ids: [360700],
   },
   {
-    name: "Parries Activate Golden Retaliation",
+    key: "parriesActivateGoldenRetaliation",
     ids: [8350400],
   },
   {
-    name: "Partial HP Restoration upon Post-Damage Attacks",
+    key: "partialHpRestorationUponPostDamageAttacks",
     ids: [7005600],
   },
   {
-    name: "Performing consecutive successful guards improves guard ability and deflects big attacks",
+    key: "performingConsecutiveSuccessfulGuardsImprovesGuardAbilityAndDeflectsBigAttacks",
     ids: [7031600],
   },
   {
-    name: "Periodical Giant Glintblades",
+    key: "periodicalGiantGlintblades",
     ids: [8530200],
   },
   {
-    name: "Pest Threads upon Charged Thrust",
+    key: "pestThreadsUponChargedThrust",
     ids: [8882300],
   },
   {
-    name: "Phantom Attack upon Charged Slash",
+    key: "phantomAttackUponChargedSlash",
     ids: [8880300],
   },
   {
-    name: "Phantom Attack upon Charged Strike",
+    key: "phantomAttackUponChargedStrike",
     ids: [8881400],
   },
   {
-    name: "Phantom Attack upon Charged Thrust",
+    key: "phantomAttackUponChargedThrust",
     ids: [8882000],
   },
   {
-    name: "Physical Attack Up",
+    key: "physicalAttackUp",
     ids: [7001400],
   },
   {
-    name: "Physical Attack Up +1",
+    key: "physicalAttackUpPlus1",
     ids: [7001401],
   },
   {
-    name: "Physical Attack Up +2",
+    key: "physicalAttackUpPlus2",
     ids: [7001402],
   },
   {
-    name: "Physical Attack Up +3",
+    key: "physicalAttackUpPlus3",
     ids: [7001403],
   },
   {
-    name: "Poise +1",
+    key: "poisePlus1",
     ids: [7001000],
   },
   {
-    name: "Poise +2",
+    key: "poisePlus2",
     ids: [7001001],
   },
   {
-    name: "Poise +3",
+    key: "poisePlus3",
     ids: [7001002],
   },
   {
-    name: "Poison & Rot Improves Attack Power",
+    key: "poisonAndRotImprovesAttackPower",
     ids: [321700],
   },
   {
-    name: "Poison & Rot in Vicinity Increases Attack Power",
+    key: "poisonAndRotInVicinityIncreasesAttackPower",
     ids: [7260710, 7260800],
   },
   {
-    name: "Poison Increases Attack Power",
+    key: "poisonIncreasesAttackPower",
     ids: [8700000],
   },
   {
-    name: "Poison Mist upon Charged Thrust",
+    key: "poisonMistUponChargedThrust",
     ids: [8882400],
   },
   {
-    name: "Poison Mist upon Poison Critical Hit",
+    key: "poisonMistUponPoisonCriticalHit",
     ids: [8640700],
   },
   {
-    name: "Poison Mist upon Precision Aiming",
+    key: "poisonMistUponPrecisionAiming",
     ids: [8883200],
   },
   {
-    name: "Poison Produces a Mist of Poison",
+    key: "poisonProducesAMistOfPoison",
     ids: [8690000],
   },
   {
-    name: "Poisonbone Darts in possession at start of expedition",
+    key: "poisonboneDartsInPossessionAtStartOfExpedition",
     ids: [7121500],
   },
   {
-    name: "Power of Dark Moon",
+    key: "powerOfDarkMoon",
     ids: [9030900],
   },
   {
-    name: "Power of Despair",
+    key: "powerOfDespair",
     ids: [9071000],
   },
   {
-    name: "Power of Destined Death",
+    key: "powerOfDestinedDeath",
     ids: [9040200],
   },
   {
-    name: "Power of Destruction",
+    key: "powerOfDestruction",
     ids: [9040800],
   },
   {
-    name: "Power of Full Moon",
+    key: "powerOfFullMoon",
     ids: [9330900],
   },
   {
-    name: "Power of House Marais",
+    key: "powerOfHouseMarais",
     ids: [9031500],
   },
   {
-    name: "Power of Night and Flame",
+    key: "powerOfNightAndFlame",
     ids: [9021400],
   },
   {
-    name: "Power of the Ancestral Spirit",
+    key: "powerOfTheAncestralSpirit",
     ids: [9151100],
   },
   {
-    name: "Power of the Blasphemous",
+    key: "powerOfTheBlasphemous",
     ids: [9031400, 9122000],
   },
   {
-    name: "Power of the Blood Lord",
+    key: "powerOfTheBloodLord",
     ids: [9170100],
   },
   {
-    name: "Power of the Dragonlord",
+    key: "powerOfTheDragonlord",
     ids: [9060400],
   },
   {
-    name: "Power of the First Lord",
+    key: "powerOfTheFirstLord",
     ids: [9230500],
   },
   {
-    name: "Power of the Flying Dragon",
+    key: "powerOfTheFlyingDragon",
     ids: [9210600],
   },
   {
-    name: "Power of the General",
+    key: "powerOfTheGeneral",
     ids: [9420000],
   },
   {
-    name: "Power of the Giant",
+    key: "powerOfTheGiant",
     ids: [9200600],
   },
   {
-    name: "Power of the Golden Lineage",
+    key: "powerOfTheGoldenLineage",
     ids: [9150400],
   },
   {
-    name: "Power of the Golden Order",
+    key: "powerOfTheGoldenOrder",
     ids: [9031700],
   },
   {
-    name: "Power of the Great Ancient Dragon",
+    key: "powerOfTheGreatAncientDragon",
     ids: [9160900],
   },
   {
-    name: "Power of the Greater Will",
+    key: "powerOfTheGreaterWill",
     ids: [9031000],
   },
   {
-    name: "Power of the Lightless Void",
+    key: "powerOfTheLightlessVoid",
     ids: [9130300],
   },
   {
-    name: "Power of the Omen King",
+    key: "powerOfTheOmenKing",
     ids: [9081000],
   },
   {
-    name: "Power of the Queen",
+    key: "powerOfTheQueen",
     ids: [9111500],
   },
   {
-    name: "Power of the Starscourge",
+    key: "powerOfTheStarscourge",
     ids: [9040500],
   },
   {
-    name: "Power of the Undefeated",
+    key: "powerOfTheUndefeated",
     ids: [9090200],
   },
   {
-    name: "Power of Vengeance",
+    key: "powerOfVengeance",
     ids: [9041000],
   },
   {
-    name: "Projectile Damage Drop-Off Reduced",
+    key: "projectileDamageDropOffReduced",
     ids: [321000, 8340100],
   },
   {
-    name: "Projectile damage drop-off reduced +1",
+    key: "projectileDamageDropOffReducedPlus1",
     ids: [8340102],
   },
   {
-    name: "Projectiles Launched upon Attacks",
+    key: "projectilesLaunchedUponAttacks",
     ids: [8883000],
   },
   {
-    name: "Projectiles upon Charged Strike",
+    key: "projectilesUponChargedStrike",
     ids: [8881100],
   },
   {
-    name: "Raised stamina recovery for nearby allies, but not for self",
+    key: "raisedStaminaRecoveryForNearbyAlliesButNotForSelf",
     ids: [7050000],
   },
   {
-    name: "Raises maximum FP +1",
+    key: "raisesMaximumFpPlus1",
     ids: [8010001],
   },
   {
-    name: "Raises non-physical damage negation +1",
+    key: "raisesNonPhysicalDamageNegationPlus1",
     ids: [8200501],
   },
   {
-    name: "Raises physical attack power +1",
+    key: "raisesPhysicalAttackPowerPlus1",
     ids: [8100001],
   },
   {
-    name: "Raises physical damage negation +1",
+    key: "raisesPhysicalDamageNegationPlus1",
     ids: [8200001],
   },
   {
-    name: "Raises resistance to all ailments",
+    key: "raisesResistanceToAllAilments",
     ids: [8210700],
   },
   {
-    name: "Raises sorcery/incantation potency",
+    key: "raisesSorceryIncantationPotency",
     ids: [8330104],
   },
   {
-    name: "Reduced FP Consumption",
+    key: "reducedFpConsumption",
     ids: [8010100],
   },
   {
-    name: "Reduced Skill FP Cost",
+    key: "reducedSkillFpCost",
     ids: [360200, 8350200],
   },
   {
-    name: "Reduced spell FP cost",
-    ids: [8330602],
+    key: "reducedSpellFpCost",
+    ids: [330800, 8330600, 8330602],
   },
   {
-    name: "Reduced Spell FP Cost",
-    ids: [330800, 8330600],
-  },
-  {
-    name: "Reduced Stamina Consumption",
+    key: "reducedStaminaConsumption",
     ids: [8020100],
   },
   {
-    name: "Ring of Light upon Charged Slash",
+    key: "ringOfLightUponChargedSlash",
     ids: [8880100],
   },
   {
-    name: "Roaring Flames upon Charged Slash",
+    key: "roaringFlamesUponChargedSlash",
     ids: [8880400],
   },
   {
-    name: "Rot Critical Hit Fires Pest Threads",
+    key: "rotCriticalHitFiresPestThreads",
     ids: [8640900],
   },
   {
-    name: "Rot Mist upon Precision Aiming",
+    key: "rotMistUponPrecisionAiming",
     ids: [8883300],
   },
   {
-    name: "Rot Produces a Mist of Scarlet Rot",
+    key: "rotProducesAMistOfScarletRot",
     ids: [8690200],
   },
   {
-    name: "Rune discount for shop purchases while on expedition",
+    key: "runeDiscountForShopPurchasesWhileOnExpedition",
     ids: [7230000],
   },
   {
-    name: "Sacred Order upon Holy Critical Hit",
+    key: "sacredOrderUponHolyCriticalHit",
     ids: [8640300],
   },
   {
-    name: "Savage Flames Roar While Walking",
+    key: "savageFlamesRoarWhileWalking",
     ids: [8460100],
   },
   {
-    name: "Shield Grease in possession at start of expedition",
+    key: "shieldGreaseInPossessionAtStartOfExpedition",
     ids: [7122600],
   },
   {
-    name: "Shielding Creates Holy Ground",
+    key: "shieldingCreatesHolyGround",
     ids: [8884200],
   },
   {
-    name: "Shielding Improves Damage Negation",
+    key: "shieldingImprovesDamageNegation",
     ids: [8884000],
   },
   {
-    name: "Shielding Invokes Indomitable Vow",
+    key: "shieldingInvokesIndomitableVow",
     ids: [8884100],
   },
   {
-    name: "Shockwave Produced From Successful Guarding",
+    key: "shockwaveProducedFromSuccessfulGuarding",
     ids: [7031700],
   },
   {
-    name: "Shockwave upon Charged Strike",
+    key: "shockwaveUponChargedStrike",
     ids: [8881300],
   },
   {
-    name: "Skill Activation Improves Poise",
+    key: "skillActivationImprovesPoise",
     ids: [8350300],
   },
   {
-    name: "Sleep Increases Attack Power",
+    key: "sleepIncreasesAttackPower",
     ids: [8720000],
   },
   {
-    name: "Sleep Produces a Mist of Sleep",
+    key: "sleepProducesAMistOfSleep",
     ids: [8690400],
   },
   {
-    name: "Slowly restore HP for self and nearby allies when HP is low",
+    key: "slowlyRestoreHpForSelfAndNearbyAlliesWhenHpIsLow",
     ids: [7012200],
   },
   {
-    name: "Small Pouch in possession at start of expedition",
+    key: "smallPouchInPossessionAtStartOfExpedition",
     ids: [7121000],
   },
   {
-    name: "Stamina recovers with each successful attack",
+    key: "staminaRecoversWithEachSuccessfulAttack",
     ids: [7100100],
   },
   {
-    name: "Stamina recovers with each successful attack +1",
+    key: "staminaRecoversWithEachSuccessfulAttackPlus1",
     ids: [7100110, 7100190],
   },
   {
-    name: "Starlight Shards in possession at start of expedition",
+    key: "starlightShardsInPossessionAtStartOfExpedition",
     ids: [7126000, 7126001, 7126002],
   },
   {
-    name: "Starting armament deals fire damage",
+    key: "startingArmamentDealsFireDamage",
     ids: [7120100],
   },
   {
-    name: "Starting armament deals holy damage",
+    key: "startingArmamentDealsHolyDamage",
     ids: [7120300],
   },
   {
-    name: "Starting armament deals lightning damage",
+    key: "startingArmamentDealsLightningDamage",
     ids: [7120200],
   },
   {
-    name: "Starting armament deals magic damage",
+    key: "startingArmamentDealsMagicDamage",
     ids: [7120000],
   },
   {
-    name: "Starting armament inflicts blood loss",
+    key: "startingArmamentInflictsBloodLoss",
     ids: [7120600],
   },
   {
-    name: "Starting armament inflicts frost",
+    key: "startingArmamentInflictsFrost",
     ids: [7120400],
   },
   {
-    name: "Starting armament inflicts poison",
+    key: "startingArmamentInflictsPoison",
     ids: [7120500],
   },
   {
-    name: "Starting armament inflicts scarlet rot",
+    key: "startingArmamentInflictsScarletRot",
     ids: [7120700],
   },
   {
-    name: "Stonesword Key in possession at start of expedition",
+    key: "stoneswordKeyInPossessionAtStartOfExpedition",
     ids: [7120900],
   },
   {
-    name: "Storm of Red Lightning While Walking",
+    key: "stormOfRedLightningWhileWalking",
     ids: [8460500],
   },
   {
-    name: "Strength +1",
+    key: "strengthPlus1",
     ids: [7000300],
   },
   {
-    name: "Strength +2",
+    key: "strengthPlus2",
     ids: [7000301],
   },
   {
-    name: "Strength +3",
+    key: "strengthPlus3",
     ids: [7000302],
   },
   {
-    name: "Strong Attack Creates Wide Wave of Heat",
+    key: "strongAttackCreatesWideWaveOfHeat",
     ids: [7012400],
   },
   {
-    name: "Strong Attacks Improve Poise",
+    key: "strongAttacksImprovePoise",
     ids: [8320200],
   },
   {
-    name: "Strong Jump Attacks Create Shockwave",
+    key: "strongJumpAttacksCreateShockwave",
     ids: [8960200],
   },
   {
-    name: "Successful Guarding Ups Dmg Negation",
+    key: "successfulGuardingUpsDmgNegation",
     ids: [8652100],
   },
   {
-    name: "Successful Guarding Ups Poise",
+    key: "successfulGuardingUpsPoise",
     ids: [8652000],
   },
   {
-    name: "Successive Attack HP Restoration",
+    key: "successiveAttackHpRestoration",
     ids: [350400],
   },
   {
-    name: "Successive Attacks Boost Attack Power",
+    key: "successiveAttacksBoostAttackPower",
     ids: [312501, 320800, 8610200],
   },
   {
-    name: "Successive Attacks Negate Damage",
+    key: "successiveAttacksNegateDamage",
     ids: [8610700],
   },
   {
-    name: "Sudden Enemy Death upon Attacks",
+    key: "suddenEnemyDeathUponAttacks",
     ids: [8600300],
   },
   {
-    name: "Surge Sprint Landings Split Earth",
+    key: "surgeSprintLandingsSplitEarth",
     ids: [7035600],
   },
   {
-    name: "Switching Weapons Adds an Affinity Attack",
+    key: "switchingWeaponsAddsAnAffinityAttack",
     ids: [7035700],
   },
   {
-    name: "Switching Weapons Boosts Attack Power",
+    key: "switchingWeaponsBoostsAttackPower",
     ids: [10002, 7035900],
   },
   {
-    name: "Taking attacks improves attack power",
+    key: "takingAttacksImprovesAttackPower",
     ids: [10001, 7032200],
   },
   {
-    name: "Taking Damage Boosts Damage Negation",
+    key: "takingDamageBoostsDamageNegation",
     ids: [8620100],
   },
   {
-    name: "Taking Damage Restores FP",
+    key: "takingDamageRestoresFp",
     ids: [8620000],
   },
   {
-    name: "The Duchess' Grief",
+    key: "theDuchessGrief",
     ids: [9990400],
   },
   {
-    name: "The Executor's Grief",
+    key: "theExecutorsGrief",
     ids: [9990800],
   },
   {
-    name: "The Guardian's Grief",
+    key: "theGuardiansGrief",
     ids: [9990200],
   },
   {
-    name: "The Ironeye's Grief",
+    key: "theIroneyesGrief",
     ids: [9990300],
   },
   {
-    name: "The Raider's Grief",
+    key: "theRaidersGrief",
     ids: [9990500],
   },
   {
-    name: "The Recluse's Grief",
+    key: "theReclusesGrief",
     ids: [9990700],
   },
   {
-    name: "The Revenant's Grief",
+    key: "theRevenantsGrief",
     ids: [9990600],
   },
   {
-    name: "The Wylder's Grief",
+    key: "theWyldersGrief",
     ids: [9990100],
   },
   {
-    name: "Throwing Daggers in possession at start of expedition",
+    key: "throwingDaggersInPossessionAtStartOfExpedition",
     ids: [7121700],
   },
   {
-    name: "Treasure marked upon map",
+    key: "treasureMarkedUponMap",
     ids: [7070000],
   },
   {
-    name: "Ultimate Art Gauge +1",
+    key: "ultimateArtGaugePlus1",
     ids: [7000900],
   },
   {
-    name: "Ultimate Art Gauge +2",
+    key: "ultimateArtGaugePlus2",
     ids: [7000901],
   },
   {
-    name: "Ultimate Art Gauge +3",
+    key: "ultimateArtGaugePlus3",
     ids: [7000902],
   },
   {
-    name: "Ultimate Art Gauge Charge Speed Up",
+    key: "ultimateArtGaugeChargeSpeedUp",
     ids: [8360000],
   },
   {
-    name: "Vicious Star Rain Pours While Walking",
+    key: "viciousStarRainPoursWhileWalking",
     ids: [8460400],
   },
   {
-    name: "Vigor +1",
+    key: "vigorPlus1",
     ids: [7000000],
   },
   {
-    name: "Vigor +2",
+    key: "vigorPlus2",
     ids: [7000001],
   },
   {
-    name: "Vigor +3",
+    key: "vigorPlus3",
     ids: [7000002],
   },
   {
-    name: "Wraith Calling Bell in possession at start of expedition",
+    key: "wraithCallingBellInPossessionAtStartOfExpedition",
     ids: [7122100],
   },
   {
-    name: "Wraiths While Walking",
+    key: "wraithsWhileWalking",
     ids: [8460300],
   },
 ];
 
 interface Effect {
-  name: string;
+  key: string;
 }
 
 export const effects: Map<number, Effect> = new Map();

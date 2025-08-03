@@ -1,94 +1,94 @@
 import type { RelicColor } from "../utils/RelicColor";
 
 interface ItemArrayElement {
-  name: string;
+  key: string;
   color: RelicColor | null;
   ids: number[];
 }
 
 const itemsArray: ItemArrayElement[] = [
   {
-    name: "Besmirched Frame",
+    key: "besmirchedFrame",
     color: "Blue",
     ids: [10001],
   },
   {
-    name: "Black Claw Necklace",
+    key: "blackClawNecklace",
     color: "Yellow",
     ids: [15002],
   },
   {
-    name: "Blade of Night Fragment",
+    key: "bladeOfNightFragment",
     color: null,
     ids: [16000],
   },
   {
-    name: "Blessed Flowers",
+    key: "blessedFlowers",
     color: "Green",
     ids: [18000],
   },
   {
-    name: "Blessed Iron Coin",
+    key: "blessedIronCoin",
     color: "Green",
     ids: [14002],
   },
   {
-    name: "Bone-Like Stone",
+    key: "boneLikeStone",
     color: "Green",
     ids: [17002],
   },
   {
-    name: "Cracked Sealing Wax",
+    key: "crackedSealingWax",
     color: "Yellow",
     ids: [13001],
   },
   {
-    name: "Cracked Witch's Brooch",
+    key: "crackedWitchsBrooch",
     color: "Blue",
     ids: [12003],
   },
   {
-    name: "Crown Medal",
+    key: "crownMedal",
     color: "Green",
     ids: [14001],
   },
   {
-    name: "Dark Night of the Baron",
+    key: "darkNightOfTheBaron",
     color: "Red",
     ids: [2011],
   },
   {
-    name: "Dark Night of the Beast",
+    key: "darkNightOfTheBeast",
     color: null,
     ids: [2001],
   },
   {
-    name: "Dark Night of the Champion",
+    key: "darkNightOfTheChampion",
     color: "Yellow",
     ids: [2051],
   },
   {
-    name: "Dark Night of the Demon",
+    key: "darkNightOfTheDemon",
     color: "Blue",
     ids: [2041],
   },
   {
-    name: "Dark Night of the Fathom",
+    key: "darkNightOfTheFathom",
     color: null,
     ids: [2031],
   },
   {
-    name: "Dark Night of the Miasma",
+    key: "darkNightOfTheMiasma",
     color: null,
     ids: [2061],
   },
   {
-    name: "Dark Night of the Wise",
+    key: "darkNightOfTheWise",
     color: "Green",
     ids: [2021],
   },
   {
-    name: "Delicate Burning Scene",
+    key: "delicateBurningScene",
     color: "Red",
     ids: [
       100, 103, 106, 1000, 11003, 11004, 20000, 20003, 20006, 1000000, 1000010,
@@ -98,7 +98,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Delicate Drizzly Scene",
+    key: "delicateDrizzlyScene",
     color: "Blue",
     ids: [
       109, 112, 115, 1010, 12005, 12006, 20009, 20012, 20015, 1000100, 1000110,
@@ -108,7 +108,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Delicate Luminous Scene",
+    key: "delicateLuminousScene",
     color: "Yellow",
     ids: [
       118, 121, 124, 1020, 1050, 12004, 20018, 20021, 20024, 1000200, 1000210,
@@ -118,7 +118,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Delicate Tranquil Scene",
+    key: "delicateTranquilScene",
     color: "Green",
     ids: [
       127, 130, 133, 1030, 12007, 20027, 20030, 20033, 1000300, 1000310,
@@ -128,37 +128,37 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Edge of Order",
+    key: "edgeOfOrder",
     color: "Yellow",
     ids: [13002],
   },
   {
-    name: "Fell Omen Fetish",
+    key: "fellOmenFetish",
     color: "Blue",
     ids: [10002],
   },
   {
-    name: "Fine Arrowhead",
+    key: "fineArrowhead",
     color: null,
     ids: [13000],
   },
   {
-    name: "Golden Dew",
+    key: "goldenDew",
     color: "Yellow",
     ids: [14000],
   },
   {
-    name: "Golden Shell",
+    key: "goldenShell",
     color: null,
     ids: [18001],
   },
   {
-    name: "Golden Sprout",
+    key: "goldenSprout",
     color: "Red",
     ids: [18002],
   },
   {
-    name: "Grand Burning Scene",
+    key: "grandBurningScene",
     color: "Red",
     ids: [
       102, 105, 108, 1180, 1250, 1260, 1410, 1440, 1480, 1500, 20002, 20005,
@@ -169,7 +169,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Grand Drizzly Scene",
+    key: "grandDrizzlyScene",
     color: "Blue",
     ids: [
       111, 114, 117, 1190, 1230, 1240, 1400, 1460, 1520, 20011, 20014, 20017,
@@ -179,7 +179,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Grand Luminous Scene",
+    key: "grandLuminousScene",
     color: "Yellow",
     ids: [
       120, 123, 126, 1220, 1450, 1470, 1510, 20020, 20023, 20026, 1000202,
@@ -189,7 +189,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Grand Tranquil Scene",
+    key: "grandTranquilScene",
     color: "Green",
     ids: [
       129, 132, 135, 1200, 1210, 1270, 1420, 1430, 1490, 20029, 20032, 20035,
@@ -199,67 +199,67 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Large Scenic Flatstone",
+    key: "largeScenicFlatstone",
     color: null,
     ids: [30],
   },
   {
-    name: "Night of the Baron",
+    key: "nightOfTheBaron",
     color: "Blue",
     ids: [2010],
   },
   {
-    name: "Night of the Beast",
+    key: "nightOfTheBeast",
     color: "Green",
     ids: [2000],
   },
   {
-    name: "Night of the Champion",
+    key: "nightOfTheChampion",
     color: "Green",
     ids: [2050],
   },
   {
-    name: "Night of the Demon",
+    key: "nightOfTheDemon",
     color: "Red",
     ids: [2040],
   },
   {
-    name: "Night of the Fathom",
+    key: "nightOfTheFathom",
     color: "Red",
     ids: [2030],
   },
   {
-    name: "Night of the Lord",
+    key: "nightOfTheLord",
     color: "Blue",
     ids: [2100],
   },
   {
-    name: "Night of the Miasma",
+    key: "nightOfTheMiasma",
     color: "Yellow",
     ids: [2060],
   },
   {
-    name: "Night of the Wise",
+    key: "nightOfTheWise",
     color: "Yellow",
     ids: [2020],
   },
   {
-    name: "Night Shard",
+    key: "nightShard",
     color: null,
     ids: [17000],
   },
   {
-    name: "Old Pocketwatch",
+    key: "oldPocketwatch",
     color: "Green",
     ids: [10000],
   },
   {
-    name: "Old Portrait",
+    key: "oldPortrait",
     color: "Blue",
     ids: [16002],
   },
   {
-    name: "Polished Burning Scene",
+    key: "polishedBurningScene",
     color: "Red",
     ids: [
       101, 104, 107, 1040, 1080, 1110, 1120, 20001, 20004, 20007, 1000001,
@@ -269,7 +269,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Polished Drizzly Scene",
+    key: "polishedDrizzlyScene",
     color: "Blue",
     ids: [
       110, 113, 116, 1070, 1160, 1170, 20010, 20013, 20016, 1000101, 1000111,
@@ -279,7 +279,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Polished Luminous Scene",
+    key: "polishedLuminousScene",
     color: "Yellow",
     ids: [
       119, 122, 125, 1140, 1150, 20019, 20022, 20025, 1000201, 1000211, 1000221,
@@ -289,7 +289,7 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Polished Tranquil Scene",
+    key: "polishedTranquilScene",
     color: "Green",
     ids: [
       128, 131, 134, 1060, 1090, 1100, 1130, 20028, 20031, 20034, 1000301,
@@ -299,64 +299,64 @@ const itemsArray: ItemArrayElement[] = [
     ],
   },
   {
-    name: "Scenic Flatstone",
+    key: "scenicFlatstone",
     color: null,
     ids: [20],
   },
   {
-    name: "Silver Tear",
+    key: "silverTear",
     color: "Red",
     ids: [11002],
   },
   {
-    name: "Slate Whetstone",
+    key: "slateWhetstone",
     color: "Red",
     ids: [11000],
   },
   {
-    name: "Small Makeup Brush",
+    key: "smallMakeupBrush",
     color: "Blue",
     ids: [16001],
   },
   {
-    name: "Sovereign Sigil",
+    key: "sovereignSigil",
     color: null,
     ids: [11],
   },
   {
-    name: "Stone Stake",
+    key: "stoneStake",
     color: "Red",
     ids: [12001],
   },
   {
-    name: "The Wylder's Earring",
+    key: "theWyldersEarring",
     color: "Red",
     ids: [11001],
   },
   {
-    name: "Third Volume",
+    key: "thirdVolume",
     color: "Red",
     ids: [12000],
   },
   {
-    name: "Torn Braided Cord",
+    key: "tornBraidedCord",
     color: "Blue",
     ids: [15000],
   },
   {
-    name: "Vestige of Night",
+    key: "vestigeOfNight",
     color: "Green",
     ids: [17001],
   },
   {
-    name: "Witch's Brooch",
+    key: "witchsBrooch",
     color: "Blue",
     ids: [12002],
   },
 ];
 
 interface Item {
-  name: string;
+  key: string;
   color: RelicColor | null;
 }
 
