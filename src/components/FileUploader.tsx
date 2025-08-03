@@ -11,6 +11,7 @@ import {
   Alert,
   Link,
   AlertTitle,
+  Paper,
 } from "@mui/material";
 import { CloudUpload, Close, FileUpload, Clear } from "@mui/icons-material";
 
@@ -260,9 +261,9 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
               onChange={handleFileChange}
             />
 
-            <Box sx={{ mt: 2, p: 2, bgcolor: "action.hover", borderRadius: 1 }}>
+            <Paper variant="outlined" sx={{ p: 2 }}>
               {getHelperText()}
-            </Box>
+            </Paper>
 
             <Alert severity="info">
               <AlertTitle>Can't find your save file?</AlertTitle>
