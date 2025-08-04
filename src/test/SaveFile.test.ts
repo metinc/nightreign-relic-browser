@@ -26,6 +26,7 @@ const testData: TestData = [
   { name: "teru.sl2", slots: [{ name: "Teru", relics: 254 }] },
   { name: "stluna.sl2", slots: [{ name: "ST. Luna", relics: 403 }] },
   // { name: "eonacat.sl2", slots: [{ name: "EonaCat", relics: 743 }] },
+  { name: "pekzer.sl2", slots: [{ name: "Pekzer", relics: 139 }] },
 ];
 
 describe("Save File Processing", () => {

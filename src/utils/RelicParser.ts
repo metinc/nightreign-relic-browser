@@ -103,7 +103,8 @@ export class RelicParser {
         if (trimmed.length > 0 && trimmed.length % 2 === 0) {
           const decoder = new TextDecoder("utf-16le");
           const decoded = decoder.decode(trimmed);
-          if (decoded && decoded.trim()) {
+          const decodedTrimmed = decoded.trim();
+          if (decoded && decodedTrimmed && !decodedTrimmed.includes("\uffff")) {
             return decoded.trim();
           }
         }
