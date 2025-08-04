@@ -52,28 +52,33 @@ describe("Save File Processing", () => {
         expect(bnd4Entries.length).toBe(14);
       });
 
-      testEntry.slots.forEach((slotData, slotIndex) => {
-        const slotNumber = slotIndex + 1;
+      // Test all 10 character slots
+      for (let slotNumber = 1; slotNumber <= 10; slotNumber++) {
+        const expectedSlotData = testEntry.slots.find(
+          (_, index) => index + 1 === slotNumber
+        );
 
-        it(`should parse slot ${slotNumber} (${slotData.name}) correctly`, () => {
+        it(`should parse slot ${slotNumber} correctly`, () => {
           const slot = RelicParser.parseCharacterSlot(slotNumber, bnd4Entries);
 
           expect(slot).toBeDefined();
-          expect(slot.name).toBe(slotData.name);
           expect(slot.relics).toBeDefined();
-          expect(slot.relics.length).toBe(slotData.relics);
-        });
+          expect(Array.isArray(slot.relics)).toBe(true);
 
-        it(`should find exactly ${slotData.relics} relics for ${slotData.name}`, () => {
-          const slot = RelicParser.parseCharacterSlot(slotNumber, bnd4Entries);
-
-          expect(slot.name).toBe(slotData.name);
-          console.log(
-            `Found ${slot.relics.length} relics, expected ${slotData.relics}`
-          );
-          expect(slot.relics.length).toBe(slotData.relics);
+          if (expectedSlotData) {
+            // Slot should have data
+            expect(slot.name).toBe(expectedSlotData.name);
+            expect(slot.relics.length).toBe(expectedSlotData.relics);
+            console.log(
+              `Slot ${slotNumber} (${expectedSlotData.name}): Found ${slot.relics.length} relics, expected ${expectedSlotData.relics}`
+            );
+          } else {
+            // Slot should be empty
+            expect(slot.name).toBe(null);
+            expect(slot.relics.length).toBe(0);
+          }
         });
-      });
+      }
 
       it("should decrypt all BND4 entries successfully", () => {
         for (const entry of bnd4Entries) {
@@ -84,13 +89,22 @@ describe("Save File Processing", () => {
       });
 
       it("should parse relics with valid structure", () => {
-        const firstSlot = RelicParser.parseCharacterSlot(1, bnd4Entries);
+        // Find the first non-empty slot
+        let firstNonEmptySlot = null;
+        for (let i = 1; i <= 10; i++) {
+          const slot = RelicParser.parseCharacterSlot(i, bnd4Entries);
+          if (slot.relics.length > 0) {
+            firstNonEmptySlot = slot;
+            break;
+          }
+        }
 
-        // Check that we have relics
-        expect(firstSlot.relics.length).toBeGreaterThan(0);
+        // Check that we have a non-empty slot with relics
+        expect(firstNonEmptySlot).not.toBeNull();
+        expect(firstNonEmptySlot!.relics.length).toBeGreaterThan(0);
 
         // Check the structure of the first relic
-        const firstRelic = firstSlot.relics[0];
+        const firstRelic = firstNonEmptySlot!.relics[0];
         const [itemId, ...effects] = firstRelic;
         expect(firstRelic).toBeDefined();
         expect(itemId).toBeTypeOf("number");
@@ -99,13 +113,18 @@ describe("Save File Processing", () => {
       });
 
       it("should handle UTF-16LE character names correctly", () => {
-        testEntry.slots.forEach((slotData, slotIndex) => {
-          const slot = RelicParser.parseCharacterSlot(
-            slotIndex + 1,
-            bnd4Entries
+        for (let slotNumber = 1; slotNumber <= 10; slotNumber++) {
+          const expectedSlotData = testEntry.slots.find(
+            (_, index) => index + 1 === slotNumber
           );
-          expect(slot.name).toBe(slotData.name);
-        });
+          const slot = RelicParser.parseCharacterSlot(slotNumber, bnd4Entries);
+
+          if (expectedSlotData) {
+            expect(slot.name).toBe(expectedSlotData.name);
+          } else {
+            expect(slot.name).toBe(null);
+          }
+        }
       });
 
       it("should parse all 10 character slots without errors", () => {
@@ -116,29 +135,32 @@ describe("Save File Processing", () => {
           expect(slot.relics).toBeDefined();
           expect(Array.isArray(slot.relics)).toBe(true);
 
-          slot.relics.forEach((relic) => {
-            const [itemId, ...effects] = relic;
-            const itemName = getItemName(itemId);
-            expect(itemName).toBeDefined();
-            expect(itemName).toBeTypeOf("string");
-            expect(itemName).not.toBe("Unknown Item");
+          // Only validate relic structure for non-empty slots
+          if (slot.relics.length > 0) {
+            slot.relics.forEach((relic) => {
+              const [itemId, ...effects] = relic;
+              const itemName = getItemName(itemId);
+              expect(itemName).toBeDefined();
+              expect(itemName).toBeTypeOf("string");
+              expect(itemName).not.toBe("Unknown Item");
 
-            const itemColor = getItemColor(itemId);
-            expect(itemColor).toBeDefined();
-            expect(itemColor).toBeTypeOf("string");
+              const itemColor = getItemColor(itemId);
+              expect(itemColor).toBeDefined();
+              expect(itemColor).toBeTypeOf("string");
 
-            const effectNames = effects.map((effectId) =>
-              getEffectName(effectId)
-            );
-            effectNames.forEach((effectName, index) => {
-              expect(
-                effectName,
-                `${testEntry.name}: effectName ${effects[index]} is undefined on item ${itemName} effect ${index}`
-              ).toBeDefined();
-              expect(effectName).toBeTypeOf("string");
-              expect(effectName.startsWith("Unknown Effect")).toBe(false);
+              const effectNames = effects.map((effectId) =>
+                getEffectName(effectId)
+              );
+              effectNames.forEach((effectName, index) => {
+                expect(
+                  effectName,
+                  `${testEntry.name}: effectName ${effects[index]} is undefined on item ${itemName} effect ${index}`
+                ).toBeDefined();
+                expect(effectName).toBeTypeOf("string");
+                expect(effectName.startsWith("Unknown Effect")).toBe(false);
+              });
             });
-          });
+          }
         }
       });
     });
