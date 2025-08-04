@@ -62,7 +62,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const chipColor = getChipColor(itemColor);
   const backgroundColor = getBackgroundColor(effects.length);
   const isSpecialRelic =
-    !itemName.endsWith(" Scene") && itemName !== "Unknown Item";
+    !itemName.endsWith(" Scene") && !itemName.startsWith("Unknown Item");
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
   const selectedChipColor = getChipColor(selectedColor);
 
