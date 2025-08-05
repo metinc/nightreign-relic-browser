@@ -1,11 +1,26 @@
 import type { RelicSlotColor } from "./RelicColor";
 
-export type Chalice = {
+export type Vessel = {
   name: string;
   slots: [RelicSlotColor, RelicSlotColor, RelicSlotColor];
 };
 
-export const duchess: Chalice[] = [
+const anyoneVessels: Vessel[] = [
+  {
+    name: "Giant's Cradle Grail",
+    slots: ["Blue", "Blue", "Blue"],
+  },
+  {
+    name: "Sacred Erdtree Grail",
+    slots: ["Yellow", "Yellow", "Yellow"],
+  },
+  {
+    name: "Spirit Shelter Grail",
+    slots: ["Green", "Green", "Green"],
+  },
+] as const;
+
+export const duchessVessels: Vessel[] = [
   {
     name: "Duchess' Chalice",
     slots: ["Blue", "Yellow", "Any"],
@@ -26,9 +41,10 @@ export const duchess: Chalice[] = [
     name: "Sealed Duchess' Urn",
     slots: ["Blue", "Blue", "Red"],
   },
-];
+  ...anyoneVessels,
+] as const;
 
-export const executor: Chalice[] = [
+export const executorVessels: Vessel[] = [
   {
     name: "Executor's Chalice",
     slots: ["Blue", "Yellow", "Any"],
@@ -49,9 +65,10 @@ export const executor: Chalice[] = [
     name: "Sealed Executor's Urn",
     slots: ["Yellow", "Yellow", "Red"],
   },
-];
+  ...anyoneVessels,
+] as const;
 
-export const guardian: Chalice[] = [
+export const guardianVessels: Vessel[] = [
   {
     name: "Guardian's Chalice",
     slots: ["Blue", "Yellow", "Any"],
@@ -72,9 +89,10 @@ export const guardian: Chalice[] = [
     name: "Sealed Guardian's Urn",
     slots: ["Yellow", "Yellow", "Red"],
   },
-];
+  ...anyoneVessels,
+] as const;
 
-export const ironeye: Chalice[] = [
+export const ironeyeVessels: Vessel[] = [
   {
     name: "Ironeye's Chalice",
     slots: ["Red", "Green", "Any"],
@@ -95,9 +113,10 @@ export const ironeye: Chalice[] = [
     name: "Sealed Ironeye's Urn",
     slots: ["Green", "Green", "Yellow"],
   },
-];
+  ...anyoneVessels,
+] as const;
 
-export const raider: Chalice[] = [
+export const raiderVessels: Vessel[] = [
   {
     name: "Raider's Chalice",
     slots: ["Red", "Red", "Any"],
@@ -118,9 +137,10 @@ export const raider: Chalice[] = [
     name: "Sealed Raider's Urn",
     slots: ["Green", "Green", "Red"],
   },
-];
+  ...anyoneVessels,
+] as const;
 
-export const recluse: Chalice[] = [
+export const recluseVessels: Vessel[] = [
   {
     name: "Recluse's Chalice",
     slots: ["Yellow", "Green", "Any"],
@@ -141,9 +161,10 @@ export const recluse: Chalice[] = [
     name: "Sealed Recluse's Urn",
     slots: ["Green", "Blue", "Blue"],
   },
-];
+  ...anyoneVessels,
+] as const;
 
-export const revenant: Chalice[] = [
+export const revenantVessels: Vessel[] = [
   {
     name: "Revenant's Chalice",
     slots: ["Blue", "Green", "Any"],
@@ -164,9 +185,10 @@ export const revenant: Chalice[] = [
     name: "Sealed Revenant's Urn",
     slots: ["Yellow", "Blue", "Blue"],
   },
-];
+  ...anyoneVessels,
+] as const;
 
-export const wylder: Chalice[] = [
+export const wylderVessels: Vessel[] = [
   {
     name: "Wylder's Chalice",
     slots: ["Red", "Yellow", "Any"],
@@ -187,19 +209,5 @@ export const wylder: Chalice[] = [
     name: "Sealed Wylder's Urn",
     slots: ["Blue", "Red", "Red"],
   },
-];
-
-export const anyone: Chalice[] = [
-  {
-    name: "Giant's Cradle Grail",
-    slots: ["Blue", "Blue", "Blue"],
-  },
-  {
-    name: "Sacred Erdtree Grail",
-    slots: ["Yellow", "Yellow", "Yellow"],
-  },
-  {
-    name: "Spirit Shelter Grail",
-    slots: ["Green", "Green", "Green"],
-  },
-];
+  ...anyoneVessels,
+] as const;
