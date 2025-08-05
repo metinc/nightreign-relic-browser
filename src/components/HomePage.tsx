@@ -55,6 +55,20 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
       <Grid container spacing={3}>
         <Grid size={12}>
           <Typography
+            variant="h1"
+            sx={{
+              textAlign: "center",
+              display: { xs: "none", sm: "block" },
+            }}
+          >
+            Elden Ring Nightreign
+            <br />
+            Relic Browser
+          </Typography>
+        </Grid>
+
+        <Grid size={12}>
+          <Typography
             variant="body1"
             sx={{ mb: 3, lineHeight: 1.6, textAlign: "center" }}
           >

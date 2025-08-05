@@ -1,4 +1,4 @@
-import { CssBaseline, ThemeProvider, Typography, Box } from "@mui/material";
+import { CssBaseline, ThemeProvider, Box } from "@mui/material";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { FileUploader } from "./components/FileUploader";
 import { HomePage } from "./components/HomePage";
@@ -66,18 +66,7 @@ function App() {
             mb: 3,
           }}
         >
-          <Typography
-            variant="h1"
-            gutterBottom
-            sx={{
-              textAlign: "center",
-              display: { xs: "none", sm: "block" },
-            }}
-          >
-            Elden Ring Nightreign Relic Browser
-          </Typography>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <FileUploader
               onFileSelect={handleLoadSaveFile}
               onClear={handleClearSaveFile}

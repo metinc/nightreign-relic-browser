@@ -187,7 +187,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
           startIcon={<Clear />}
           disabled={loading}
           onClick={onClear}
-          sx={{ minWidth, mt: 2 }}
+          sx={{ minWidth }}
         >
           Close Save File
         </Button>
@@ -197,7 +197,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
           startIcon={<CloudUpload />}
           loading={loading}
           onClick={() => setIsModalOpen(true)}
-          sx={{ minWidth, mt: 2 }}
+          sx={{ minWidth }}
         >
           Open Save File
         </Button>
