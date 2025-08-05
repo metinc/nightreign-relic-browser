@@ -121,17 +121,21 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   const showRelicCoordinates = !bigScreen || !showPlaceholders;
 
   return (
-    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "black",
+      }}
+    >
       {/* Fixed header with column numbers */}
 
       {!showRelicCoordinates && (
         <Box
           sx={{
             p: 2,
-            pb: 1,
-            backgroundColor: "#191919",
-            borderBottom: 1,
-            borderColor: "divider",
+            pb: 0,
             display: { xs: "none", md: "block" },
           }}
         >
@@ -148,6 +152,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  borderBottom: "1px solid",
+                  borderColor: "InactiveBorder",
                 }}
               >
                 <Typography

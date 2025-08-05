@@ -1,11 +1,15 @@
-import { Box, Alert, CircularProgress } from "@mui/material";
-import { useEffect } from "react";
+import { Box, Alert, CircularProgress, Tabs, Tab, AppBar } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { SlotSelector } from "./SlotSelector";
-import { RelicDisplay } from "./RelicDisplay";
-import { SearchInput } from "./SearchInput";
 import type { SaveFileData } from "../types/SaveFile";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
+import { RelicBrowser } from "./RelicBrowser";
+import { ComboFinder } from "./ComboFinder";
+
+const enum TabIndex {
+  RelicBrowser,
+  ComboFinder,
+}
 
 interface RelicsPageProps {
   saveFileData: SaveFileData | null;
@@ -48,6 +52,8 @@ export function RelicsPage({
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [tab, setTab] = useState(TabIndex.RelicBrowser);
+
   // Clear save file when component unmounts (leaving /relics route)
   useEffect(() => {
     return () => {
@@ -70,7 +76,7 @@ export function RelicsPage({
     );
   }
 
-  if (loading) {
+  if (loading || currentSlot === undefined) {
     return (
       <Box
         sx={{ display: "flex", justifyContent: "center", my: 4 }}
@@ -98,39 +104,39 @@ export function RelicsPage({
         minHeight: 0,
       }}
     >
-      <SearchInput
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        selectedColor={selectedColor}
-        onColorChange={setSelectedColor}
-        showPlaceholders={showPlaceholders}
-        onShowPlaceholdersChange={setShowPlaceholders}
-      />
-
-      <SlotSelector
-        slots={saveFileData.slots}
-        currentSlot={saveFileData.currentSlot}
-        onSlotSelect={selectSlot}
-        matchingRelicsCount={matchingRelicsCount}
-      />
-
-      {currentSlot && (
-        <Box
-          sx={{ flexGrow: 1, minHeight: 0 }}
-          component="section"
-          aria-label="Relic display"
-        >
-          <RelicDisplay
-            relics={currentSlot.relics}
-            getItemName={getItemName}
-            getItemColor={getItemColor}
-            getEffectName={getEffectName}
-            searchTerm={searchTerm}
-            selectedColor={selectedColor}
-            showPlaceholders={showPlaceholders}
-            onMatchCountChange={handleMatchingRelicsCountChange}
-          />
-        </Box>
+      <AppBar position="static" elevation={24}>
+        <Tabs value={tab} onChange={(_e, value) => setTab(value)} centered>
+          <Tab value={TabIndex.RelicBrowser} label="Relic Browser" />
+          <Tab value={TabIndex.ComboFinder} label="Combo Finder" />
+        </Tabs>
+      </AppBar>
+      {tab === TabIndex.RelicBrowser && (
+        <RelicBrowser
+          saveFileData={saveFileData}
+          currentSlot={currentSlot}
+          selectSlot={selectSlot}
+          getItemName={getItemName}
+          getItemColor={getItemColor}
+          getEffectName={getEffectName}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          showPlaceholders={showPlaceholders}
+          setShowPlaceholders={setShowPlaceholders}
+          matchingRelicsCount={matchingRelicsCount}
+          handleMatchingRelicsCountChange={handleMatchingRelicsCountChange}
+        />
+      )}
+      {tab === TabIndex.ComboFinder && (
+        <ComboFinder
+          saveFileData={saveFileData}
+          currentSlot={currentSlot}
+          selectSlot={selectSlot}
+          getItemName={getItemName}
+          getItemColor={getItemColor}
+          getEffectName={getEffectName}
+        />
       )}
     </Box>
   );

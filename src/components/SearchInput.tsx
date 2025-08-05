@@ -44,6 +44,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         justifyContent: "center",
         flexWrap: "wrap",
         gap: 2,
+        pt: 2,
       }}
     >
       <TextField
@@ -80,7 +81,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         variant="outlined"
         sx={{
           height: 56,
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           alignItems: "center",
           px: 2,
         }}

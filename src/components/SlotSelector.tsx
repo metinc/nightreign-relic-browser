@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Chip, Tabs, Tab, AppBar } from "@mui/material";
+import { Box, Chip, Tabs, Tab } from "@mui/material";
 import type { CharacterSlot } from "../types/SaveFile";
 
 interface SlotSelectorProps {
@@ -22,35 +22,33 @@ export const SlotSelector: React.FC<SlotSelectorProps> = ({
   };
 
   return (
-    <AppBar position="static">
-      <Tabs
-        value={currentSlot}
-        onChange={handleTabChange}
-        sx={{ borderBottom: 1, borderColor: "divider" }}
-        centered
-      >
-        {validSlots.map((slot, index) => (
-          <Tab
-            key={slot.name}
-            label={
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                {slot.name}
-                <Chip
-                  label={`${
-                    currentSlot === index
-                      ? matchingRelicsCount
-                      : slot.relics.length
-                  } ${slot.relics.length === 1 ? "Relic" : "Relics"}`}
-                  size="small"
-                  variant="outlined"
-                  sx={{ minWidth: "82px" }}
-                />
-              </Box>
-            }
-            sx={{ textTransform: "none" }}
-          />
-        ))}
-      </Tabs>
-    </AppBar>
+    <Tabs
+      value={currentSlot}
+      onChange={handleTabChange}
+      sx={{ borderBottom: 1, borderColor: "divider" }}
+      centered
+    >
+      {validSlots.map((slot, index) => (
+        <Tab
+          key={slot.name}
+          label={
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {slot.name}
+              <Chip
+                label={`${
+                  currentSlot === index
+                    ? matchingRelicsCount
+                    : slot.relics.length
+                } ${slot.relics.length === 1 ? "Relic" : "Relics"}`}
+                size="small"
+                variant="outlined"
+                sx={{ minWidth: "82px" }}
+              />
+            </Box>
+          }
+          sx={{ textTransform: "none" }}
+        />
+      ))}
+    </Tabs>
   );
 };
