@@ -104,12 +104,14 @@ export function RelicsPage({
         minHeight: 0,
       }}
     >
-      <AppBar position="static" elevation={24}>
-        <Tabs value={tab} onChange={(_e, value) => setTab(value)} centered>
-          <Tab value={TabIndex.RelicBrowser} label="Relic Browser" />
-          <Tab value={TabIndex.ComboFinder} label="Combo Finder" />
-        </Tabs>
-      </AppBar>
+      {import.meta.env.DEV && (
+        <AppBar position="static" elevation={24}>
+          <Tabs value={tab} onChange={(_e, value) => setTab(value)} centered>
+            <Tab value={TabIndex.RelicBrowser} label="Relic Browser" />
+            <Tab value={TabIndex.ComboFinder} label="Combo Finder" />
+          </Tabs>
+        </AppBar>
+      )}
       {tab === TabIndex.RelicBrowser && (
         <RelicBrowser
           saveFileData={saveFileData}
