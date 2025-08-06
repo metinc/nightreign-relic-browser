@@ -9,7 +9,7 @@ import {
   Tooltip,
   useTheme,
 } from "@mui/material";
-import type { CompactRelicSlot } from "../types/SaveFile";
+import type { RelicSlot } from "../types/SaveFile";
 import { highlightSearchTerm } from "../utils/SearchUtils";
 import {
   getChipColor,
@@ -18,7 +18,7 @@ import {
 } from "../utils/RelicColor";
 
 interface RelicCardProps {
-  relic: CompactRelicSlot;
+  relic: RelicSlot;
   getItemName: (itemId: number) => string;
   getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
@@ -56,7 +56,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   selectedColor,
 }) => {
   const { palette } = useTheme();
-  const [itemId, ...effects] = relic;
+  const { itemId, effects } = relic;
   const itemName = getItemName(itemId);
   const itemColor = getItemColor(itemId);
   const chipColor = getChipColor(itemColor);
@@ -203,7 +203,7 @@ export const RelicCard = React.memo(
     }
 
     // Check if highlighting results actually changed
-    const [itemId, ...effects] = prevProps.relic;
+    const { itemId, effects } = prevProps.relic;
     const itemName = prevProps.getItemName(itemId);
     const prevItemHighlight = highlightSearchTerm(
       itemName,

@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useEffect } from "react";
 import { Box, Typography, Paper, Grid, useMediaQuery } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import type { CompactRelicSlot } from "../types/SaveFile";
+import type { RelicSlot } from "../types/SaveFile";
 import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
@@ -13,7 +13,7 @@ const COLUMNS = RELICS_PER_ROW * COLUMNS_PER_RELIC;
 const COLUMNS_BIG_SCREEN = COLUMNS + COLUMNS_PER_ROW_NUMBER * 2;
 
 interface RelicDisplayProps {
-  relics: CompactRelicSlot[];
+  relics: RelicSlot[];
   getItemName: (itemId: number) => string;
   getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
@@ -43,9 +43,12 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       return allRelics;
     }
 
-    return allRelics.filter(([itemId, ...effects]) => {
+    return allRelics.filter((relic) => {
+      const { itemId, effects } = relic;
       const itemName = getItemName(itemId);
-      const effectNames = effects.map((effectId) => getEffectName(effectId));
+      const effectNames = effects.map((effectId: number) =>
+        getEffectName(effectId)
+      );
       const itemColor = getItemColor(itemId);
 
       if (!doesRelicColorMatch(itemColor, selectedColor)) {
@@ -78,13 +81,13 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     const relics = showPlaceholders ? allRelics : matchingRelics;
 
     const filteredRelics = showPlaceholders
-      ? relics.filter(([itemId]) => {
-          const itemColor = getItemColor(itemId);
+      ? relics.filter((relic) => {
+          const itemColor = getItemColor(relic.itemId);
           return doesRelicColorMatch(itemColor, selectedColor);
         })
       : relics; // matchingRelics already includes color filtering
 
-    const rows: CompactRelicSlot[][] = [];
+    const rows: RelicSlot[][] = [];
     for (let i = 0; i < filteredRelics.length; i += 8) {
       rows.push(filteredRelics.slice(i, i + 8));
     }
@@ -236,9 +239,9 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
                   {/* Relics in this row */}
                   {rowRelics.flatMap((relic) => {
-                    const [itemId, ...effects] = relic;
+                    const { itemId, effects } = relic;
                     const itemName = getItemName(itemId);
-                    const effectNames = effects.map((effectId) =>
+                    const effectNames = effects.map((effectId: number) =>
                       getEffectName(effectId)
                     );
 

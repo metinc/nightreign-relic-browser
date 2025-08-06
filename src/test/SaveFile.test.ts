@@ -107,11 +107,10 @@ describe("Save File Processing", () => {
 
         // Check the structure of the first relic
         const firstRelic = firstNonEmptySlot!.relics[0];
-        const [itemId, ...effects] = firstRelic;
         expect(firstRelic).toBeDefined();
-        expect(itemId).toBeTypeOf("number");
-        expect(firstRelic.length).toBeGreaterThan(1); // Should have at least itemId and one effect
-        expect(effects.length).toBeGreaterThan(0);
+        expect(firstRelic.itemId).toBeTypeOf("number");
+        expect(firstRelic.effects).toBeDefined();
+        expect(firstRelic.effects.length).toBeGreaterThan(0);
       });
 
       it("should handle UTF-16LE character names correctly", () => {
@@ -140,7 +139,7 @@ describe("Save File Processing", () => {
           // Only validate relic structure for non-empty slots
           if (slot.relics.length > 0) {
             slot.relics.forEach((relic) => {
-              const [itemId, ...effects] = relic;
+              const { itemId, effects } = relic;
               const itemName = getItemName(itemId);
               expect(itemName).toBeDefined();
               expect(itemName).toBeTypeOf("string");

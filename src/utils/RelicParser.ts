@@ -1,4 +1,4 @@
-import type { BND4Entry, RelicSlot, CompactRelicSlot } from "../types/SaveFile";
+import type { BND4Entry, RelicSlot } from "../types/SaveFile";
 
 export class RelicParser {
   /**
@@ -157,7 +157,7 @@ export class RelicParser {
     patternOffsetStart: number,
     patternOffsetEnd: number,
     sortKeyLookupEnd?: number
-  ): CompactRelicSlot[] {
+  ): RelicSlot[] {
     const foundSlots: RelicSlot[] = [];
     const currentEntryOffset = currentEntry.slice(
       patternOffsetStart,
@@ -347,11 +347,7 @@ export class RelicParser {
     // Sort relics by sort key
     finalValidSlots.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
 
-    // Convert RelicSlot[] to CompactRelicSlot[]
-    return finalValidSlots.map(
-      (relic): CompactRelicSlot =>
-        [relic.itemId, ...relic.effects.slice(0, 3)] as CompactRelicSlot
-    );
+    return finalValidSlots;
   }
 
   /**
@@ -360,7 +356,7 @@ export class RelicParser {
   public static parseCharacterSlot(
     sectionNumber: number,
     bnd4Entries: BND4Entry[]
-  ): { name: string | null; relics: CompactRelicSlot[] } {
+  ): { name: string | null; relics: RelicSlot[] } {
     if (sectionNumber < 1 || sectionNumber > 10) {
       throw new Error(`Invalid section number: ${sectionNumber}`);
     }
