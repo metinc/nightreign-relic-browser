@@ -315,7 +315,8 @@ export class RelicParser {
 
       const hexPattern = Array.from(slot.idBytes)
         .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
+        .join("")
+        .concat("01000000");
       const sortKeyOffset = this.findHexOffset(
         currentEntryOffsetEnd,
         hexPattern

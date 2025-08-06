@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
 import { getItemName, getItemColor, getEffectName } from "../utils/DataUtils";
-import type { BND4Entry } from "../types/SaveFile";
+import type { BND4Entry, RelicSlot } from "../types/SaveFile";
 import fs from "fs";
 import path from "path";
 
@@ -11,6 +11,7 @@ type TestData = {
   slots: {
     name: string;
     relics: number;
+    samples: { index: number; relic: Partial<RelicSlot> }[];
   }[];
 }[];
 
@@ -18,16 +19,28 @@ const testData: TestData = [
   {
     name: "metin.sl2",
     slots: [
-      { name: "Metin", relics: 610 },
-      { name: "qwertzuiopasdfgh", relics: 1 },
+      { name: "Metin", relics: 610, samples: [] },
+      { name: "qwertzuiopasdfgh", relics: 1, samples: [] },
     ],
   },
-  { name: "player.sl2", slots: [{ name: "Player", relics: 651 }] },
-  { name: "teru.sl2", slots: [{ name: "Teru", relics: 254 }] },
-  { name: "teru2.sl2", slots: [{ name: "Teru", relics: 284 }] },
-  { name: "stluna.sl2", slots: [{ name: "ST. Luna", relics: 403 }] },
-  // { name: "eonacat.sl2", slots: [{ name: "EonaCat", relics: 743 }] },
-  { name: "pekzer.sl2", slots: [{ name: "Pekzer", relics: 139 }] },
+  { name: "player.sl2", slots: [{ name: "Player", relics: 651, samples: [] }] },
+  { name: "teru.sl2", slots: [{ name: "Teru", relics: 254, samples: [] }] },
+  {
+    name: "teru2.sl2",
+    slots: [
+      {
+        name: "Teru",
+        relics: 284,
+        samples: [{ index: 283, relic: { itemId: 10000 } }],
+      },
+    ],
+  },
+  {
+    name: "stluna.sl2",
+    slots: [{ name: "ST. Luna", relics: 403, samples: [] }],
+  },
+  // { name: "eonacat.sl2", slots: [{ name: "EonaCat", relics: 743, samples: [] }] },
+  { name: "pekzer.sl2", slots: [{ name: "Pekzer", relics: 139, samples: [] }] },
 ];
 
 describe("Save File Processing", () => {
@@ -74,6 +87,15 @@ describe("Save File Processing", () => {
             console.log(
               `Slot ${slotNumber} (${expectedSlotData.name}): Found ${slot.relics.length} relics, expected ${expectedSlotData.relics}`
             );
+
+            const { samples } = testEntry.slots[slotNumber - 1];
+            for (const sample of samples) {
+              const relicSlot = slot.relics[sample.index];
+              expect(relicSlot).toBeDefined();
+              if (sample.relic.itemId !== undefined) {
+                expect(relicSlot.itemId).toBe(sample.relic.itemId);
+              }
+            }
           } else {
             // Slot should be empty
             expect(slot.name).toBe(null);
