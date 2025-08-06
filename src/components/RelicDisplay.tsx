@@ -111,6 +111,16 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     },
   });
 
+  const relicsByColor = useMemo(() => {
+    if (selectedColor === "Any") {
+      return allRelics;
+    }
+    return allRelics.filter((relic) => {
+      const itemColor = getItemColor(relic.itemId);
+      return doesRelicColorMatch(itemColor, selectedColor);
+    });
+  }, [allRelics, getItemColor, selectedColor]);
+
   if (allRelics.length === 0) {
     return (
       <Paper sx={{ p: 3, textAlign: "center" }}>
@@ -252,7 +262,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       searchTerm
                     );
 
-                    const index = allRelics.indexOf(relic);
+                    const index = relicsByColor.indexOf(relic);
 
                     const rowIndex = showRelicCoordinates
                       ? Math.floor(index / RELICS_PER_ROW)
