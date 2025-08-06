@@ -2141,11 +2141,11 @@ const effectsArray: EffectArrayElement[] = [
     ids: [7121000],
   },
   {
-    key: "staminaRecoversWithEachSuccessfulAttack",
+    key: "staminaRecoveryUponLandingAttacks",
     ids: [7100100],
   },
   {
-    key: "staminaRecoversWithEachSuccessfulAttackPlus1",
+    key: "staminaRecoveryUponLandingAttacksPlus1",
     ids: [7100110, 7100190],
   },
   {

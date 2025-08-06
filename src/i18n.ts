@@ -822,10 +822,10 @@ const resources = {
           "Slowly restore HP for self and nearby allies when HP is low",
         smallPouchInPossessionAtStartOfExpedition:
           "Small Pouch in possession at start of expedition",
-        staminaRecoversWithEachSuccessfulAttack:
-          "Stamina recovers with each successful attack",
-        staminaRecoversWithEachSuccessfulAttackPlus1:
-          "Stamina recovers with each successful attack +1",
+        staminaRecoveryUponLandingAttacks:
+          "Stamina Recovery upon Landing Attacks",
+        staminaRecoveryUponLandingAttacksPlus1:
+          "Stamina Recovery upon Landing Attacks +1",
         starlightShardsInPossessionAtStartOfExpedition:
           "Starlight Shards in possession at start of expedition",
         startingArmamentDealsFireDamage: "Starting armament deals fire damage",
