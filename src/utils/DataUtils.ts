@@ -2,6 +2,7 @@ import type { RelicColor } from "./RelicColor";
 import { items } from "../resources/items";
 import { effects } from "../resources/effects";
 import i18n from "../i18n";
+import type { CharacterSlot, CompactCharacterSlot } from "../types/SaveFile";
 
 /**
  * Get item name by ID using TypeScript resources and i18n
@@ -40,4 +41,18 @@ export const getEffectName = (effectId: number): string => {
     return `Unknown Effect ${effectId}`;
   }
   return i18n.t(`effects.${effect.key}`, { defaultValue: effect.key });
+};
+
+export const getCompactCharacterSlot = (
+  compactCharacterSlot: CompactCharacterSlot
+): CharacterSlot => {
+  return {
+    name: compactCharacterSlot.name,
+    relics: compactCharacterSlot.relics.map((relic, index) => ({
+      id: index,
+      itemId: relic[0],
+      effects: relic.slice(1),
+      idBytes: undefined,
+    })),
+  };
 };

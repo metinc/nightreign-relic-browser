@@ -20,6 +20,11 @@ export interface RelicSlot {
   idBytes?: Uint8Array;
 }
 
+type CompactRelicSlot =
+  | [itemId: number, effect1: number]
+  | [itemId: number, effect1: number, effect2: number]
+  | [itemId: number, effect1: number, effect2: number, effect3: number];
+
 export interface ItemData {
   name: string;
   color: string | null;
@@ -32,6 +37,11 @@ export interface EffectData {
 export interface CharacterSlot {
   name: string | null;
   relics: RelicSlot[];
+}
+
+export interface CompactCharacterSlot {
+  name: string | null;
+  relics: CompactRelicSlot[];
 }
 
 export interface SaveFileData {

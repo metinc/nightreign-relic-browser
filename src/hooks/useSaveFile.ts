@@ -3,7 +3,12 @@ import type { SaveFileData, CharacterSlot } from "../types/SaveFile";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
-import { getItemName, getItemColor, getEffectName } from "../utils/DataUtils";
+import {
+  getItemName,
+  getItemColor,
+  getEffectName,
+  getCompactCharacterSlot,
+} from "../utils/DataUtils";
 
 export const useSaveFile = () => {
   const [saveFileData, setSaveFileData] = useState<SaveFileData | null>(null);
@@ -29,10 +34,7 @@ export const useSaveFile = () => {
       const demoData = await demoResponse.json();
 
       // Create a single character slot with the demo data
-      const demoSlot: CharacterSlot = {
-        name: demoData.name,
-        relics: demoData.relics || [],
-      };
+      const demoSlot = getCompactCharacterSlot(demoData);
 
       const saveData: SaveFileData = {
         filePath: "demo.json",
