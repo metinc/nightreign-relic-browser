@@ -74,7 +74,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "darkNightOfTheFathom",
-    color: null,
+    color: "Blue",
     ids: [2031],
   },
   {
