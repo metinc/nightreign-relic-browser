@@ -3,7 +3,17 @@ interface EffectArrayElement {
   ids: number[];
 }
 
-export const effectsArray: EffectArrayElement[] = [
+interface EffectWithGroupArrayElement {
+  key: string;
+  ids: number[];
+  group: string;
+  level: number;
+}
+
+export const effectsArray: (
+  | EffectArrayElement
+  | EffectWithGroupArrayElement
+)[] = [
   {
     key: "duchessBecomeStealthyAfterCritFromBehind",
     ids: [7031800],
@@ -219,14 +229,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "arcanePlus1",
     ids: [7000700],
+    group: "arcane",
+    level: 1,
   },
   {
     key: "arcanePlus2",
     ids: [7000701],
+    group: "arcane",
+    level: 2,
   },
   {
     key: "arcanePlus3",
     ids: [7000702],
+    group: "arcane",
+    level: 3,
   },
   {
     key: "armamentDealsFireDamagePlus1AtStartOfExpedition",
@@ -295,14 +311,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "attacksInflictBloodLoss",
     ids: [7002000, 8110100],
+    group: "attacksInflictBloodLoss",
+    level: 0,
   },
   {
     key: "attacksInflictBloodLossPlus1",
     ids: [7002001],
+    group: "attacksInflictBloodLoss",
+    level: 1,
   },
   {
     key: "attacksInflictBloodLossPlus2",
     ids: [7002002],
+    group: "attacksInflictBloodLoss",
+    level: 2,
   },
   {
     key: "attacksInflictDeathBlight",
@@ -311,18 +333,26 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "attacksInflictFrost",
     ids: [7002400, 8110500],
+    group: "attacksInflictFrost",
+    level: 0,
   },
   {
     key: "attacksInflictFrostPlus1",
     ids: [7002401],
+    group: "attacksInflictFrost",
+    level: 1,
   },
   {
     key: "attacksInflictFrostPlus2",
     ids: [7002402],
+    group: "attacksInflictFrost",
+    level: 2,
   },
   {
     key: "attacksInflictFrostPlus3",
     ids: [7002403],
+    group: "attacksInflictFrost",
+    level: 3,
   },
   {
     key: "attacksInflictMadness",
@@ -331,14 +361,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "attacksInflictPoison",
     ids: [7001900, 8110000],
+    group: "attacksInflictPoison",
+    level: 0,
   },
   {
     key: "attacksInflictPoisonPlus1",
     ids: [7001901],
+    group: "attacksInflictPoison",
+    level: 1,
   },
   {
     key: "attacksInflictPoisonPlus2",
     ids: [7001902],
+    group: "attacksInflictPoison",
+    level: 2,
   },
   {
     key: "attacksInflictRot",
@@ -347,30 +383,44 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "attacksInflictScarletRot",
     ids: [7002300],
+    group: "attacksInflictScarletRot",
+    level: 0,
   },
   {
     key: "attacksInflictScarletRotPlus1",
     ids: [7002301],
+    group: "attacksInflictScarletRot",
+    level: 1,
   },
   {
     key: "attacksInflictScarletRotPlus2",
     ids: [7002302],
+    group: "attacksInflictScarletRot",
+    level: 2,
   },
   {
     key: "attacksInflictSleep",
     ids: [7002100, 8110200],
+    group: "attacksInflictSleep",
+    level: 0,
   },
   {
     key: "attacksInflictSleepPlus1",
     ids: [7002101],
+    group: "attacksInflictSleep",
+    level: 1,
   },
   {
     key: "attacksInflictSleepPlus2",
     ids: [7002102],
+    group: "attacksInflictSleep",
+    level: 2,
   },
   {
     key: "attacksInflictSleepPlus3",
     ids: [7002103],
+    group: "attacksInflictSleep",
+    level: 3,
   },
   {
     key: "bewitchingBranchesInPossessionAtStartOfExpedition",
@@ -491,18 +541,26 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "characterSkillCooldownReduction",
     ids: [8370000],
+    group: "characterSkillCooldownReduction",
+    level: 0,
   },
   {
     key: "characterSkillCooldownReductionPlus1",
     ids: [7000800],
+    group: "characterSkillCooldownReduction",
+    level: 1,
   },
   {
     key: "characterSkillCooldownReductionPlus2",
     ids: [7000801],
+    group: "characterSkillCooldownReduction",
+    level: 2,
   },
   {
     key: "characterSkillCooldownReductionPlus3",
     ids: [7000802],
+    group: "characterSkillCooldownReduction",
+    level: 3,
   },
   {
     key: "chargedThrustInvokesSleepMist",
@@ -631,14 +689,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "dexterityPlus1",
     ids: [7000400],
+    group: "dexterity",
+    level: 1,
   },
   {
     key: "dexterityPlus2",
     ids: [7000401],
+    group: "dexterity",
+    level: 2,
   },
   {
     key: "dexterityPlus3",
     ids: [7000402],
+    group: "dexterity",
+    level: 3,
   },
   {
     key: "dmgNegationUpWhileCastingSpells",
@@ -655,14 +719,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "endurancePlus1",
     ids: [7000200],
+    group: "endurance",
+    level: 1,
   },
   {
     key: "endurancePlus2",
     ids: [7000201],
+    group: "endurance",
+    level: 2,
   },
   {
     key: "endurancePlus3",
     ids: [7000202],
+    group: "endurance",
+    level: 3,
   },
   {
     key: "extendedSpellDuration",
@@ -675,14 +745,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "faithPlus1",
     ids: [7000600],
+    group: "faith",
+    level: 1,
   },
   {
     key: "faithPlus2",
     ids: [7000601],
+    group: "faith",
+    level: 2,
   },
   {
     key: "faithPlus3",
     ids: [7000602],
+    group: "faith",
+    level: 3,
   },
   {
     key: "fireAttackFollowsChargeAttacks",
@@ -691,14 +767,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "fireAttackPowerUp",
     ids: [7001600],
+    group: "fireAttackPowerUp",
+    level: 0,
   },
   {
     key: "fireAttackPowerUpPlus1",
     ids: [7001601],
+    group: "fireAttackPowerUp",
+    level: 1,
   },
   {
     key: "fireAttackPowerUpPlus2",
     ids: [7001602],
+    group: "fireAttackPowerUp",
+    level: 2,
   },
   {
     key: "fireCriticalHitGrantsMaxStaminaBoost",
@@ -895,14 +977,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "holyAttackPowerUp",
     ids: [7001800],
+    group: "holyAttackPowerUp",
+    level: 0,
   },
   {
     key: "holyAttackPowerUpPlus1",
     ids: [7001801],
+    group: "holyAttackPowerUp",
+    level: 1,
   },
   {
     key: "holyAttackPowerUpPlus2",
     ids: [7001802],
+    group: "holyAttackPowerUp",
+    level: 2,
   },
   {
     key: "holyDamageNegationUp",
@@ -1243,10 +1331,14 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "improvedCriticalHits",
     ids: [320900, 7040200, 8130000],
+    group: "improvedCriticalHits",
+    level: 0,
   },
   {
     key: "improvedCriticalHitsPlus1",
     ids: [7040201, 7040290],
+    group: "improvedCriticalHits",
+    level: 1,
   },
   {
     key: "improvedCrystalianSorcery",
@@ -1367,14 +1459,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "improvedGuardingAbility",
     ids: [341000, 8220000],
+    group: "improvedGuardingAbility",
+    level: 0,
   },
   {
     key: "improvedGuardingAbilityPlus1",
     ids: [8220001],
+    group: "improvedGuardingAbility",
+    level: 1,
   },
   {
     key: "improvedGuardingAbilityPlus2",
     ids: [8220002],
+    group: "improvedGuardingAbility",
+    level: 2,
   },
   {
     key: "improvedHalberdAttackPower",
@@ -1531,10 +1629,14 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "improvedStaminaRecovery",
     ids: [311500, 8020200],
+    group: "improvedStaminaRecovery",
+    level: 0,
   },
   {
     key: "improvedStaminaRecoveryPlus1",
     ids: [8020201],
+    group: "improvedStaminaRecovery",
+    level: 1,
   },
   {
     key: "improvedStanceBreaking",
@@ -1615,14 +1717,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "intelligencePlus1",
     ids: [7000500],
+    group: "intelligence",
+    level: 1,
   },
   {
     key: "intelligencePlus2",
     ids: [7000501],
+    group: "intelligence",
+    level: 2,
   },
   {
     key: "intelligencePlus3",
     ids: [7000502],
+    group: "intelligence",
+    level: 3,
   },
   {
     key: "itemsConferEffectToAllNearbyAllies",
@@ -1639,14 +1747,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "lightningAttackPowerUp",
     ids: [7001700],
+    group: "lightningAttackPowerUp",
+    level: 0,
   },
   {
     key: "lightningAttackPowerUpPlus1",
     ids: [7001701],
+    group: "lightningAttackPowerUp",
+    level: 1,
   },
   {
     key: "lightningAttackPowerUpPlus2",
     ids: [7001702],
+    group: "lightningAttackPowerUp",
+    level: 2,
   },
   {
     key: "lightningCriticalHitImbuesArmament",
@@ -1711,14 +1825,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "magicAttackPowerUp",
     ids: [7001500],
+    group: "magicAttackPowerUp",
+    level: 0,
   },
   {
     key: "magicAttackPowerUpPlus1",
     ids: [7001501],
+    group: "magicAttackPowerUp",
+    level: 1,
   },
   {
     key: "magicAttackPowerUpPlus2",
     ids: [7001502],
+    group: "magicAttackPowerUp",
+    level: 2,
   },
   {
     key: "magicBubblesUponChargedStrike",
@@ -1787,14 +1907,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "mindPlus1",
     ids: [7000100],
+    group: "mind",
+    level: 1,
   },
   {
     key: "mindPlus2",
     ids: [7000101],
+    group: "mind",
+    level: 2,
   },
   {
     key: "mindPlus3",
     ids: [7000102],
+    group: "mind",
+    level: 3,
   },
   {
     key: "moreRunesFromDefeatedEnemies",
@@ -1847,30 +1973,44 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "physicalAttackUp",
     ids: [7001400],
+    group: "physicalAttackUp",
+    level: 0,
   },
   {
     key: "physicalAttackUpPlus1",
     ids: [7001401],
+    group: "physicalAttackUp",
+    level: 1,
   },
   {
     key: "physicalAttackUpPlus2",
     ids: [7001402],
+    group: "physicalAttackUp",
+    level: 2,
   },
   {
     key: "physicalAttackUpPlus3",
     ids: [7001403],
+    group: "physicalAttackUp",
+    level: 3,
   },
   {
     key: "poisePlus1",
     ids: [7001000],
+    group: "poise",
+    level: 1,
   },
   {
     key: "poisePlus2",
     ids: [7001001],
+    group: "poise",
+    level: 2,
   },
   {
     key: "poisePlus3",
     ids: [7001002],
+    group: "poise",
+    level: 3,
   },
   {
     key: "poisonAndRotImprovesAttackPower",
@@ -2007,10 +2147,14 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "projectileDamageDropOffReduced",
     ids: [321000, 8340100],
+    group: "projectileDamageDropOffReduced",
+    level: 0,
   },
   {
     key: "projectileDamageDropOffReducedPlus1",
     ids: [8340102],
+    group: "projectileDamageDropOffReduced",
+    level: 1,
   },
   {
     key: "projectilesLaunchedUponAttacks",
@@ -2027,18 +2171,26 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "raisesMaximumFpPlus1",
     ids: [8010001],
+    group: "raisesMaximumFp",
+    level: 1,
   },
   {
     key: "raisesNonPhysicalDamageNegationPlus1",
     ids: [8200501],
+    group: "raisesNonPhysicalDamageNegation",
+    level: 1,
   },
   {
     key: "raisesPhysicalAttackPowerPlus1",
     ids: [8100001],
+    group: "raisesPhysicalAttackPower",
+    level: 1,
   },
   {
     key: "raisesPhysicalDamageNegationPlus1",
     ids: [8200001],
+    group: "raisesPhysicalDamageNegation",
+    level: 1,
   },
   {
     key: "raisesResistanceToAllAilments",
@@ -2143,10 +2295,14 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "staminaRecoveryUponLandingAttacks",
     ids: [7100100],
+    group: "staminaRecoveryUponLandingAttacks",
+    level: 0,
   },
   {
     key: "staminaRecoveryUponLandingAttacksPlus1",
     ids: [7100110, 7100190],
+    group: "staminaRecoveryUponLandingAttacks",
+    level: 1,
   },
   {
     key: "starlightShardsInPossessionAtStartOfExpedition",
@@ -2195,14 +2351,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "strengthPlus1",
     ids: [7000300],
+    group: "strength",
+    level: 1,
   },
   {
     key: "strengthPlus2",
     ids: [7000301],
+    group: "strength",
+    level: 2,
   },
   {
     key: "strengthPlus3",
     ids: [7000302],
+    group: "strength",
+    level: 3,
   },
   {
     key: "strongAttackCreatesWideWaveOfHeat",
@@ -2307,14 +2469,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "ultimateArtGaugePlus1",
     ids: [7000900],
+    group: "ultimateArtGauge",
+    level: 1,
   },
   {
     key: "ultimateArtGaugePlus2",
     ids: [7000901],
+    group: "ultimateArtGauge",
+    level: 2,
   },
   {
     key: "ultimateArtGaugePlus3",
     ids: [7000902],
+    group: "ultimateArtGauge",
+    level: 3,
   },
   {
     key: "ultimateArtGaugeChargeSpeedUp",
@@ -2327,14 +2495,20 @@ export const effectsArray: EffectArrayElement[] = [
   {
     key: "vigorPlus1",
     ids: [7000000],
+    group: "vigor",
+    level: 1,
   },
   {
     key: "vigorPlus2",
     ids: [7000001],
+    group: "vigor",
+    level: 2,
   },
   {
     key: "vigorPlus3",
     ids: [7000002],
+    group: "vigor",
+    level: 3,
   },
   {
     key: "wraithCallingBellInPossessionAtStartOfExpedition",
