@@ -340,15 +340,10 @@ export class RelicParser {
     console.log(`Found ${emptySlotCount} empty slots`);
     console.log(`Found ${foundSlots.length} slots with b4=0xC0`);
 
-    // Filter to only include relics that have sort keys (these are the actual equipped/owned relics)
-    const finalValidSlots = foundSlots.filter(
-      (relic) => relic.sortKey !== undefined
-    );
-
     // Sort relics by sort key
-    finalValidSlots.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
+    foundSlots.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
 
-    return finalValidSlots;
+    return foundSlots;
   }
 
   /**
