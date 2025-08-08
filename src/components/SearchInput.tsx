@@ -1,26 +1,23 @@
 import React from "react";
 import {
-  TextField,
-  InputAdornment,
   ToggleButtonGroup,
   ToggleButton,
   Chip,
-  IconButton,
   Box,
   FormControlLabel,
   Checkbox,
   Tooltip,
   Paper,
 } from "@mui/material";
-import { Search, Clear, Info } from "@mui/icons-material";
+import { Info } from "@mui/icons-material";
 import {
   getChipColor,
   relicSlotColors,
   type RelicColor,
 } from "../utils/RelicColor";
+import { EffectsAutocomplete } from "./EffectsAutocomplete";
 
 interface SearchInputProps {
-  searchTerm: string;
   onSearchChange: (searchTerm: string) => void;
   selectedColor: string;
   onColorChange: (color: RelicColor) => void;
@@ -29,7 +26,6 @@ interface SearchInputProps {
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
-  searchTerm,
   onSearchChange,
   selectedColor,
   onColorChange,
@@ -47,35 +43,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         pt: 2,
       }}
     >
-      <TextField
-        fullWidth
-        placeholder="Search relics by name or effect..."
-        value={searchTerm}
-        onChange={(e) => onSearchChange(e.target.value)}
-        variant="outlined"
-        sx={{ width: 350 }}
-        slotProps={{
-          input: {
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search />
-              </InputAdornment>
-            ),
-            endAdornment: searchTerm.trim() && (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="clear search"
-                  onClick={() => onSearchChange("")}
-                  edge="end"
-                  size="small"
-                >
-                  <Clear />
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
-      />
+      <EffectsAutocomplete onSearchChange={onSearchChange} />
 
       <Paper
         variant="outlined"

@@ -17,7 +17,7 @@ interface RelicDisplayProps {
   getItemName: (itemId: number) => string;
   getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
-  searchTerm?: string;
+  searchTerm: string;
   selectedColor: RelicSlotColor;
   showPlaceholders: boolean;
   onMatchCountChange?: (count: number) => void;
@@ -28,7 +28,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   getItemName,
   getItemColor,
   getEffectName,
-  searchTerm = "",
+  searchTerm,
   selectedColor,
   showPlaceholders,
   onMatchCountChange,

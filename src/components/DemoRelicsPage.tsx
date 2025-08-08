@@ -13,7 +13,7 @@ interface DemoRelicsPageProps {
   getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: (searchTerm: string) => void;
   selectedColor: RelicSlotColor;
   setSelectedColor: (color: RelicColor) => void;
   showPlaceholders: boolean;

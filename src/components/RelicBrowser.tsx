@@ -13,7 +13,7 @@ interface RelicBrowserProps {
   getItemColor: (id: number) => RelicColor;
   getEffectName: (id: number) => string;
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: (searchTerm: string) => void;
   selectedColor: RelicSlotColor;
   setSelectedColor: (color: RelicColor) => void;
   showPlaceholders: boolean;
@@ -41,7 +41,6 @@ export function RelicBrowser({
   return (
     <>
       <SearchInput
-        searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         selectedColor={selectedColor}
         onColorChange={setSelectedColor}

@@ -7,55 +7,49 @@ import {
   recluseVessels,
   revenantVessels,
   wylderVessels,
-  type Vessel,
 } from "./Vessels";
 
-type Nightfarer = {
-  name: string;
-  vessels: Vessel[];
-};
-
-const duchess: Nightfarer = {
+const duchess = {
   name: "Duchess",
   vessels: duchessVessels,
-};
+} as const;
 
-const executor: Nightfarer = {
+const executor = {
   name: "Executor",
   vessels: executorVessels,
-};
+} as const;
 
-const guardian: Nightfarer = {
+const guardian = {
   name: "Guardian",
   vessels: guardianVessels,
-};
+} as const;
 
-const ironeye: Nightfarer = {
+const ironeye = {
   name: "Ironeye",
   vessels: ironeyeVessels,
-};
+} as const;
 
-const raider: Nightfarer = {
+const raider = {
   name: "Raider",
   vessels: raiderVessels,
-};
+} as const;
 
-const recluse: Nightfarer = {
+const recluse = {
   name: "Recluse",
   vessels: recluseVessels,
-};
+} as const;
 
-const revenant: Nightfarer = {
+const revenant = {
   name: "Revenant",
   vessels: revenantVessels,
-};
+} as const;
 
-const wylder: Nightfarer = {
+const wylder = {
   name: "Wylder",
   vessels: wylderVessels,
-};
+} as const;
 
-export const nightfarers: Nightfarer[] = [
+export const nightfarers = [
   wylder,
   guardian,
   ironeye,
@@ -64,4 +58,10 @@ export const nightfarers: Nightfarer[] = [
   revenant,
   recluse,
   executor,
-];
+] as const;
+
+export type NightfarerName = (typeof nightfarers)[number]["name"];
+
+export const isNightfarerName = (name: string): name is NightfarerName => {
+  return nightfarers.some((nf) => nf.name === name);
+};

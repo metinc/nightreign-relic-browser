@@ -3,7 +3,7 @@ interface EffectArrayElement {
   ids: number[];
 }
 
-const effectsArray: EffectArrayElement[] = [
+export const effectsArray: EffectArrayElement[] = [
   {
     key: "duchessBecomeStealthyAfterCritFromBehind",
     ids: [7031800],
