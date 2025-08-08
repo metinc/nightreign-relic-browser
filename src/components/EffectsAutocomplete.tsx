@@ -24,6 +24,7 @@ export function EffectsAutocomplete({
     <Autocomplete
       disablePortal
       options={localizedOptions}
+      freeSolo
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}
       renderInput={(params) => (
