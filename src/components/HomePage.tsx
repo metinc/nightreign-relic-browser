@@ -89,6 +89,9 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
             </Typography>
             <Typography component="ul" sx={{ pl: 2 }}>
               <li>Browse all relics across multiple character slots</li>
+              <li>
+                Detect outclassed and duplicate relics that should be sold
+              </li>
               <li>Search relics by name or effect</li>
               <li>Filter relics by color</li>
               <li>View detailed relic information and effects</li>

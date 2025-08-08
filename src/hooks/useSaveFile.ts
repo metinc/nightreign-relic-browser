@@ -9,6 +9,7 @@ import {
   getEffectName,
   getCompactCharacterSlot,
 } from "../utils/DataUtils";
+import { findOutclassedRelics } from "../utils/RelicProcessor";
 
 export const useSaveFile = () => {
   const [saveFileData, setSaveFileData] = useState<SaveFileData | null>(null);
@@ -78,6 +79,7 @@ export const useSaveFile = () => {
       for (let i = 1; i <= 10; i++) {
         try {
           const slotData = RelicParser.parseCharacterSlot(i, bnd4Entries);
+          findOutclassedRelics(slotData.relics);
           slots.push(slotData);
         } catch (err) {
           console.error(`Error parsing slot ${i}:`, err);

@@ -2524,7 +2524,13 @@ interface Effect {
   key: string;
 }
 
-export const effects: Map<number, Effect> = new Map();
+interface EffectWithGroup {
+  key: string;
+  group: string;
+  level: number;
+}
+
+export const effects: Map<number, Effect | EffectWithGroup> = new Map();
 for (const effect of effectsArray) {
   for (const id of effect.ids) {
     effects.set(id, effect);

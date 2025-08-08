@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -16,6 +16,7 @@ import {
   type RelicColor,
   type RelicSlotColor,
 } from "../utils/RelicColor";
+import { RelicComparisonModal } from "./RelicComparisonModal";
 
 interface RelicCardProps {
   relic: RelicSlot;
@@ -56,6 +57,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   selectedColor,
 }) => {
   const { palette } = useTheme();
+  const [modalOpen, setModalOpen] = useState(false);
   const { itemId, effects } = relic;
   const itemName = getItemName(itemId);
   const itemColor = getItemColor(itemId);
@@ -65,6 +67,14 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
     !itemName.endsWith(" Scene") && !itemName.startsWith("Unknown Item");
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
   const selectedChipColor = getChipColor(selectedColor);
+
+  const handleSellMeClick = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   const tooltipContent = selectedChipColor ? (
     <span>
@@ -90,6 +100,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         transition: "0.3s ease",
         overflow: "hidden",
         position: "relative",
+        borderRadius: 3,
       }}
     >
       <CardContent
@@ -116,6 +127,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               overflow: "hidden",
               textOverflow: "ellipsis",
               letterSpacing: 0,
+              flexGrow: 1,
               fontSize: ".9rem",
               ...(isSpecialRelic
                 ? {
@@ -132,6 +144,21 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           >
             {itemNameHighlight.highlightedText}
           </Typography>
+          {relic.redundant && (
+            <Chip
+              label="SELL ME"
+              size="small"
+              sx={{
+                overflow: "clip",
+                mr: 1,
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "info.main",
+                },
+              }}
+              onClick={handleSellMeClick}
+            />
+          )}
           {itemColor && (
             <Chip
               label={itemColor}
@@ -177,6 +204,20 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           </Tooltip>
         )}
       </CardContent>
+
+      {/* Comparison Modal */}
+      {relic.redundant && (
+        <RelicComparisonModal
+          open={modalOpen}
+          onClose={handleModalClose}
+          currentRelic={relic}
+          equalOrBetterRelic={relic.redundant.relic}
+          getItemName={getItemName}
+          getItemColor={getItemColor}
+          getEffectName={getEffectName}
+          selectedColor={selectedColor}
+        />
+      )}
     </Card>
   );
 };

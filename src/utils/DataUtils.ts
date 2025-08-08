@@ -43,6 +43,19 @@ export const getEffectName = (effectId: number): string => {
   return i18n.t(`effects.${effect.key}`, { defaultValue: effect.key });
 };
 
+export const getEffectGroup = (
+  effectId: number
+): { group: string; level: number } | undefined => {
+  const effect = effects.get(effectId);
+  if (!effect) {
+    return undefined;
+  }
+  if ("group" in effect && "level" in effect) {
+    return { group: effect.group, level: effect.level };
+  }
+  return undefined;
+};
+
 export const getCompactCharacterSlot = (
   compactCharacterSlot: CompactCharacterSlot
 ): CharacterSlot => {
