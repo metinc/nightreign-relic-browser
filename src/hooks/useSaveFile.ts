@@ -36,6 +36,7 @@ export const useSaveFile = () => {
 
       // Create a single character slot with the demo data
       const demoSlot = getCompactCharacterSlot(demoData);
+      findOutclassedRelics(demoSlot.relics);
 
       const saveData: SaveFileData = {
         filePath: "demo.json",
