@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import type { SaveFileData, CharacterSlot } from "../types/SaveFile";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
-import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
+import type { RelicSlotColor } from "../utils/RelicColor";
 import {
   getItemName,
   getItemColor,
@@ -15,11 +15,10 @@ export const useSaveFile = () => {
   const [saveFileData, setSaveFileData] = useState<SaveFileData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTermState] = useState<string>("");
-  const [selectedColor, setSelectedColorState] =
-    useState<RelicSlotColor>("Any");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<RelicSlotColor>("Any");
   const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
-  const [showPlaceholders, setShowPlaceholdersState] = useState<boolean>(false);
+  const [showPlaceholders, setShowPlaceholders] = useState<boolean>(false);
 
   // Load demo data
   const loadDemoData = useCallback(async () => {
@@ -127,42 +126,12 @@ export const useSaveFile = () => {
     [saveFileData]
   );
 
-  // Get item name by ID
-  const getItemNameMemo = useCallback((itemId: number): string => {
-    return getItemName(itemId);
-  }, []);
-
-  // Get item color by ID
-  const getItemColorMemo = useCallback((itemId: number): RelicColor => {
-    return getItemColor(itemId);
-  }, []);
-
-  // Get effect name by ID
-  const getEffectNameMemo = useCallback((effectId: number) => {
-    return getEffectName(effectId);
-  }, []);
-
-  // Set search term
-  const setSearchTerm = useCallback((term: string) => {
-    setSearchTermState(term);
-  }, []);
-
-  // Set selected color
-  const setSelectedColor = useCallback((color: RelicColor) => {
-    setSelectedColorState(color);
-  }, []);
-
-  // Set show placeholders
-  const setShowPlaceholders = useCallback((show: boolean) => {
-    setShowPlaceholdersState(show);
-  }, []);
-
   // Clear save file data
   const clearSaveFile = useCallback(() => {
     setSaveFileData(null);
-    setSearchTermState("");
-    setSelectedColorState("Any");
-    setShowPlaceholdersState(false);
+    setSearchTerm("");
+    setSelectedColor("Any");
+    setShowPlaceholders(false);
     setMatchingRelicsCount(0);
     setError(null);
   }, []);
@@ -174,9 +143,9 @@ export const useSaveFile = () => {
     loadSaveFile,
     loadDemoData,
     selectSlot,
-    getItemName: getItemNameMemo,
-    getItemColor: getItemColorMemo,
-    getEffectName: getEffectNameMemo,
+    getItemName,
+    getItemColor,
+    getEffectName,
     searchTerm,
     setSearchTerm,
     selectedColor,
@@ -184,7 +153,7 @@ export const useSaveFile = () => {
     showPlaceholders,
     setShowPlaceholders,
     matchingRelicsCount,
-    handleMatchingRelicsCountChange: setMatchingRelicsCount,
+    setMatchingRelicsCount,
     clearSaveFile,
   };
 };

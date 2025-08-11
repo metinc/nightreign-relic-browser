@@ -27,7 +27,7 @@ function App() {
     showPlaceholders,
     setShowPlaceholders,
     matchingRelicsCount,
-    handleMatchingRelicsCountChange,
+    setMatchingRelicsCount,
     clearSaveFile,
   } = useSaveFile();
 
@@ -109,9 +109,7 @@ function App() {
                   showPlaceholders={showPlaceholders}
                   setShowPlaceholders={setShowPlaceholders}
                   matchingRelicsCount={matchingRelicsCount}
-                  handleMatchingRelicsCountChange={
-                    handleMatchingRelicsCountChange
-                  }
+                  handleMatchingRelicsCountChange={setMatchingRelicsCount}
                   clearSaveFile={clearSaveFile}
                 />
               }
@@ -135,9 +133,7 @@ function App() {
                   showPlaceholders={showPlaceholders}
                   setShowPlaceholders={setShowPlaceholders}
                   matchingRelicsCount={matchingRelicsCount}
-                  handleMatchingRelicsCountChange={
-                    handleMatchingRelicsCountChange
-                  }
+                  handleMatchingRelicsCountChange={setMatchingRelicsCount}
                   clearSaveFile={clearSaveFile}
                 />
               }
