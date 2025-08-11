@@ -1,4 +1,3 @@
-import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { effectsArray } from "../resources/effects";
@@ -16,17 +15,15 @@ export function EffectsAutocomplete({
   onSearchChange,
 }: EffectsAutocompleteProps) {
   const { t } = useTranslation();
-  const localizedOptions = React.useMemo(() => {
-    return options.map((option) => t(`effects.${option}`));
-  }, [t]);
 
   return (
     <Autocomplete
       disablePortal
-      options={localizedOptions}
+      options={options}
       freeSolo
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}
+      getOptionLabel={(option) => t(`effects.${option}`)}
       renderInput={(params) => (
         <TextField
           {...params}
