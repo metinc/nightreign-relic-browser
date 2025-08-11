@@ -9,10 +9,12 @@ const options = effectsArray.map((effect) => effect.key);
 
 interface EffectsAutocompleteProps {
   onSearchChange: (searchTerm: string) => void;
+  onChange?: (effectKey: string | null) => void;
 }
 
 export function EffectsAutocomplete({
   onSearchChange,
+  onChange,
 }: EffectsAutocompleteProps) {
   const { t } = useTranslation();
 
@@ -23,6 +25,7 @@ export function EffectsAutocomplete({
       freeSolo
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}
+      onChange={(_e, value) => onChange && onChange(value)}
       getOptionLabel={(option) => t(`effects.${option}`)}
       renderInput={(params) => (
         <TextField

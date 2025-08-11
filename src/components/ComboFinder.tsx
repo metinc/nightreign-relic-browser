@@ -18,6 +18,8 @@ import {
   nightfarers,
   type NightfarerName,
 } from "../utils/Nightfarers";
+import { EffectsAutocomplete } from "./EffectsAutocomplete";
+import { useTranslation } from "react-i18next";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
@@ -47,12 +49,35 @@ function createInitialSettings(): Record<NightfarerName, ComboFinderSettings> {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function ComboFinder(_props: ComboFinderProps) {
+  const { t } = useTranslation();
   const [selectedNightfarer, setSelectedNightfarer] =
     useState<NightfarerName>("Wylder");
 
   const [settings, setSettings] = useState<
     Record<NightfarerName, ComboFinderSettings>
   >(createInitialSettings);
+
+  const [selectedEffects, setSelectedEffects] = useState<string[]>([]);
+
+  const handleEffectChange = useCallback(
+    (effectKey: string | null) => {
+      // Only add effect if we have less than 9 effects and the effectKey is not empty
+      if (selectedEffects.length >= 9 || !effectKey) {
+        return;
+      }
+
+      if (!selectedEffects.some((effect) => effect === effectKey)) {
+        setSelectedEffects((prev) => [...prev, effectKey]);
+      }
+    },
+    [selectedEffects]
+  );
+
+  const removeEffect = useCallback((effectToRemove: string) => {
+    setSelectedEffects((prev) =>
+      prev.filter((effect) => effect !== effectToRemove)
+    );
+  }, []);
 
   const toggleVessel = useCallback(
     (nightfarer: NightfarerName, vesselIndex: number) => {
@@ -102,6 +127,32 @@ export function ComboFinder(_props: ComboFinderProps) {
           ))}
         </RadioGroup>
       </FormControl>
+
+      {/* Effects Selection Section */}
+      <Box sx={{ mt: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          Select Effects (up to 9):
+        </Typography>
+        <EffectsAutocomplete
+          onSearchChange={() => {}}
+          onChange={handleEffectChange}
+        />
+
+        {/* Selected Effects Chips */}
+        {selectedEffects.length > 0 && (
+          <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
+            {selectedEffects.map((effect) => (
+              <Chip
+                key={effect}
+                label={t(`effects.${effect}`)}
+                onDelete={() => removeEffect(effect)}
+                color="primary"
+                variant="filled"
+              />
+            ))}
+          </Box>
+        )}
+      </Box>
 
       {selectedNightfarerData && (
         <Box sx={{ mt: 3 }}>
