@@ -39,7 +39,16 @@ export function RelicBrowser({
   handleMatchingRelicsCountChange,
 }: RelicBrowserProps) {
   return (
-    <>
+    <Box
+      component="section"
+      aria-label="Relic management interface"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        minHeight: 0,
+      }}
+    >
       <SearchInput
         onSearchChange={setSearchTerm}
         selectedColor={selectedColor}
@@ -73,6 +82,6 @@ export function RelicBrowser({
           />
         </Box>
       )}
-    </>
+    </Box>
   );
 }

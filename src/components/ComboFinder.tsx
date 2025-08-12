@@ -1,7 +1,5 @@
 import { useCallback, useState } from "react";
 import {
-  FormControl,
-  FormLabel,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -10,6 +8,12 @@ import {
   Card,
   CardContent,
   Chip,
+  Button,
+  Alert,
+  CircularProgress,
+  Stack,
+  FormControl,
+  Checkbox,
 } from "@mui/material";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import { getChipColor, type RelicColor } from "../utils/RelicColor";
@@ -19,7 +23,13 @@ import {
   type NightfarerName,
 } from "../utils/Nightfarers";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
+import { RelicCard } from "./RelicCard";
 import { useTranslation } from "react-i18next";
+import {
+  searchCombinations,
+  type ComboSearchResult,
+} from "../utils/ComboSearch";
+import type { Effect } from "../resources/effects";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
@@ -47,8 +57,8 @@ function createInitialSettings(): Record<NightfarerName, ComboFinderSettings> {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function ComboFinder(_props: ComboFinderProps) {
+export function ComboFinder(props: ComboFinderProps) {
+  const { saveFileData, getItemName, getItemColor, getEffectName } = props;
   const { t } = useTranslation();
   const [selectedNightfarer, setSelectedNightfarer] =
     useState<NightfarerName>("Wylder");
@@ -57,25 +67,84 @@ export function ComboFinder(_props: ComboFinderProps) {
     Record<NightfarerName, ComboFinderSettings>
   >(createInitialSettings);
 
-  const [selectedEffects, setSelectedEffects] = useState<string[]>([]);
+  const [selectedEffects, setSelectedEffects] = useState<Effect[]>([]);
+  const [searchResults, setSearchResults] = useState<ComboSearchResult | null>(
+    null
+  );
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleEffectChange = useCallback(
-    (effectKey: string | null) => {
-      // Only add effect if we have less than 9 effects and the effectKey is not empty
-      if (selectedEffects.length >= 9 || !effectKey) {
+  const performSearch = useCallback(async () => {
+    if (selectedEffects.length === 0) {
+      return;
+    }
+
+    setIsSearching(true);
+
+    try {
+      const selectedNightfarerData = nightfarers.find(
+        (nf) => nf.name === selectedNightfarer
+      );
+
+      if (
+        !selectedNightfarerData ||
+        !saveFileData.slots[saveFileData.currentSlot]
+      ) {
+        setSearchResults({
+          combinations: [],
+          searchTime: 0,
+          totalCombinationsChecked: 0,
+          availableRelicsCount: 0,
+        });
         return;
       }
 
-      if (!selectedEffects.some((effect) => effect === effectKey)) {
-        setSelectedEffects((prev) => [...prev, effectKey]);
+      const availableRelics =
+        saveFileData.slots[saveFileData.currentSlot].relics;
+      const enabledVessels = selectedNightfarerData.vessels.filter(
+        (_, index) =>
+          !settings[selectedNightfarer].disabledVessels.includes(index)
+      );
+
+      // Use the extracted search algorithm with performance limits
+      const result = searchCombinations(
+        selectedNightfarer,
+        selectedEffects,
+        availableRelics,
+        enabledVessels
+      );
+
+      setSearchResults(result);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [selectedEffects, selectedNightfarer, settings, saveFileData]);
+
+  const handleEffectChange = useCallback(
+    (newEffect: Effect | null) => {
+      // Only add effect if we have less than 9 effects and the effectKey is not empty
+      if (selectedEffects.length >= 9 || !newEffect) {
+        return;
+      }
+
+      const effectAlreadyAdded = selectedEffects.some(
+        (effect) => effect === newEffect
+      );
+      if (!effectAlreadyAdded) {
+        setSelectedEffects((prev) => [
+          ...prev.filter(
+            (effect) =>
+              effect.group === undefined || effect.group !== newEffect.group
+          ),
+          newEffect,
+        ]);
       }
     },
     [selectedEffects]
   );
 
-  const removeEffect = useCallback((effectToRemove: string) => {
+  const removeEffect = useCallback((effectToRemove: Effect) => {
     setSelectedEffects((prev) =>
-      prev.filter((effect) => effect !== effectToRemove)
+      prev.filter((effect) => effect.key !== effectToRemove.key)
     );
   }, []);
 
@@ -107,9 +176,11 @@ export function ComboFinder(_props: ComboFinderProps) {
   );
 
   return (
-    <Box>
-      <FormControl>
-        <FormLabel component="legend">Select Nightfarer:</FormLabel>
+    <Box sx={{ display: "flex", gap: 2, m: 3 }}>
+      <Box>
+        <Typography variant="h6" gutterBottom>
+          1. Select Nightfarer
+        </Typography>
         <RadioGroup
           value={selectedNightfarer}
           onChange={(e) => {
@@ -126,12 +197,71 @@ export function ComboFinder(_props: ComboFinderProps) {
             />
           ))}
         </RadioGroup>
-      </FormControl>
+      </Box>
 
-      {/* Effects Selection Section */}
-      <Box sx={{ mt: 3 }}>
+      <Box>
+        {selectedNightfarerData && (
+          <>
+            <Typography variant="h6" gutterBottom>
+              2. Select Vessels:
+            </Typography>
+            <Stack gap={2}>
+              {selectedNightfarerData.vessels.map((vessel, index) => {
+                const disabled =
+                  settings[selectedNightfarer].disabledVessels.includes(index);
+                return (
+                  <Card
+                    key={index}
+                    onClick={() => toggleVessel(selectedNightfarer, index)}
+                    elevation={disabled ? 1 : 24}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <CardContent>
+                      {/* checkbox */}
+                      <FormControl>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={!disabled}
+                              onChange={() =>
+                                toggleVessel(selectedNightfarer, index)
+                              }
+                            />
+                          }
+                          label={vessel.name}
+                        />
+                      </FormControl>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 0.5,
+                          flexWrap: "wrap",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {vessel.slots.map((slot, slotIndex) => (
+                          <Chip
+                            key={slotIndex}
+                            label={slot}
+                            size="small"
+                            color={getChipColor(slot)}
+                            variant={disabled ? "outlined" : "filled"}
+                            disabled={disabled}
+                          />
+                        ))}
+                      </Box>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </Stack>
+          </>
+        )}
+      </Box>
+
+      <Box sx={{ width: "350px" }}>
         <Typography variant="h6" gutterBottom>
-          Select Effects (up to 9):
+          3. Select Effects:
         </Typography>
         <EffectsAutocomplete
           onSearchChange={() => {}}
@@ -140,57 +270,118 @@ export function ComboFinder(_props: ComboFinderProps) {
 
         {/* Selected Effects Chips */}
         {selectedEffects.length > 0 && (
-          <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
+          <Stack
+            gap={1}
+            mt={2}
+            sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+          >
             {selectedEffects.map((effect) => (
-              <Chip
-                key={effect}
-                label={t(`effects.${effect}`)}
-                onDelete={() => removeEffect(effect)}
-                color="primary"
-                variant="filled"
-              />
+              <Box sx={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                <Chip
+                  key={effect.key}
+                  label={t(`effects.${effect.key}`)}
+                  onDelete={() => removeEffect(effect)}
+                  variant="filled"
+                  sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+                />
+              </Box>
             ))}
-          </Box>
+          </Stack>
         )}
       </Box>
 
-      {selectedNightfarerData && (
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Available Vessels for {selectedNightfarerData.name}:
-          </Typography>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-            {selectedNightfarerData.vessels.map((vessel, index) => {
-              const disabled =
-                settings[selectedNightfarer].disabledVessels.includes(index);
-              return (
-                <Card
-                  key={index}
-                  sx={{ minWidth: 200 }}
-                  onClick={() => toggleVessel(selectedNightfarer, index)}
-                  elevation={disabled ? 1 : 24}
-                >
-                  <CardContent>
-                    <Typography variant="subtitle1">{vessel.name}</Typography>
-                    <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
-                      {vessel.slots.map((slot, slotIndex) => (
-                        <Chip
-                          key={slotIndex}
-                          label={slot}
-                          size="small"
-                          color={getChipColor(slot)}
-                          variant={disabled ? "outlined" : "filled"}
-                          disabled={disabled}
-                        />
-                      ))}
-                    </Box>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </Box>
+      <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+        {/* Search Button */}
+        <Box sx={{ mb: 2 }}>
+          <Button
+            variant="contained"
+            onClick={performSearch}
+            disabled={selectedEffects.length === 0 || isSearching}
+            startIcon={isSearching ? <CircularProgress size={20} /> : undefined}
+          >
+            {isSearching ? "Searching..." : "Find Combinations"}
+          </Button>
         </Box>
-      )}
+
+        {/* Search Results */}
+        {searchResults && (
+          <Box>
+            {searchResults.combinations.length === 0 ? (
+              <Alert severity="info">
+                No combinations found that contain all selected effects.
+                <br />
+                Checked {searchResults.totalCombinationsChecked} combinations
+                from {searchResults.availableRelicsCount} relics.
+              </Alert>
+            ) : (
+              <>
+                <Typography variant="h6" gutterBottom>
+                  Found {searchResults.combinations.length} combination(s) in{" "}
+                  {searchResults.searchTime} ms
+                </Typography>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  Checked {searchResults.totalCombinationsChecked} combinations
+                  from {searchResults.availableRelicsCount} relics
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  {searchResults.combinations.map((combo, index) => (
+                    <Card key={index} elevation={2}>
+                      <CardContent>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontWeight: "bold", mb: 1 }}
+                        >
+                          {combo.vessel.name}
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: 0.5,
+                            flexWrap: "wrap",
+                            mb: 2,
+                          }}
+                        >
+                          {combo.vessel.slots.map((slot, slotIndex) => (
+                            <Chip
+                              key={slotIndex}
+                              label={slot}
+                              size="small"
+                              color={getChipColor(slot)}
+                              variant="filled"
+                            />
+                          ))}
+                        </Box>
+
+                        <Stack direction="row">
+                          {combo.relicCombination.map((relic, index) => (
+                            <Box key={relic?.id ?? index}>
+                              {relic ? (
+                                <RelicCard
+                                  relic={relic}
+                                  getItemName={getItemName}
+                                  getItemColor={getItemColor}
+                                  getEffectName={getEffectName}
+                                  searchTerm=""
+                                  relicMatches={true}
+                                  rowIndex={null}
+                                  colIndex={null}
+                                  selectedColor="Any"
+                                />
+                              ) : (
+                                "no relic"
+                              )}
+                            </Box>
+                          ))}
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </>
+            )}
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 }

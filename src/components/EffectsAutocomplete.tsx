@@ -1,15 +1,13 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { effectsArray } from "../resources/effects";
+import { effectsArray, type Effect } from "../resources/effects";
 import { useTranslation } from "react-i18next";
 import { InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
-const options = effectsArray.map((effect) => effect.key);
-
 interface EffectsAutocompleteProps {
   onSearchChange: (searchTerm: string) => void;
-  onChange?: (effectKey: string | null) => void;
+  onChange?: (effectKey: Effect | null) => void;
 }
 
 export function EffectsAutocomplete({
@@ -21,12 +19,12 @@ export function EffectsAutocomplete({
   return (
     <Autocomplete
       disablePortal
-      options={options}
+      options={effectsArray}
       freeSolo
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}
-      onChange={(_e, value) => onChange && onChange(value)}
-      getOptionLabel={(option) => t(`effects.${option}`)}
+      onChange={(_e, value) => onChange && onChange(value as Effect | null)}
+      getOptionLabel={(option) => t(`effects.${(option as Effect).key}`)}
       renderInput={(params) => (
         <TextField
           {...params}

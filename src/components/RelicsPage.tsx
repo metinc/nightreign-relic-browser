@@ -94,16 +94,7 @@ export function RelicsPage({
   }
 
   return (
-    <Box
-      component="section"
-      aria-label="Relic management interface"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        flexGrow: 1,
-        minHeight: 0,
-      }}
-    >
+    <>
       {import.meta.env.DEV && (
         <AppBar position="static" elevation={24}>
           <Tabs value={tab} onChange={(_e, value) => setTab(value)} centered>
@@ -140,6 +131,6 @@ export function RelicsPage({
           getEffectName={getEffectName}
         />
       )}
-    </Box>
+    </>
   );
 }

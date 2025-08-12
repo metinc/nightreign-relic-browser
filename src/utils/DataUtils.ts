@@ -32,6 +32,14 @@ export const getItemColor = (itemId: number): RelicColor => {
   return color as RelicColor;
 };
 
+export const getEffect = (id: number) => {
+  const effect = effects.get(id);
+  if (!effect) {
+    throw new Error(`Effect with ID ${id} not found`);
+  }
+  return effect;
+};
+
 /**
  * Get effect name by ID using TypeScript resources and i18n
  */

@@ -46,14 +46,13 @@ const testData: TestData = [
 describe("Save File Processing", () => {
   testData.forEach((testEntry) => {
     describe(`Testing ${testEntry.name}`, () => {
-      let saveFileBuffer: ArrayBuffer;
       let bnd4Entries: BND4Entry[];
 
       beforeAll(async () => {
         // Load the test save file directly from filesystem
         const filePath = path.join(__dirname, testEntry.name);
         const fileBuffer = fs.readFileSync(filePath);
-        saveFileBuffer = fileBuffer.buffer.slice(
+        const saveFileBuffer = fileBuffer.buffer.slice(
           fileBuffer.byteOffset,
           fileBuffer.byteOffset + fileBuffer.byteLength
         );

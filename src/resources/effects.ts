@@ -1,170 +1,249 @@
+import type { NightfarerName } from "../utils/Nightfarers";
+
 interface EffectArrayElement {
   key: string;
   ids: number[];
+  nightfarer?: NightfarerName;
+  stacks?: boolean;
 }
 
 interface EffectWithGroupArrayElement {
   key: string;
   ids: number[];
+  nightfarer?: NightfarerName;
+  stacks?: boolean;
   group: string;
   level: number;
 }
 
-export const effectsArray: (
-  | EffectArrayElement
-  | EffectWithGroupArrayElement
-)[] = [
+export const effectsArray = [
   {
     key: "duchessBecomeStealthyAfterCritFromBehind",
     ids: [7031800],
+    nightfarer: "Duchess",
+    stacks: false,
   },
   {
     key: "duchessCharacterSkillInflictsSleep",
     ids: [7300000],
+    nightfarer: "Duchess",
+    stacks: false,
   },
   {
     key: "duchessDaggerChainAttackReprises",
     ids: [7010700],
+    nightfarer: "Duchess",
+    stacks: false,
   },
   {
     key: "duchessDefeatingEnemiesWhileArtActiveUpsAttack",
     ids: [7032700],
+    nightfarer: "Duchess",
+    stacks: false,
   },
   {
     key: "duchessDurationOfUltimateArtExtended",
     ids: [7033600],
+    nightfarer: "Duchess",
+    stacks: false,
   },
   {
     key: "duchessImprovedCharacterSkillAttackPower",
     ids: [7290000],
+    nightfarer: "Duchess",
+    stacks: false,
   },
   {
     key: "executorAttackPowerUpWhileUltimateArtActive",
     ids: [7034200],
+    nightfarer: "Executor",
+    stacks: false,
   },
   {
     key: "executorCharacterSkillBoostsAttackButDrainsHP",
     ids: [7034400],
+    nightfarer: "Executor",
+    stacks: false,
   },
   {
     key: "executorImprovesEffectButLowersResistance",
     ids: [7034300],
+    nightfarer: "Executor",
+    stacks: false,
   },
   {
     key: "executorRoaringRestoresHPWhileArtActive",
     ids: [7011700],
+    nightfarer: "Executor",
+    stacks: false,
   },
   {
     key: "executorUnlockingCursedSwordRestoresHP",
     ids: [7034500],
+    nightfarer: "Executor",
+    stacks: false,
   },
   {
     key: "guardianBecomeTargetOfEnemyAggression",
     ids: [7033300],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "guardianCharacterSkillInflictsHolyDamage",
     ids: [7011900],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "guardianCreatesWhirlwindWhenChargingHalberd",
     ids: [7011600],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "guardianDamageNegationForAlliesImproved",
     ids: [7011100],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "guardianImprovedCharacterSkillRange",
     ids: [7010000],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "guardianIncreasedDurationForCharacterSkill",
     ids: [7011000],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "guardianReflectPortionOfDamageReceived",
     ids: [7033400],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "guardianRestoresAlliesHPWhenCharacterSkillUsed",
     ids: [7011400],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "guardianSlowlyRestoresNearbyAlliesHP",
     ids: [12002, 7012000],
+    nightfarer: "Guardian",
+    stacks: false,
   },
   {
     key: "ironeyeAdditionalCharacterSkillUse",
     ids: [7270100],
+    nightfarer: "Ironeye",
+    stacks: false,
   },
   {
     key: "ironeyeArtChargeActivationAddsPoisonEffect",
     ids: [7034600],
+    nightfarer: "Ironeye",
+    stacks: false,
   },
   {
     key: "ironeyeBoostsThrustingCounterattacksAfterArt",
     ids: [7034700],
+    nightfarer: "Ironeye",
+    stacks: false,
   },
   {
     key: "ironeyeExtendsDurationOfWeakPoint",
     ids: [7280000],
+    nightfarer: "Ironeye",
+    stacks: false,
   },
   {
     key: "raiderCharacterSkillDamageUp",
     ids: [7010800],
+    nightfarer: "Raider",
+    stacks: false,
   },
   {
     key: "raiderDamageTakenWhileUsingCharacterSkillImprovesAttack",
     ids: [7031300],
+    nightfarer: "Raider",
+    stacks: false,
   },
   {
     key: "raiderDurationOfUltimateArtExtended",
     ids: [7310000],
+    nightfarer: "Raider",
+    stacks: false,
   },
   {
     key: "raiderPermanentlyIncreaseAttackPower",
     ids: [7033800],
+    nightfarer: "Raider",
+    stacks: false,
   },
   {
     key: "recluseActivatingUltimateArtRaisesMaxHP",
     ids: [7034100],
+    nightfarer: "Recluse",
+    stacks: false,
   },
   {
     key: "recluseCollecting4AffinityResiduesImprovesAffinityAttackPower",
     ids: [7034000],
+    nightfarer: "Recluse",
+    stacks: false,
   },
   {
     key: "recluseCollectingAffinityResidueActivatesTerraMagica",
     ids: [7032800],
+    nightfarer: "Recluse",
+    stacks: false,
   },
   {
     key: "recluseExtendsDurationOfBloodSigils",
     ids: [7033900],
+    nightfarer: "Recluse",
+    stacks: false,
   },
   {
     key: "recluseSufferBloodLossAndIncreaseAttackPower",
     ids: [17002, 7032900],
+    nightfarer: "Recluse",
+    stacks: false,
   },
   {
     key: "revenantAbilityActivationChanceIncreased",
     ids: [7320000],
+    nightfarer: "Revenant",
+    stacks: false,
   },
   {
     key: "revenantExpendOwnHPToFullyHealNearbyAllies",
     ids: [16002, 7010900],
+    nightfarer: "Revenant",
+    stacks: false,
   },
   {
     key: "revenantPowerUpWhileFightingAlongsideFamily",
     ids: [7220000],
+    nightfarer: "Revenant",
+    stacks: false,
   },
   {
     key: "revenantStrengthensFamilyAndAlliesWhenUltimateArtActivated",
     ids: [7031200],
+    nightfarer: "Revenant",
+    stacks: false,
   },
   {
     key: "revenantTriggerGhostflameExplosionDuringUltimateArtActivation",
     ids: [7011200],
+    nightfarer: "Revenant",
+    stacks: false,
   },
   {
     key: "runes60kAtStart30kOnDeath",
@@ -173,38 +252,56 @@ export const effectsArray: (
   {
     key: "wylderAdditionalCharacterSkillUse",
     ids: [11000, 7033200],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "wylderArtActivationSpreadsFireInArea",
     ids: [7010500],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "wylderArtGaugeGreatlyFilledWhenAbilityActivated",
     ids: [11002, 7032400],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "wylderCharacterSkillInflictsBloodLoss",
     ids: [7011500],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "wylderFollowUpAttacksPossibleWhenUsingCharacterSkill",
     ids: [7020000],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "wylderImpairedDamageNegationImprovedAttackPowerStaminaAfterArtActivation",
     ids: [7030500],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "wylderImprovedAttackPowerWhenAbilityActivated",
     ids: [7033000],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "wylderImprovedAttackPowerWhenCharacterSkillActivated",
     ids: [7032300],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "wylderReducedCooldownTimeForCharacterSkill",
     ids: [7031400],
+    nightfarer: "Wylder",
+    stacks: false,
   },
   {
     key: "acidMistUponChargedThrust",
@@ -425,6 +522,7 @@ export const effectsArray: (
   {
     key: "bewitchingBranchesInPossessionAtStartOfExpedition",
     ids: [7122000],
+    stacks: true,
   },
   {
     key: "blackFlamesUponChargedSlash",
@@ -449,6 +547,7 @@ export const effectsArray: (
   {
     key: "boostsAttackPowerOfAddedAffinityAttacks",
     ids: [7035800],
+    stacks: true,
   },
   {
     key: "brokenStanceActivatesEndure",
@@ -461,106 +560,130 @@ export const effectsArray: (
   {
     key: "changesCompatibleArmamentsSkillToBloodBladeAtStartOfExpedition",
     ids: [7123700],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToChillingMistAtStartOfExpedition",
     ids: [7006200, 7123900],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToDeterminationAtStartOfExpedition",
     ids: [7124600],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToEndureAtStartOfExpedition",
     ids: [7124300],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToEruptionAtStartOfExpedition",
     ids: [7123000],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToFlamingStrikeAtStartOfExpedition",
     ids: [7122900],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToGlintbladePhalanxAtStartOfExpedition",
     ids: [7122700],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToGravitasAtStartOfExpedition",
     ids: [7122800],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToHoarfrostStompAtStartOfExpedition",
     ids: [7124000],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToLightningSlashAtStartOfExpedition",
     ids: [7123200],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToPoisonMothFlightAtStartOfExpedition",
     ids: [7123600],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToPoisonousMistAtStartOfExpedition",
     ids: [7123500],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToPrayerfulStrikeAtStartOfExpedition",
     ids: [7123400],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToQuickstepAtStartOfExpedition",
     ids: [7124400],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToRainOfArrowsAtStartOfExpedition",
     ids: [7124700],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToSacredBladeAtStartOfExpedition",
     ids: [7123300],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToSeppukuAtStartOfExpedition",
     ids: [7123800],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToStormStompAtStartOfExpedition",
     ids: [7124500],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToThunderboltAtStartOfExpedition",
     ids: [7123100],
+    stacks: false,
   },
   {
     key: "changesCompatibleArmamentsSkillToWhiteShadowsLureAtStartOfExpedition",
     ids: [7124100],
+    stacks: false,
   },
   {
     key: "characterSkillCooldownReduction",
     ids: [8370000],
     group: "characterSkillCooldownReduction",
     level: 0,
+    stacks: true,
   },
   {
     key: "characterSkillCooldownReductionPlus1",
     ids: [7000800],
     group: "characterSkillCooldownReduction",
     level: 1,
+    stacks: true,
   },
   {
     key: "characterSkillCooldownReductionPlus2",
     ids: [7000801],
     group: "characterSkillCooldownReduction",
     level: 2,
+    stacks: true,
   },
   {
     key: "characterSkillCooldownReductionPlus3",
     ids: [7000802],
     group: "characterSkillCooldownReduction",
     level: 3,
+    stacks: true,
   },
   {
     key: "chargedThrustInvokesSleepMist",
@@ -625,6 +748,7 @@ export const effectsArray: (
   {
     key: "crystalDartsInPossessionAtStartOfExpedition",
     ids: [7121600],
+    stacks: true,
   },
   {
     key: "crystalShardsUponMagicCriticalHit",
@@ -649,6 +773,8 @@ export const effectsArray: (
   {
     key: "defeatingEnemiesNearTotemStelaRestoresHP",
     ids: [7090300],
+    nightfarer: "Raider",
+    stacks: false,
   },
   {
     key: "defeatingEnemiesRestoresFP",
@@ -691,18 +817,21 @@ export const effectsArray: (
     ids: [7000400],
     group: "dexterity",
     level: 1,
+    stacks: true,
   },
   {
     key: "dexterityPlus2",
     ids: [7000401],
     group: "dexterity",
     level: 2,
+    stacks: true,
   },
   {
     key: "dexterityPlus3",
     ids: [7000402],
     group: "dexterity",
     level: 3,
+    stacks: true,
   },
   {
     key: "dmgNegationUpWhileCastingSpells",
@@ -721,18 +850,21 @@ export const effectsArray: (
     ids: [7000200],
     group: "endurance",
     level: 1,
+    stacks: true,
   },
   {
     key: "endurancePlus2",
     ids: [7000201],
     group: "endurance",
     level: 2,
+    stacks: true,
   },
   {
     key: "endurancePlus3",
     ids: [7000202],
     group: "endurance",
     level: 3,
+    stacks: true,
   },
   {
     key: "extendedSpellDuration",
@@ -747,18 +879,21 @@ export const effectsArray: (
     ids: [7000600],
     group: "faith",
     level: 1,
+    stacks: true,
   },
   {
     key: "faithPlus2",
     ids: [7000601],
     group: "faith",
     level: 2,
+    stacks: true,
   },
   {
     key: "faithPlus3",
     ids: [7000602],
     group: "faith",
     level: 3,
+    stacks: true,
   },
   {
     key: "fireAttackFollowsChargeAttacks",
@@ -769,18 +904,21 @@ export const effectsArray: (
     ids: [7001600],
     group: "fireAttackPowerUp",
     level: 0,
+    stacks: true,
   },
   {
     key: "fireAttackPowerUpPlus1",
     ids: [7001601],
     group: "fireAttackPowerUp",
     level: 1,
+    stacks: true,
   },
   {
     key: "fireAttackPowerUpPlus2",
     ids: [7001602],
     group: "fireAttackPowerUp",
     level: 2,
+    stacks: true,
   },
   {
     key: "fireCriticalHitGrantsMaxStaminaBoost",
@@ -789,14 +927,17 @@ export const effectsArray: (
   {
     key: "fireDamageNegationUp",
     ids: [7002700],
+    stacks: true,
   },
   {
     key: "fireGreaseInPossessionAtStartOfExpedition",
     ids: [7122200],
+    stacks: true,
   },
   {
     key: "firePotsInPossessionAtStartOfExpedition",
     ids: [7121100],
+    stacks: true,
   },
   {
     key: "flameOfFrenzyWhileWalking",
@@ -813,10 +954,6 @@ export const effectsArray: (
   {
     key: "fpRecoveryFromSuccessfulGuarding",
     ids: [8650100],
-  },
-  {
-    key: "fpRestorationOnSuccessiveAttacks",
-    ids: [10000],
   },
   {
     key: "fpRestorationUponAttacks",
@@ -912,7 +1049,8 @@ export const effectsArray: (
   },
   {
     key: "fpRestorationUponSuccessiveAttacks",
-    ids: [7036000, 8610100],
+    ids: [10000, 7036000, 8610100],
+    stacks: true,
   },
   {
     key: "fpRestorationUponThrustingSwordAttacks",
@@ -941,6 +1079,7 @@ export const effectsArray: (
   {
     key: "glintstoneScrapsInPossessionAtStartOfExpedition",
     ids: [7121800],
+    stacks: true,
   },
   {
     key: "gradualRestorationByFlask",
@@ -949,6 +1088,7 @@ export const effectsArray: (
   {
     key: "gravityStoneChunksInPossessionAtStartOfExpedition",
     ids: [7121900],
+    stacks: true,
   },
   {
     key: "guardCounterIsGivenABoostBasedOnCurrentHP",
@@ -979,26 +1119,31 @@ export const effectsArray: (
     ids: [7001800],
     group: "holyAttackPowerUp",
     level: 0,
+    stacks: true,
   },
   {
     key: "holyAttackPowerUpPlus1",
     ids: [7001801],
     group: "holyAttackPowerUp",
     level: 1,
+    stacks: true,
   },
   {
     key: "holyAttackPowerUpPlus2",
     ids: [7001802],
     group: "holyAttackPowerUp",
     level: 2,
+    stacks: true,
   },
   {
     key: "holyDamageNegationUp",
     ids: [7002900],
+    stacks: true,
   },
   {
     key: "holyGreaseInPossessionAtStartOfExpedition",
     ids: [7122500],
+    stacks: true,
   },
   {
     key: "holyShockwaveUponChargedStrike",
@@ -1007,6 +1152,7 @@ export const effectsArray: (
   {
     key: "holyWaterPotsInPossessionAtStartOfExpedition",
     ids: [7121400],
+    stacks: true,
   },
   {
     key: "hpRecoveryFromSuccessfulGuarding",
@@ -1271,6 +1417,7 @@ export const effectsArray: (
   {
     key: "improvedAxeAttackPower",
     ids: [7331000],
+    stacks: true,
   },
   {
     key: "improvedBestialIncantations",
@@ -1279,18 +1426,22 @@ export const effectsArray: (
   {
     key: "improvedBloodLossAndFrostResistance",
     ids: [312001],
+    stacks: true,
   },
   {
     key: "improvedBloodLossResistance",
     ids: [311600, 7003100, 8210100],
+    stacks: true,
   },
   {
     key: "improvedBowAttackPower",
     ids: [7332400],
+    stacks: true,
   },
   {
     key: "improvedCarianSwordSorcery",
     ids: [7043300],
+    stacks: true,
   },
   {
     key: "improvedChainAttackFinishers",
@@ -1319,42 +1470,51 @@ export const effectsArray: (
   {
     key: "improvedClawAttackPower",
     ids: [7332100],
+    stacks: true,
   },
   {
     key: "improvedColossalSwordAttackPower",
     ids: [7330300],
+    stacks: true,
   },
   {
     key: "improvedColossalWeaponAttackPower",
     ids: [7332300],
+    stacks: true,
   },
   {
     key: "improvedCriticalHits",
     ids: [320900, 7040200, 8130000],
     group: "improvedCriticalHits",
     level: 0,
+    stacks: true,
   },
   {
     key: "improvedCriticalHitsPlus1",
     ids: [7040201, 7040290],
     group: "improvedCriticalHits",
     level: 1,
+    stacks: false,
   },
   {
     key: "improvedCrystalianSorcery",
     ids: [7043600],
+    stacks: true,
   },
   {
     key: "improvedCurvedGreatswordAttackPower",
     ids: [7330500],
+    stacks: true,
   },
   {
     key: "improvedCurvedSwordAttackPower",
     ids: [7330400],
+    stacks: true,
   },
   {
     key: "improvedDaggerAttackPower",
     ids: [7330000],
+    stacks: true,
   },
   {
     key: "improvedDamageNegationAtFullHP",
@@ -1363,10 +1523,12 @@ export const effectsArray: (
   {
     key: "improvedDamageNegationAtLowHP",
     ids: [340800, 7012300, 8660101],
+    stacks: true,
   },
   {
     key: "improvedDeathBlightResistance",
     ids: [311900, 7003300, 8210300],
+    stacks: true,
   },
   {
     key: "improvedDexterity",
@@ -1387,6 +1549,7 @@ export const effectsArray: (
   {
     key: "improvedFireAttackPower",
     ids: [320200, 8100200],
+    stacks: true,
   },
   {
     key: "improvedFireDamageNegation",
@@ -1395,10 +1558,12 @@ export const effectsArray: (
   {
     key: "improvedFistAttackPower",
     ids: [7332000],
+    stacks: true,
   },
   {
     key: "improvedFlailAttackPower",
     ids: [7331400],
+    stacks: true,
   },
   {
     key: "improvedFlaskHPRecovery",
@@ -1411,6 +1576,7 @@ export const effectsArray: (
   {
     key: "improvedFrostResistance",
     ids: [311601, 7003500, 8210500],
+    stacks: true,
   },
   {
     key: "improvedFundamentalistIncantations",
@@ -1423,6 +1589,7 @@ export const effectsArray: (
   {
     key: "improvedGlintbladeSorcery",
     ids: [7043400],
+    stacks: true,
   },
   {
     key: "improvedGodslayerIncantations",
@@ -1431,22 +1598,27 @@ export const effectsArray: (
   {
     key: "improvedGravitySorcery",
     ids: [7043700],
+    stacks: true,
   },
   {
     key: "improvedGreatHammerAttackPower",
     ids: [7331300],
+    stacks: true,
   },
   {
     key: "improvedGreatSpearAttackPower",
     ids: [7331700],
+    stacks: true,
   },
   {
     key: "improvedGreataxeAttackPower",
     ids: [7331100],
+    stacks: true,
   },
   {
     key: "improvedGreatswordAttackPower",
     ids: [7330200],
+    stacks: true,
   },
   {
     key: "improvedGuardBreaking",
@@ -1455,6 +1627,7 @@ export const effectsArray: (
   {
     key: "improvedGuardCounters",
     ids: [322000, 7040100, 8420000],
+    stacks: true,
   },
   {
     key: "improvedGuardingAbility",
@@ -1477,14 +1650,17 @@ export const effectsArray: (
   {
     key: "improvedHalberdAttackPower",
     ids: [7331800],
+    stacks: true,
   },
   {
     key: "improvedHammerAttackPower",
     ids: [7331200],
+    stacks: true,
   },
   {
     key: "improvedHeavyThrustingSwordAttackPower",
     ids: [7330900],
+    stacks: true,
   },
   {
     key: "improvedHolyAttackPower",
@@ -1501,10 +1677,12 @@ export const effectsArray: (
   {
     key: "improvedInitialStandardAttack",
     ids: [7040000],
+    stacks: true,
   },
   {
     key: "improvedInvisibilitySorcery",
     ids: [7043500],
+    stacks: true,
   },
   {
     key: "improvedItemDiscovery",
@@ -1517,6 +1695,7 @@ export const effectsArray: (
   {
     key: "improvedKatanaAttackPower",
     ids: [7330600],
+    stacks: true,
   },
   {
     key: "improvedLightningAttackPower",
@@ -1529,6 +1708,7 @@ export const effectsArray: (
   {
     key: "improvedMadnessResistance",
     ids: [311801, 7003600, 8210600],
+    stacks: true,
   },
   {
     key: "improvedMagicAttackPower",
@@ -1541,6 +1721,7 @@ export const effectsArray: (
   {
     key: "improvedNightSorcery",
     ids: [7043900],
+    stacks: true,
   },
   {
     key: "improvedNonPhysicalAttackPower",
@@ -1565,6 +1746,7 @@ export const effectsArray: (
   {
     key: "improvedPikeAttackPower",
     ids: [7331600],
+    stacks: true,
   },
   {
     key: "improvedPoise",
@@ -1577,14 +1759,18 @@ export const effectsArray: (
   {
     key: "improvedPoiseNearTotemStela",
     ids: [7030000],
+    nightfarer: "Raider",
+    stacks: false,
   },
   {
     key: "improvedPoisonRotResistance",
     ids: [312000],
+    stacks: true,
   },
   {
     key: "improvedPoisonResistance",
     ids: [311700, 7003000, 8210000],
+    stacks: true,
   },
   {
     key: "improvedRangedWeaponAttacks",
@@ -1593,14 +1779,17 @@ export const effectsArray: (
   {
     key: "improvedReaperAttackPower",
     ids: [7331900],
+    stacks: true,
   },
   {
     key: "improvedRoarBreathAttacks",
     ids: [321900, 7043000, 8380000],
+    stacks: true,
   },
   {
     key: "improvedRotResistance",
     ids: [311701, 7003400, 8210400],
+    stacks: true,
   },
   {
     key: "improvedSkillAttackPower",
@@ -1609,10 +1798,12 @@ export const effectsArray: (
   {
     key: "improvedSleepMadnessResistance",
     ids: [312002],
+    stacks: true,
   },
   {
     key: "improvedSleepResistance",
     ids: [311800, 7003200, 8210200],
+    stacks: true,
   },
   {
     key: "improvedSorceries",
@@ -1621,6 +1812,7 @@ export const effectsArray: (
   {
     key: "improvedSpearAttackPower",
     ids: [7331500],
+    stacks: true,
   },
   {
     key: "improvedSpellCastingSpeed",
@@ -1645,10 +1837,12 @@ export const effectsArray: (
   {
     key: "improvedStanceBreakingWhenTwoHanding",
     ids: [7006000, 7006001, 8300100],
+    stacks: true,
   },
   {
     key: "improvedStanceBreakingWhenWieldingTwoArmaments",
     ids: [7006100, 7006101, 8310100],
+    stacks: true,
   },
   {
     key: "improvedStanceBreakingWithHeadShots",
@@ -1657,22 +1851,27 @@ export const effectsArray: (
   {
     key: "improvedStonediggerSorcery",
     ids: [7043200],
+    stacks: true,
   },
   {
     key: "improvedStraightSwordAttackPower",
     ids: [7330100],
+    stacks: true,
   },
   {
     key: "improvedThornSorcery",
     ids: [7043800],
+    stacks: true,
   },
   {
     key: "improvedThrowingKnifeDamage",
     ids: [7040400],
+    stacks: true,
   },
   {
     key: "improvedThrowingPotDamage",
     ids: [7040300],
+    stacks: true,
   },
   {
     key: "improvedThrowingPots",
@@ -1681,6 +1880,7 @@ export const effectsArray: (
   {
     key: "improvedThrowingStoneDamage",
     ids: [7040500],
+    stacks: true,
   },
   {
     key: "improvedThrustingCounterattack",
@@ -1689,48 +1889,58 @@ export const effectsArray: (
   {
     key: "improvedThrustingSwordAttackPower",
     ids: [7330800],
+    stacks: true,
   },
   {
     key: "improvedTwinbladeAttackPower",
     ids: [7330700],
+    stacks: true,
   },
   {
     key: "improvedWhipAttackPower",
     ids: [7332200],
+    stacks: true,
   },
   {
     key: "increasedMaximumFP",
     ids: [310100, 7000190, 8010000],
+    stacks: false,
   },
   {
     key: "increasedMaximumHP",
     ids: [310000, 310400, 7000090, 8000000],
+    stacks: false,
   },
   {
     key: "increasedMaximumStamina",
     ids: [310200, 310401, 7000290, 8020000],
+    stacks: false,
   },
   {
     key: "increasedRuneAcquisitionForSelfAndAllies",
     ids: [7110000],
+    stacks: true,
   },
   {
     key: "intelligencePlus1",
     ids: [7000500],
     group: "intelligence",
     level: 1,
+    stacks: true,
   },
   {
     key: "intelligencePlus2",
     ids: [7000501],
     group: "intelligence",
     level: 2,
+    stacks: true,
   },
   {
     key: "intelligencePlus3",
     ids: [7000502],
     group: "intelligence",
     level: 3,
+    stacks: true,
   },
   {
     key: "itemsConferEffectToAllNearbyAllies",
@@ -1749,18 +1959,21 @@ export const effectsArray: (
     ids: [7001700],
     group: "lightningAttackPowerUp",
     level: 0,
+    stacks: true,
   },
   {
     key: "lightningAttackPowerUpPlus1",
     ids: [7001701],
     group: "lightningAttackPowerUp",
     level: 1,
+    stacks: true,
   },
   {
     key: "lightningAttackPowerUpPlus2",
     ids: [7001702],
     group: "lightningAttackPowerUp",
     level: 2,
+    stacks: true,
   },
   {
     key: "lightningCriticalHitImbuesArmament",
@@ -1769,6 +1982,7 @@ export const effectsArray: (
   {
     key: "lightningDamageNegationUp",
     ids: [7002800],
+    stacks: true,
   },
   {
     key: "lightningFollowsChargeAttacks",
@@ -1777,10 +1991,12 @@ export const effectsArray: (
   {
     key: "lightningGreaseInPossessionAtStartOfExpedition",
     ids: [7122400],
+    stacks: true,
   },
   {
     key: "lightningPotsInPossessionAtStartOfExpedition",
     ids: [7121300],
+    stacks: true,
   },
   {
     key: "lightningUponChargedThrust",
@@ -1827,18 +2043,21 @@ export const effectsArray: (
     ids: [7001500],
     group: "magicAttackPowerUp",
     level: 0,
+    stacks: true,
   },
   {
     key: "magicAttackPowerUpPlus1",
     ids: [7001501],
     group: "magicAttackPowerUp",
     level: 1,
+    stacks: true,
   },
   {
     key: "magicAttackPowerUpPlus2",
     ids: [7001502],
     group: "magicAttackPowerUp",
     level: 2,
+    stacks: true,
   },
   {
     key: "magicBubblesUponChargedStrike",
@@ -1847,14 +2066,17 @@ export const effectsArray: (
   {
     key: "magicDamageNegationUp",
     ids: [7002600],
+    stacks: true,
   },
   {
     key: "magicGreaseInPossessionAtStartOfExpedition",
     ids: [7122300],
+    stacks: true,
   },
   {
     key: "magicPotsInPossessionAtStartOfExpedition",
     ids: [7121200],
+    stacks: true,
   },
   {
     key: "magmaSurgeSprint",
@@ -1883,22 +2105,27 @@ export const effectsArray: (
   {
     key: "maxFpUpWith3PlusSacredSealsEquipped",
     ids: [7082600],
+    stacks: false,
   },
   {
     key: "maxFpUpWith3PlusStavesEquipped",
     ids: [7082500],
+    stacks: false,
   },
   {
     key: "maxHpUpWith3PlusGreatshieldsEquipped",
     ids: [7082900],
+    stacks: false,
   },
   {
     key: "maxHpUpWith3PlusMediumShieldsEquipped",
     ids: [7082800],
+    stacks: false,
   },
   {
     key: "maxHpUpWith3PlusSmallShieldsEquipped",
     ids: [7082700],
+    stacks: false,
   },
   {
     key: "maximumHpDown",
@@ -1909,18 +2136,21 @@ export const effectsArray: (
     ids: [7000100],
     group: "mind",
     level: 1,
+    stacks: true,
   },
   {
     key: "mindPlus2",
     ids: [7000101],
     group: "mind",
     level: 2,
+    stacks: true,
   },
   {
     key: "mindPlus3",
     ids: [7000102],
     group: "mind",
     level: 3,
+    stacks: true,
   },
   {
     key: "moreRunesFromDefeatedEnemies",
@@ -1975,42 +2205,49 @@ export const effectsArray: (
     ids: [7001400],
     group: "physicalAttackUp",
     level: 0,
+    stacks: true,
   },
   {
     key: "physicalAttackUpPlus1",
     ids: [7001401],
     group: "physicalAttackUp",
     level: 1,
+    stacks: true,
   },
   {
     key: "physicalAttackUpPlus2",
     ids: [7001402],
     group: "physicalAttackUp",
     level: 2,
+    stacks: true,
   },
   {
     key: "physicalAttackUpPlus3",
     ids: [7001403],
     group: "physicalAttackUp",
     level: 3,
+    stacks: true,
   },
   {
     key: "poisePlus1",
     ids: [7001000],
     group: "poise",
     level: 1,
+    stacks: true,
   },
   {
     key: "poisePlus2",
     ids: [7001001],
     group: "poise",
     level: 2,
+    stacks: true,
   },
   {
     key: "poisePlus3",
     ids: [7001002],
     group: "poise",
     level: 3,
+    stacks: true,
   },
   {
     key: "poisonAndRotImprovesAttackPower",
@@ -2043,6 +2280,7 @@ export const effectsArray: (
   {
     key: "poisonboneDartsInPossessionAtStartOfExpedition",
     ids: [7121500],
+    stacks: true,
   },
   {
     key: "powerOfDarkMoon",
@@ -2179,6 +2417,7 @@ export const effectsArray: (
     ids: [8200501],
     group: "raisesNonPhysicalDamageNegation",
     level: 1,
+    stacks: true,
   },
   {
     key: "raisesPhysicalAttackPowerPlus1",
@@ -2251,6 +2490,7 @@ export const effectsArray: (
   {
     key: "shieldGreaseInPossessionAtStartOfExpedition",
     ids: [7122600],
+    stacks: true,
   },
   {
     key: "shieldingCreatesHolyGround",
@@ -2291,6 +2531,7 @@ export const effectsArray: (
   {
     key: "smallPouchInPossessionAtStartOfExpedition",
     ids: [7121000],
+    stacks: true,
   },
   {
     key: "staminaRecoveryUponLandingAttacks",
@@ -2307,42 +2548,52 @@ export const effectsArray: (
   {
     key: "starlightShardsInPossessionAtStartOfExpedition",
     ids: [7126000, 7126001, 7126002],
+    stacks: true,
   },
   {
     key: "startingArmamentDealsFireDamage",
     ids: [7120100],
+    stacks: false,
   },
   {
     key: "startingArmamentDealsHolyDamage",
     ids: [7120300],
+    stacks: false,
   },
   {
     key: "startingArmamentDealsLightningDamage",
     ids: [7120200],
+    stacks: false,
   },
   {
     key: "startingArmamentDealsMagicDamage",
     ids: [7120000],
+    stacks: false,
   },
   {
     key: "startingArmamentInflictsBloodLoss",
     ids: [7120600],
+    stacks: false,
   },
   {
     key: "startingArmamentInflictsFrost",
     ids: [7120400],
+    stacks: false,
   },
   {
     key: "startingArmamentInflictsPoison",
     ids: [7120500],
+    stacks: false,
   },
   {
     key: "startingArmamentInflictsScarletRot",
     ids: [7120700],
+    stacks: false,
   },
   {
     key: "stoneswordKeyInPossessionAtStartOfExpedition",
     ids: [7120900],
+    stacks: false,
   },
   {
     key: "stormOfRedLightningWhileWalking",
@@ -2353,18 +2604,21 @@ export const effectsArray: (
     ids: [7000300],
     group: "strength",
     level: 1,
+    stacks: true,
   },
   {
     key: "strengthPlus2",
     ids: [7000301],
     group: "strength",
     level: 2,
+    stacks: true,
   },
   {
     key: "strengthPlus3",
     ids: [7000302],
     group: "strength",
     level: 3,
+    stacks: true,
   },
   {
     key: "strongAttackCreatesWideWaveOfHeat",
@@ -2461,6 +2715,7 @@ export const effectsArray: (
   {
     key: "throwingDaggersInPossessionAtStartOfExpedition",
     ids: [7121700],
+    stacks: true,
   },
   {
     key: "treasureMarkedUponMap",
@@ -2471,18 +2726,21 @@ export const effectsArray: (
     ids: [7000900],
     group: "ultimateArtGauge",
     level: 1,
+    stacks: true,
   },
   {
     key: "ultimateArtGaugePlus2",
     ids: [7000901],
     group: "ultimateArtGauge",
     level: 2,
+    stacks: true,
   },
   {
     key: "ultimateArtGaugePlus3",
     ids: [7000902],
     group: "ultimateArtGauge",
     level: 3,
+    stacks: true,
   },
   {
     key: "ultimateArtGaugeChargeSpeedUp",
@@ -2497,40 +2755,44 @@ export const effectsArray: (
     ids: [7000000],
     group: "vigor",
     level: 1,
+    stacks: true,
   },
   {
     key: "vigorPlus2",
     ids: [7000001],
     group: "vigor",
     level: 2,
+    stacks: true,
   },
   {
     key: "vigorPlus3",
     ids: [7000002],
     group: "vigor",
     level: 3,
+    stacks: true,
   },
   {
     key: "wraithCallingBellInPossessionAtStartOfExpedition",
     ids: [7122100],
+    stacks: true,
   },
   {
     key: "wraithsWhileWalking",
     ids: [8460300],
   },
-];
+] as const satisfies (EffectArrayElement | EffectWithGroupArrayElement)[];
 
-interface Effect {
-  key: string;
+export type EffectKey = (typeof effectsArray)[number]["key"];
+
+export interface Effect {
+  key: EffectKey;
+  nightfarer?: NightfarerName;
+  stacks?: boolean;
+  group?: string;
+  level?: number;
 }
 
-interface EffectWithGroup {
-  key: string;
-  group: string;
-  level: number;
-}
-
-export const effects: Map<number, Effect | EffectWithGroup> = new Map();
+export const effects: Map<number, Effect> = new Map();
 for (const effect of effectsArray) {
   for (const id of effect.ids) {
     effects.set(id, effect);

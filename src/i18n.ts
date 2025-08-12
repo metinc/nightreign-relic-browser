@@ -362,8 +362,6 @@ const resources = {
         flaskHealingAlsoRestoresFP: "Flask Healing Also Restores FP",
         fpRecoveryFromSuccessfulGuarding:
           "FP Recovery From Successful Guarding",
-        fpRestorationOnSuccessiveAttacks:
-          "FP Restoration on Successive Attacks",
         fpRestorationUponAttacks: "FP Restoration upon Attacks",
         fpRestorationUponAxeAttacks: "FP Restoration upon Axe Attacks",
         fpRestorationUponBowAttacks: "FP Restoration upon Bow Attacks",
