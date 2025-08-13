@@ -375,6 +375,7 @@ export function ComboFinder(props: ComboFinderProps) {
                                       rowIndex={null}
                                       colIndex={null}
                                       selectedColor="Any"
+                                      highlightedEffects={selectedEffects}
                                     />
                                   ) : (
                                     "no relic"

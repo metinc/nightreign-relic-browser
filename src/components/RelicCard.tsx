@@ -17,6 +17,8 @@ import {
   type RelicSlotColor,
 } from "../utils/RelicColor";
 import { RelicComparisonModal } from "./RelicComparisonModal";
+import type { Effect } from "../resources/effects";
+import { getEffect } from "../utils/DataUtils";
 
 interface RelicCardProps {
   relic: RelicSlot;
@@ -28,6 +30,7 @@ interface RelicCardProps {
   rowIndex: number | null;
   colIndex: number | null;
   selectedColor: RelicSlotColor;
+  highlightedEffects?: Effect[];
 }
 
 const getBackgroundColor = (effectsCount: number) => {
@@ -55,6 +58,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   rowIndex,
   colIndex,
   selectedColor,
+  highlightedEffects = [],
 }) => {
   const { palette } = useTheme();
   const [modalOpen, setModalOpen] = useState(false);
@@ -171,12 +175,24 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
 
         <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
           {effects.map((effectId) => {
+            const effect = getEffect(effectId);
             const effectName = getEffectName(effectId);
             const effectHighlight = highlightSearchTerm(effectName, searchTerm);
+            const highlightEffect = highlightedEffects.includes(effect);
 
             return (
               <Box key={effectId} sx={{ mb: 0.5, display: "list-item" }}>
-                <Typography variant="body2">
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color:
+                      highlightedEffects.length === 0
+                        ? "text.primary"
+                        : highlightEffect
+                        ? "primary.main"
+                        : "text.secondary",
+                  }}
+                >
                   {effectHighlight.highlightedText}
                 </Typography>
               </Box>
