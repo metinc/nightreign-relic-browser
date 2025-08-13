@@ -329,58 +329,61 @@ export function ComboFinder(props: ComboFinderProps) {
                   from {searchResults.availableRelicsCount} relics
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  {searchResults.combinations.map((combo, index) => (
-                    <Card key={index} elevation={2}>
-                      <CardContent>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: "bold", mb: 1 }}
-                        >
-                          {combo.vessel.name}
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            gap: 0.5,
-                            flexWrap: "wrap",
-                            mb: 2,
-                          }}
-                        >
-                          {combo.vessel.slots.map((slot, slotIndex) => (
-                            <Chip
-                              key={slotIndex}
-                              label={slot}
-                              size="small"
-                              color={getChipColor(slot)}
-                              variant="filled"
-                            />
-                          ))}
-                        </Box>
-
-                        <Stack direction="row">
-                          {combo.relicCombination.map((relic, index) => (
-                            <Box key={relic?.id ?? index}>
-                              {relic ? (
-                                <RelicCard
-                                  relic={relic}
-                                  getItemName={getItemName}
-                                  getItemColor={getItemColor}
-                                  getEffectName={getEffectName}
-                                  searchTerm=""
-                                  relicMatches={true}
-                                  rowIndex={null}
-                                  colIndex={null}
-                                  selectedColor="Any"
+                  {searchResults.combinations.map(
+                    (combo, index) =>
+                      index < 50 && (
+                        <Card key={index} elevation={2}>
+                          <CardContent>
+                            <Typography
+                              variant="subtitle1"
+                              sx={{ fontWeight: "bold", mb: 1 }}
+                            >
+                              {combo.vessel.name}
+                            </Typography>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                gap: 0.5,
+                                flexWrap: "wrap",
+                                mb: 2,
+                              }}
+                            >
+                              {combo.vessel.slots.map((slot, slotIndex) => (
+                                <Chip
+                                  key={slotIndex}
+                                  label={slot}
+                                  size="small"
+                                  color={getChipColor(slot)}
+                                  variant="filled"
                                 />
-                              ) : (
-                                "no relic"
-                              )}
+                              ))}
                             </Box>
-                          ))}
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  ))}
+
+                            <Stack direction="row">
+                              {combo.relicCombination.map((relic, index) => (
+                                <Box key={relic?.id ?? index}>
+                                  {relic ? (
+                                    <RelicCard
+                                      relic={relic}
+                                      getItemName={getItemName}
+                                      getItemColor={getItemColor}
+                                      getEffectName={getEffectName}
+                                      searchTerm=""
+                                      relicMatches={true}
+                                      rowIndex={null}
+                                      colIndex={null}
+                                      selectedColor="Any"
+                                    />
+                                  ) : (
+                                    "no relic"
+                                  )}
+                                </Box>
+                              ))}
+                            </Stack>
+                          </CardContent>
+                        </Card>
+                      )
+                  )}
                 </Box>
               </>
             )}
