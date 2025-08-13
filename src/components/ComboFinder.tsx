@@ -221,17 +221,9 @@ export function ComboFinder(props: ComboFinderProps) {
                     sx={{ cursor: "pointer" }}
                   >
                     <CardContent>
-                      {/* checkbox */}
                       <FormControl>
                         <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={!disabled}
-                              onChange={() =>
-                                toggleVessel(selectedNightfarer, index)
-                              }
-                            />
-                          }
+                          control={<Checkbox checked={!disabled} />}
                           label={vessel.name}
                         />
                       </FormControl>
