@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { type Effect } from "../resources/effects";
+import { isEffect, type Effect } from "../resources/effects";
 import { useTranslation } from "react-i18next";
 import { InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
@@ -25,8 +25,10 @@ export function EffectsAutocomplete({
       freeSolo
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}
-      onChange={(_e, value) => onChange && onChange(value as Effect | null)}
-      getOptionLabel={(option) => t(`effects.${(option as Effect).key}`)}
+      onChange={(_e, value) => onChange && isEffect(value) && onChange(value)}
+      getOptionLabel={(option) =>
+        isEffect(option) ? t(`effects.${(option as Effect).key}`) : option
+      }
       renderInput={(params) => (
         <TextField
           {...params}

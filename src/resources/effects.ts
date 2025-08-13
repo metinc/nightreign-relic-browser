@@ -2799,3 +2799,12 @@ for (const effect of effectsArray) {
   }
   delete (effect as Partial<EffectArrayElement>).ids;
 }
+
+export function isEffect(input: unknown): input is Effect {
+  return (
+    typeof input === "object" &&
+    input !== null &&
+    "key" in input &&
+    typeof (input as Effect).key === "string"
+  );
+}
