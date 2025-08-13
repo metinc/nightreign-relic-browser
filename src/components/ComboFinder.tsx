@@ -14,6 +14,7 @@ import {
   Stack,
   FormControl,
   Checkbox,
+  Divider,
 } from "@mui/material";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import { getChipColor, type RelicColor } from "../utils/RelicColor";
@@ -200,6 +201,8 @@ export function ComboFinder(props: ComboFinderProps) {
         </RadioGroup>
       </Box>
 
+      <Divider orientation="vertical" />
+
       <Box>
         {selectedNightfarerData && (
           <>
@@ -260,6 +263,8 @@ export function ComboFinder(props: ComboFinderProps) {
         )}
       </Box>
 
+      <Divider orientation="vertical" />
+
       <Box sx={{ width: "350px" }}>
         <Typography variant="h6" gutterBottom>
           3. Select Effects:
@@ -295,7 +300,12 @@ export function ComboFinder(props: ComboFinderProps) {
         )}
       </Box>
 
+      <Divider orientation="vertical" />
+
       <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+        <Typography variant="h6" gutterBottom>
+          4. Check Results:
+        </Typography>
         {/* Search Button */}
         <Box sx={{ mb: 2 }}>
           <Button
