@@ -58,7 +58,12 @@ export const getEffectGroup = (
   if (!effect) {
     return undefined;
   }
-  if ("group" in effect && "level" in effect) {
+  if (
+    "group" in effect &&
+    "level" in effect &&
+    effect.group !== undefined &&
+    effect.level !== undefined
+  ) {
     return { group: effect.group, level: effect.level };
   }
   return undefined;
