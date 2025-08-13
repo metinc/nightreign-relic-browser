@@ -7,6 +7,7 @@ import { RelicBrowser } from "./RelicBrowser";
 import { ComboFinder } from "./ComboFinder";
 import { getEffect } from "../utils/DataUtils";
 import { useTranslation } from "react-i18next";
+import { CharacterSlotSelect } from "./CharacterSlotSelect";
 
 const enum TabIndex {
   RelicBrowser,
@@ -46,7 +47,6 @@ export function RelicsPage({
   setSelectedColor,
   showPlaceholders,
   setShowPlaceholders,
-  matchingRelicsCount,
   handleMatchingRelicsCountChange,
   clearSaveFile,
 }: RelicsPageProps) {
@@ -112,6 +112,14 @@ export function RelicsPage({
 
   return (
     <>
+      {saveFileData.slots.length > 1 && (
+        <CharacterSlotSelect
+          slots={saveFileData.slots}
+          value={saveFileData.currentSlot}
+          onChange={selectSlot}
+          label={t("Character")}
+        />
+      )}
       {import.meta.env.DEV && (
         <AppBar position="static" elevation={24}>
           <Tabs value={tab} onChange={(_e, value) => setTab(value)} centered>
@@ -122,10 +130,8 @@ export function RelicsPage({
       )}
       {tab === TabIndex.RelicBrowser && (
         <RelicBrowser
-          saveFileData={saveFileData}
           availableEffects={availableEffects}
           currentSlot={currentSlot}
-          selectSlot={selectSlot}
           getItemName={getItemName}
           getItemColor={getItemColor}
           getEffectName={getEffectName}
@@ -135,7 +141,6 @@ export function RelicsPage({
           setSelectedColor={setSelectedColor}
           showPlaceholders={showPlaceholders}
           setShowPlaceholders={setShowPlaceholders}
-          matchingRelicsCount={matchingRelicsCount}
           handleMatchingRelicsCountChange={handleMatchingRelicsCountChange}
         />
       )}

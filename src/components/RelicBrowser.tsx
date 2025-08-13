@@ -1,15 +1,12 @@
 import { Box } from "@mui/material";
-import { SlotSelector } from "./SlotSelector";
 import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
-import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
+import type { CharacterSlot } from "../types/SaveFile";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
 import type { Effect } from "../resources/effects";
 
 interface RelicBrowserProps {
-  saveFileData: SaveFileData;
   availableEffects: Effect[];
-  selectSlot: (index: number) => void;
   currentSlot: CharacterSlot;
   getItemName: (id: number) => string;
   getItemColor: (id: number) => RelicColor;
@@ -20,14 +17,11 @@ interface RelicBrowserProps {
   setSelectedColor: (color: RelicColor) => void;
   showPlaceholders: boolean;
   setShowPlaceholders: (show: boolean) => void;
-  matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
 }
 
 export function RelicBrowser({
-  saveFileData,
   availableEffects,
-  selectSlot,
   currentSlot,
   getItemName,
   getItemColor,
@@ -38,7 +32,6 @@ export function RelicBrowser({
   setSelectedColor,
   showPlaceholders,
   setShowPlaceholders,
-  matchingRelicsCount,
   handleMatchingRelicsCountChange,
 }: RelicBrowserProps) {
   return (
@@ -59,13 +52,6 @@ export function RelicBrowser({
         showPlaceholders={showPlaceholders}
         onShowPlaceholdersChange={setShowPlaceholders}
         availableEffects={availableEffects}
-      />
-
-      <SlotSelector
-        slots={saveFileData.slots}
-        currentSlot={saveFileData.currentSlot}
-        onSlotSelect={selectSlot}
-        matchingRelicsCount={matchingRelicsCount}
       />
 
       {currentSlot && (
