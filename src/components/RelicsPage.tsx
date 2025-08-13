@@ -1,10 +1,12 @@
 import { Box, Alert, CircularProgress, Tabs, Tab, AppBar } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import type { SaveFileData } from "../types/SaveFile";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
 import { RelicBrowser } from "./RelicBrowser";
 import { ComboFinder } from "./ComboFinder";
+import { getEffect } from "../utils/DataUtils";
+import { useTranslation } from "react-i18next";
 
 const enum TabIndex {
   RelicBrowser,
@@ -51,6 +53,7 @@ export function RelicsPage({
   const currentSlot = saveFileData?.slots[saveFileData.currentSlot];
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const [tab, setTab] = useState(TabIndex.RelicBrowser);
 
@@ -67,6 +70,20 @@ export function RelicsPage({
       navigate("/");
     }
   }, [saveFileData, loading, navigate, location.pathname]);
+
+  const availableEffects = useMemo(() => {
+    if (!currentSlot) return [];
+    const effectIds = currentSlot?.relics.flatMap((relic) => relic.effects);
+    const effects = effectIds.map((id) => getEffect(id));
+    const uniqueEffects = effects.filter(
+      (effect, index, arr) =>
+        arr.findIndex((e) => e.key === effect.key) === index
+    );
+    uniqueEffects.sort((a, b) =>
+      t(`effects.${a.key}`).localeCompare(t(`effects.${b.key}`))
+    );
+    return uniqueEffects;
+  }, [currentSlot, t]);
 
   if (error) {
     return (
@@ -106,6 +123,7 @@ export function RelicsPage({
       {tab === TabIndex.RelicBrowser && (
         <RelicBrowser
           saveFileData={saveFileData}
+          availableEffects={availableEffects}
           currentSlot={currentSlot}
           selectSlot={selectSlot}
           getItemName={getItemName}
@@ -124,6 +142,7 @@ export function RelicsPage({
       {tab === TabIndex.ComboFinder && (
         <ComboFinder
           saveFileData={saveFileData}
+          availableEffects={availableEffects}
           currentSlot={currentSlot}
           selectSlot={selectSlot}
           getItemName={getItemName}

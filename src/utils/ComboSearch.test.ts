@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { canRelicFitInSlot, searchCombinations } from "../utils/ComboSearch";
-import { type Effect, type EffectKey } from "../resources/effects";
+import { type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
 import { wylderVessels } from "../utils/Vessels";
 import type { RelicColor } from "../utils/RelicColor";

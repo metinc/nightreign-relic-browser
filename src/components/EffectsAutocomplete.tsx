@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { effectsArray, type Effect } from "../resources/effects";
+import { type Effect } from "../resources/effects";
 import { useTranslation } from "react-i18next";
 import { InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
@@ -8,18 +8,20 @@ import { Search } from "@mui/icons-material";
 interface EffectsAutocompleteProps {
   onSearchChange: (searchTerm: string) => void;
   onChange?: (effectKey: Effect | null) => void;
+  availableEffects: Effect[];
 }
 
 export function EffectsAutocomplete({
   onSearchChange,
   onChange,
+  availableEffects,
 }: EffectsAutocompleteProps) {
   const { t } = useTranslation();
 
   return (
     <Autocomplete
       disablePortal
-      options={effectsArray}
+      options={availableEffects}
       freeSolo
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}

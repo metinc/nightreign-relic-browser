@@ -33,6 +33,7 @@ import type { Effect } from "../resources/effects";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
+  availableEffects: Effect[];
   selectSlot: (index: number) => void;
   currentSlot: CharacterSlot;
   getItemName: (id: number) => string;
@@ -266,6 +267,7 @@ export function ComboFinder(props: ComboFinderProps) {
         <EffectsAutocomplete
           onSearchChange={() => {}}
           onChange={handleEffectChange}
+          availableEffects={props.availableEffects}
         />
 
         {/* Selected Effects Chips */}

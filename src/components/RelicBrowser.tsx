@@ -4,9 +4,11 @@ import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
+import type { Effect } from "../resources/effects";
 
 interface RelicBrowserProps {
   saveFileData: SaveFileData;
+  availableEffects: Effect[];
   selectSlot: (index: number) => void;
   currentSlot: CharacterSlot;
   getItemName: (id: number) => string;
@@ -24,6 +26,7 @@ interface RelicBrowserProps {
 
 export function RelicBrowser({
   saveFileData,
+  availableEffects,
   selectSlot,
   currentSlot,
   getItemName,
@@ -55,6 +58,7 @@ export function RelicBrowser({
         onColorChange={setSelectedColor}
         showPlaceholders={showPlaceholders}
         onShowPlaceholdersChange={setShowPlaceholders}
+        availableEffects={availableEffects}
       />
 
       <SlotSelector

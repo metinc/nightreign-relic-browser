@@ -16,6 +16,7 @@ import {
   type RelicColor,
 } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
+import type { Effect } from "../resources/effects";
 
 interface SearchInputProps {
   onSearchChange: (searchTerm: string) => void;
@@ -23,6 +24,7 @@ interface SearchInputProps {
   onColorChange: (color: RelicColor) => void;
   showPlaceholders: boolean;
   onShowPlaceholdersChange: (show: boolean) => void;
+  availableEffects: Effect[];
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -31,6 +33,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onColorChange,
   showPlaceholders,
   onShowPlaceholdersChange,
+  availableEffects,
 }) => {
   return (
     <Box
@@ -43,7 +46,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         pt: 2,
       }}
     >
-      <EffectsAutocomplete onSearchChange={onSearchChange} />
+      <EffectsAutocomplete
+        onSearchChange={onSearchChange}
+        availableEffects={availableEffects}
+      />
 
       <Paper
         variant="outlined"
