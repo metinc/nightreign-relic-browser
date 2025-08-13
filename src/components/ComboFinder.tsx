@@ -278,7 +278,10 @@ export function ComboFinder(props: ComboFinderProps) {
             sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
           >
             {selectedEffects.map((effect) => (
-              <Box sx={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+              <Box
+                sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+                key={effect.key}
+              >
                 <Chip
                   key={effect.key}
                   label={t(`effects.${effect.key}`)}
