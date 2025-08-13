@@ -247,7 +247,9 @@ describe("Utility Functions", () => {
 
   describe("getEffectName", () => {
     it("should return the correct effect name for existing effects", () => {
-      expect(getEffectName(10000)).toBe("FP Restoration on Successive Attacks");
+      expect(getEffectName(10000)).toBe(
+        "FP Restoration upon Successive Attacks"
+      );
       expect(getEffectName(10001)).toBe("Taking attacks improves attack power");
       expect(getEffectName(310000)).toBe("Increased Maximum HP");
     });
