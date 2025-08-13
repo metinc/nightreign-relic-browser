@@ -76,9 +76,13 @@ export const useSaveFile = () => {
 
       // Parse all character slots (1-10)
       const slots: CharacterSlot[] = [];
-      for (let i = 1; i <= 10; i++) {
+      const names = RelicParser.getNames(bnd4Entries[10]);
+      for (let i = 0; i < names.length; i++) {
         try {
-          const slotData = RelicParser.parseCharacterSlot(i, bnd4Entries);
+          const slotData = RelicParser.parseCharacterSlot(
+            names[i],
+            bnd4Entries[i]
+          );
           findOutclassedRelics(slotData.relics);
           slots.push(slotData);
         } catch (err) {

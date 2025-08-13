@@ -6,7 +6,8 @@ export class RelicParser {
    */
   private static findHexOffset(
     data: Uint8Array,
-    hexPattern: string
+    hexPattern: string,
+    offset = 0
   ): number | null {
     try {
       const pattern = hexPattern.replace(/\s+/g, "").toLowerCase();
@@ -14,7 +15,8 @@ export class RelicParser {
         pattern.match(/.{2}/g)?.map((byte) => parseInt(byte, 16)) || []
       );
 
-      for (let i = 0; i <= data.length - patternBytes.length; i++) {
+      const start = Math.max(0, Math.min(offset, data.length));
+      for (let i = start; i <= data.length - patternBytes.length; i++) {
         let match = true;
         for (let j = 0; j < patternBytes.length; j++) {
           if (data[i + j] !== patternBytes[j]) {
@@ -27,113 +29,6 @@ export class RelicParser {
       return null;
     } catch (error) {
       console.error("Failed to find hex pattern:", error);
-      return null;
-    }
-  }
-
-  /**
-   * Locates a character name from the names entry using UTF-16LE encoding
-   */
-  private static locateName(
-    namesEntry: Uint8Array,
-    offset: number,
-    size: number
-  ): Uint8Array {
-    const raw = namesEntry.slice(offset, offset + size);
-    return raw;
-  }
-
-  /**
-   * Gets the character name from the given offset
-   */
-  private static getName(
-    offset: number,
-    currentEntry: Uint8Array,
-    namesEntry: Uint8Array
-  ): { nameBytes: Uint8Array; currentName: string | null } {
-    // Try different sizes to find the name
-    const sizes = [32, 15, 6];
-
-    for (const size of sizes) {
-      const nameBytes = this.locateName(namesEntry, offset, size);
-      const hexString = Array.from(nameBytes)
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")
-        .toLowerCase();
-
-      const nameOffset = this.findHexOffset(currentEntry, hexString);
-
-      if (nameOffset !== null) {
-        const currentName = this.findCharacterName(currentEntry, nameOffset);
-        if (currentName && currentName !== "Unknown") {
-          return { nameBytes, currentName };
-        }
-      }
-    }
-
-    // If no valid name pattern found, return null (like Python version)
-    // This prevents interpreting garbage data as a name when no save slot exists
-    const nameBytes = this.locateName(namesEntry, offset, 32);
-    return { nameBytes, currentName: null };
-  }
-
-  /**
-   * Finds the character name at a specific offset
-   */
-  private static findCharacterName(
-    sectionData: Uint8Array,
-    offset: number
-  ): string | null {
-    const BYTE_SIZE = 32;
-    try {
-      const valueBytes = sectionData.slice(offset, offset + BYTE_SIZE);
-
-      // Try to decode as UTF-16LE first
-      try {
-        // Look for null terminator (0x00 0x00 for UTF-16LE)
-        let endIndex = valueBytes.length;
-        for (let i = 0; i < valueBytes.length - 1; i += 2) {
-          if (valueBytes[i] === 0x00 && valueBytes[i + 1] === 0x00) {
-            endIndex = i;
-            break;
-          }
-        }
-
-        const trimmed = valueBytes.slice(0, endIndex);
-        if (trimmed.length > 0 && trimmed.length % 2 === 0) {
-          const decoder = new TextDecoder("utf-16le");
-          const decoded = decoder.decode(trimmed);
-          const decodedTrimmed = decoded.trim();
-          if (decoded && decodedTrimmed && !decodedTrimmed.includes("\uffff")) {
-            return decoded.trim();
-          }
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        // Fall back to ASCII parsing
-      }
-
-      // Fallback to ASCII parsing (like Python version)
-      const nameChars: string[] = [];
-      for (let i = 0; i < valueBytes.length; i += 2) {
-        const charByte = valueBytes[i];
-        if (charByte === 0) break;
-
-        if (charByte >= 32 && charByte <= 126) {
-          nameChars.push(String.fromCharCode(charByte));
-        } else {
-          nameChars.push(".");
-        }
-      }
-
-      const name = nameChars.join("");
-      // Return null if name is empty or only contains dots (like Python version)
-      if (!name || name.replace(/\./g, "").trim() === "") {
-        return null;
-      }
-      return name;
-    } catch (error) {
-      console.error("Error finding character name:", error);
       return null;
     }
   }
@@ -303,8 +198,7 @@ export class RelicParser {
     }
 
     // Use the sortKeyLookupEnd if provided, otherwise fall back to patternOffsetEnd
-    const sortKeyEnd = sortKeyLookupEnd ?? patternOffsetEnd;
-    const currentEntryOffsetEnd = currentEntry.slice(sortKeyEnd);
+    const sortKeyStart = sortKeyLookupEnd ?? patternOffsetEnd;
     const validSlots: RelicSlot[] = [];
 
     for (const slot of foundSlots) {
@@ -318,11 +212,12 @@ export class RelicParser {
         .join("")
         .concat("01000000");
       const sortKeyOffset = this.findHexOffset(
-        currentEntryOffsetEnd,
-        hexPattern
+        currentEntry,
+        hexPattern,
+        sortKeyStart
       );
       if (sortKeyOffset !== null) {
-        const sortKeyBytes = currentEntryOffsetEnd.slice(
+        const sortKeyBytes = currentEntry.slice(
           sortKeyOffset + 8,
           sortKeyOffset + 10
         );
@@ -346,42 +241,48 @@ export class RelicParser {
     return foundSlots;
   }
 
+  public static getNames(bnd4Entry: BND4Entry): Uint8Array<ArrayBuffer>[] {
+    const namesEntry = bnd4Entry.cleanData;
+    const names: Uint8Array<ArrayBuffer>[] = [];
+    let searchOffset = 0;
+
+    for (let i = 0; i < 10; i++) {
+      const patternOffset = this.findHexOffset(
+        namesEntry,
+        "27 00 00 46 41 43 45",
+        searchOffset
+      );
+      if (patternOffset === null) break;
+
+      searchOffset = patternOffset + 7;
+      const nameOffset = patternOffset - 51;
+      const nameTerminatorOffset = this.findHexOffset(
+        namesEntry,
+        "00 00",
+        nameOffset
+      );
+      if (nameTerminatorOffset === null) break;
+
+      const nameBytes = namesEntry.slice(nameOffset, nameTerminatorOffset + 1);
+      names.push(nameBytes);
+    }
+
+    return names;
+  }
+
   /**
    * Main function to parse a character slot and extract relics
    */
   public static parseCharacterSlot(
-    sectionNumber: number,
-    bnd4Entries: BND4Entry[]
+    nameBytes: Uint8Array<ArrayBuffer>,
+    currentEntry: BND4Entry
   ): { name: string | null; relics: RelicSlot[] } {
-    if (sectionNumber < 1 || sectionNumber > 10) {
-      throw new Error(`Invalid section number: ${sectionNumber}`);
-    }
-
-    const currentEntry = bnd4Entries[sectionNumber - 1].cleanData;
-    const namesEntry = bnd4Entries[10].cleanData;
-
-    // Section 1 starts at 0xA01AA2, each section offset is 632 (0x278) bytes apart
-    const baseOffset = 0xa01aa2 - 0xa00140 - 4;
-    const offset = baseOffset + (sectionNumber - 1) * 0x278;
-
-    const { nameBytes, currentName } = this.getName(
-      offset,
-      currentEntry,
-      namesEntry
-    );
-
-    if (currentName === null) {
-      return {
-        name: currentName,
-        relics: [],
-      };
-    }
-
-    console.log(`Loaded section ${sectionNumber} with name: ${currentName}`);
+    const decoder = new TextDecoder("utf-16le");
+    const name = decoder.decode(nameBytes);
 
     // Find pattern boundaries for relic parsing
     const fixedPatternOffset = this.findHexOffset(
-      currentEntry,
+      currentEntry.cleanData,
       Array.from(nameBytes)
         .map((b) => b.toString(16).padStart(2, "0"))
         .join("")
@@ -392,7 +293,7 @@ export class RelicParser {
         "Character name not found in data, results may be unreliable"
       );
       return {
-        name: currentName,
+        name,
         relics: [],
       };
     }
@@ -401,39 +302,38 @@ export class RelicParser {
     const hexPatternEnd = "ffffffff"; // "FF FF FF FF" pattern
     const searchStartPosition = fixedPatternOffset + 1000;
 
-    if (searchStartPosition >= currentEntry.length) {
+    if (searchStartPosition >= currentEntry.cleanData.length) {
       console.log("Search start position beyond section data.");
       return {
-        name: currentName,
+        name,
         relics: [],
       };
     }
 
-    let fixedPatternOffsetEnd = this.findHexOffset(
-      currentEntry.slice(searchStartPosition),
-      hexPatternEnd
+    const fixedPatternOffsetEnd = this.findHexOffset(
+      currentEntry.cleanData,
+      hexPatternEnd,
+      searchStartPosition
     );
 
-    if (fixedPatternOffsetEnd !== null) {
-      fixedPatternOffsetEnd += searchStartPosition;
-    } else {
+    if (fixedPatternOffsetEnd === null) {
       console.log("End pattern not found");
       return {
-        name: currentName,
+        name,
         relics: [],
       };
     }
 
     // Parse relics using the same parameters as Python version
     const relics = this.parseRelics(
-      currentEntry,
+      currentEntry.cleanData,
       32,
       fixedPatternOffset - 100,
       fixedPatternOffsetEnd
     );
 
     return {
-      name: currentName,
+      name,
       relics,
     };
   }

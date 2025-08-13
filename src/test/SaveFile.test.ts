@@ -23,6 +23,21 @@ const testData: TestData = [
       { name: "qwertzuiopasdfgh", relics: 1, samples: [] },
     ],
   },
+  {
+    name: "10slots.sl2",
+    slots: [
+      { name: "relicbrowser.com", relics: 660, samples: [] },
+      { name: "Frauke", relics: 1, samples: [] },
+      { name: "Timur", relics: 0, samples: [] },
+      { name: "Aylin", relics: 0, samples: [] },
+      { name: "Malte", relics: 0, samples: [] },
+      { name: "Flitzpiepe", relics: 0, samples: [] },
+      { name: "Arne", relics: 0, samples: [] },
+      { name: "0000000000000000", relics: 0, samples: [] },
+      { name: "0123456789abcdef", relics: 0, samples: [] },
+      { name: "x", relics: 0, samples: [] },
+    ],
+  },
   { name: "player.sl2", slots: [{ name: "Player", relics: 651, samples: [] }] },
   { name: "teru.sl2", slots: [{ name: "Teru", relics: 254, samples: [] }] },
   {
@@ -40,7 +55,13 @@ const testData: TestData = [
     slots: [{ name: "ST. Luna", relics: 403, samples: [] }],
   },
   // { name: "eonacat.sl2", slots: [{ name: "EonaCat", relics: 743, samples: [] }] },
-  { name: "pekzer.sl2", slots: [{ name: "Pekzer", relics: 139, samples: [] }] },
+  {
+    name: "pekzer.sl2",
+    slots: [
+      { name: "Pekzer", relics: 139, samples: [] },
+      { name: "asd", relics: 77, samples: [] },
+    ],
+  },
 ];
 
 describe("Save File Processing", () => {
@@ -67,38 +88,35 @@ describe("Save File Processing", () => {
       });
 
       // Test all 10 character slots
-      for (let slotNumber = 1; slotNumber <= 10; slotNumber++) {
-        const expectedSlotData = testEntry.slots.find(
-          (_, index) => index + 1 === slotNumber
-        );
+      for (
+        let slotNumber = 1;
+        slotNumber <= testEntry.slots.length;
+        slotNumber++
+      ) {
+        const expectedSlotData = testEntry.slots[slotNumber - 1];
 
         it(`should parse slot ${slotNumber} correctly`, () => {
-          const slot = RelicParser.parseCharacterSlot(slotNumber, bnd4Entries);
+          const names = RelicParser.getNames(bnd4Entries[10]);
+          const slot = RelicParser.parseCharacterSlot(
+            names[slotNumber - 1],
+            bnd4Entries[slotNumber - 1]
+          );
 
           expect(slot).toBeDefined();
           expect(slot.relics).toBeDefined();
           expect(Array.isArray(slot.relics)).toBe(true);
 
-          if (expectedSlotData) {
-            // Slot should have data
-            expect(slot.name).toBe(expectedSlotData.name);
-            expect(slot.relics.length).toBe(expectedSlotData.relics);
-            console.log(
-              `Slot ${slotNumber} (${expectedSlotData.name}): Found ${slot.relics.length} relics, expected ${expectedSlotData.relics}`
-            );
+          // Slot should have data
+          expect(slot.name).toBe(expectedSlotData.name);
+          expect(slot.relics.length).toBe(expectedSlotData.relics);
 
-            const { samples } = testEntry.slots[slotNumber - 1];
-            for (const sample of samples) {
-              const relicSlot = slot.relics[sample.index];
-              expect(relicSlot).toBeDefined();
-              if (sample.relic.itemId !== undefined) {
-                expect(relicSlot.itemId).toBe(sample.relic.itemId);
-              }
+          const { samples } = testEntry.slots[slotNumber - 1];
+          for (const sample of samples) {
+            const relicSlot = slot.relics[sample.index];
+            expect(relicSlot).toBeDefined();
+            if (sample.relic.itemId !== undefined) {
+              expect(relicSlot.itemId).toBe(sample.relic.itemId);
             }
-          } else {
-            // Slot should be empty
-            expect(slot.name).toBe(null);
-            expect(slot.relics.length).toBe(0);
           }
         });
       }
@@ -114,8 +132,9 @@ describe("Save File Processing", () => {
       it("should parse relics with valid structure", () => {
         // Find the first non-empty slot
         let firstNonEmptySlot = null;
-        for (let i = 1; i <= 10; i++) {
-          const slot = RelicParser.parseCharacterSlot(i, bnd4Entries);
+        const names = RelicParser.getNames(bnd4Entries[10]);
+        for (let i = 0; i < names.length; i++) {
+          const slot = RelicParser.parseCharacterSlot(names[i], bnd4Entries[i]);
           if (slot.relics.length > 0) {
             firstNonEmptySlot = slot;
             break;
@@ -135,23 +154,38 @@ describe("Save File Processing", () => {
       });
 
       it("should handle UTF-16LE character names correctly", () => {
-        for (let slotNumber = 1; slotNumber <= 10; slotNumber++) {
+        const names = RelicParser.getNames(bnd4Entries[10]);
+        expect(names).toHaveLength(testEntry.slots.length);
+
+        for (
+          let slotNumber = 1;
+          slotNumber <= testEntry.slots.length;
+          slotNumber++
+        ) {
           const expectedSlotData = testEntry.slots.find(
             (_, index) => index + 1 === slotNumber
           );
-          const slot = RelicParser.parseCharacterSlot(slotNumber, bnd4Entries);
+
+          const slot = RelicParser.parseCharacterSlot(
+            names[slotNumber - 1],
+            bnd4Entries[slotNumber - 1]
+          );
 
           if (expectedSlotData) {
             expect(slot.name).toBe(expectedSlotData.name);
-          } else {
-            expect(slot.name).toBe(null);
           }
         }
       });
 
       it("should parse all 10 character slots without errors", () => {
-        for (let i = 1; i <= 10; i++) {
-          const slot = RelicParser.parseCharacterSlot(i, bnd4Entries);
+        const names = RelicParser.getNames(bnd4Entries[10]);
+        expect(names).toHaveLength(testEntry.slots.length);
+
+        for (let i = 1; i <= testEntry.slots.length; i++) {
+          const slot = RelicParser.parseCharacterSlot(
+            names[i - 1],
+            bnd4Entries[i - 1]
+          );
           expect(slot).toBeDefined();
           expect(slot.name).toBeDefined();
           expect(slot.relics).toBeDefined();

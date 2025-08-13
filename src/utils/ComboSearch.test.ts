@@ -73,7 +73,8 @@ describe("ComboSearch", () => {
       const bnd4Entries = await SaveFileDecryptor.decryptSaveFile(
         saveFileBuffer
       );
-      relics = RelicParser.parseCharacterSlot(1, bnd4Entries).relics;
+      const names = RelicParser.getNames(bnd4Entries[10]);
+      relics = RelicParser.parseCharacterSlot(names[0], bnd4Entries[0]).relics;
     });
 
     it("should find valid combinations of relics and vessels for single effect", () => {
