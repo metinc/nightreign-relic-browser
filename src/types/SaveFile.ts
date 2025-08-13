@@ -49,4 +49,5 @@ export interface SaveFileData {
   filePath: string;
   slots: CharacterSlot[];
   currentSlot: number;
+  bnd4Entries?: BND4Entry[];
 }

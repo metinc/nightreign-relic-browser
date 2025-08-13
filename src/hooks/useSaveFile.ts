@@ -90,6 +90,7 @@ export const useSaveFile = () => {
         filePath: file.name,
         slots,
         currentSlot: 0,
+        bnd4Entries,
       };
 
       setSaveFileData(saveData);

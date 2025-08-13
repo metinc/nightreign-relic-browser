@@ -5,6 +5,7 @@ import { HomePage } from "./components/HomePage";
 import { RelicsPage } from "./components/RelicsPage";
 import { DemoRelicsPage } from "./components/DemoRelicsPage";
 import { Footer } from "./components/Footer";
+import { DebugMenu } from "./components/DebugMenu";
 import { useSaveFile } from "./hooks/useSaveFile";
 import { theme } from "./theme";
 
@@ -66,14 +67,12 @@ function App() {
             mb: 3,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <FileUploader
-              onFileSelect={handleLoadSaveFile}
-              onClear={handleClearSaveFile}
-              loading={loading}
-              hasFile={!!saveFileData}
-            />
-          </Box>
+          <FileUploader
+            onFileSelect={handleLoadSaveFile}
+            onClear={handleClearSaveFile}
+            loading={loading}
+            hasFile={!!saveFileData}
+          />
         </Box>
 
         <Box
@@ -143,6 +142,15 @@ function App() {
           <Footer />
         </Box>
       </Box>
+
+      {import.meta.env.DEV && (
+        <Box sx={{ position: "fixed", top: 0, right: 0, p: 1 }}>
+          <DebugMenu
+            bnd4Entries={saveFileData?.bnd4Entries}
+            disabled={loading || !saveFileData}
+          />
+        </Box>
+      )}
     </ThemeProvider>
   );
 }
