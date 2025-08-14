@@ -341,6 +341,8 @@ export function ComboFinder(props: ComboFinderProps) {
                               sx={{ fontWeight: "bold", mb: 1 }}
                             >
                               {combo.vessel.name}
+                              {import.meta.env.DEV &&
+                                ` (${combo.points.toFixed(2)} points)`}
                             </Typography>
                             <Box
                               sx={{
