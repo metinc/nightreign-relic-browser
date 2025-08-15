@@ -2808,3 +2808,23 @@ export function isEffect(input: unknown): input is Effect {
     typeof (input as Effect).key === "string"
   );
 }
+
+export function isSameGroup(effect1: Effect, effect2: Effect): boolean {
+  return (
+    effect1.group !== undefined &&
+    effect2.group !== undefined &&
+    effect1.group === effect2.group
+  );
+}
+
+export function isSameGroupAndEqualOrBetter(
+  effect1: Effect,
+  effect2: Effect
+): boolean {
+  return (
+    isSameGroup(effect1, effect2) &&
+    effect1.level !== undefined &&
+    effect2.level !== undefined &&
+    effect1.level <= effect2.level
+  );
+}

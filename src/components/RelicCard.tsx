@@ -17,7 +17,7 @@ import {
   type RelicSlotColor,
 } from "../utils/RelicColor";
 import { RelicComparisonModal } from "./RelicComparisonModal";
-import type { Effect } from "../resources/effects";
+import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
 import { getEffect } from "../utils/DataUtils";
 
 interface RelicCardProps {
@@ -178,7 +178,11 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
             const effect = getEffect(effectId);
             const effectName = getEffectName(effectId);
             const effectHighlight = highlightSearchTerm(effectName, searchTerm);
-            const highlightEffect = highlightedEffects.includes(effect);
+            const highlightEffect =
+              highlightedEffects.includes(effect) ||
+              highlightedEffects.some((highlighted) =>
+                isSameGroupAndEqualOrBetter(highlighted, effect)
+              );
 
             return (
               <Box key={effectId} sx={{ mb: 0.5, display: "list-item" }}>

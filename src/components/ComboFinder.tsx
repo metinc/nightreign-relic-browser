@@ -10,7 +10,6 @@ import {
   Chip,
   Button,
   Alert,
-  CircularProgress,
   Stack,
   FormControl,
   Checkbox,
@@ -201,7 +200,7 @@ export function ComboFinder(props: ComboFinderProps) {
         </RadioGroup>
       </Box>
 
-      <Divider orientation="vertical" />
+      <Divider orientation="vertical" flexItem />
 
       <Box>
         {selectedNightfarerData && (
@@ -255,7 +254,7 @@ export function ComboFinder(props: ComboFinderProps) {
         )}
       </Box>
 
-      <Divider orientation="vertical" />
+      <Divider orientation="vertical" flexItem />
 
       <Box sx={{ width: "350px" }}>
         <Typography variant="h6" gutterBottom>
@@ -292,7 +291,7 @@ export function ComboFinder(props: ComboFinderProps) {
         )}
       </Box>
 
-      <Divider orientation="vertical" />
+      <Divider orientation="vertical" flexItem />
 
       <Box sx={{ flexGrow: 1, minHeight: 0 }}>
         <Typography variant="h6" gutterBottom>
@@ -303,10 +302,10 @@ export function ComboFinder(props: ComboFinderProps) {
           <Button
             variant="contained"
             onClick={performSearch}
-            disabled={selectedEffects.length === 0 || isSearching}
-            startIcon={isSearching ? <CircularProgress size={20} /> : undefined}
+            disabled={selectedEffects.length === 0}
+            loading={isSearching}
           >
-            {isSearching ? "Searching..." : "Find Combinations"}
+            Find Combinations
           </Button>
         </Box>
 
@@ -363,7 +362,7 @@ export function ComboFinder(props: ComboFinderProps) {
                               ))}
                             </Box>
 
-                            <Stack direction="row">
+                            <Stack direction="row" gap={2}>
                               {combo.relicCombination.map((relic, index) => (
                                 <Box key={relic?.id ?? index}>
                                   {relic ? (
