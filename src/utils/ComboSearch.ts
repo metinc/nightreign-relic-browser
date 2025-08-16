@@ -1,6 +1,10 @@
 import type { RelicSlot } from "../types/SaveFile";
 import type { Vessel } from "./Vessels";
-import { relicColors, type RelicColor } from "./RelicColor";
+import {
+  relicColors,
+  type RelicColor,
+  type RelicSlotColor,
+} from "./RelicColor";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
 import { getEffect, getItemColor } from "./DataUtils";
 import type { NightfarerName } from "./Nightfarers";
@@ -152,49 +156,6 @@ function calculateComboPoints(
   return points;
 }
 
-// Exact counting to mirror the loops (duplicate checks before fit, then require at least one slot fits)
-function countStageTotal(
-  vessels: Vessel[],
-  choices: Array<RelicSlot | undefined>
-): number {
-  let total = 0;
-  for (const vessel of vessels) {
-    const slotColors = vessel.slots;
-    for (const relic1 of choices) {
-      for (const relic2 of choices) {
-        if (relic1 !== undefined && relic2 !== undefined && relic1 === relic2)
-          continue;
-        for (const relic3 of choices) {
-          if (relic1 !== undefined && relic3 !== undefined && relic1 === relic3)
-            continue;
-          if (relic2 !== undefined && relic3 !== undefined && relic2 === relic3)
-            continue;
-
-          const slot1Relic =
-            relic1 !== undefined &&
-            canRelicFitInSlot(relic1, slotColors[0], getItemColor)
-              ? relic1
-              : undefined;
-          const slot2Relic =
-            relic2 !== undefined &&
-            canRelicFitInSlot(relic2, slotColors[1], getItemColor)
-              ? relic2
-              : undefined;
-          const slot3Relic =
-            relic3 !== undefined &&
-            canRelicFitInSlot(relic3, slotColors[2], getItemColor)
-              ? relic3
-              : undefined;
-
-          if (!slot1Relic && !slot2Relic && !slot3Relic) continue;
-          total++;
-        }
-      }
-    }
-  }
-  return total;
-}
-
 /**
  * Async variant for UI progress and yielding
  */
@@ -248,6 +209,14 @@ export async function searchCombinationsAsync(
     return acc;
   }, {} as Record<RelicColor, RelicSlot[]>);
 
+  // Build effect candidates per color once
+  const relicsByEffectByColor = relicColors.reduce((acc, color) => {
+    acc[color] = relicsByEffect.filter(
+      (relic) => getItemColor(relic.itemId) === color
+    );
+    return acc;
+  }, {} as Record<RelicColor, RelicSlot[]>);
+
   Object.values(fallbackRelicsByColor).forEach((fallback) => {
     fallback.sort((a, b) => {
       const aNightfarers = a.effects.map(
@@ -270,21 +239,99 @@ export async function searchCombinationsAsync(
     });
   });
 
-  const preselectedFallbackRelics = Object.values(
-    fallbackRelicsByColor
-  ).flatMap((r) => r.slice(0, 3));
-  const preselectedFallbackRelicsAndUndefined = [
-    ...preselectedFallbackRelics,
-    undefined,
-  ];
-
   const availableRelicsCount = relics.length;
 
-  // Precompute totalToCheck by mirroring the nested loops exactly
-  const relicsByEffectAndUndefined = [...relicsByEffect, undefined];
-  const totalToCheck =
-    countStageTotal(enabledVessels, preselectedFallbackRelicsAndUndefined) +
-    countStageTotal(enabledVessels, relicsByEffectAndUndefined);
+  // Preselect limited fallback relics per color (cap to 3 as before)
+  const preselectedFallbackByColor: Record<RelicColor, RelicSlot[]> = {
+    Red: fallbackRelicsByColor.Red.slice(0, 3),
+    Blue: fallbackRelicsByColor.Blue.slice(0, 3),
+    Yellow: fallbackRelicsByColor.Yellow.slice(0, 3),
+    Green: fallbackRelicsByColor.Green.slice(0, 3),
+  };
+  const preselectedFallbackAll: RelicSlot[] = [
+    ...preselectedFallbackByColor.Red,
+    ...preselectedFallbackByColor.Blue,
+    ...preselectedFallbackByColor.Yellow,
+    ...preselectedFallbackByColor.Green,
+  ];
+
+  // Helper for counting combinations for one vessel with slot-specific choices
+  const countPerVessel = (
+    slotChoices: [
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>
+    ]
+  ): number => {
+    let total = 0;
+    const [c0, c1, c2] = slotChoices;
+    for (const r0 of c0) {
+      for (const r1 of c1) {
+        if (r0 !== undefined && r1 !== undefined && r0 === r1) continue;
+        for (const r2 of c2) {
+          if (r0 !== undefined && r2 !== undefined && r0 === r2) continue;
+          if (r1 !== undefined && r2 !== undefined && r1 === r2) continue;
+          if (!r0 && !r1 && !r2) continue; // skip all-undefined
+          total++;
+        }
+      }
+    }
+    return total;
+  };
+
+  // Helper to resolve slot-specific candidates and include undefined option
+  const withUndefined = (arr: RelicSlot[]): Array<RelicSlot | undefined> => [
+    ...arr,
+    undefined,
+  ];
+  const getSlotCandidates = (
+    slotColor: RelicSlotColor,
+    byColor: Record<RelicColor, RelicSlot[]>,
+    all: RelicSlot[]
+  ): Array<RelicSlot | undefined> => {
+    const base =
+      slotColor === "Any" ? all : byColor[slotColor as RelicColor] ?? [];
+    return withUndefined(base);
+  };
+
+  // Precompute totalToCheck by mirroring the new slot-specific loops
+  let totalToCheck = 0;
+  for (const vessel of enabledVessels) {
+    const slotColors = vessel.slots;
+    const fallbackSlotChoices: [
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>
+    ] = [
+      getSlotCandidates(
+        slotColors[0],
+        preselectedFallbackByColor,
+        preselectedFallbackAll
+      ),
+      getSlotCandidates(
+        slotColors[1],
+        preselectedFallbackByColor,
+        preselectedFallbackAll
+      ),
+      getSlotCandidates(
+        slotColors[2],
+        preselectedFallbackByColor,
+        preselectedFallbackAll
+      ),
+    ];
+    totalToCheck += countPerVessel(fallbackSlotChoices);
+
+    const effectSlotChoices: [
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>
+    ] = [
+      getSlotCandidates(slotColors[0], relicsByEffectByColor, relicsByEffect),
+      getSlotCandidates(slotColors[1], relicsByEffectByColor, relicsByEffect),
+      getSlotCandidates(slotColors[2], relicsByEffectByColor, relicsByEffect),
+    ];
+    totalToCheck += countPerVessel(effectSlotChoices);
+  }
 
   let totalCombinationsChecked = 0;
 
@@ -299,31 +346,51 @@ export async function searchCombinationsAsync(
   const fallbackCombinationsMap: Map<string, VesselCombination> = new Map();
   for (const vessel of enabledVessels) {
     const slotColors = vessel.slots;
+    const slotChoices: [
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>
+    ] = [
+      getSlotCandidates(
+        slotColors[0],
+        preselectedFallbackByColor,
+        preselectedFallbackAll
+      ),
+      getSlotCandidates(
+        slotColors[1],
+        preselectedFallbackByColor,
+        preselectedFallbackAll
+      ),
+      getSlotCandidates(
+        slotColors[2],
+        preselectedFallbackByColor,
+        preselectedFallbackAll
+      ),
+    ];
 
-    for (const relic1 of preselectedFallbackRelicsAndUndefined) {
-      for (const relic2 of preselectedFallbackRelicsAndUndefined) {
-        if (relic1 !== undefined && relic1 === relic2) continue;
+    const [choices0, choices1, choices2] = slotChoices;
 
-        for (const relic3 of preselectedFallbackRelicsAndUndefined) {
-          if (relic1 !== undefined && relic1 === relic3) continue;
-          if (relic2 !== undefined && relic2 === relic3) continue;
-
-          const slot1Relic =
-            relic1 !== undefined &&
-            canRelicFitInSlot(relic1, slotColors[0], getItemColor)
-              ? relic1
-              : undefined;
-          const slot2Relic =
-            relic2 !== undefined &&
-            canRelicFitInSlot(relic2, slotColors[1], getItemColor)
-              ? relic2
-              : undefined;
-          const slot3Relic =
-            relic3 !== undefined &&
-            canRelicFitInSlot(relic3, slotColors[2], getItemColor)
-              ? relic3
-              : undefined;
-
+    for (const slot1Relic of choices0) {
+      for (const slot2Relic of choices1) {
+        if (
+          slot1Relic !== undefined &&
+          slot2Relic !== undefined &&
+          slot1Relic === slot2Relic
+        )
+          continue;
+        for (const slot3Relic of choices2) {
+          if (
+            slot1Relic !== undefined &&
+            slot3Relic !== undefined &&
+            slot1Relic === slot3Relic
+          )
+            continue;
+          if (
+            slot2Relic !== undefined &&
+            slot3Relic !== undefined &&
+            slot2Relic === slot3Relic
+          )
+            continue;
           if (!slot1Relic && !slot2Relic && !slot3Relic) continue;
 
           // Count this evaluated combination for progress
@@ -366,32 +433,25 @@ export async function searchCombinationsAsync(
   const combinationsMap: Map<string, VesselCombination> = new Map();
   for (const vessel of enabledVessels) {
     const slotColors = vessel.slots;
+    const slotChoices: [
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>,
+      Array<RelicSlot | undefined>
+    ] = [
+      getSlotCandidates(slotColors[0], relicsByEffectByColor, relicsByEffect),
+      getSlotCandidates(slotColors[1], relicsByEffectByColor, relicsByEffect),
+      getSlotCandidates(slotColors[2], relicsByEffectByColor, relicsByEffect),
+    ];
 
-    for (const relic1 of relicsByEffectAndUndefined) {
-      for (const relic2 of relicsByEffectAndUndefined) {
-        if (relic1 !== undefined && relic1 === relic2) continue;
+    const [choices0, choices1, choices2] = slotChoices;
 
-        for (const relic3 of relicsByEffectAndUndefined) {
-          if (relic1 !== undefined && relic1 === relic3) continue;
-          if (relic2 !== undefined && relic2 === relic3) continue;
-
-          const slot1Relic =
-            relic1 !== undefined &&
-            canRelicFitInSlot(relic1, slotColors[0], getItemColor)
-              ? relic1
-              : undefined;
-          const slot2Relic =
-            relic2 !== undefined &&
-            canRelicFitInSlot(relic2, slotColors[1], getItemColor)
-              ? relic2
-              : undefined;
-          const slot3Relic =
-            relic3 !== undefined &&
-            canRelicFitInSlot(relic3, slotColors[2], getItemColor)
-              ? relic3
-              : undefined;
-
-          if (!slot1Relic && !slot2Relic && !slot3Relic) continue;
+    for (const r0 of choices0) {
+      for (const r1 of choices1) {
+        if (r0 !== undefined && r1 !== undefined && r0 === r1) continue;
+        for (const r2 of choices2) {
+          if (r0 !== undefined && r2 !== undefined && r0 === r2) continue;
+          if (r1 !== undefined && r2 !== undefined && r1 === r2) continue;
+          if (!r0 && !r1 && !r2) continue;
 
           // Count this evaluated combination for progress
           totalCombinationsChecked++;
@@ -403,12 +463,9 @@ export async function searchCombinationsAsync(
           );
 
           const relicCombination: VesselCombination["relicCombination"] = [
-            slot1Relic ??
-              fallbackCombinationsMap.get(vessel.name)?.relicCombination[0],
-            slot2Relic ??
-              fallbackCombinationsMap.get(vessel.name)?.relicCombination[1],
-            slot3Relic ??
-              fallbackCombinationsMap.get(vessel.name)?.relicCombination[2],
+            r0 ?? fallbackCombinationsMap.get(vessel.name)?.relicCombination[0],
+            r1 ?? fallbackCombinationsMap.get(vessel.name)?.relicCombination[1],
+            r2 ?? fallbackCombinationsMap.get(vessel.name)?.relicCombination[2],
           ];
 
           const points = calculateComboPoints(
