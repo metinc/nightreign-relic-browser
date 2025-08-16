@@ -253,7 +253,8 @@ export const RelicCard = React.memo(
       prevProps.getEffectName !== nextProps.getEffectName ||
       prevProps.rowIndex !== nextProps.rowIndex ||
       prevProps.colIndex !== nextProps.colIndex ||
-      prevProps.relicMatches !== nextProps.relicMatches
+      prevProps.relicMatches !== nextProps.relicMatches ||
+      prevProps.highlightedEffects !== nextProps.highlightedEffects
     ) {
       return false;
     }
