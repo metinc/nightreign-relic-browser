@@ -14,6 +14,7 @@ import {
   FormControl,
   Checkbox,
   Divider,
+  LinearProgress,
 } from "@mui/material";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import { getChipColor, type RelicColor } from "../utils/RelicColor";
@@ -26,8 +27,9 @@ import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
 import { useTranslation } from "react-i18next";
 import {
-  searchCombinations,
+  searchCombinationsAsync,
   type ComboSearchResult,
+  type ComboSearchProgress,
 } from "../utils/ComboSearch";
 import type { Effect } from "../resources/effects";
 
@@ -73,6 +75,7 @@ export function ComboFinder(props: ComboFinderProps) {
     null
   );
   const [isSearching, setIsSearching] = useState(false);
+  const [progress, setProgress] = useState<ComboSearchProgress | null>(null);
 
   const performSearch = useCallback(async () => {
     if (selectedEffects.length === 0) {
@@ -80,6 +83,12 @@ export function ComboFinder(props: ComboFinderProps) {
     }
 
     setIsSearching(true);
+    setProgress({
+      totalCombinationsChecked: 0,
+      availableRelicsCount: 0,
+      stage: "fallback",
+      totalToCheck: 0,
+    });
 
     try {
       const selectedNightfarerData = nightfarers.find(
@@ -96,6 +105,7 @@ export function ComboFinder(props: ComboFinderProps) {
           totalCombinationsChecked: 0,
           availableRelicsCount: 0,
         });
+        setProgress(null);
         return;
       }
 
@@ -106,15 +116,25 @@ export function ComboFinder(props: ComboFinderProps) {
           !settings[selectedNightfarer].disabledVessels.includes(index)
       );
 
-      // Use the extracted search algorithm with performance limits
-      const result = searchCombinations(
+      // Use the async search algorithm with progress updates and yielding
+      const result = await searchCombinationsAsync(
         selectedNightfarer,
         selectedEffects,
         availableRelics,
-        enabledVessels
+        enabledVessels,
+        {
+          onProgress: (p) => setProgress(p),
+          yieldIntervalMs: 12, // update roughly every frame
+        }
       );
 
       setSearchResults(result);
+      setProgress({
+        totalCombinationsChecked: result.totalCombinationsChecked,
+        availableRelicsCount: result.availableRelicsCount,
+        stage: "done",
+        totalToCheck: result.totalCombinationsChecked,
+      });
     } finally {
       setIsSearching(false);
     }
@@ -298,7 +318,7 @@ export function ComboFinder(props: ComboFinderProps) {
           4. Check Results:
         </Typography>
         {/* Search Button */}
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
           <Button
             variant="contained"
             onClick={performSearch}
@@ -308,6 +328,40 @@ export function ComboFinder(props: ComboFinderProps) {
             Find Combinations
           </Button>
         </Box>
+
+        {/* Live progress while searching */}
+        {
+          <Box sx={{ mb: 2 }}>
+            <LinearProgress
+              variant="determinate"
+              value={
+                progress?.totalToCheck === undefined
+                  ? 0
+                  : Math.min(
+                      100,
+                      (progress.totalCombinationsChecked /
+                        progress.totalToCheck) *
+                        100
+                    )
+              }
+              sx={{
+                "& .MuiLinearProgress-bar": {
+                  transitionDuration: "0.1s",
+                },
+              }}
+            />
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              {progress &&
+                `Checked ${progress.totalCombinationsChecked.toLocaleString()} / ${
+                  progress.totalToCheck?.toLocaleString() ?? "?"
+                } combinations` +
+                  (progress.availableRelicsCount
+                    ? ` from ${progress.availableRelicsCount.toLocaleString()} relics`
+                    : "") +
+                  (progress.stage !== "done" ? ` (${progress.stage})` : "")}
+            </Typography>
+          </Box>
+        }
 
         {/* Search Results */}
         {searchResults && (

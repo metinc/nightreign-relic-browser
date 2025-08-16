@@ -22,6 +22,13 @@ export interface ComboSearchResult {
   availableRelicsCount: number;
 }
 
+export interface ComboSearchProgress {
+  totalCombinationsChecked: number;
+  availableRelicsCount: number;
+  stage: "fallback" | "main" | "done";
+  totalToCheck: number;
+}
+
 /**
  * Check if a relic fits in a vessel slot (considering color compatibility)
  */
@@ -145,16 +152,88 @@ function calculateComboPoints(
   return points;
 }
 
+// Exact counting to mirror the loops (duplicate checks before fit, then require at least one slot fits)
+function countStageTotal(
+  vessels: Vessel[],
+  choices: Array<RelicSlot | undefined>
+): number {
+  let total = 0;
+  for (const vessel of vessels) {
+    const slotColors = vessel.slots;
+    for (const relic1 of choices) {
+      for (const relic2 of choices) {
+        if (relic1 !== undefined && relic2 !== undefined && relic1 === relic2)
+          continue;
+        for (const relic3 of choices) {
+          if (relic1 !== undefined && relic3 !== undefined && relic1 === relic3)
+            continue;
+          if (relic2 !== undefined && relic3 !== undefined && relic2 === relic3)
+            continue;
+
+          const slot1Relic =
+            relic1 !== undefined &&
+            canRelicFitInSlot(relic1, slotColors[0], getItemColor)
+              ? relic1
+              : undefined;
+          const slot2Relic =
+            relic2 !== undefined &&
+            canRelicFitInSlot(relic2, slotColors[1], getItemColor)
+              ? relic2
+              : undefined;
+          const slot3Relic =
+            relic3 !== undefined &&
+            canRelicFitInSlot(relic3, slotColors[2], getItemColor)
+              ? relic3
+              : undefined;
+
+          if (!slot1Relic && !slot2Relic && !slot3Relic) continue;
+          total++;
+        }
+      }
+    }
+  }
+  return total;
+}
+
 /**
- * Main search function with performance optimizations
+ * Async variant for UI progress and yielding
  */
-export function searchCombinations(
+export async function searchCombinationsAsync(
   nightfarer: NightfarerName,
   selectedEffects: Effect[],
   relics: RelicSlot[],
-  enabledVessels: Vessel[]
-): ComboSearchResult {
+  enabledVessels: Vessel[],
+  options?: {
+    onProgress?: (p: ComboSearchProgress) => void;
+    yieldIntervalMs?: number;
+  }
+): Promise<ComboSearchResult> {
   const startTime = Date.now();
+  const yieldIntervalMs = options?.yieldIntervalMs ?? 8;
+  let lastYield = performance.now?.() ?? Date.now();
+
+  const maybeYield = async (
+    stage: ComboSearchProgress["stage"],
+    total: number,
+    available: number,
+    totalToCheck: number
+  ) => {
+    const now = performance.now?.() ?? Date.now();
+    if (now - lastYield >= yieldIntervalMs) {
+      options?.onProgress?.({
+        totalCombinationsChecked: total,
+        availableRelicsCount: available,
+        stage,
+        totalToCheck,
+      });
+      await new Promise<void>((resolve) =>
+        (typeof requestAnimationFrame === "function"
+          ? requestAnimationFrame
+          : (cb: FrameRequestCallback) => setTimeout(cb, 0))(() => resolve())
+      );
+      lastYield = performance.now?.() ?? Date.now();
+    }
+  };
 
   const relevantColors = getRelevantColors(enabledVessels);
   const relicsByColor = filterRelicsByColor(relics, relevantColors);
@@ -171,45 +250,51 @@ export function searchCombinations(
 
   Object.values(fallbackRelicsByColor).forEach((fallback) => {
     fallback.sort((a, b) => {
-      // Get nightfarer info for both relics
       const aNightfarers = a.effects.map(
         (effectId) => getEffect(effectId).nightfarer
       );
       const bNightfarers = b.effects.map(
         (effectId) => getEffect(effectId).nightfarer
       );
-
-      // Check if relic has matching nightfarer effect
       const aHasMatching = aNightfarers.some((nf) => nf === nightfarer);
       const bHasMatching = bNightfarers.some((nf) => nf === nightfarer);
-
-      // Check if relic has undefined nightfarer effect
       const aHasUndefined = aNightfarers.some((nf) => nf === undefined);
       const bHasUndefined = bNightfarers.some((nf) => nf === undefined);
-
-      // Priority: matching > undefined > non-matching
       if (aHasMatching && !bHasMatching) return -1;
       if (!aHasMatching && bHasMatching) return 1;
       if (!aHasMatching && !bHasMatching) {
         if (aHasUndefined && !bHasUndefined) return -1;
         if (!aHasUndefined && bHasUndefined) return 1;
       }
-
-      // If nightfarer priority is equal, sort by effects length
       return b.effects.length - a.effects.length;
     });
   });
 
   const preselectedFallbackRelics = Object.values(
     fallbackRelicsByColor
-  ).flatMap((relics) => relics.slice(0, 3));
-
+  ).flatMap((r) => r.slice(0, 3));
   const preselectedFallbackRelicsAndUndefined = [
     ...preselectedFallbackRelics,
     undefined,
   ];
 
+  const availableRelicsCount = relics.length;
+
+  // Precompute totalToCheck by mirroring the nested loops exactly
+  const relicsByEffectAndUndefined = [...relicsByEffect, undefined];
+  const totalToCheck =
+    countStageTotal(enabledVessels, preselectedFallbackRelicsAndUndefined) +
+    countStageTotal(enabledVessels, relicsByEffectAndUndefined);
+
   let totalCombinationsChecked = 0;
+
+  // Initial progress ping
+  options?.onProgress?.({
+    totalCombinationsChecked,
+    availableRelicsCount,
+    stage: "fallback",
+    totalToCheck,
+  });
 
   const fallbackCombinationsMap: Map<string, VesselCombination> = new Map();
   for (const vessel of enabledVessels) {
@@ -223,7 +308,6 @@ export function searchCombinations(
           if (relic1 !== undefined && relic1 === relic3) continue;
           if (relic2 !== undefined && relic2 === relic3) continue;
 
-          // Check which relics fit in their respective slots
           const slot1Relic =
             relic1 !== undefined &&
             canRelicFitInSlot(relic1, slotColors[0], getItemColor)
@@ -240,8 +324,16 @@ export function searchCombinations(
               ? relic3
               : undefined;
 
-          // Only skip if all three slots would be undefined
           if (!slot1Relic && !slot2Relic && !slot3Relic) continue;
+
+          // Count this evaluated combination for progress
+          totalCombinationsChecked++;
+          await maybeYield(
+            "fallback",
+            totalCombinationsChecked,
+            availableRelicsCount,
+            totalToCheck
+          );
 
           const relicCombination: VesselCombination["relicCombination"] = [
             slot1Relic,
@@ -250,10 +342,8 @@ export function searchCombinations(
           ];
 
           const points = calculateComboPoints(nightfarer, relicCombination, []);
-
           const prevPoints =
             fallbackCombinationsMap.get(vessel.name)?.points ?? 0;
-
           if (points <= prevPoints) continue;
 
           fallbackCombinationsMap.set(vessel.name, {
@@ -261,15 +351,17 @@ export function searchCombinations(
             relicCombination,
             points,
           });
-
-          totalCombinationsChecked++;
         }
       }
     }
   }
 
-  // Add undefined relic to allow for empty slots in combinations
-  const relicsByEffectAndUndefined = [...relicsByEffect, undefined];
+  options?.onProgress?.({
+    totalCombinationsChecked,
+    availableRelicsCount,
+    stage: "main",
+    totalToCheck,
+  });
 
   const combinationsMap: Map<string, VesselCombination> = new Map();
   for (const vessel of enabledVessels) {
@@ -283,7 +375,6 @@ export function searchCombinations(
           if (relic1 !== undefined && relic1 === relic3) continue;
           if (relic2 !== undefined && relic2 === relic3) continue;
 
-          // Check which relics fit in their respective slots
           const slot1Relic =
             relic1 !== undefined &&
             canRelicFitInSlot(relic1, slotColors[0], getItemColor)
@@ -300,8 +391,16 @@ export function searchCombinations(
               ? relic3
               : undefined;
 
-          // Only skip if all three slots would be undefined
           if (!slot1Relic && !slot2Relic && !slot3Relic) continue;
+
+          // Count this evaluated combination for progress
+          totalCombinationsChecked++;
+          await maybeYield(
+            "main",
+            totalCombinationsChecked,
+            availableRelicsCount,
+            totalToCheck
+          );
 
           const relicCombination: VesselCombination["relicCombination"] = [
             slot1Relic ??
@@ -329,8 +428,6 @@ export function searchCombinations(
             relicCombination,
             points,
           });
-
-          totalCombinationsChecked++;
         }
       }
     }
@@ -341,14 +438,17 @@ export function searchCombinations(
   );
 
   const searchTime = Date.now() - startTime;
-  console.log(
-    `Checked ${totalCombinationsChecked} combinations in ${searchTime} ms`
-  );
+  options?.onProgress?.({
+    totalCombinationsChecked,
+    availableRelicsCount,
+    stage: "done",
+    totalToCheck,
+  });
 
   return {
     combinations,
     searchTime,
     totalCombinationsChecked,
-    availableRelicsCount: relics.length,
+    availableRelicsCount,
   };
 }

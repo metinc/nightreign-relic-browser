@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { canRelicFitInSlot, searchCombinations } from "../utils/ComboSearch";
+import {
+  canRelicFitInSlot,
+  searchCombinationsAsync,
+} from "../utils/ComboSearch";
 import { type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
 import { wylderVessels } from "../utils/Vessels";
@@ -57,7 +60,7 @@ describe("ComboSearch", () => {
     });
   });
 
-  describe("searchCombinations", () => {
+  describe("searchCombinationsAsync", () => {
     let relics: RelicSlot[];
 
     beforeAll(async () => {
@@ -77,31 +80,47 @@ describe("ComboSearch", () => {
       relics = RelicParser.parseCharacterSlot(names[0], bnd4Entries[0]).relics;
     });
 
-    it("should find valid combinations of relics and vessels for single effect", () => {
+    it("should find valid combinations of relics and vessels for single effect", async () => {
       const selectedEffects: Effect[] = [getEffect(7000702)];
-      const result = searchCombinations(
+      let totalToCheck: number | undefined;
+      const result = await searchCombinationsAsync(
         "Wylder",
         selectedEffects,
         relics,
-        wylderVessels
+        wylderVessels,
+        {
+          onProgress: (p) => {
+            if (p.totalToCheck !== undefined) totalToCheck = p.totalToCheck;
+          },
+        }
       );
       expect(result.combinations.length).toBeGreaterThan(0);
       expect(result.totalCombinationsChecked).toBeGreaterThan(0);
+      expect(totalToCheck).toBeDefined();
+      expect(result.totalCombinationsChecked).toBe(totalToCheck);
     });
 
-    it("should find valid combinations of relics and vessels for multiple effect", () => {
+    it("should find valid combinations of relics and vessels for multiple effect", async () => {
       const selectedEffects: Effect[] = [
         getEffect(7000702),
         getEffect(8440100),
       ];
-      const result = searchCombinations(
+      let totalToCheck: number | undefined;
+      const result = await searchCombinationsAsync(
         "Wylder",
         selectedEffects,
         relics,
-        wylderVessels
+        wylderVessels,
+        {
+          onProgress: (p) => {
+            if (p.totalToCheck !== undefined) totalToCheck = p.totalToCheck;
+          },
+        }
       );
       expect(result.combinations.length).toBeGreaterThan(0);
       expect(result.totalCombinationsChecked).toBeGreaterThan(0);
+      expect(totalToCheck).toBeDefined();
+      expect(result.totalCombinationsChecked).toBe(totalToCheck);
     });
   });
 });
