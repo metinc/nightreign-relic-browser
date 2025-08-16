@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   RadioGroup,
   FormControlLabel,
@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   Chip,
-  Button,
   Alert,
   Stack,
   FormControl,
@@ -74,15 +73,18 @@ export function ComboFinder(props: ComboFinderProps) {
   const [searchResults, setSearchResults] = useState<ComboSearchResult | null>(
     null
   );
-  const [isSearching, setIsSearching] = useState(false);
   const [progress, setProgress] = useState<ComboSearchProgress | null>(null);
+
+  // Track latest search run to avoid race conditions when inputs change quickly
+  const runIdRef = useRef<number>(0);
 
   const performSearch = useCallback(async () => {
     if (selectedEffects.length === 0) {
       return;
     }
 
-    setIsSearching(true);
+    const myRunId = ++runIdRef.current;
+
     setProgress({
       totalCombinationsChecked: 0,
       availableRelicsCount: 0,
@@ -99,13 +101,15 @@ export function ComboFinder(props: ComboFinderProps) {
         !selectedNightfarerData ||
         !saveFileData.slots[saveFileData.currentSlot]
       ) {
-        setSearchResults({
-          combinations: [],
-          searchTime: 0,
-          totalCombinationsChecked: 0,
-          availableRelicsCount: 0,
-        });
-        setProgress(null);
+        if (myRunId === runIdRef.current) {
+          setSearchResults({
+            combinations: [],
+            searchTime: 0,
+            totalCombinationsChecked: 0,
+            availableRelicsCount: 0,
+          });
+          setProgress(null);
+        }
         return;
       }
 
@@ -123,22 +127,39 @@ export function ComboFinder(props: ComboFinderProps) {
         availableRelics,
         enabledVessels,
         {
-          onProgress: (p) => setProgress(p),
+          onProgress: (p) => {
+            if (myRunId === runIdRef.current) setProgress(p);
+          },
           yieldIntervalMs: 12, // update roughly every frame
         }
       );
 
-      setSearchResults(result);
-      setProgress({
-        totalCombinationsChecked: result.totalCombinationsChecked,
-        availableRelicsCount: result.availableRelicsCount,
-        stage: "done",
-        totalToCheck: result.totalCombinationsChecked,
-      });
+      if (myRunId === runIdRef.current) {
+        setSearchResults(result);
+        setProgress({
+          totalCombinationsChecked: result.totalCombinationsChecked,
+          availableRelicsCount: result.availableRelicsCount,
+          stage: "done",
+          totalToCheck: result.totalCombinationsChecked,
+        });
+      }
     } finally {
-      setIsSearching(false);
+      // no-op
     }
-  }, [selectedEffects, selectedNightfarer, settings, saveFileData]);
+  }, [selectedEffects, selectedNightfarer, settings, saveFileData, runIdRef]);
+
+  // Automatically perform a search when selectedEffects changes
+  useEffect(() => {
+    if (selectedEffects.length > 0) {
+      performSearch();
+    } else {
+      // Clear results when no effects are selected
+      runIdRef.current++;
+      setProgress(null);
+      setSearchResults(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedEffects]);
 
   const handleEffectChange = useCallback(
     (newEffect: Effect | null) => {
@@ -317,18 +338,6 @@ export function ComboFinder(props: ComboFinderProps) {
         <Typography variant="h6" gutterBottom>
           4. Check Results:
         </Typography>
-        {/* Search Button */}
-        <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
-          <Button
-            variant="contained"
-            onClick={performSearch}
-            disabled={selectedEffects.length === 0}
-            loading={isSearching}
-          >
-            Find Combinations
-          </Button>
-        </Box>
-
         {/* Live progress while searching */}
         {
           <Box sx={{ mb: 2 }}>
