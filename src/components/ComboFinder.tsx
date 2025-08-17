@@ -457,8 +457,7 @@ export function ComboFinder(props: ComboFinderProps) {
                 } combinations` +
                   (progress.availableRelicsCount
                     ? ` from ${progress.availableRelicsCount.toLocaleString()} relics`
-                    : "") +
-                  (progress.stage !== "done" ? ` (${progress.stage})` : "")}
+                    : "")}
             </Typography>
           </Box>
         }
@@ -467,12 +466,7 @@ export function ComboFinder(props: ComboFinderProps) {
         {searchResults && (
           <Box>
             {searchResults.combinations.length === 0 ? (
-              <Alert severity="info">
-                No combinations found that contain all selected effects.
-                <br />
-                Checked {searchResults.totalCombinationsChecked} combinations
-                from {searchResults.availableRelicsCount} relics.
-              </Alert>
+              <Alert severity="info">No combinations found.</Alert>
             ) : (
               <>
                 <Typography variant="h6" gutterBottom>
