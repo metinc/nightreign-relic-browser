@@ -265,6 +265,7 @@ export function ComboFinder(props: ComboFinderProps) {
                     <CardContent>
                       <FormControl>
                         <FormControlLabel
+                          sx={{ pointerEvents: "none" }}
                           control={<Checkbox checked={!disabled} />}
                           label={vessel.name}
                         />
