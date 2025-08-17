@@ -19,8 +19,6 @@ interface RelicsPageProps {
   loading: boolean;
   error: string | null;
   selectSlot: (index: number) => void;
-  getItemName: (id: number) => string;
-  getEffectName: (id: number) => string;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedColor: RelicSlotColor;
@@ -37,8 +35,6 @@ export function RelicsPage({
   loading,
   error,
   selectSlot,
-  getItemName,
-  getEffectName,
   searchTerm,
   setSearchTerm,
   selectedColor,
@@ -130,8 +126,6 @@ export function RelicsPage({
         <RelicBrowser
           availableEffects={availableEffects}
           currentSlot={currentSlot}
-          getItemName={getItemName}
-          getEffectName={getEffectName}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           selectedColor={selectedColor}
@@ -147,8 +141,6 @@ export function RelicsPage({
           availableEffects={availableEffects}
           currentSlot={currentSlot}
           selectSlot={selectSlot}
-          getItemName={getItemName}
-          getEffectName={getEffectName}
         />
       )}
     </>

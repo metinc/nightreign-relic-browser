@@ -16,8 +16,6 @@ interface RelicComparisonModalProps {
   onClose: () => void;
   currentRelic: RelicSlot;
   equalOrBetterRelic: RelicSlot;
-  getItemName: (itemId: number) => string;
-  getEffectName: (effectId: number) => string;
   selectedColor: RelicSlotColor;
 }
 
@@ -26,8 +24,6 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
   onClose,
   currentRelic,
   equalOrBetterRelic,
-  getItemName,
-  getEffectName,
   selectedColor,
 }) => {
   const currentRelicClean: RelicSlot = {
@@ -57,8 +53,6 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
           <Grid size={{ xs: 2, sm: 1 }}>
             <RelicCard
               relic={currentRelicClean}
-              getItemName={getItemName}
-              getEffectName={getEffectName}
               searchTerm=""
               relicMatches={true}
               selectedColor={selectedColor}
@@ -68,8 +62,6 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
           <Grid size={{ xs: 2, sm: 1 }}>
             <RelicCard
               relic={betterRelicClean}
-              getItemName={getItemName}
-              getEffectName={getEffectName}
               searchTerm=""
               relicMatches={true}
               selectedColor={selectedColor}

@@ -9,8 +9,6 @@ interface DemoRelicsPageProps {
   error: string | null;
   loadDemoData: () => void;
   selectSlot: (slotIndex: number) => void;
-  getItemName: (itemId: number) => string;
-  getEffectName: (effectId: number) => string;
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
   selectedColor: RelicSlotColor;

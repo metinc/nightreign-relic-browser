@@ -14,12 +14,15 @@ import { highlightSearchTerm } from "../utils/SearchUtils";
 import { getChipColor, type RelicSlotColor } from "../utils/RelicColor";
 import { RelicComparisonModal } from "./RelicComparisonModal";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
-import { getEffect, getRelicColor } from "../utils/DataUtils";
+import {
+  getEffect,
+  getEffectName,
+  getItemName,
+  getRelicColor,
+} from "../utils/DataUtils";
 
 interface RelicCardProps {
   relic: RelicSlot;
-  getItemName: (itemId: number) => string;
-  getEffectName: (effectId: number) => string;
   searchTerm: string;
   relicMatches: boolean;
   selectedColor: RelicSlotColor;
@@ -44,8 +47,6 @@ const getBackgroundColor = (effectsCount: number) => {
 
 const RelicCardComponent: React.FC<RelicCardProps> = ({
   relic,
-  getItemName,
-  getEffectName,
   searchTerm,
   relicMatches,
   selectedColor,
@@ -227,8 +228,6 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           onClose={handleModalClose}
           currentRelic={relic}
           equalOrBetterRelic={relic.redundant.relic}
-          getItemName={getItemName}
-          getEffectName={getEffectName}
           selectedColor={selectedColor}
         />
       )}
@@ -242,8 +241,6 @@ export const RelicCard = React.memo(
     // If basic props changed, re-render
     if (
       prevProps.relic !== nextProps.relic ||
-      prevProps.getItemName !== nextProps.getItemName ||
-      prevProps.getEffectName !== nextProps.getEffectName ||
       prevProps.selectedColor !== nextProps.selectedColor ||
       prevProps.coordinatesByColor !== nextProps.coordinatesByColor ||
       prevProps.relicMatches !== nextProps.relicMatches ||
@@ -259,7 +256,7 @@ export const RelicCard = React.memo(
 
     // Check if highlighting results actually changed
     const { itemId, effects } = prevProps.relic;
-    const itemName = prevProps.getItemName(itemId);
+    const itemName = getItemName(itemId);
     const prevItemHighlight = highlightSearchTerm(
       itemName,
       prevProps.searchTerm
@@ -278,7 +275,7 @@ export const RelicCard = React.memo(
 
     // Check if any effect highlighting changed
     for (const effectId of effects) {
-      const effectName = prevProps.getEffectName(effectId);
+      const effectName = getEffectName(effectId);
       const prevEffectHighlight = highlightSearchTerm(
         effectName,
         prevProps.searchTerm

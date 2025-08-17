@@ -5,7 +5,7 @@ import type { RelicSlot } from "../types/SaveFile";
 import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
 import type { RelicSlotColor } from "../utils/RelicColor";
-import { getRelicColor } from "../utils/DataUtils";
+import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
 
 const RELICS_PER_ROW = 8;
 const COLUMNS_PER_RELIC = 6;
@@ -15,8 +15,6 @@ const COLUMNS_BIG_SCREEN = COLUMNS + COLUMNS_PER_ROW_NUMBER * 2;
 
 interface RelicDisplayProps {
   relics: RelicSlot[];
-  getItemName: (itemId: number) => string;
-  getEffectName: (effectId: number) => string;
   searchTerm: string;
   selectedColor: RelicSlotColor;
   showPlaceholders: boolean;
@@ -25,8 +23,6 @@ interface RelicDisplayProps {
 
 export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   relics: allRelics,
-  getItemName,
-  getEffectName,
   searchTerm,
   selectedColor,
   showPlaceholders,
@@ -271,8 +267,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       >
                         <RelicCard
                           relic={relic}
-                          getItemName={getItemName}
-                          getEffectName={getEffectName}
                           searchTerm={searchTerm}
                           relicMatches={relicMatches}
                           selectedColor={selectedColor}

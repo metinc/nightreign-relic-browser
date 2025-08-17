@@ -8,8 +8,6 @@ import type { Effect } from "../resources/effects";
 interface RelicBrowserProps {
   availableEffects: Effect[];
   currentSlot: CharacterSlot;
-  getItemName: (id: number) => string;
-  getEffectName: (id: number) => string;
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
   selectedColor: RelicSlotColor;
@@ -22,8 +20,6 @@ interface RelicBrowserProps {
 export function RelicBrowser({
   availableEffects,
   currentSlot,
-  getItemName,
-  getEffectName,
   searchTerm,
   setSearchTerm,
   selectedColor,
@@ -60,8 +56,6 @@ export function RelicBrowser({
         >
           <RelicDisplay
             relics={currentSlot.relics}
-            getItemName={getItemName}
-            getEffectName={getEffectName}
             searchTerm={searchTerm}
             selectedColor={selectedColor}
             showPlaceholders={showPlaceholders}

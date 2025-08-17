@@ -42,8 +42,6 @@ interface ComboFinderProps {
   availableEffects: Effect[];
   selectSlot: (index: number) => void;
   currentSlot: CharacterSlot;
-  getItemName: (id: number) => string;
-  getEffectName: (id: number) => string;
 }
 
 interface ComboFinderSettings {
@@ -64,7 +62,7 @@ function createInitialSettings(): Record<NightfarerName, ComboFinderSettings> {
 }
 
 export function ComboFinder(props: ComboFinderProps) {
-  const { saveFileData, getItemName, getEffectName } = props;
+  const { saveFileData } = props;
   const { t } = useTranslation();
   const [selectedNightfarer, setSelectedNightfarer] =
     useState<NightfarerName>("Wylder");
@@ -521,8 +519,6 @@ export function ComboFinder(props: ComboFinderProps) {
                                   {relic ? (
                                     <RelicCard
                                       relic={relic}
-                                      getItemName={getItemName}
-                                      getEffectName={getEffectName}
                                       searchTerm=""
                                       relicMatches={true}
                                       selectedColor={getRelicColor(

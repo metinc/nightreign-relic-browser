@@ -3,11 +3,7 @@ import type { SaveFileData, CharacterSlot } from "../types/SaveFile";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
 import type { RelicSlotColor } from "../utils/RelicColor";
-import {
-  getItemName,
-  getEffectName,
-  getCompactCharacterSlot,
-} from "../utils/DataUtils";
+import { getCompactCharacterSlot } from "../utils/DataUtils";
 import { findOutclassedRelics } from "../utils/RelicProcessor";
 
 export const useSaveFile = () => {
@@ -147,8 +143,6 @@ export const useSaveFile = () => {
     loadSaveFile,
     loadDemoData,
     selectSlot,
-    getItemName,
-    getEffectName,
     searchTerm,
     setSearchTerm,
     selectedColor,
