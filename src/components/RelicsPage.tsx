@@ -20,7 +20,6 @@ interface RelicsPageProps {
   error: string | null;
   selectSlot: (index: number) => void;
   getItemName: (id: number) => string;
-  getItemColor: (id: number) => RelicColor;
   getEffectName: (id: number) => string;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
@@ -39,7 +38,6 @@ export function RelicsPage({
   error,
   selectSlot,
   getItemName,
-  getItemColor,
   getEffectName,
   searchTerm,
   setSearchTerm,
@@ -133,7 +131,6 @@ export function RelicsPage({
           availableEffects={availableEffects}
           currentSlot={currentSlot}
           getItemName={getItemName}
-          getItemColor={getItemColor}
           getEffectName={getEffectName}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -151,7 +148,6 @@ export function RelicsPage({
           currentSlot={currentSlot}
           selectSlot={selectSlot}
           getItemName={getItemName}
-          getItemColor={getItemColor}
           getEffectName={getEffectName}
         />
       )}

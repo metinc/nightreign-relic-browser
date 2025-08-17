@@ -4,7 +4,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import type { RelicSlot } from "../types/SaveFile";
 import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
-import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
+import type { RelicSlotColor } from "../utils/RelicColor";
+import { getItemColor } from "../utils/DataUtils";
 
 const RELICS_PER_ROW = 8;
 const COLUMNS_PER_RELIC = 6;
@@ -15,7 +16,6 @@ const COLUMNS_BIG_SCREEN = COLUMNS + COLUMNS_PER_ROW_NUMBER * 2;
 interface RelicDisplayProps {
   relics: RelicSlot[];
   getItemName: (itemId: number) => string;
-  getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   searchTerm: string;
   selectedColor: RelicSlotColor;
@@ -26,7 +26,6 @@ interface RelicDisplayProps {
 export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   relics: allRelics,
   getItemName,
-  getItemColor,
   getEffectName,
   searchTerm,
   selectedColor,
@@ -119,7 +118,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       const itemColor = getItemColor(relic.itemId);
       return doesRelicColorMatch(itemColor, selectedColor);
     });
-  }, [allRelics, getItemColor, selectedColor]);
+  }, [allRelics, selectedColor]);
 
   if (allRelics.length === 0) {
     return (
@@ -273,7 +272,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                         <RelicCard
                           relic={relic}
                           getItemName={getItemName}
-                          getItemColor={getItemColor}
                           getEffectName={getEffectName}
                           searchTerm={searchTerm}
                           relicMatches={relicMatches}

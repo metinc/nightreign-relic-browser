@@ -8,7 +8,7 @@ import {
   Grid,
 } from "@mui/material";
 import type { RelicSlot } from "../types/SaveFile";
-import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
+import type { RelicSlotColor } from "../utils/RelicColor";
 import { RelicCard } from "./RelicCard";
 
 interface RelicComparisonModalProps {
@@ -17,7 +17,6 @@ interface RelicComparisonModalProps {
   currentRelic: RelicSlot;
   equalOrBetterRelic: RelicSlot;
   getItemName: (itemId: number) => string;
-  getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   selectedColor: RelicSlotColor;
 }
@@ -28,7 +27,6 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
   currentRelic,
   equalOrBetterRelic,
   getItemName,
-  getItemColor,
   getEffectName,
   selectedColor,
 }) => {
@@ -60,7 +58,6 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
             <RelicCard
               relic={currentRelicClean}
               getItemName={getItemName}
-              getItemColor={getItemColor}
               getEffectName={getEffectName}
               searchTerm=""
               relicMatches={true}
@@ -72,7 +69,6 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
             <RelicCard
               relic={betterRelicClean}
               getItemName={getItemName}
-              getItemColor={getItemColor}
               getEffectName={getEffectName}
               searchTerm=""
               relicMatches={true}

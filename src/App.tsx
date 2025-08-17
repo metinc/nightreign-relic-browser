@@ -19,7 +19,6 @@ function App() {
     loadDemoData,
     selectSlot,
     getItemName,
-    getItemColor,
     getEffectName,
     searchTerm,
     setSearchTerm,
@@ -99,7 +98,6 @@ function App() {
                   error={error}
                   selectSlot={selectSlot}
                   getItemName={getItemName}
-                  getItemColor={getItemColor}
                   getEffectName={getEffectName}
                   searchTerm={searchTerm}
                   setSearchTerm={setSearchTerm}
@@ -123,7 +121,6 @@ function App() {
                   loadDemoData={loadDemoData}
                   selectSlot={selectSlot}
                   getItemName={getItemName}
-                  getItemColor={getItemColor}
                   getEffectName={getEffectName}
                   searchTerm={searchTerm}
                   setSearchTerm={setSearchTerm}

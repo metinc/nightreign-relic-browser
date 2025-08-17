@@ -16,7 +16,7 @@ import {
   LinearProgress,
 } from "@mui/material";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
-import { getChipColor, type RelicColor } from "../utils/RelicColor";
+import { getChipColor } from "../utils/RelicColor";
 import {
   isNightfarerName,
   nightfarers,
@@ -31,6 +31,7 @@ import {
   type ComboSearchProgress,
 } from "../utils/ComboSearch";
 import type { Effect } from "../resources/effects";
+import { getItemColor } from "../utils/DataUtils";
 
 // Persistent storage keys
 const SETTINGS_STORAGE_KEY = "comboFinder:settings:v1";
@@ -42,7 +43,6 @@ interface ComboFinderProps {
   selectSlot: (index: number) => void;
   currentSlot: CharacterSlot;
   getItemName: (id: number) => string;
-  getItemColor: (id: number) => RelicColor;
   getEffectName: (id: number) => string;
 }
 
@@ -64,7 +64,7 @@ function createInitialSettings(): Record<NightfarerName, ComboFinderSettings> {
 }
 
 export function ComboFinder(props: ComboFinderProps) {
-  const { saveFileData, getItemName, getItemColor, getEffectName } = props;
+  const { saveFileData, getItemName, getEffectName } = props;
   const { t } = useTranslation();
   const [selectedNightfarer, setSelectedNightfarer] =
     useState<NightfarerName>("Wylder");
@@ -522,7 +522,6 @@ export function ComboFinder(props: ComboFinderProps) {
                                     <RelicCard
                                       relic={relic}
                                       getItemName={getItemName}
-                                      getItemColor={getItemColor}
                                       getEffectName={getEffectName}
                                       searchTerm=""
                                       relicMatches={true}

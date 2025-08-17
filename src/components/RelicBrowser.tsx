@@ -9,7 +9,6 @@ interface RelicBrowserProps {
   availableEffects: Effect[];
   currentSlot: CharacterSlot;
   getItemName: (id: number) => string;
-  getItemColor: (id: number) => RelicColor;
   getEffectName: (id: number) => string;
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
@@ -24,7 +23,6 @@ export function RelicBrowser({
   availableEffects,
   currentSlot,
   getItemName,
-  getItemColor,
   getEffectName,
   searchTerm,
   setSearchTerm,
@@ -63,7 +61,6 @@ export function RelicBrowser({
           <RelicDisplay
             relics={currentSlot.relics}
             getItemName={getItemName}
-            getItemColor={getItemColor}
             getEffectName={getEffectName}
             searchTerm={searchTerm}
             selectedColor={selectedColor}

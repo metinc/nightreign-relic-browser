@@ -11,19 +11,14 @@ import {
 } from "@mui/material";
 import type { RelicSlot } from "../types/SaveFile";
 import { highlightSearchTerm } from "../utils/SearchUtils";
-import {
-  getChipColor,
-  type RelicColor,
-  type RelicSlotColor,
-} from "../utils/RelicColor";
+import { getChipColor, type RelicSlotColor } from "../utils/RelicColor";
 import { RelicComparisonModal } from "./RelicComparisonModal";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
-import { getEffect } from "../utils/DataUtils";
+import { getEffect, getItemColor } from "../utils/DataUtils";
 
 interface RelicCardProps {
   relic: RelicSlot;
   getItemName: (itemId: number) => string;
-  getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   searchTerm: string;
   relicMatches: boolean;
@@ -50,7 +45,6 @@ const getBackgroundColor = (effectsCount: number) => {
 const RelicCardComponent: React.FC<RelicCardProps> = ({
   relic,
   getItemName,
-  getItemColor,
   getEffectName,
   searchTerm,
   relicMatches,
@@ -234,7 +228,6 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           currentRelic={relic}
           equalOrBetterRelic={relic.redundant.relic}
           getItemName={getItemName}
-          getItemColor={getItemColor}
           getEffectName={getEffectName}
           selectedColor={selectedColor}
         />
@@ -250,7 +243,6 @@ export const RelicCard = React.memo(
     if (
       prevProps.relic !== nextProps.relic ||
       prevProps.getItemName !== nextProps.getItemName ||
-      prevProps.getItemColor !== nextProps.getItemColor ||
       prevProps.getEffectName !== nextProps.getEffectName ||
       prevProps.selectedColor !== nextProps.selectedColor ||
       prevProps.coordinatesByColor !== nextProps.coordinatesByColor ||

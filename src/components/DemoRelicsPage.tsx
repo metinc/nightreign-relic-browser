@@ -10,7 +10,6 @@ interface DemoRelicsPageProps {
   loadDemoData: () => void;
   selectSlot: (slotIndex: number) => void;
   getItemName: (itemId: number) => string;
-  getItemColor: (itemId: number) => RelicColor;
   getEffectName: (effectId: number) => string;
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
