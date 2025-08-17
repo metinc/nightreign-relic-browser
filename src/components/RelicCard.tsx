@@ -115,6 +115,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
             paddingBottom: 1,
           },
           p: 1,
+          mb: 1,
         }}
       >
         <Box
