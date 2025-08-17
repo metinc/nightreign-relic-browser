@@ -133,6 +133,14 @@ export function ComboFinder(props: ComboFinderProps) {
     }
   }, [props.availableEffects]);
 
+  const selectableEffects = props.availableEffects.filter(
+    (effect) =>
+      effect.nightfarer === undefined ||
+      effect.nightfarer === selectedNightfarer ||
+      effect.key === "improvedPoiseNearTotemStela" ||
+      effect.key === "defeatingEnemiesNearTotemStelaRestoresHP"
+  );
+
   // Persist settings and selected effects
   useEffect(() => {
     try {
@@ -388,7 +396,7 @@ export function ComboFinder(props: ComboFinderProps) {
         <EffectsAutocomplete
           onSearchChange={() => {}}
           onChange={handleEffectChange}
-          availableEffects={props.availableEffects}
+          availableEffects={selectableEffects}
         />
 
         {/* Selected Effects Chips */}
