@@ -385,12 +385,10 @@ export function ComboFinder(props: ComboFinderProps) {
             ) : (
               <>
                 <Typography variant="h6" gutterBottom>
-                  Found {searchResults.combinations.length} combination(s) in{" "}
-                  {searchResults.searchTime} ms
-                </Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Checked {searchResults.totalCombinationsChecked} combinations
-                  from {searchResults.availableRelicsCount} relics
+                  {`Showing the best ${Math.min(
+                    50,
+                    searchResults.combinations.length
+                  )} combos out of ${searchResults.combinations.length} total`}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   {searchResults.combinations.map(
