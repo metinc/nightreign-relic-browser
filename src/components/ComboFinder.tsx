@@ -395,6 +395,7 @@ export function ComboFinder(props: ComboFinderProps) {
           onSearchChange={() => {}}
           onChange={handleEffectChange}
           availableEffects={selectableEffects}
+          showOrBetterLabels
         />
 
         {/* Selected Effects Chips */}

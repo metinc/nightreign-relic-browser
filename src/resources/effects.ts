@@ -2832,3 +2832,24 @@ export function isSameGroupAndEqualOrBetter(
     effect1.level <= effect2.level
   );
 }
+
+function hasGroupAndLevel(e: unknown): e is EffectWithGroupArrayElement {
+  return typeof e === "object" && e !== null && "group" in e && "level" in e;
+}
+
+export function isMaxLevel(effect: Effect): boolean {
+  if (effect.group === undefined || effect.level === undefined) {
+    return true;
+  }
+  const maxLevel = effectsArray.reduce((max, e) => {
+    if (
+      hasGroupAndLevel(e) &&
+      isSameGroup(effect, e) &&
+      e.level !== undefined
+    ) {
+      return Math.max(max, e.level);
+    }
+    return max;
+  }, 0);
+  return effect.level === maxLevel;
+}

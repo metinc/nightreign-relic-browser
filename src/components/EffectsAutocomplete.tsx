@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { isEffectKey, type Effect } from "../resources/effects";
+import { isEffectKey, isMaxLevel, type Effect } from "../resources/effects";
 import { useTranslation } from "react-i18next";
 import { InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
@@ -11,22 +11,30 @@ interface EffectsAutocompleteProps {
   onSearchChange: (searchTerm: string) => void;
   onChange?: (effectKey: Effect | null) => void;
   availableEffects: Effect[];
+  showOrBetterLabels?: boolean;
 }
 
 export function EffectsAutocomplete({
   onSearchChange,
   onChange,
   availableEffects,
+  showOrBetterLabels = false,
 }: EffectsAutocompleteProps) {
   const { t } = useTranslation();
 
   const getOptionLabel = useCallback(
     (option: string) => {
       const label = t(`effects.${option}`);
-      if (label.startsWith("effect.")) return "";
-      return label;
+      if (isEffectKey(option)) {
+        const effect = getEffectByKey(option);
+        if (showOrBetterLabels && !isMaxLevel(effect)) {
+          return label + " (or better)";
+        }
+        return label;
+      }
+      return "";
     },
-    [t]
+    [showOrBetterLabels, t]
   );
 
   return (
