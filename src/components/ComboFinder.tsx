@@ -10,7 +10,6 @@ import {
   Chip,
   Alert,
   Stack,
-  FormControl,
   Checkbox,
   Divider,
   LinearProgress,
@@ -309,7 +308,7 @@ export function ComboFinder(props: ComboFinderProps) {
   return (
     <Box sx={{ display: "flex", gap: 2, m: 3 }}>
       <Box>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom noWrap>
           1. Select Nightfarer
         </Typography>
         <RadioGroup
@@ -335,8 +334,8 @@ export function ComboFinder(props: ComboFinderProps) {
       <Box>
         {selectedNightfarerData && (
           <>
-            <Typography variant="h6" gutterBottom>
-              2. Select Vessels:
+            <Typography variant="h6" gutterBottom noWrap>
+              2. Select Vessels
             </Typography>
             <Stack gap={2}>
               {selectedNightfarerData.vessels.map((vessel, index) => {
@@ -346,35 +345,51 @@ export function ComboFinder(props: ComboFinderProps) {
                   <Card
                     key={index}
                     onClick={() => toggleVessel(selectedNightfarer, index)}
-                    elevation={disabled ? 1 : 24}
-                    sx={{ cursor: "pointer" }}
+                    elevation={disabled ? 1 : 2}
+                    sx={{ cursor: "pointer", minWidth: 270, m: 0, p: 0 }}
                   >
                     <CardContent>
-                      <FormControl>
-                        <FormControlLabel
-                          sx={{ pointerEvents: "none" }}
-                          control={<Checkbox checked={!disabled} />}
-                          label={vessel.name}
-                        />
-                      </FormControl>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          gap: 0.5,
-                          flexWrap: "wrap",
-                          justifyContent: "center",
-                        }}
+                      <Typography
+                        fontWeight="bold"
+                        gutterBottom
+                        color={disabled ? "text.disabled" : "text.primary"}
                       >
-                        {vessel.slots.map((slot, slotIndex) => (
-                          <Chip
-                            key={slotIndex}
-                            label={slot}
-                            size="small"
-                            color={getChipColor(slot)}
-                            variant={disabled ? "outlined" : "filled"}
-                            disabled={disabled}
+                        {vessel.name}
+                      </Typography>
+                      <Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: 1,
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              justifyContent: "space-between",
+                              width: "180px",
+                            }}
+                          >
+                            {vessel.slots.map((slot, slotIndex) => (
+                              <Chip
+                                key={slotIndex}
+                                label={slot}
+                                size="small"
+                                color={getChipColor(slot)}
+                                variant={disabled ? "outlined" : "filled"}
+                                disabled={disabled}
+                              />
+                            ))}
+                          </Box>
+                          <Checkbox
+                            checked={!disabled}
+                            size="large"
+                            sx={{ m: -1 }}
                           />
-                        ))}
+                        </Box>
                       </Box>
                     </CardContent>
                   </Card>
@@ -388,8 +403,8 @@ export function ComboFinder(props: ComboFinderProps) {
       <Divider orientation="vertical" flexItem />
 
       <Box sx={{ width: "350px" }}>
-        <Typography variant="h6" gutterBottom>
-          3. Select Effects:
+        <Typography variant="h6" gutterBottom noWrap>
+          3. Select Effects
         </Typography>
         <EffectsAutocomplete
           onSearchChange={() => {}}
@@ -426,11 +441,10 @@ export function ComboFinder(props: ComboFinderProps) {
       <Divider orientation="vertical" flexItem />
 
       <Box sx={{ flexGrow: 1, minHeight: 0 }}>
-        <Typography variant="h6" gutterBottom>
-          4. Check Results:
+        <Typography variant="h6" gutterBottom noWrap>
+          4. Check Results
         </Typography>
-        {/* Live progress while searching */}
-        {
+        {selectedEffects.length > 0 && (
           <Box sx={{ mb: 2 }}>
             <LinearProgress
               variant="determinate"
@@ -461,7 +475,7 @@ export function ComboFinder(props: ComboFinderProps) {
                     : "")}
             </Typography>
           </Box>
-        }
+        )}
 
         {/* Search Results */}
         {searchResults && (
@@ -470,7 +484,7 @@ export function ComboFinder(props: ComboFinderProps) {
               <Alert severity="info">No combinations found.</Alert>
             ) : (
               <>
-                <Typography variant="h6" gutterBottom>
+                <Typography gutterBottom>
                   {`Showing the best ${Math.min(
                     50,
                     searchResults.combinations.length
@@ -482,34 +496,19 @@ export function ComboFinder(props: ComboFinderProps) {
                       index < 50 && (
                         <Card key={index} elevation={2}>
                           <CardContent>
-                            <Typography
-                              variant="subtitle1"
-                              sx={{ fontWeight: "bold", mb: 1 }}
-                            >
+                            <Typography fontWeight="bold" gutterBottom>
                               {combo.vessel.name}
                               {import.meta.env.DEV &&
                                 ` (${combo.points.toFixed(2)} points)`}
                             </Typography>
+
                             <Box
                               sx={{
-                                display: "flex",
-                                gap: 0.5,
-                                flexWrap: "wrap",
-                                mb: 2,
+                                display: "grid",
+                                gridTemplateColumns: "repeat(3, 1fr)",
+                                gap: 2,
                               }}
                             >
-                              {combo.vessel.slots.map((slot, slotIndex) => (
-                                <Chip
-                                  key={slotIndex}
-                                  label={slot}
-                                  size="small"
-                                  color={getChipColor(slot)}
-                                  variant="filled"
-                                />
-                              ))}
-                            </Box>
-
-                            <Stack direction="row" gap={2}>
                               {combo.relicCombination.map((relic, index) => (
                                 <Box key={relic?.id ?? index}>
                                   {relic ? (
@@ -539,7 +538,7 @@ export function ComboFinder(props: ComboFinderProps) {
                                   )}
                                 </Box>
                               ))}
-                            </Stack>
+                            </Box>
                           </CardContent>
                         </Card>
                       )

@@ -7,7 +7,6 @@ import {
   Chip,
   List,
   Tooltip,
-  useTheme,
 } from "@mui/material";
 import type { RelicSlot } from "../types/SaveFile";
 import { highlightSearchTerm } from "../utils/SearchUtils";
@@ -53,7 +52,6 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   highlightedEffects = [],
   coordinatesByColor,
 }) => {
-  const { palette } = useTheme();
   const [modalOpen, setModalOpen] = useState(false);
   const { itemId, effects } = relic;
   const itemName = getItemName(itemId);
@@ -74,16 +72,19 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   };
 
   const tooltipContent = selectedChipColor ? (
-    <span>
+    <Typography component="span" variant="caption">
       These coordinates can be used ingame to find the relic when sorted by
       'Order Found' and filtered by{" "}
-      <span
-        style={{ color: palette[selectedChipColor].main, fontWeight: "bold" }}
+      <Typography
+        color={selectedChipColor}
+        fontWeight="bold"
+        component="span"
+        variant="caption"
       >
         {selectedColor.toLowerCase()}
-      </span>
+      </Typography>
       .
-    </span>
+    </Typography>
   ) : (
     "These coordinates can be used ingame to find the relic when sorted by 'Order Found'."
   );
