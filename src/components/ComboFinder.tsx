@@ -434,6 +434,7 @@ export function ComboFinder(props: ComboFinderProps) {
           <Box sx={{ mb: 2 }}>
             <LinearProgress
               variant="determinate"
+              color={progress?.stage === "done" ? "success" : "primary"}
               value={
                 progress?.totalToCheck === undefined
                   ? 0
