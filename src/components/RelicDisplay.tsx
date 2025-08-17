@@ -14,7 +14,8 @@ const COLUMNS = RELICS_PER_ROW * COLUMNS_PER_RELIC;
 const COLUMNS_BIG_SCREEN = COLUMNS + COLUMNS_PER_ROW_NUMBER * 2;
 
 interface RelicDisplayProps {
-  relics: RelicSlot[];
+  allRelics: RelicSlot[];
+  matchingRelics: RelicSlot[];
   searchTerm: string;
   selectedColor: RelicSlotColor;
   showPlaceholders: boolean;
@@ -22,7 +23,8 @@ interface RelicDisplayProps {
 }
 
 export const RelicDisplay: React.FC<RelicDisplayProps> = ({
-  relics: allRelics,
+  allRelics,
+  matchingRelics,
   searchTerm,
   selectedColor,
   showPlaceholders,
@@ -31,28 +33,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   const parentRef = useRef<HTMLDivElement>(null);
 
   const bigScreen = useMediaQuery((theme) => theme.breakpoints.up("md"));
-
-  // Calculate matching relics count (search matches only, ignoring color filter)
-  const matchingRelics = useMemo(() => {
-    if (!searchTerm.trim() && selectedColor === "Any") {
-      return allRelics;
-    }
-
-    return allRelics.filter((relic) => {
-      const { itemId, effects } = relic;
-      const itemName = getItemName(itemId);
-      const effectNames = effects.map((effectId: number) =>
-        getEffectName(effectId)
-      );
-      const itemColor = getRelicColor(itemId);
-
-      if (!doesRelicColorMatch(itemColor, selectedColor)) {
-        return false;
-      }
-
-      return doesRelicMatch(itemName, effectNames, searchTerm);
-    });
-  }, [allRelics, searchTerm, selectedColor]);
 
   const matchingRelicsCount = matchingRelics.length;
 

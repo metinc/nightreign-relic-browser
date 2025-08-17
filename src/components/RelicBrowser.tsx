@@ -1,9 +1,12 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
 import type { CharacterSlot } from "../types/SaveFile";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
 import type { Effect } from "../resources/effects";
+import { useMemo } from "react";
+import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
+import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 
 interface RelicBrowserProps {
   availableEffects: Effect[];
@@ -28,6 +31,28 @@ export function RelicBrowser({
   setShowPlaceholders,
   handleMatchingRelicsCountChange,
 }: RelicBrowserProps) {
+  // Calculate matching relics count (search matches only, ignoring color filter)
+  const matchingRelics = useMemo(() => {
+    if (!searchTerm.trim() && selectedColor === "Any") {
+      return currentSlot.relics;
+    }
+
+    return currentSlot.relics.filter((relic) => {
+      const { itemId, effects } = relic;
+      const itemName = getItemName(itemId);
+      const effectNames = effects.map((effectId: number) =>
+        getEffectName(effectId)
+      );
+      const itemColor = getRelicColor(itemId);
+
+      if (!doesRelicColorMatch(itemColor, selectedColor)) {
+        return false;
+      }
+
+      return doesRelicMatch(itemName, effectNames, searchTerm);
+    });
+  }, [currentSlot.relics, searchTerm, selectedColor]);
+
   return (
     <Box
       component="section"
@@ -48,6 +73,12 @@ export function RelicBrowser({
         availableEffects={availableEffects}
       />
 
+      <Typography variant="subtitle2" textAlign="center" gutterBottom>
+        {currentSlot.relics.length === matchingRelics.length
+          ? `Showing all ${currentSlot.relics.length} relics`
+          : `Showing ${matchingRelics.length} matching relics out of ${currentSlot.relics.length}`}
+      </Typography>
+
       {currentSlot && (
         <Box
           sx={{ flexGrow: 1, minHeight: 0 }}
@@ -55,7 +86,8 @@ export function RelicBrowser({
           aria-label="Relic display"
         >
           <RelicDisplay
-            relics={currentSlot.relics}
+            allRelics={currentSlot.relics}
+            matchingRelics={matchingRelics}
             searchTerm={searchTerm}
             selectedColor={selectedColor}
             showPlaceholders={showPlaceholders}
