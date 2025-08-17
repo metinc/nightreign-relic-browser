@@ -436,10 +436,9 @@ export function ComboFinder(props: ComboFinderProps) {
                                       getEffectName={getEffectName}
                                       searchTerm=""
                                       relicMatches={true}
-                                      rowIndex={null}
-                                      colIndex={null}
-                                      selectedColor="Any"
+                                      selectedColor={getItemColor(relic.itemId)}
                                       highlightedEffects={selectedEffects}
+                                      coordinatesByColor={true}
                                     />
                                   ) : (
                                     "no relic"

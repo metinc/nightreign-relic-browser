@@ -2,7 +2,11 @@ import type { RelicColor } from "./RelicColor";
 import { items } from "../resources/items";
 import { effects } from "../resources/effects";
 import i18n from "../i18n";
-import type { CharacterSlot, CompactCharacterSlot } from "../types/SaveFile";
+import type {
+  CharacterSlot,
+  CompactCharacterSlot,
+  CompactRelicSlot,
+} from "../types/SaveFile";
 
 /**
  * Get item name by ID using TypeScript resources and i18n
@@ -72,13 +76,34 @@ export const getEffectGroup = (
 export const getCompactCharacterSlot = (
   compactCharacterSlot: CompactCharacterSlot
 ): CharacterSlot => {
+  const relicsByColor: Record<RelicColor, CompactRelicSlot[]> = {
+    Red: compactCharacterSlot.relics.filter(
+      ([itemId]) => getItemColor(itemId) === "Red"
+    ),
+    Blue: compactCharacterSlot.relics.filter(
+      ([itemId]) => getItemColor(itemId) === "Blue"
+    ),
+    Yellow: compactCharacterSlot.relics.filter(
+      ([itemId]) => getItemColor(itemId) === "Yellow"
+    ),
+    Green: compactCharacterSlot.relics.filter(
+      ([itemId]) => getItemColor(itemId) === "Green"
+    ),
+  };
+
   return {
     name: compactCharacterSlot.name,
-    relics: compactCharacterSlot.relics.map((relic, index) => ({
-      id: index,
-      itemId: relic[0],
-      effects: relic.slice(1),
-      idBytes: undefined,
-    })),
+    relics: compactCharacterSlot.relics.map((relic, index) => {
+      const [itemId, ...effects] = relic;
+      const color = getItemColor(itemId);
+      const indexByColor = relicsByColor[color].indexOf(relic);
+      return {
+        id: index,
+        itemId,
+        effects,
+        coordinates: [Math.floor(index / 8), index % 8],
+        coordinatesByColor: [Math.floor(indexByColor / 8), indexByColor % 8],
+      };
+    }),
   };
 };

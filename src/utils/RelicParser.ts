@@ -1,4 +1,6 @@
 import type { BND4Entry, RelicSlot } from "../types/SaveFile";
+import { getItemColor } from "./DataUtils";
+import type { RelicColor } from "./RelicColor";
 
 export class RelicParser {
   /**
@@ -169,7 +171,7 @@ export class RelicParser {
                 itemId,
                 effects,
                 idBytes,
-              };
+              } as RelicSlot;
               foundSlots.push(slotInfo);
             }
 
@@ -222,7 +224,7 @@ export class RelicParser {
           sortKeyOffset + 10
         );
         slot.sortKey = this.readIntLE(sortKeyBytes);
-        validSlots.push(slot);
+        validSlots.push(slot as RelicSlot);
       } else {
         // maybe the relic was sold?!
         console.warn(`Sort key for slot ${slot.id} not found`);
@@ -239,6 +241,34 @@ export class RelicParser {
     foundSlots.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
 
     return foundSlots;
+  }
+
+  public static setCoordinates(relics: RelicSlot[]): RelicSlot[] {
+    const relicsByColor: Record<RelicColor, RelicSlot[]> = {
+      Red: relics.filter((r) => getItemColor(r.itemId) === "Red"),
+      Blue: relics.filter((r) => getItemColor(r.itemId) === "Blue"),
+      Yellow: relics.filter((r) => getItemColor(r.itemId) === "Yellow"),
+      Green: relics.filter((r) => getItemColor(r.itemId) === "Green"),
+    };
+
+    for (let i = 0; i < relics.length; i++) {
+      // 8 per row
+      const relic = relics[i];
+      const row = Math.floor(i / 8);
+      const column = i % 8;
+      const coordinates: [number, number] = [row, column];
+
+      const color = getItemColor(relic.itemId);
+      const index = relicsByColor[color].indexOf(relic);
+      const rowByColor = Math.floor(index / 8);
+      const columnByColor = index % 8;
+      const coordinatesByColor: [number, number] = [rowByColor, columnByColor];
+
+      relic.coordinates = coordinates;
+      relic.coordinatesByColor = coordinatesByColor;
+    }
+
+    return relics;
   }
 
   public static getNames(bnd4Entry: BND4Entry): Uint8Array<ArrayBuffer>[] {
@@ -325,12 +355,14 @@ export class RelicParser {
     }
 
     // Parse relics using the same parameters as Python version
-    const relics = this.parseRelics(
+    const baseRelics = this.parseRelics(
       currentEntry.cleanData,
       32,
       fixedPatternOffset - 100,
       fixedPatternOffsetEnd
     );
+
+    const relics = this.setCoordinates(baseRelics);
 
     return {
       name,

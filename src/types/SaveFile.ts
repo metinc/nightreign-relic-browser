@@ -16,12 +16,14 @@ export interface RelicSlot {
   id: number;
   itemId: number;
   effects: number[];
+  coordinates: [row: number, column: number];
+  coordinatesByColor: [row: number, column: number];
   sortKey?: number;
   idBytes?: Uint8Array;
   redundant?: { relic: RelicSlot; outclassed: boolean };
 }
 
-type CompactRelicSlot =
+export type CompactRelicSlot =
   | [itemId: number, effect1: number]
   | [itemId: number, effect1: number, effect2: number]
   | [itemId: number, effect1: number, effect2: number, effect3: number];

@@ -15,11 +15,41 @@ import { getEffect } from "./DataUtils";
 
 // Mock data for testing
 const mockRelics: RelicSlot[] = [
-  { id: 1, itemId: 100, effects: [7001400, 7001500] }, // Red relic with 2 effects
-  { id: 2, itemId: 200, effects: [7001600] }, // Blue relic with 1 effect
-  { id: 3, itemId: 300, effects: [7001700, 7001800] }, // Yellow relic with 2 effects
-  { id: 4, itemId: 400, effects: [7001500, 7001700] }, // Green relic with 2 effects
-  { id: 5, itemId: 500, effects: [7001900] }, // Red relic with 1 effect
+  {
+    id: 1,
+    itemId: 100,
+    effects: [7001400, 7001500],
+    coordinates: [0, 0],
+    coordinatesByColor: [0, 0],
+  }, // Red relic with 2 effects
+  {
+    id: 2,
+    itemId: 200,
+    effects: [7001600],
+    coordinates: [0, 0],
+    coordinatesByColor: [0, 0],
+  }, // Blue relic with 1 effect
+  {
+    id: 3,
+    itemId: 300,
+    effects: [7001700, 7001800],
+    coordinates: [0, 0],
+    coordinatesByColor: [0, 0],
+  }, // Yellow relic with 2 effects
+  {
+    id: 4,
+    itemId: 400,
+    effects: [7001500, 7001700],
+    coordinates: [0, 0],
+    coordinatesByColor: [0, 0],
+  }, // Green relic with 2 effects
+  {
+    id: 5,
+    itemId: 500,
+    effects: [7001900],
+    coordinates: [0, 0],
+    coordinatesByColor: [0, 0],
+  }, // Red relic with 1 effect
 ];
 
 const mockGetItemColor = (itemId: number): RelicColor => {

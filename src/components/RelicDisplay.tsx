@@ -264,13 +264,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
                     const index = relicsByColor.indexOf(relic);
 
-                    const rowIndex = showRelicCoordinates
-                      ? Math.floor(index / RELICS_PER_ROW)
-                      : null;
-                    const colIndex = showRelicCoordinates
-                      ? index % RELICS_PER_ROW
-                      : null;
-
                     return (
                       <Grid
                         size={{ xs: COLUMNS, md: COLUMNS_PER_RELIC }}
@@ -284,9 +277,8 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                           getEffectName={getEffectName}
                           searchTerm={searchTerm}
                           relicMatches={relicMatches}
-                          rowIndex={rowIndex}
-                          colIndex={colIndex}
                           selectedColor={selectedColor}
+                          coordinatesByColor={selectedColor !== "Any"}
                         />
                       </Grid>
                     );

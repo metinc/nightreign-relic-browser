@@ -27,10 +27,9 @@ interface RelicCardProps {
   getEffectName: (effectId: number) => string;
   searchTerm: string;
   relicMatches: boolean;
-  rowIndex: number | null;
-  colIndex: number | null;
   selectedColor: RelicSlotColor;
   highlightedEffects?: Effect[];
+  coordinatesByColor: boolean;
 }
 
 const getBackgroundColor = (effectsCount: number) => {
@@ -55,10 +54,9 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   getEffectName,
   searchTerm,
   relicMatches,
-  rowIndex,
-  colIndex,
   selectedColor,
   highlightedEffects = [],
+  coordinatesByColor,
 }) => {
   const { palette } = useTheme();
   const [modalOpen, setModalOpen] = useState(false);
@@ -94,6 +92,10 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   ) : (
     "These coordinates can be used ingame to find the relic when sorted by 'Order Found'."
   );
+
+  const [row, column] = coordinatesByColor
+    ? relic.coordinatesByColor
+    : relic.coordinates;
 
   return (
     <Card
@@ -205,24 +207,22 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         </List>
 
         {/* Row and Column indices in lower right corner */}
-        {(rowIndex !== undefined || colIndex !== undefined) && (
-          <Tooltip title={tooltipContent} placement="top" arrow>
-            <Box
-              sx={{
-                position: "absolute",
-                bottom: 0,
-                right: 3,
-                fontSize: "0.7rem",
-                color: "text.disabled",
-                cursor: "help",
-              }}
-            >
-              {rowIndex !== null &&
-                colIndex !== null &&
-                `Row ${rowIndex + 1}, Column ${colIndex + 1}`}
-            </Box>
-          </Tooltip>
-        )}
+        <Tooltip title={tooltipContent} placement="top" arrow>
+          <Typography
+            variant="caption"
+            color={
+              coordinatesByColor ? getChipColor(itemColor) : "text.disabled"
+            }
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              right: 3,
+              cursor: "help",
+            }}
+          >
+            {`Row ${row + 1}, Column ${column + 1}`}
+          </Typography>
+        </Tooltip>
       </CardContent>
 
       {/* Comparison Modal */}
@@ -251,8 +251,8 @@ export const RelicCard = React.memo(
       prevProps.getItemName !== nextProps.getItemName ||
       prevProps.getItemColor !== nextProps.getItemColor ||
       prevProps.getEffectName !== nextProps.getEffectName ||
-      prevProps.rowIndex !== nextProps.rowIndex ||
-      prevProps.colIndex !== nextProps.colIndex ||
+      prevProps.selectedColor !== nextProps.selectedColor ||
+      prevProps.coordinatesByColor !== nextProps.coordinatesByColor ||
       prevProps.relicMatches !== nextProps.relicMatches ||
       prevProps.highlightedEffects !== nextProps.highlightedEffects
     ) {

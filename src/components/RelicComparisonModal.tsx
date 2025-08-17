@@ -36,12 +36,16 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
     id: currentRelic.id,
     itemId: currentRelic.itemId,
     effects: currentRelic.effects,
+    coordinates: currentRelic.coordinates,
+    coordinatesByColor: currentRelic.coordinatesByColor,
   };
 
   const betterRelicClean: RelicSlot = {
     id: equalOrBetterRelic.id,
     itemId: equalOrBetterRelic.itemId,
     effects: equalOrBetterRelic.effects,
+    coordinates: equalOrBetterRelic.coordinates,
+    coordinatesByColor: equalOrBetterRelic.coordinatesByColor,
   };
 
   return (
@@ -60,9 +64,8 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
               getEffectName={getEffectName}
               searchTerm=""
               relicMatches={true}
-              rowIndex={null}
-              colIndex={null}
               selectedColor={selectedColor}
+              coordinatesByColor={selectedColor !== "Any"}
             />
           </Grid>
           <Grid size={{ xs: 2, sm: 1 }}>
@@ -73,9 +76,8 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
               getEffectName={getEffectName}
               searchTerm=""
               relicMatches={true}
-              rowIndex={null}
-              colIndex={null}
               selectedColor={selectedColor}
+              coordinatesByColor={selectedColor !== "Any"}
             />
           </Grid>
         </Grid>
