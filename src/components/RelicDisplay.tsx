@@ -52,14 +52,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
       return doesRelicMatch(itemName, effectNames, searchTerm);
     });
-  }, [
-    getEffectName,
-    getRelicColor,
-    getItemName,
-    allRelics,
-    searchTerm,
-    selectedColor,
-  ]);
+  }, [allRelics, searchTerm, selectedColor]);
 
   const matchingRelicsCount = matchingRelics.length;
 
@@ -87,13 +80,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       rows.push(filteredRelics.slice(i, i + 8));
     }
     return rows;
-  }, [
-    getRelicColor,
-    allRelics,
-    matchingRelics,
-    selectedColor,
-    showPlaceholders,
-  ]);
+  }, [allRelics, matchingRelics, selectedColor, showPlaceholders]);
 
   // Virtual list setup
   const virtualizer = useVirtualizer({
