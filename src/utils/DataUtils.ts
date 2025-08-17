@@ -1,6 +1,11 @@
 import type { RelicColor } from "./RelicColor";
 import { items } from "../resources/items";
-import { effects } from "../resources/effects";
+import {
+  effects,
+  effectsArray,
+  type Effect,
+  type EffectKey,
+} from "../resources/effects";
 import i18n from "../i18n";
 import type {
   CharacterSlot,
@@ -40,6 +45,14 @@ export const getEffect = (id: number) => {
   const effect = effects.get(id);
   if (!effect) {
     throw new Error(`Effect with ID ${id} not found`);
+  }
+  return effect;
+};
+
+export const getEffectByKey = (key: EffectKey): Effect => {
+  const effect = effectsArray.find((e) => e.key === key);
+  if (!effect) {
+    throw new Error(`Effect with key ${key} not found`);
   }
   return effect;
 };

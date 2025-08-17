@@ -2800,6 +2800,10 @@ for (const effect of effectsArray) {
   delete (effect as Partial<EffectArrayElement>).ids;
 }
 
+export function isEffectKey(input: unknown): input is EffectKey {
+  return effectsArray.some((effect) => effect.key === input);
+}
+
 export function isEffect(input: unknown): input is Effect {
   return (
     typeof input === "object" &&

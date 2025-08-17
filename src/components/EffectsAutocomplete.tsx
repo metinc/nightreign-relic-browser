@@ -1,9 +1,11 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { isEffect, type Effect } from "../resources/effects";
+import { isEffectKey, type Effect } from "../resources/effects";
 import { useTranslation } from "react-i18next";
 import { InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { useCallback } from "react";
+import { getEffectByKey } from "../utils/DataUtils";
 
 interface EffectsAutocompleteProps {
   onSearchChange: (searchTerm: string) => void;
@@ -18,17 +20,30 @@ export function EffectsAutocomplete({
 }: EffectsAutocompleteProps) {
   const { t } = useTranslation();
 
+  const getOptionLabel = useCallback(
+    (option: string) => {
+      const label = t(`effects.${option}`);
+      if (label.startsWith("effect.")) return "";
+      return label;
+    },
+    [t]
+  );
+
   return (
     <Autocomplete
       disablePortal
-      options={availableEffects}
+      options={availableEffects.map((effect) => effect.key)}
       freeSolo
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}
-      onChange={(_e, value) => onChange && isEffect(value) && onChange(value)}
-      getOptionLabel={(option) =>
-        isEffect(option) ? t(`effects.${(option as Effect).key}`) : option
-      }
+      onChange={(_e, value) => {
+        if (onChange === undefined) return;
+        if (isEffectKey(value)) {
+          const effect = getEffectByKey(value);
+          onChange(effect);
+        }
+      }}
+      getOptionLabel={getOptionLabel}
       renderInput={(params) => (
         <TextField
           {...params}
