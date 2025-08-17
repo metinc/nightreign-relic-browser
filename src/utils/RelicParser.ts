@@ -1,5 +1,5 @@
 import type { BND4Entry, RelicSlot } from "../types/SaveFile";
-import { getItemColor } from "./DataUtils";
+import { getRelicColor } from "./DataUtils";
 import type { RelicColor } from "./RelicColor";
 
 export class RelicParser {
@@ -245,10 +245,10 @@ export class RelicParser {
 
   public static setCoordinates(relics: RelicSlot[]): RelicSlot[] {
     const relicsByColor: Record<RelicColor, RelicSlot[]> = {
-      Red: relics.filter((r) => getItemColor(r.itemId) === "Red"),
-      Blue: relics.filter((r) => getItemColor(r.itemId) === "Blue"),
-      Yellow: relics.filter((r) => getItemColor(r.itemId) === "Yellow"),
-      Green: relics.filter((r) => getItemColor(r.itemId) === "Green"),
+      Red: relics.filter((r) => getRelicColor(r.itemId) === "Red"),
+      Blue: relics.filter((r) => getRelicColor(r.itemId) === "Blue"),
+      Yellow: relics.filter((r) => getRelicColor(r.itemId) === "Yellow"),
+      Green: relics.filter((r) => getRelicColor(r.itemId) === "Green"),
     };
 
     for (let i = 0; i < relics.length; i++) {
@@ -258,7 +258,7 @@ export class RelicParser {
       const column = i % 8;
       const coordinates: [number, number] = [row, column];
 
-      const color = getItemColor(relic.itemId);
+      const color = getRelicColor(relic.itemId);
       const index = relicsByColor[color].indexOf(relic);
       const rowByColor = Math.floor(index / 8);
       const columnByColor = index % 8;

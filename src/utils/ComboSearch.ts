@@ -6,7 +6,7 @@ import {
   type RelicSlotColor,
 } from "./RelicColor";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
-import { getEffect, getItemColor } from "./DataUtils";
+import { getEffect, getRelicColor } from "./DataUtils";
 import type { NightfarerName } from "./Nightfarers";
 
 export interface VesselCombination {
@@ -38,11 +38,10 @@ export interface ComboSearchProgress {
  */
 export function canRelicFitInSlot(
   relic: RelicSlot,
-  slotColor: string,
-  getItemColor: (id: number) => RelicColor
+  slotColor: string
 ): boolean {
   if (slotColor === "Any") return true;
-  const relicColor = getItemColor(relic.itemId);
+  const relicColor = getRelicColor(relic.itemId);
   return relicColor === slotColor;
 }
 
@@ -68,7 +67,7 @@ function filterRelicsByColor(
 ): RelicSlot[] {
   if (relevantColors.length === relicColors.length) return relics;
   return relics.filter((relic) => {
-    const relicColor = getItemColor(relic.itemId);
+    const relicColor = getRelicColor(relic.itemId);
     return relevantColors.includes(relicColor);
   });
 }
@@ -204,7 +203,7 @@ export async function searchCombinationsAsync(
   );
   const fallbackRelicsByColor = relicColors.reduce((acc, color) => {
     acc[color] = fallbackRelics.filter(
-      (relic) => getItemColor(relic.itemId) === color
+      (relic) => getRelicColor(relic.itemId) === color
     );
     return acc;
   }, {} as Record<RelicColor, RelicSlot[]>);
@@ -212,7 +211,7 @@ export async function searchCombinationsAsync(
   // Build effect candidates per color once
   const relicsByEffectByColor = relicColors.reduce((acc, color) => {
     acc[color] = relicsByEffect.filter(
-      (relic) => getItemColor(relic.itemId) === color
+      (relic) => getRelicColor(relic.itemId) === color
     );
     return acc;
   }, {} as Record<RelicColor, RelicSlot[]>);

@@ -5,7 +5,7 @@ import type { RelicSlot } from "../types/SaveFile";
 import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
 import type { RelicSlotColor } from "../utils/RelicColor";
-import { getItemColor } from "../utils/DataUtils";
+import { getRelicColor } from "../utils/DataUtils";
 
 const RELICS_PER_ROW = 8;
 const COLUMNS_PER_RELIC = 6;
@@ -48,7 +48,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       const effectNames = effects.map((effectId: number) =>
         getEffectName(effectId)
       );
-      const itemColor = getItemColor(itemId);
+      const itemColor = getRelicColor(itemId);
 
       if (!doesRelicColorMatch(itemColor, selectedColor)) {
         return false;
@@ -58,7 +58,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     });
   }, [
     getEffectName,
-    getItemColor,
+    getRelicColor,
     getItemName,
     allRelics,
     searchTerm,
@@ -81,7 +81,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
     const filteredRelics = showPlaceholders
       ? relics.filter((relic) => {
-          const itemColor = getItemColor(relic.itemId);
+          const itemColor = getRelicColor(relic.itemId);
           return doesRelicColorMatch(itemColor, selectedColor);
         })
       : relics; // matchingRelics already includes color filtering
@@ -92,7 +92,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     }
     return rows;
   }, [
-    getItemColor,
+    getRelicColor,
     allRelics,
     matchingRelics,
     selectedColor,
@@ -115,7 +115,7 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
       return allRelics;
     }
     return allRelics.filter((relic) => {
-      const itemColor = getItemColor(relic.itemId);
+      const itemColor = getRelicColor(relic.itemId);
       return doesRelicColorMatch(itemColor, selectedColor);
     });
   }, [allRelics, selectedColor]);

@@ -1,5 +1,5 @@
 import type { RelicSlot } from "../types/SaveFile";
-import { getEffectGroup, getItemColor } from "./DataUtils";
+import { getEffectGroup, getRelicColor } from "./DataUtils";
 import type { RelicColor } from "./RelicColor";
 
 export function sortRelicsByColor(
@@ -13,7 +13,7 @@ export function sortRelicsByColor(
   };
 
   relics.forEach((relic) => {
-    const color = getItemColor(relic.itemId);
+    const color = getRelicColor(relic.itemId);
     sortedRelics[color].push(relic);
   });
 
@@ -91,7 +91,7 @@ export function findOutclassedRelics(relics: RelicSlot[]): void {
   for (const relic of relics) {
     const redundant = findBetterRelic(
       relic,
-      relicsByColor[getItemColor(relic.itemId)]
+      relicsByColor[getRelicColor(relic.itemId)]
     );
     if (redundant) {
       relic.redundant = redundant;

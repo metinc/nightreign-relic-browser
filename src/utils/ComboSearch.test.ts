@@ -6,87 +6,63 @@ import {
 import { type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
 import { wylderVessels } from "../utils/Vessels";
-import type { RelicColor } from "../utils/RelicColor";
 import path from "path";
 import fs from "fs";
 import { SaveFileDecryptor } from "./SaveFileDecryptor";
 import { RelicParser } from "./RelicParser";
 import { getEffect } from "./DataUtils";
 
-// Mock data for testing
 const mockRelics: RelicSlot[] = [
   {
     id: 1,
-    itemId: 100,
+    itemId: 100, // red
     effects: [7001400, 7001500],
     coordinates: [0, 0],
     coordinatesByColor: [0, 0],
-  }, // Red relic with 2 effects
+  },
   {
     id: 2,
-    itemId: 200,
+    itemId: 131, // green
     effects: [7001600],
     coordinates: [0, 0],
     coordinatesByColor: [0, 0],
-  }, // Blue relic with 1 effect
+  },
   {
     id: 3,
-    itemId: 300,
+    itemId: 16001, // blue
     effects: [7001700, 7001800],
     coordinates: [0, 0],
     coordinatesByColor: [0, 0],
-  }, // Yellow relic with 2 effects
+  },
   {
     id: 4,
-    itemId: 400,
+    itemId: 13002, // yellow
     effects: [7001500, 7001700],
     coordinates: [0, 0],
     coordinatesByColor: [0, 0],
-  }, // Green relic with 2 effects
-  {
-    id: 5,
-    itemId: 500,
-    effects: [7001900],
-    coordinates: [0, 0],
-    coordinatesByColor: [0, 0],
-  }, // Red relic with 1 effect
+  },
 ];
-
-const mockGetItemColor = (itemId: number): RelicColor => {
-  if (itemId === 100 || itemId === 500) return "Red";
-  if (itemId === 200) return "Blue";
-  if (itemId === 300) return "Yellow";
-  if (itemId === 400) return "Green";
-  return "Red";
-};
 
 describe("ComboSearch", () => {
   describe("canRelicFitInSlot", () => {
     it('should allow any relic in "Any" slot', () => {
-      expect(canRelicFitInSlot(mockRelics[0], "Any", mockGetItemColor)).toBe(
-        true
-      );
-      expect(canRelicFitInSlot(mockRelics[1], "Any", mockGetItemColor)).toBe(
-        true
-      );
+      mockRelics.forEach((relic) => {
+        expect(canRelicFitInSlot(relic, "Any")).toBe(true);
+      });
     });
 
     it("should allow matching colors", () => {
-      expect(canRelicFitInSlot(mockRelics[0], "Red", mockGetItemColor)).toBe(
-        true
-      );
-      expect(canRelicFitInSlot(mockRelics[1], "Blue", mockGetItemColor)).toBe(
-        true
-      );
+      expect(canRelicFitInSlot(mockRelics[0], "Red")).toBe(true);
+      expect(canRelicFitInSlot(mockRelics[1], "Green")).toBe(true);
+      expect(canRelicFitInSlot(mockRelics[2], "Blue")).toBe(true);
+      expect(canRelicFitInSlot(mockRelics[3], "Yellow")).toBe(true);
     });
 
     it("should reject non-matching colors", () => {
-      expect(canRelicFitInSlot(mockRelics[0], "Blue", mockGetItemColor)).toBe(
-        false
-      );
-      expect(canRelicFitInSlot(mockRelics[1], "Red", mockGetItemColor)).toBe(
-        false
-      );
+      expect(canRelicFitInSlot(mockRelics[0], "Blue")).toBe(false);
+      expect(canRelicFitInSlot(mockRelics[1], "Red")).toBe(false);
+      expect(canRelicFitInSlot(mockRelics[2], "Red")).toBe(false);
+      expect(canRelicFitInSlot(mockRelics[3], "Red")).toBe(false);
     });
   });
 

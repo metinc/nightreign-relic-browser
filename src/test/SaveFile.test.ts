@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 import { RelicParser } from "../utils/RelicParser";
-import { getItemName, getItemColor, getEffectName } from "../utils/DataUtils";
+import { getItemName, getRelicColor, getEffectName } from "../utils/DataUtils";
 import type { BND4Entry, RelicSlot } from "../types/SaveFile";
 import fs from "fs";
 import path from "path";
@@ -200,7 +200,7 @@ describe("Save File Processing", () => {
               expect(itemName).toBeTypeOf("string");
               expect(itemName).not.toBe("Unknown Item");
 
-              const itemColor = getItemColor(itemId);
+              const itemColor = getRelicColor(itemId);
               expect(itemColor).toBeDefined();
               expect(itemColor).toBeTypeOf("string");
 
@@ -238,10 +238,10 @@ describe("Utility Functions", () => {
     });
   });
 
-  describe("getItemColor", () => {
+  describe("getRelicColor", () => {
     it("should return the correct color for items with defined colors", () => {
-      expect(getItemColor(100)).toBe("Red");
-      expect(getItemColor(101)).toBe("Red");
+      expect(getRelicColor(100)).toBe("Red");
+      expect(getRelicColor(101)).toBe("Red");
     });
 
     it("should return 'Red' as default for items with null color", () => {
@@ -249,7 +249,7 @@ describe("Utility Functions", () => {
       const originalError = console.error;
       console.error = () => {};
 
-      expect(getItemColor(11)).toBe("Red");
+      expect(getRelicColor(11)).toBe("Red");
 
       // Restore console.error
       console.error = originalError;
@@ -259,8 +259,8 @@ describe("Utility Functions", () => {
       const originalError = console.error;
       console.error = () => {};
 
-      expect(getItemColor(99999)).toBe("Red");
-      expect(getItemColor(-1)).toBe("Red");
+      expect(getRelicColor(99999)).toBe("Red");
+      expect(getRelicColor(-1)).toBe("Red");
 
       console.error = originalError;
     });
@@ -272,7 +272,7 @@ describe("Utility Functions", () => {
         errorCalled = true;
       };
 
-      getItemColor(11);
+      getRelicColor(11);
       expect(errorCalled).toBe(true);
 
       console.error = originalError;
@@ -304,12 +304,12 @@ describe("Utility Functions", () => {
   describe("Integration with real data structure", () => {
     it("should handle large numeric IDs", () => {
       expect(getItemName(1007322)).toBe("Grand Tranquil Scene");
-      expect(getItemColor(1007322)).toBe("Green");
+      expect(getRelicColor(1007322)).toBe("Green");
     });
 
     it("should work with non-existing data", () => {
       expect(getItemName(999999999)).toMatch(/^Unknown Item/);
-      expect(getItemColor(999999999)).toBe("Red");
+      expect(getRelicColor(999999999)).toBe("Red");
       expect(getEffectName(999999999)).toMatch(/^Unknown Effect/);
     });
   });

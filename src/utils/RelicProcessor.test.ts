@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { RelicSlot } from "../types/SaveFile";
 import { findBetterRelic, sortRelicsByColor } from "./RelicProcessor";
-import { getItemColor } from "./DataUtils";
+import { getRelicColor } from "./DataUtils";
 
 describe("Relic Processor Functions", () => {
   describe("findBetterRelic", () => {
@@ -72,8 +72,8 @@ describe("Relic Processor Functions", () => {
         coordinatesByColor: [0, 0],
       };
 
-      expect(getItemColor(relic.itemId)).not.toBe(
-        getItemColor(betterRelicWithDifferentColor.itemId)
+      expect(getRelicColor(relic.itemId)).not.toBe(
+        getRelicColor(betterRelicWithDifferentColor.itemId)
       );
 
       const relicsByColor = sortRelicsByColor([

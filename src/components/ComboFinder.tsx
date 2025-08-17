@@ -31,7 +31,7 @@ import {
   type ComboSearchProgress,
 } from "../utils/ComboSearch";
 import type { Effect } from "../resources/effects";
-import { getItemColor } from "../utils/DataUtils";
+import { getRelicColor } from "../utils/DataUtils";
 
 // Persistent storage keys
 const SETTINGS_STORAGE_KEY = "comboFinder:settings:v1";
@@ -525,7 +525,9 @@ export function ComboFinder(props: ComboFinderProps) {
                                       getEffectName={getEffectName}
                                       searchTerm=""
                                       relicMatches={true}
-                                      selectedColor={getItemColor(relic.itemId)}
+                                      selectedColor={getRelicColor(
+                                        relic.itemId
+                                      )}
                                       highlightedEffects={selectedEffects}
                                       coordinatesByColor={true}
                                     />

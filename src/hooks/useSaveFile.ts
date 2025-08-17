@@ -5,7 +5,6 @@ import { RelicParser } from "../utils/RelicParser";
 import type { RelicSlotColor } from "../utils/RelicColor";
 import {
   getItemName,
-  getItemColor,
   getEffectName,
   getCompactCharacterSlot,
 } from "../utils/DataUtils";
@@ -149,7 +148,6 @@ export const useSaveFile = () => {
     loadDemoData,
     selectSlot,
     getItemName,
-    getItemColor,
     getEffectName,
     searchTerm,
     setSearchTerm,

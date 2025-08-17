@@ -27,7 +27,7 @@ export const getItemName = (itemId: number): string => {
 /**
  * Get item color by ID using TypeScript resources
  */
-export const getItemColor = (itemId: number): RelicColor => {
+export const getRelicColor = (itemId: number): RelicColor => {
   const item = items.get(itemId);
   if (!item) {
     console.error(`Item ${itemId} not found`);
@@ -91,16 +91,16 @@ export const getCompactCharacterSlot = (
 ): CharacterSlot => {
   const relicsByColor: Record<RelicColor, CompactRelicSlot[]> = {
     Red: compactCharacterSlot.relics.filter(
-      ([itemId]) => getItemColor(itemId) === "Red"
+      ([itemId]) => getRelicColor(itemId) === "Red"
     ),
     Blue: compactCharacterSlot.relics.filter(
-      ([itemId]) => getItemColor(itemId) === "Blue"
+      ([itemId]) => getRelicColor(itemId) === "Blue"
     ),
     Yellow: compactCharacterSlot.relics.filter(
-      ([itemId]) => getItemColor(itemId) === "Yellow"
+      ([itemId]) => getRelicColor(itemId) === "Yellow"
     ),
     Green: compactCharacterSlot.relics.filter(
-      ([itemId]) => getItemColor(itemId) === "Green"
+      ([itemId]) => getRelicColor(itemId) === "Green"
     ),
   };
 
@@ -108,7 +108,7 @@ export const getCompactCharacterSlot = (
     name: compactCharacterSlot.name,
     relics: compactCharacterSlot.relics.map((relic, index) => {
       const [itemId, ...effects] = relic;
-      const color = getItemColor(itemId);
+      const color = getRelicColor(itemId);
       const indexByColor = relicsByColor[color].indexOf(relic);
       return {
         id: index,

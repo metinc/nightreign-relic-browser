@@ -14,7 +14,7 @@ import { highlightSearchTerm } from "../utils/SearchUtils";
 import { getChipColor, type RelicSlotColor } from "../utils/RelicColor";
 import { RelicComparisonModal } from "./RelicComparisonModal";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
-import { getEffect, getItemColor } from "../utils/DataUtils";
+import { getEffect, getRelicColor } from "../utils/DataUtils";
 
 interface RelicCardProps {
   relic: RelicSlot;
@@ -56,7 +56,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const { itemId, effects } = relic;
   const itemName = getItemName(itemId);
-  const itemColor = getItemColor(itemId);
+  const itemColor = getRelicColor(itemId);
   const chipColor = getChipColor(itemColor);
   const backgroundColor = getBackgroundColor(effects.length);
   const isSpecialRelic =
