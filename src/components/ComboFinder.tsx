@@ -442,7 +442,18 @@ export function ComboFinder(props: ComboFinderProps) {
                                       coordinatesByColor={true}
                                     />
                                   ) : (
-                                    "no relic"
+                                    <Card
+                                      variant="outlined"
+                                      sx={{
+                                        height: "100%",
+                                        transition: "0.3s ease",
+                                        overflow: "hidden",
+                                        position: "relative",
+                                        borderRadius: 3,
+                                      }}
+                                    >
+                                      <CardContent>No Relic</CardContent>
+                                    </Card>
                                   )}
                                 </Box>
                               ))}
