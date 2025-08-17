@@ -114,14 +114,12 @@ export function RelicsPage({
           label={t("Character")}
         />
       )}
-      {import.meta.env.DEV && (
-        <AppBar position="static" elevation={24}>
-          <Tabs value={tab} onChange={(_e, value) => setTab(value)} centered>
-            <Tab value={TabIndex.RelicBrowser} label="Relic Browser" />
-            <Tab value={TabIndex.ComboFinder} label="Combo Finder" />
-          </Tabs>
-        </AppBar>
-      )}
+      <AppBar position="static" elevation={24}>
+        <Tabs value={tab} onChange={(_e, value) => setTab(value)} centered>
+          <Tab value={TabIndex.RelicBrowser} label="Relic Browser" />
+          <Tab value={TabIndex.ComboFinder} label="Combo Finder" />
+        </Tabs>
+      </AppBar>
       {tab === TabIndex.RelicBrowser && (
         <RelicBrowser
           availableEffects={availableEffects}
