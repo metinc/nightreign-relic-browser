@@ -150,7 +150,10 @@ export function ComboFinder(props: ComboFinderProps) {
 
   // Automatically perform a search when selectedEffects changes
   useEffect(() => {
-    if (selectedEffects.length > 0) {
+    if (
+      selectedEffects.length > 0 &&
+      settings[selectedNightfarer].disabledVessels.length < 8
+    ) {
       performSearch();
     } else {
       // Clear results when no effects are selected
@@ -158,8 +161,7 @@ export function ComboFinder(props: ComboFinderProps) {
       setProgress(null);
       setSearchResults(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedEffects]);
+  }, [performSearch, selectedEffects.length, selectedNightfarer, settings]);
 
   const handleEffectChange = useCallback(
     (newEffect: Effect | null) => {
