@@ -32,6 +32,10 @@ import {
 } from "../utils/ComboSearch";
 import type { Effect } from "../resources/effects";
 
+// Persistent storage keys
+const SETTINGS_STORAGE_KEY = "comboFinder:settings:v1";
+const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v1";
+
 interface ComboFinderProps {
   saveFileData: SaveFileData;
   availableEffects: Effect[];
@@ -65,11 +69,88 @@ export function ComboFinder(props: ComboFinderProps) {
   const [selectedNightfarer, setSelectedNightfarer] =
     useState<NightfarerName>("Wylder");
 
+  // Helper to load settings from localStorage with validation and defaults
+  function loadSettingsFromStorage(): Record<
+    NightfarerName,
+    ComboFinderSettings
+  > {
+    try {
+      const base = createInitialSettings();
+      const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      if (!raw) return base;
+      const parsed = JSON.parse(raw) as Partial<
+        Record<NightfarerName, { disabledVessels?: unknown }>
+      >;
+      (Object.keys(base) as NightfarerName[]).forEach((nf) => {
+        const val = parsed?.[nf];
+        if (val && Array.isArray(val.disabledVessels)) {
+          base[nf] = {
+            disabledVessels: (val.disabledVessels as unknown[])
+              .map((v) => (typeof v === "number" ? v : Number(v)))
+              .filter((v) => Number.isFinite(v)) as number[],
+          };
+        }
+      });
+      return base;
+    } catch {
+      return createInitialSettings();
+    }
+  }
+
   const [settings, setSettings] = useState<
     Record<NightfarerName, ComboFinderSettings>
-  >(createInitialSettings);
+  >(() => loadSettingsFromStorage());
 
   const [selectedEffects, setSelectedEffects] = useState<Effect[]>([]);
+
+  // Load selected effects from storage once when availableEffects are ready
+  const loadedEffectsRef = useRef(false);
+  useEffect(() => {
+    if (loadedEffectsRef.current) return;
+    try {
+      const raw = localStorage.getItem(EFFECTS_STORAGE_KEY);
+      if (!raw) {
+        loadedEffectsRef.current = true;
+        return;
+      }
+      const keys = JSON.parse(raw);
+      if (!Array.isArray(keys)) {
+        loadedEffectsRef.current = true;
+        return;
+      }
+      const restored = keys
+        .map((k: unknown) =>
+          typeof k === "string"
+            ? props.availableEffects.find((e) => e.key === k)
+            : undefined
+        )
+        .filter((e): e is Effect => Boolean(e));
+      if (restored.length) setSelectedEffects(restored);
+    } catch {
+      // ignore
+    } finally {
+      loadedEffectsRef.current = true;
+    }
+  }, [props.availableEffects]);
+
+  // Persist settings and selected effects
+  useEffect(() => {
+    try {
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+    } catch {
+      // ignore
+    }
+  }, [settings]);
+
+  useEffect(() => {
+    try {
+      const keys = selectedEffects.map((e) => e.key);
+      localStorage.setItem(EFFECTS_STORAGE_KEY, JSON.stringify(keys));
+    } catch {
+      // ignore
+    }
+  }, [selectedEffects]);
+
   const [searchResults, setSearchResults] = useState<ComboSearchResult | null>(
     null
   );
