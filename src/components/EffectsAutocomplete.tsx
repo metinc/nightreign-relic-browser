@@ -11,6 +11,7 @@ interface EffectsAutocompleteProps {
   onSearchChange: (searchTerm: string) => void;
   onChange?: (effectKey: Effect | null) => void;
   availableEffects: Effect[];
+  placeholder: string;
   showOrBetterLabels?: boolean;
 }
 
@@ -18,6 +19,7 @@ export function EffectsAutocomplete({
   onSearchChange,
   onChange,
   availableEffects,
+  placeholder,
   showOrBetterLabels = false,
 }: EffectsAutocompleteProps) {
   const { t } = useTranslation();
@@ -55,7 +57,7 @@ export function EffectsAutocomplete({
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search relics by name or effect..."
+          placeholder={placeholder}
           slotProps={{
             input: {
               ...params.InputProps,

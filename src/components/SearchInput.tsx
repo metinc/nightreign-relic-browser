@@ -49,6 +49,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       <EffectsAutocomplete
         onSearchChange={onSearchChange}
         availableEffects={availableEffects}
+        placeholder="Search relics by name or effect..."
       />
 
       <Paper
