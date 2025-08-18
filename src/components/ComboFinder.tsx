@@ -269,10 +269,21 @@ export function ComboFinder(props: ComboFinderProps) {
       );
       if (!effectAlreadyAdded) {
         setSelectedEffects((prev) => [
-          ...prev.filter(
-            (effect) =>
-              effect.group === undefined || effect.group !== newEffect.group
-          ),
+          ...prev.filter((effect) => {
+            if (
+              effect.group !== undefined &&
+              effect.group === newEffect.group
+            ) {
+              return false;
+            }
+            if (
+              effect.startingBonus !== undefined &&
+              effect.startingBonus === newEffect.startingBonus
+            ) {
+              return false;
+            }
+            return true;
+          }),
           newEffect,
         ]);
       }

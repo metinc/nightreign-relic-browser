@@ -5,6 +5,7 @@ interface EffectArrayElement {
   ids: number[];
   nightfarer?: NightfarerName;
   stacks?: boolean;
+  startingBonus?: StartingBonus;
 }
 
 interface EffectWithGroupArrayElement {
@@ -14,6 +15,11 @@ interface EffectWithGroupArrayElement {
   stacks?: boolean;
   group: string;
   level: number;
+}
+
+const enum StartingBonus {
+  ArmamentsSkill,
+  ElementalInfusion,
 }
 
 export const effectsArray = [
@@ -561,101 +567,121 @@ export const effectsArray = [
     key: "changesCompatibleArmamentsSkillToBloodBladeAtStartOfExpedition",
     ids: [7123700],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToChillingMistAtStartOfExpedition",
     ids: [7006200, 7123900],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToDeterminationAtStartOfExpedition",
     ids: [7124600],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToEndureAtStartOfExpedition",
     ids: [7124300],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToEruptionAtStartOfExpedition",
     ids: [7123000],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToFlamingStrikeAtStartOfExpedition",
     ids: [7122900],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToGlintbladePhalanxAtStartOfExpedition",
     ids: [7122700],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToGravitasAtStartOfExpedition",
     ids: [7122800],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToHoarfrostStompAtStartOfExpedition",
     ids: [7124000],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToLightningSlashAtStartOfExpedition",
     ids: [7123200],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToPoisonMothFlightAtStartOfExpedition",
     ids: [7123600],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToPoisonousMistAtStartOfExpedition",
     ids: [7123500],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToPrayerfulStrikeAtStartOfExpedition",
     ids: [7123400],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToQuickstepAtStartOfExpedition",
     ids: [7124400],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToRainOfArrowsAtStartOfExpedition",
     ids: [7124700],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToSacredBladeAtStartOfExpedition",
     ids: [7123300],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToSeppukuAtStartOfExpedition",
     ids: [7123800],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToStormStompAtStartOfExpedition",
     ids: [7124500],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToThunderboltAtStartOfExpedition",
     ids: [7123100],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "changesCompatibleArmamentsSkillToWhiteShadowsLureAtStartOfExpedition",
     ids: [7124100],
     stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: "characterSkillCooldownReduction",
@@ -2554,41 +2580,49 @@ export const effectsArray = [
     key: "startingArmamentDealsFireDamage",
     ids: [7120100],
     stacks: false,
+    startingBonus: StartingBonus.ElementalInfusion,
   },
   {
     key: "startingArmamentDealsHolyDamage",
     ids: [7120300],
     stacks: false,
+    startingBonus: StartingBonus.ElementalInfusion,
   },
   {
     key: "startingArmamentDealsLightningDamage",
     ids: [7120200],
     stacks: false,
+    startingBonus: StartingBonus.ElementalInfusion,
   },
   {
     key: "startingArmamentDealsMagicDamage",
     ids: [7120000],
     stacks: false,
+    startingBonus: StartingBonus.ElementalInfusion,
   },
   {
     key: "startingArmamentInflictsBloodLoss",
     ids: [7120600],
     stacks: false,
+    startingBonus: StartingBonus.ElementalInfusion,
   },
   {
     key: "startingArmamentInflictsFrost",
     ids: [7120400],
     stacks: false,
+    startingBonus: StartingBonus.ElementalInfusion,
   },
   {
     key: "startingArmamentInflictsPoison",
     ids: [7120500],
     stacks: false,
+    startingBonus: StartingBonus.ElementalInfusion,
   },
   {
     key: "startingArmamentInflictsScarletRot",
     ids: [7120700],
     stacks: false,
+    startingBonus: StartingBonus.ElementalInfusion,
   },
   {
     key: "stoneswordKeyInPossessionAtStartOfExpedition",
@@ -2790,6 +2824,7 @@ export interface Effect {
   stacks?: boolean;
   group?: string;
   level?: number;
+  startingBonus?: StartingBonus;
 }
 
 export const effects: Map<number, Effect> = new Map();
