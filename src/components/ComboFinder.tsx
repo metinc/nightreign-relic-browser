@@ -1,36 +1,36 @@
-import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  RadioGroup,
-  FormControlLabel,
-  Radio,
+  Alert,
   Box,
-  Typography,
   Card,
   CardContent,
-  Chip,
-  Alert,
-  Stack,
   Checkbox,
+  Chip,
   Divider,
+  FormControlLabel,
   LinearProgress,
+  Radio,
+  RadioGroup,
+  Stack,
+  Typography,
 } from "@mui/material";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { Effect } from "../resources/effects";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
-import { getChipColor } from "../utils/RelicColor";
+import {
+  searchCombinationsAsync,
+  type ComboSearchProgress,
+  type ComboSearchResult,
+} from "../utils/ComboSearch";
+import { getRelicColor } from "../utils/DataUtils";
 import {
   isNightfarerName,
   nightfarers,
   type NightfarerName,
 } from "../utils/Nightfarers";
+import { getChipColor } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
-import { useTranslation } from "react-i18next";
-import {
-  searchCombinationsAsync,
-  type ComboSearchResult,
-  type ComboSearchProgress,
-} from "../utils/ComboSearch";
-import type { Effect } from "../resources/effects";
-import { getRelicColor } from "../utils/DataUtils";
 
 // Persistent storage keys
 const SETTINGS_STORAGE_KEY = "comboFinder:settings:v1";

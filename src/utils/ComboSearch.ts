@@ -1,20 +1,20 @@
+import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
-import type { Vessel } from "./Vessels";
+import { getEffect, getRelicColor } from "./DataUtils";
+import type { NightfarerName } from "./Nightfarers";
 import {
   relicColors,
   type RelicColor,
   type RelicSlotColor,
 } from "./RelicColor";
-import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
-import { getEffect, getRelicColor } from "./DataUtils";
-import type { NightfarerName } from "./Nightfarers";
+import type { Vessel } from "./Vessels";
 
 export interface VesselCombination {
   vessel: Vessel;
   relicCombination: [
     RelicSlot | undefined,
     RelicSlot | undefined,
-    RelicSlot | undefined
+    RelicSlot | undefined,
   ];
   points: number;
 }
@@ -201,20 +201,26 @@ export async function searchCombinationsAsync(
   const fallbackRelics = relicsByColor.filter(
     (relic) => !relicsByEffect.includes(relic)
   );
-  const fallbackRelicsByColor = relicColors.reduce((acc, color) => {
-    acc[color] = fallbackRelics.filter(
-      (relic) => getRelicColor(relic.itemId) === color
-    );
-    return acc;
-  }, {} as Record<RelicColor, RelicSlot[]>);
+  const fallbackRelicsByColor = relicColors.reduce(
+    (acc, color) => {
+      acc[color] = fallbackRelics.filter(
+        (relic) => getRelicColor(relic.itemId) === color
+      );
+      return acc;
+    },
+    {} as Record<RelicColor, RelicSlot[]>
+  );
 
   // Build effect candidates per color once
-  const relicsByEffectByColor = relicColors.reduce((acc, color) => {
-    acc[color] = relicsByEffect.filter(
-      (relic) => getRelicColor(relic.itemId) === color
-    );
-    return acc;
-  }, {} as Record<RelicColor, RelicSlot[]>);
+  const relicsByEffectByColor = relicColors.reduce(
+    (acc, color) => {
+      acc[color] = relicsByEffect.filter(
+        (relic) => getRelicColor(relic.itemId) === color
+      );
+      return acc;
+    },
+    {} as Record<RelicColor, RelicSlot[]>
+  );
 
   Object.values(fallbackRelicsByColor).forEach((fallback) => {
     fallback.sort((a, b) => {
@@ -259,7 +265,7 @@ export async function searchCombinationsAsync(
     slotChoices: [
       Array<RelicSlot | undefined>,
       Array<RelicSlot | undefined>,
-      Array<RelicSlot | undefined>
+      Array<RelicSlot | undefined>,
     ]
   ): number => {
     let total = 0;
@@ -289,7 +295,7 @@ export async function searchCombinationsAsync(
     all: RelicSlot[]
   ): Array<RelicSlot | undefined> => {
     const base =
-      slotColor === "Any" ? all : byColor[slotColor as RelicColor] ?? [];
+      slotColor === "Any" ? all : (byColor[slotColor as RelicColor] ?? []);
     return withUndefined(base);
   };
 
@@ -300,7 +306,7 @@ export async function searchCombinationsAsync(
     const fallbackSlotChoices: [
       Array<RelicSlot | undefined>,
       Array<RelicSlot | undefined>,
-      Array<RelicSlot | undefined>
+      Array<RelicSlot | undefined>,
     ] = [
       getSlotCandidates(
         slotColors[0],
@@ -323,7 +329,7 @@ export async function searchCombinationsAsync(
     const effectSlotChoices: [
       Array<RelicSlot | undefined>,
       Array<RelicSlot | undefined>,
-      Array<RelicSlot | undefined>
+      Array<RelicSlot | undefined>,
     ] = [
       getSlotCandidates(slotColors[0], relicsByEffectByColor, relicsByEffect),
       getSlotCandidates(slotColors[1], relicsByEffectByColor, relicsByEffect),
@@ -348,7 +354,7 @@ export async function searchCombinationsAsync(
     const slotChoices: [
       Array<RelicSlot | undefined>,
       Array<RelicSlot | undefined>,
-      Array<RelicSlot | undefined>
+      Array<RelicSlot | undefined>,
     ] = [
       getSlotCandidates(
         slotColors[0],
@@ -435,7 +441,7 @@ export async function searchCombinationsAsync(
     const slotChoices: [
       Array<RelicSlot | undefined>,
       Array<RelicSlot | undefined>,
-      Array<RelicSlot | undefined>
+      Array<RelicSlot | undefined>,
     ] = [
       getSlotCandidates(slotColors[0], relicsByEffectByColor, relicsByEffect),
       getSlotCandidates(slotColors[1], relicsByEffectByColor, relicsByEffect),

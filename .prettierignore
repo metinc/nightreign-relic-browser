@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Package files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Test files
+coverage/
+*.sl2
+
+# Public assets
+public/
+
+# Environment files
+.env*
+
+# IDE files
+.vscode/
+.idea/
+
+# Other
+*.log
+*.tgz
+*.tar.gz

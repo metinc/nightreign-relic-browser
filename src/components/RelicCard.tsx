@@ -192,8 +192,8 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
                       highlightedEffects.length === 0
                         ? "text.primary"
                         : highlightEffect
-                        ? "primary.main"
-                        : "text.secondary",
+                          ? "primary.main"
+                          : "text.secondary",
                   }}
                 >
                   {effectHighlight.highlightedText}

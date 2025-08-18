@@ -79,9 +79,8 @@ describe("ComboSearch", () => {
       );
 
       // Decrypt the save file
-      const bnd4Entries = await SaveFileDecryptor.decryptSaveFile(
-        saveFileBuffer
-      );
+      const bnd4Entries =
+        await SaveFileDecryptor.decryptSaveFile(saveFileBuffer);
       const names = RelicParser.getNames(bnd4Entries[10]);
       relics = RelicParser.parseCharacterSlot(names[0], bnd4Entries[0]).relics;
     });

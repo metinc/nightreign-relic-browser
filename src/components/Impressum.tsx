@@ -109,8 +109,8 @@ export const Impressum: React.FC = () => {
             <Typography variant="body2" component="p">
               <strong>Markenrechte:</strong>
               <br />
-              Elden Ring™ ist eine Marke von Bandai Namco Entertainment Inc. und
-              FromSoftware Inc.
+              Elden Ring™ ist eine Marke von Bandai Namco Entertainment Inc.
+              und FromSoftware Inc.
               <br />
               <br />
               Diese Website ist nicht mit Bandai Namco Entertainment Inc. oder
