@@ -71,15 +71,15 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
     setModalOpen(false);
   };
 
-  const tooltipContent = selectedChipColor ? (
-    <Typography component="span" variant="caption">
+  const tooltipContent = coordinatesByColor ? (
+    <Typography component="span" variant="inherit">
       These coordinates can be used ingame to find the relic when sorted by
       'Order Found' and filtered by{" "}
       <Typography
         color={selectedChipColor}
         fontWeight="bold"
         component="span"
-        variant="caption"
+        variant="inherit"
       >
         {selectedColor.toLowerCase()}
       </Typography>
@@ -239,6 +239,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
 export const RelicCard = React.memo(
   RelicCardComponent,
   (prevProps, nextProps) => {
+    return false;
     // If basic props changed, re-render
     if (
       prevProps.relic !== nextProps.relic ||

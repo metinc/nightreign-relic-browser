@@ -521,7 +521,9 @@ export function ComboFinder(props: ComboFinderProps) {
                                         relic.itemId
                                       )}
                                       highlightedEffects={selectedEffects}
-                                      coordinatesByColor={true}
+                                      coordinatesByColor={
+                                        combo.vessel.slots[index] !== "Any"
+                                      }
                                     />
                                   ) : (
                                     <Card
