@@ -16,7 +16,9 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
   // Set up video event listeners
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video) {
+      return;
+    }
 
     const handleVideoEnded = () => {
       window.dataLayer.push({

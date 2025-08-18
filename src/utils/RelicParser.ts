@@ -26,7 +26,9 @@ export class RelicParser {
             break;
           }
         }
-        if (match) return i;
+        if (match) {
+          return i;
+        }
       }
       return null;
     } catch (error) {
@@ -282,7 +284,9 @@ export class RelicParser {
         "27 00 00 46 41 43 45",
         searchOffset
       );
-      if (patternOffset === null) break;
+      if (patternOffset === null) {
+        break;
+      }
 
       searchOffset = patternOffset + 7;
       const nameOffset = patternOffset - 51;
@@ -291,7 +295,9 @@ export class RelicParser {
         "00 00",
         nameOffset
       );
-      if (nameTerminatorOffset === null) break;
+      if (nameTerminatorOffset === null) {
+        break;
+      }
 
       const nameBytes = namesEntry.slice(nameOffset, nameTerminatorOffset + 1);
       names.push(nameBytes);

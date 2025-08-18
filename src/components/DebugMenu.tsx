@@ -78,7 +78,9 @@ export const DebugMenu: React.FC<DebugMenuProps> = ({
   };
 
   const downloadAllDecrypted = () => {
-    if (!bnd4Entries) return;
+    if (!bnd4Entries) {
+      return;
+    }
 
     // Create a zip-like structure by downloading each entry
     bnd4Entries.forEach((entry, index) => {
@@ -91,7 +93,9 @@ export const DebugMenu: React.FC<DebugMenuProps> = ({
   };
 
   const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 B";
+    if (bytes === 0) {
+      return "0 B";
+    }
     const k = 1024;
     const sizes = ["B", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));

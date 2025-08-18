@@ -40,7 +40,9 @@ export function canRelicFitInSlot(
   relic: RelicSlot,
   slotColor: string
 ): boolean {
-  if (slotColor === "Any") return true;
+  if (slotColor === "Any") {
+    return true;
+  }
   const relicColor = getRelicColor(relic.itemId);
   return relicColor === slotColor;
 }
@@ -65,7 +67,9 @@ function filterRelicsByColor(
   relics: RelicSlot[],
   relevantColors: readonly RelicColor[]
 ): RelicSlot[] {
-  if (relevantColors.length === relicColors.length) return relics;
+  if (relevantColors.length === relicColors.length) {
+    return relics;
+  }
   return relics.filter((relic) => {
     const relicColor = getRelicColor(relic.itemId);
     return relevantColors.includes(relicColor);
@@ -80,7 +84,9 @@ export function relicHasAnyEffect(
     return relic.effects.some((effectId) => {
       const effect = getEffect(effectId);
       return selectedEffects.some((selectedEffect) => {
-        if (selectedEffect.key === effect.key) return true;
+        if (selectedEffect.key === effect.key) {
+          return true;
+        }
         if (
           selectedEffect.group !== undefined &&
           selectedEffect.level !== undefined &&
@@ -88,8 +94,9 @@ export function relicHasAnyEffect(
           effect.level !== undefined &&
           selectedEffect.group === effect.group &&
           selectedEffect.level <= effect.level
-        )
+        ) {
           return true;
+        }
         return false;
       });
     });
@@ -234,11 +241,19 @@ export async function searchCombinationsAsync(
       const bHasMatching = bNightfarers.some((nf) => nf === nightfarer);
       const aHasUndefined = aNightfarers.some((nf) => nf === undefined);
       const bHasUndefined = bNightfarers.some((nf) => nf === undefined);
-      if (aHasMatching && !bHasMatching) return -1;
-      if (!aHasMatching && bHasMatching) return 1;
+      if (aHasMatching && !bHasMatching) {
+        return -1;
+      }
+      if (!aHasMatching && bHasMatching) {
+        return 1;
+      }
       if (!aHasMatching && !bHasMatching) {
-        if (aHasUndefined && !bHasUndefined) return -1;
-        if (!aHasUndefined && bHasUndefined) return 1;
+        if (aHasUndefined && !bHasUndefined) {
+          return -1;
+        }
+        if (!aHasUndefined && bHasUndefined) {
+          return 1;
+        }
       }
       return b.effects.length - a.effects.length;
     });
@@ -272,11 +287,19 @@ export async function searchCombinationsAsync(
     const [c0, c1, c2] = slotChoices;
     for (const r0 of c0) {
       for (const r1 of c1) {
-        if (r0 !== undefined && r1 !== undefined && r0 === r1) continue;
+        if (r0 !== undefined && r1 !== undefined && r0 === r1) {
+          continue;
+        }
         for (const r2 of c2) {
-          if (r0 !== undefined && r2 !== undefined && r0 === r2) continue;
-          if (r1 !== undefined && r2 !== undefined && r1 === r2) continue;
-          if (!r0 && !r1 && !r2) continue; // skip all-undefined
+          if (r0 !== undefined && r2 !== undefined && r0 === r2) {
+            continue;
+          }
+          if (r1 !== undefined && r2 !== undefined && r1 === r2) {
+            continue;
+          }
+          if (!r0 && !r1 && !r2) {
+            continue;
+          } // skip all-undefined
           total++;
         }
       }
@@ -381,22 +404,27 @@ export async function searchCombinationsAsync(
           slot1Relic !== undefined &&
           slot2Relic !== undefined &&
           slot1Relic === slot2Relic
-        )
+        ) {
           continue;
+        }
         for (const slot3Relic of choices2) {
           if (
             slot1Relic !== undefined &&
             slot3Relic !== undefined &&
             slot1Relic === slot3Relic
-          )
+          ) {
             continue;
+          }
           if (
             slot2Relic !== undefined &&
             slot3Relic !== undefined &&
             slot2Relic === slot3Relic
-          )
+          ) {
             continue;
-          if (!slot1Relic && !slot2Relic && !slot3Relic) continue;
+          }
+          if (!slot1Relic && !slot2Relic && !slot3Relic) {
+            continue;
+          }
 
           // Count this evaluated combination for progress
           totalCombinationsChecked++;
@@ -416,7 +444,9 @@ export async function searchCombinationsAsync(
           const points = calculateComboPoints(nightfarer, relicCombination, []);
           const prevPoints =
             fallbackCombinationsMap.get(vessel.name)?.points ?? 0;
-          if (points <= prevPoints) continue;
+          if (points <= prevPoints) {
+            continue;
+          }
 
           fallbackCombinationsMap.set(vessel.name, {
             vessel,
@@ -452,11 +482,19 @@ export async function searchCombinationsAsync(
 
     for (const r0 of choices0) {
       for (const r1 of choices1) {
-        if (r0 !== undefined && r1 !== undefined && r0 === r1) continue;
+        if (r0 !== undefined && r1 !== undefined && r0 === r1) {
+          continue;
+        }
         for (const r2 of choices2) {
-          if (r0 !== undefined && r2 !== undefined && r0 === r2) continue;
-          if (r1 !== undefined && r2 !== undefined && r1 === r2) continue;
-          if (!r0 && !r1 && !r2) continue;
+          if (r0 !== undefined && r2 !== undefined && r0 === r2) {
+            continue;
+          }
+          if (r1 !== undefined && r2 !== undefined && r1 === r2) {
+            continue;
+          }
+          if (!r0 && !r1 && !r2) {
+            continue;
+          }
 
           // Count this evaluated combination for progress
           totalCombinationsChecked++;

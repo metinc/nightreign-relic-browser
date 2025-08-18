@@ -47,7 +47,9 @@ export function EffectsAutocomplete({
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}
       onChange={(_e, value) => {
-        if (onChange === undefined) return;
+        if (onChange === undefined) {
+          return;
+        }
         if (isEffectKey(value)) {
           const effect = getEffectByKey(value);
           onChange(effect);

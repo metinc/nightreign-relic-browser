@@ -50,7 +50,9 @@ export function CharacterSlotSelect({
           onChange={handleChange}
           renderValue={(selected) => {
             const entry = validSlots.find(({ idx }) => idx === selected);
-            if (!entry) return "";
+            if (!entry) {
+              return "";
+            }
             const { slot } = entry;
             const count = slot.relics.length;
             return `${slot.name ?? "-"} — ${count} ${

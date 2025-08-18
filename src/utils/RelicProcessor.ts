@@ -29,7 +29,9 @@ export function findBetterRelic(
     (r) => r.effects.length >= effects.length
   );
   const betterOrEqualRelic = relicsWithEnoughEffects.find((r) => {
-    if (relic === r) return false;
+    if (relic === r) {
+      return false;
+    }
     const isRedundant = effects.every((effect) => {
       const effectGroup = getEffectGroup(effect);
       if (!effectGroup && r.effects.includes(effect)) {

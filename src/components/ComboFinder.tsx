@@ -74,7 +74,9 @@ export function ComboFinder(props: ComboFinderProps) {
     try {
       const base = createInitialSettings();
       const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
-      if (!raw) return base;
+      if (!raw) {
+        return base;
+      }
       const parsed = JSON.parse(raw) as Partial<
         Record<NightfarerName, { disabledVessels?: unknown }>
       >;
@@ -103,7 +105,9 @@ export function ComboFinder(props: ComboFinderProps) {
   // Load selected effects from storage once when availableEffects are ready
   const loadedEffectsRef = useRef(false);
   useEffect(() => {
-    if (loadedEffectsRef.current) return;
+    if (loadedEffectsRef.current) {
+      return;
+    }
     try {
       const raw = localStorage.getItem(EFFECTS_STORAGE_KEY);
       if (!raw) {
@@ -122,7 +126,9 @@ export function ComboFinder(props: ComboFinderProps) {
             : undefined
         )
         .filter((e): e is Effect => Boolean(e));
-      if (restored.length) setSelectedEffects(restored);
+      if (restored.length) {
+        setSelectedEffects(restored);
+      }
     } catch {
       // ignore
     } finally {
@@ -214,7 +220,9 @@ export function ComboFinder(props: ComboFinderProps) {
         enabledVessels,
         {
           onProgress: (p) => {
-            if (myRunId === runIdRef.current) setProgress(p);
+            if (myRunId === runIdRef.current) {
+              setProgress(p);
+            }
           },
           yieldIntervalMs: 12, // update roughly every frame
         }
@@ -314,8 +322,9 @@ export function ComboFinder(props: ComboFinderProps) {
         <RadioGroup
           value={selectedNightfarer}
           onChange={(e) => {
-            if (isNightfarerName(e.target.value))
+            if (isNightfarerName(e.target.value)) {
               setSelectedNightfarer(e.target.value);
+            }
           }}
         >
           {nightfarers.map((nightfarer) => (

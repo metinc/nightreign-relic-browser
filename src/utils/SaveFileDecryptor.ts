@@ -30,9 +30,13 @@ export class SaveFileDecryptor {
     data: Uint8Array,
     pattern: Uint8Array
   ): boolean {
-    if (data.length < pattern.length) return false;
+    if (data.length < pattern.length) {
+      return false;
+    }
     for (let i = 0; i < pattern.length; i++) {
-      if (data[i] !== pattern[i]) return false;
+      if (data[i] !== pattern[i]) {
+        return false;
+      }
     }
     return true;
   }

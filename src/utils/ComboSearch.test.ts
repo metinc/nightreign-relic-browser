@@ -95,7 +95,9 @@ describe("ComboSearch", () => {
         wylderVessels,
         {
           onProgress: (p) => {
-            if (p.totalToCheck !== undefined) totalToCheck = p.totalToCheck;
+            if (p.totalToCheck !== undefined) {
+              totalToCheck = p.totalToCheck;
+            }
           },
         }
       );
@@ -118,7 +120,9 @@ describe("ComboSearch", () => {
         wylderVessels,
         {
           onProgress: (p) => {
-            if (p.totalToCheck !== undefined) totalToCheck = p.totalToCheck;
+            if (p.totalToCheck !== undefined) {
+              totalToCheck = p.totalToCheck;
+            }
           },
         }
       );

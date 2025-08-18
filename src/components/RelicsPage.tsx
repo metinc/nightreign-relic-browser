@@ -66,7 +66,9 @@ export function RelicsPage({
   }, [saveFileData, loading, navigate, location.pathname]);
 
   const availableEffects = useMemo(() => {
-    if (!currentSlot) return [];
+    if (!currentSlot) {
+      return [];
+    }
     const effectIds = currentSlot?.relics.flatMap((relic) => relic.effects);
     const effects = effectIds.map((id) => getEffect(id));
     const uniqueEffects = effects.filter(

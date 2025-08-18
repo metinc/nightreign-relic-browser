@@ -37,7 +37,9 @@ describe("ComboSearch performance", () => {
       wylderVessels,
       {
         onProgress: (p) => {
-          if (p.totalToCheck !== undefined) totalToCheck = p.totalToCheck;
+          if (p.totalToCheck !== undefined) {
+            totalToCheck = p.totalToCheck;
+          }
         },
       }
     );
