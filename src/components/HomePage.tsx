@@ -90,10 +90,26 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
             <Typography component="ul" sx={{ pl: 2 }}>
               <li>Browse all relics across multiple character slots</li>
               <li>
+                <Typography
+                  variant="inherit"
+                  color="success"
+                  component="span"
+                  fontWeight={"bold"}
+                >
+                  {"New: "}
+                </Typography>
                 Find the best relics for the effects you are looking for using
                 the <b>Combo Finder</b>
               </li>
               <li>
+                <Typography
+                  variant="inherit"
+                  color="success"
+                  component="span"
+                  fontWeight={"bold"}
+                >
+                  {"New: "}
+                </Typography>
                 Detect outclassed and duplicate relics that should be sold
               </li>
               <li>Search relics by name or effect</li>
