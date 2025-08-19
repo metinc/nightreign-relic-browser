@@ -2848,6 +2848,14 @@ export function isEffect(input: unknown): input is Effect {
   );
 }
 
+export function isSameStartingBonus(effect1: Effect, effect2: Effect): boolean {
+  return (
+    effect1.startingBonus !== undefined &&
+    effect2.startingBonus !== undefined &&
+    effect1.startingBonus === effect2.startingBonus
+  );
+}
+
 export function isSameGroup(effect1: Effect, effect2: Effect): boolean {
   return (
     effect1.group !== undefined &&

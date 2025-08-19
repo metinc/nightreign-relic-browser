@@ -1,4 +1,8 @@
-import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
+import {
+  isSameGroupAndEqualOrBetter,
+  isSameStartingBonus,
+  type Effect,
+} from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
 import { getEffect, getRelicColor } from "./DataUtils";
 import type { NightfarerName } from "./Nightfarers";
@@ -123,6 +127,14 @@ function calculateComboPoints(
 
   let points = 0;
   for (const effect of effects) {
+    const isOverriddenEffect = satisfiedEffects.some((satisfiedEffect) =>
+      isSameStartingBonus(effect, satisfiedEffect)
+    );
+    if (isOverriddenEffect) {
+      // No points for overridden effects
+      satisfiedEffects.push(effect);
+      continue;
+    }
     const isDuplicate =
       satisfiedEffects.includes(effect) ||
       satisfiedEffects.some((satisfiedEffect) =>
@@ -518,11 +530,27 @@ export async function searchCombinationsAsync(
           );
 
           const relicIds = relicCombination
-            .filter((combo) => combo !== undefined)
-            .map((combo) => combo.itemId)
-            .sort((a, b) => a - b);
+            .filter((relicSlot) => relicSlot !== undefined)
+            .map(({ id, effects }) => ({
+              id,
+              effects: effects.map(getEffect),
+            }));
 
-          const uniqueKey = `${vessel.name}-${relicIds.join("-")}`;
+          // sort to avoid identical relic combinations
+          relicIds.sort((a, b) => {
+            if (
+              a.effects.some((aEffect) =>
+                b.effects.some((bEffect) =>
+                  isSameStartingBonus(aEffect, bEffect)
+                )
+              )
+            ) {
+              return 0;
+            }
+            return a.id - b.id;
+          });
+
+          const uniqueKey = `${vessel.name}-${relicIds.map(({ id }) => id).join("-")}`;
           combinationsMap.set(uniqueKey, {
             vessel,
             relicCombination,
