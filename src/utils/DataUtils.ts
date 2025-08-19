@@ -1,17 +1,17 @@
-import type { RelicColor } from "./RelicColor";
-import { items } from "../resources/items";
+import i18n from "../i18n";
 import {
   effects,
   effectsArray,
   type Effect,
   type EffectKey,
 } from "../resources/effects";
-import i18n from "../i18n";
+import { items } from "../resources/items";
 import type {
   CharacterSlot,
   CompactCharacterSlot,
   CompactRelicSlot,
 } from "../types/SaveFile";
+import type { RelicColor } from "./RelicColor";
 
 /**
  * Get item name by ID using TypeScript resources and i18n
@@ -41,10 +41,13 @@ export const getRelicColor = (itemId: number): RelicColor => {
   return color as RelicColor;
 };
 
+const unknownEffect: Effect = { key: "unknown" as EffectKey };
+
 export const getEffect = (id: number) => {
   const effect = effects.get(id);
   if (!effect) {
-    throw new Error(`Effect with ID ${id} not found`);
+    console.error(`Effect with ID ${id} not found`);
+    return unknownEffect;
   }
   return effect;
 };
