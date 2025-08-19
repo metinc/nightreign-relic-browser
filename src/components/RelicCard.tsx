@@ -1,24 +1,24 @@
-import React, { useState } from "react";
 import {
   Box,
-  Typography,
   Card,
   CardContent,
   Chip,
   List,
   Tooltip,
+  Typography,
 } from "@mui/material";
-import type { RelicSlot } from "../types/SaveFile";
-import { highlightSearchTerm } from "../utils/SearchUtils";
-import { getChipColor, type RelicSlotColor } from "../utils/RelicColor";
-import { RelicComparisonModal } from "./RelicComparisonModal";
+import React, { useState } from "react";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
+import type { RelicSlot } from "../types/SaveFile";
 import {
   getEffect,
   getEffectName,
   getItemName,
   getRelicColor,
 } from "../utils/DataUtils";
+import { getChipColor, type RelicSlotColor } from "../utils/RelicColor";
+import { highlightSearchTerm } from "../utils/SearchUtils";
+import { RelicComparisonModal } from "./RelicComparisonModal";
 
 interface RelicCardProps {
   relic: RelicSlot;
@@ -239,7 +239,6 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
 export const RelicCard = React.memo(
   RelicCardComponent,
   (prevProps, nextProps) => {
-    return false;
     // If basic props changed, re-render
     if (
       prevProps.relic !== nextProps.relic ||
