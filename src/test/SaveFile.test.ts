@@ -54,7 +54,10 @@ const testData: TestData = [
     name: "stluna.sl2",
     slots: [{ name: "ST. Luna", relics: 403, samples: [] }],
   },
-  // { name: "eonacat.sl2", slots: [{ name: "EonaCat", relics: 743, samples: [] }] },
+  {
+    name: "eonacat.sl2",
+    slots: [{ name: "EonaCat", relics: 743, samples: [] }],
+  },
   {
     name: "pekzer.sl2",
     slots: [
