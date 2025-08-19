@@ -1,12 +1,12 @@
 import { Box, Typography } from "@mui/material";
+import { useMemo } from "react";
+import type { Effect } from "../resources/effects";
+import type { CharacterSlot } from "../types/SaveFile";
+import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
+import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
+import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
-import type { CharacterSlot } from "../types/SaveFile";
-import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
-import type { Effect } from "../resources/effects";
-import { useMemo } from "react";
-import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
-import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 
 interface RelicBrowserProps {
   availableEffects: Effect[];
@@ -75,8 +75,8 @@ export function RelicBrowser({
 
       <Typography variant="subtitle2" textAlign="center" gutterBottom>
         {currentSlot.relics.length === matchingRelics.length
-          ? `Showing all ${currentSlot.relics.length} relics`
-          : `Showing ${matchingRelics.length} matching relics out of ${currentSlot.relics.length}`}
+          ? `Showing all ${currentSlot.relics.length} relics on character ${currentSlot.name}`
+          : `Showing ${matchingRelics.length} matching relics out of ${currentSlot.relics.length} on character ${currentSlot.name}`}
       </Typography>
 
       {currentSlot && (
