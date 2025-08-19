@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
-import { RelicParser } from "../utils/RelicParser";
-import { getItemName, getRelicColor, getEffectName } from "../utils/DataUtils";
-import type { BND4Entry, RelicSlot } from "../types/SaveFile";
 import fs from "fs";
 import path from "path";
+import { beforeAll, describe, expect, it } from "vitest";
+import type { BND4Entry, RelicSlot } from "../types/SaveFile";
+import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
+import { RelicParser } from "../utils/RelicParser";
+import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 
 type TestData = {
   name: string;
@@ -61,6 +61,10 @@ const testData: TestData = [
       { name: "Pekzer", relics: 139, samples: [] },
       { name: "asd", relics: 77, samples: [] },
     ],
+  },
+  {
+    name: "orlexor.sl2",
+    slots: [{ name: "Orlexor", relics: 406, samples: [] }],
   },
 ];
 
