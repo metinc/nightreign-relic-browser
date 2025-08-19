@@ -571,7 +571,7 @@ export const effectsArray = [
   },
   {
     key: "changesCompatibleArmamentsSkillToChillingMistAtStartOfExpedition",
-    ids: [7006200, 7123900],
+    ids: [7123900],
     stacks: false,
     startingBonus: StartingBonus.ArmamentsSkill,
   },
@@ -1767,7 +1767,7 @@ export const effectsArray = [
   },
   {
     key: "improvedPhysicalDamageNegation",
-    ids: [340000, 8200000],
+    ids: [340000, 7006200, 8200000],
   },
   {
     key: "improvedPikeAttackPower",
