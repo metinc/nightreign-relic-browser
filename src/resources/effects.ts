@@ -1100,7 +1100,7 @@ export const effectsArray = [
   },
   {
     key: "gestureCrossedLegsBuildsUpMadness",
-    ids: [7035400],
+    ids: [7035400, 7035410],
   },
   {
     key: "glintstoneScrapsInPossessionAtStartOfExpedition",
@@ -2046,7 +2046,7 @@ export const effectsArray = [
   },
   {
     key: "madnessContinuallyRecoversFP",
-    ids: [7035500],
+    ids: [7035500, 7035510],
   },
   {
     key: "madnessCritHitFiresFrenziedFlame",
