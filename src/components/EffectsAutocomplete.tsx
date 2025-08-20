@@ -29,12 +29,12 @@ export function EffectsAutocomplete({
       const label = t(`effects.${option}`);
       if (isEffectKey(option)) {
         const effect = getEffectByKey(option);
-        if (showOrBetterLabels && !isMaxLevel(effect)) {
+        if (showOrBetterLabels && effect !== undefined && !isMaxLevel(effect)) {
           return label + " (or better)";
         }
         return label;
       }
-      return "";
+      return "Unknown Effect";
     },
     [showOrBetterLabels, t]
   );
@@ -52,7 +52,9 @@ export function EffectsAutocomplete({
         }
         if (isEffectKey(value)) {
           const effect = getEffectByKey(value);
-          onChange(effect);
+          if (effect) {
+            onChange(effect);
+          }
         }
       }}
       getOptionLabel={getOptionLabel}

@@ -52,11 +52,8 @@ export const getEffect = (id: number) => {
   return effect;
 };
 
-export const getEffectByKey = (key: EffectKey): Effect => {
+export const getEffectByKey = (key: EffectKey): Effect | undefined => {
   const effect = effectsArray.find((e) => e.key === key);
-  if (!effect) {
-    throw new Error(`Effect with key ${key} not found`);
-  }
   return effect;
 };
 
