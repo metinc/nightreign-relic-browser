@@ -1,15 +1,15 @@
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import { isEffectKey, isMaxLevel, type Effect } from "../resources/effects";
-import { useTranslation } from "react-i18next";
-import { InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { InputAdornment } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { isEffectKey, isMaxLevel, type Effect } from "../resources/effects";
 import { getEffectByKey } from "../utils/DataUtils";
 
 interface EffectsAutocompleteProps {
   onSearchChange: (searchTerm: string) => void;
-  onChange?: (effectKey: Effect | null) => void;
+  onChange?: (effectKey: Effect) => void;
   availableEffects: Effect[];
   placeholder: string;
   showOrBetterLabels?: boolean;

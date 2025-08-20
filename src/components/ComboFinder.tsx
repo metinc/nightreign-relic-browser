@@ -258,7 +258,7 @@ export function ComboFinder(props: ComboFinderProps) {
   }, [performSearch, selectedEffects.length, selectedNightfarer, settings]);
 
   const handleEffectChange = useCallback(
-    (newEffect: Effect | null) => {
+    (newEffect: Effect) => {
       // Only add effect if we have less than 9 effects and the effectKey is not empty
       if (selectedEffects.length >= 9 || !newEffect) {
         return;
