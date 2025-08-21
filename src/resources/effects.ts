@@ -1904,7 +1904,7 @@ export const effectsArray = [
     ids: [322100, 8390000],
   },
   {
-    key: "improvedThrowingStoneDamage",
+    key: "improvedGlintstoneAndGravityStoneDamage",
     ids: [7040500],
     stacks: true,
   },

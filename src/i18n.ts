@@ -1,6 +1,6 @@
 import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
 
 const resources = {
   en: {
@@ -652,7 +652,8 @@ const resources = {
         improvedThrowingKnifeDamage: "Improved Throwing Knife Damage",
         improvedThrowingPotDamage: "Improved Throwing Pot Damage",
         improvedThrowingPots: "Improved Throwing Pots",
-        improvedThrowingStoneDamage: "Improved Throwing Stone Damage",
+        improvedGlintstoneAndGravityStoneDamage:
+          "Improved Glintstone and Gravity Stone Damage",
         improvedThrustingCounterattack: "Improved Thrusting Counterattack",
         improvedThrustingSwordAttackPower:
           "Improved Thrusting Sword Attack Power",
