@@ -10,6 +10,7 @@ import {
   LinearProgress,
   Radio,
   RadioGroup,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
@@ -186,6 +187,7 @@ export function ComboFinder(props: ComboFinderProps) {
     null
   );
   const [progress, setProgress] = useState<ComboSearchProgress | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   // Track latest search run to avoid race conditions when inputs change quickly
   const runIdRef = useRef<number>(0);
@@ -279,8 +281,12 @@ export function ComboFinder(props: ComboFinderProps) {
 
   const handleEffectChange = useCallback(
     (newEffect: Effect) => {
-      // Only add effect if we have less than 9 effects and the effectKey is not empty
-      if (selectedEffects.length >= 9 || !newEffect) {
+      if (selectedEffects.length >= 9) {
+        setNotice("You can't select more than 9 effects.");
+        return;
+      }
+
+      if (!newEffect) {
         return;
       }
 
@@ -591,6 +597,22 @@ export function ComboFinder(props: ComboFinderProps) {
           </Box>
         )}
       </Box>
+
+      <Snackbar
+        open={Boolean(notice)}
+        autoHideDuration={5000}
+        onClose={() => setNotice(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setNotice(null)}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {notice}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
