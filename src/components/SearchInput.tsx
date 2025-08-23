@@ -1,29 +1,17 @@
+import { Box, Chip, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React from "react";
-import {
-  ToggleButtonGroup,
-  ToggleButton,
-  Chip,
-  Box,
-  FormControlLabel,
-  Checkbox,
-  Tooltip,
-  Paper,
-} from "@mui/material";
-import { Info } from "@mui/icons-material";
+import type { Effect } from "../resources/effects";
 import {
   getChipColor,
   relicSlotColors,
   type RelicColor,
 } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
-import type { Effect } from "../resources/effects";
 
 interface SearchInputProps {
   onSearchChange: (searchTerm: string) => void;
   selectedColor: string;
   onColorChange: (color: RelicColor) => void;
-  showPlaceholders: boolean;
-  onShowPlaceholdersChange: (show: boolean) => void;
   availableEffects: Effect[];
 }
 
@@ -31,8 +19,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onSearchChange,
   selectedColor,
   onColorChange,
-  showPlaceholders,
-  onShowPlaceholdersChange,
   availableEffects,
 }) => {
   return (
@@ -51,30 +37,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         availableEffects={availableEffects}
         placeholder="Search relics by name or effect..."
       />
-
-      <Paper
-        variant="outlined"
-        sx={{
-          height: 56,
-          display: { xs: "none", md: "flex" },
-          alignItems: "center",
-          px: 2,
-        }}
-      >
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={showPlaceholders}
-              onChange={(e) => onShowPlaceholdersChange(e.target.checked)}
-            />
-          }
-          label="Show Placeholders"
-          sx={{ alignSelf: "center" }}
-        />
-        <Tooltip title="When enabled, placeholders will appear for non-matching cards so that the grid matches the in-game view">
-          <Info sx={{ color: "info.main" }} />
-        </Tooltip>
-      </Paper>
 
       <ToggleButtonGroup
         exclusive

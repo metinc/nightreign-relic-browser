@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { RelicsPage } from "./RelicsPage";
 import type { SaveFileData } from "../types/SaveFile";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
+import { RelicsPage } from "./RelicsPage";
 
 interface DemoRelicsPageProps {
   saveFileData: SaveFileData | null;
@@ -13,8 +13,6 @@ interface DemoRelicsPageProps {
   setSearchTerm: (searchTerm: string) => void;
   selectedColor: RelicSlotColor;
   setSelectedColor: (color: RelicColor) => void;
-  showPlaceholders: boolean;
-  setShowPlaceholders: (show: boolean) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
   clearSaveFile: () => void;

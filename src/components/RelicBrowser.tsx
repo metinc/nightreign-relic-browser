@@ -15,8 +15,6 @@ interface RelicBrowserProps {
   setSearchTerm: (searchTerm: string) => void;
   selectedColor: RelicSlotColor;
   setSelectedColor: (color: RelicColor) => void;
-  showPlaceholders: boolean;
-  setShowPlaceholders: (show: boolean) => void;
   handleMatchingRelicsCountChange: (count: number) => void;
 }
 
@@ -27,8 +25,6 @@ export function RelicBrowser({
   setSearchTerm,
   selectedColor,
   setSelectedColor,
-  showPlaceholders,
-  setShowPlaceholders,
   handleMatchingRelicsCountChange,
 }: RelicBrowserProps) {
   // Calculate matching relics count (search matches only, ignoring color filter)
@@ -68,8 +64,6 @@ export function RelicBrowser({
         onSearchChange={setSearchTerm}
         selectedColor={selectedColor}
         onColorChange={setSelectedColor}
-        showPlaceholders={showPlaceholders}
-        onShowPlaceholdersChange={setShowPlaceholders}
         availableEffects={availableEffects}
       />
 
@@ -90,7 +84,6 @@ export function RelicBrowser({
             matchingRelics={matchingRelics}
             searchTerm={searchTerm}
             selectedColor={selectedColor}
-            showPlaceholders={showPlaceholders}
             onMatchCountChange={handleMatchingRelicsCountChange}
           />
         </Box>

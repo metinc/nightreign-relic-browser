@@ -1,13 +1,13 @@
-import { Box, Alert, CircularProgress, Tabs, Tab, AppBar } from "@mui/material";
+import { Alert, AppBar, Box, CircularProgress, Tab, Tabs } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import type { SaveFileData } from "../types/SaveFile";
-import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
-import { RelicBrowser } from "./RelicBrowser";
-import { ComboFinder } from "./ComboFinder";
-import { getEffect } from "../utils/DataUtils";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import type { SaveFileData } from "../types/SaveFile";
+import { getEffect } from "../utils/DataUtils";
+import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
 import { CharacterSlotSelect } from "./CharacterSlotSelect";
+import { ComboFinder } from "./ComboFinder";
+import { RelicBrowser } from "./RelicBrowser";
 
 const enum TabIndex {
   RelicBrowser,
@@ -23,8 +23,6 @@ interface RelicsPageProps {
   setSearchTerm: (term: string) => void;
   selectedColor: RelicSlotColor;
   setSelectedColor: (color: RelicColor) => void;
-  showPlaceholders: boolean;
-  setShowPlaceholders: (show: boolean) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
   clearSaveFile: () => void;
@@ -39,8 +37,6 @@ export function RelicsPage({
   setSearchTerm,
   selectedColor,
   setSelectedColor,
-  showPlaceholders,
-  setShowPlaceholders,
   handleMatchingRelicsCountChange,
   clearSaveFile,
 }: RelicsPageProps) {
@@ -130,8 +126,6 @@ export function RelicsPage({
           setSearchTerm={setSearchTerm}
           selectedColor={selectedColor}
           setSelectedColor={setSelectedColor}
-          showPlaceholders={showPlaceholders}
-          setShowPlaceholders={setShowPlaceholders}
           handleMatchingRelicsCountChange={handleMatchingRelicsCountChange}
         />
       )}

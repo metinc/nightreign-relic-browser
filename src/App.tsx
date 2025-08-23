@@ -1,11 +1,11 @@
-import { CssBaseline, ThemeProvider, Box } from "@mui/material";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { DebugMenu } from "./components/DebugMenu";
+import { DemoRelicsPage } from "./components/DemoRelicsPage";
 import { FileUploader } from "./components/FileUploader";
+import { Footer } from "./components/Footer";
 import { HomePage } from "./components/HomePage";
 import { RelicsPage } from "./components/RelicsPage";
-import { DemoRelicsPage } from "./components/DemoRelicsPage";
-import { Footer } from "./components/Footer";
-import { DebugMenu } from "./components/DebugMenu";
 import { useSaveFile } from "./hooks/useSaveFile";
 import { theme } from "./theme";
 
@@ -22,8 +22,6 @@ function App() {
     setSearchTerm,
     selectedColor,
     setSelectedColor,
-    showPlaceholders,
-    setShowPlaceholders,
     matchingRelicsCount,
     setMatchingRelicsCount,
     clearSaveFile,
@@ -99,8 +97,6 @@ function App() {
                   setSearchTerm={setSearchTerm}
                   selectedColor={selectedColor}
                   setSelectedColor={setSelectedColor}
-                  showPlaceholders={showPlaceholders}
-                  setShowPlaceholders={setShowPlaceholders}
                   matchingRelicsCount={matchingRelicsCount}
                   handleMatchingRelicsCountChange={setMatchingRelicsCount}
                   clearSaveFile={clearSaveFile}
@@ -120,8 +116,6 @@ function App() {
                   setSearchTerm={setSearchTerm}
                   selectedColor={selectedColor}
                   setSelectedColor={setSelectedColor}
-                  showPlaceholders={showPlaceholders}
-                  setShowPlaceholders={setShowPlaceholders}
                   matchingRelicsCount={matchingRelicsCount}
                   handleMatchingRelicsCountChange={setMatchingRelicsCount}
                   clearSaveFile={clearSaveFile}

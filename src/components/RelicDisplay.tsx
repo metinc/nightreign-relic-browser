@@ -1,24 +1,21 @@
-import React, { useMemo, useRef, useEffect } from "react";
-import { Box, Typography, Paper, Grid, useMediaQuery } from "@mui/material";
+import { Box, Grid, Paper, Typography, useMediaQuery } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import React, { useEffect, useMemo, useRef } from "react";
 import type { RelicSlot } from "../types/SaveFile";
-import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
-import { RelicCard } from "./RelicCard";
+import { getEffectName, getItemName } from "../utils/DataUtils";
 import type { RelicSlotColor } from "../utils/RelicColor";
-import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
+import { doesRelicMatch } from "../utils/SearchUtils";
+import { RelicCard } from "./RelicCard";
 
 const RELICS_PER_ROW = 8;
 const COLUMNS_PER_RELIC = 6;
-const COLUMNS_PER_ROW_NUMBER = 1;
 const COLUMNS = RELICS_PER_ROW * COLUMNS_PER_RELIC;
-const COLUMNS_BIG_SCREEN = COLUMNS + COLUMNS_PER_ROW_NUMBER * 2;
 
 interface RelicDisplayProps {
   allRelics: RelicSlot[];
   matchingRelics: RelicSlot[];
   searchTerm: string;
   selectedColor: RelicSlotColor;
-  showPlaceholders: boolean;
   onMatchCountChange?: (count: number) => void;
 }
 
@@ -27,7 +24,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
   matchingRelics,
   searchTerm,
   selectedColor,
-  showPlaceholders,
   onMatchCountChange,
 }) => {
   const parentRef = useRef<HTMLDivElement>(null);
@@ -45,22 +41,14 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
   // Group relics into rows of 8
   const relicRows = useMemo(() => {
-    // Use matchingRelics when showPlaceholders is false, otherwise use all relics filtered by color
-    const relics = showPlaceholders ? allRelics : matchingRelics;
-
-    const filteredRelics = showPlaceholders
-      ? relics.filter((relic) => {
-          const itemColor = getRelicColor(relic.itemId);
-          return doesRelicColorMatch(itemColor, selectedColor);
-        })
-      : relics; // matchingRelics already includes color filtering
+    const filteredRelics = matchingRelics;
 
     const rows: RelicSlot[][] = [];
     for (let i = 0; i < filteredRelics.length; i += 8) {
       rows.push(filteredRelics.slice(i, i + 8));
     }
     return rows;
-  }, [allRelics, matchingRelics, selectedColor, showPlaceholders]);
+  }, [matchingRelics]);
 
   // Virtual list setup
   const virtualizer = useVirtualizer({
@@ -73,16 +61,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     },
   });
 
-  const relicsByColor = useMemo(() => {
-    if (selectedColor === "Any") {
-      return allRelics;
-    }
-    return allRelics.filter((relic) => {
-      const itemColor = getRelicColor(relic.itemId);
-      return doesRelicColorMatch(itemColor, selectedColor);
-    });
-  }, [allRelics, selectedColor]);
-
   if (allRelics.length === 0) {
     return (
       <Paper sx={{ p: 3, textAlign: "center" }}>
@@ -93,8 +71,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     );
   }
 
-  const showRelicCoordinates = !bigScreen || !showPlaceholders;
-
   return (
     <Box
       sx={{
@@ -104,48 +80,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
         backgroundColor: "black",
       }}
     >
-      {/* Fixed header with column numbers */}
-
-      {!showRelicCoordinates && (
-        <Box
-          sx={{
-            p: 2,
-            pb: 0,
-            display: { xs: "none", md: "block" },
-          }}
-        >
-          <Grid container columns={COLUMNS_BIG_SCREEN} spacing={2}>
-            {/* Empty space for row number column */}
-            <Grid size={COLUMNS_PER_ROW_NUMBER} />
-
-            {/* Column numbers */}
-            {Array.from({ length: 8 }, (_, i) => (
-              <Grid
-                key={i}
-                size={COLUMNS_PER_RELIC}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderBottom: "1px solid",
-                  borderColor: "InactiveBorder",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    color: "text.secondary",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {i + 1}
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      )}
-
       {/* Scrollable content */}
       <Box
         ref={parentRef}
@@ -165,7 +99,6 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
         >
           {virtualizer.getVirtualItems().map((virtualItem) => {
             const rowRelics = relicRows[virtualItem.index];
-            const rowNumber = virtualItem.index + 1;
 
             return (
               <div
@@ -183,32 +116,10 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
               >
                 <Grid
                   container
-                  columns={!showRelicCoordinates ? COLUMNS_BIG_SCREEN : COLUMNS}
+                  columns={COLUMNS}
                   columnSpacing={2}
-                  rowSpacing={!showRelicCoordinates ? 2 : 0}
+                  rowSpacing={bigScreen ? 2 : 0}
                 >
-                  {/* Row number */}
-                  {!showRelicCoordinates && (
-                    <Grid
-                      size={COLUMNS_PER_ROW_NUMBER}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          color: "text.secondary",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {rowNumber}
-                      </Typography>
-                    </Grid>
-                  )}
-
                   {/* Relics in this row */}
                   {rowRelics.flatMap((relic) => {
                     const { itemId, effects } = relic;
@@ -224,13 +135,11 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       searchTerm
                     );
 
-                    const index = relicsByColor.indexOf(relic);
-
                     return (
                       <Grid
                         size={{ xs: COLUMNS, md: COLUMNS_PER_RELIC }}
                         py={1}
-                        key={index}
+                        key={relic.id}
                       >
                         <RelicCard
                           relic={relic}
