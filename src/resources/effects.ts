@@ -2704,7 +2704,7 @@ export const effectsArray = [
   },
   {
     key: "takingAttacksImprovesAttackPower",
-    ids: [10001, 7032200],
+    ids: [10001, 100000, 7032200],
   },
   {
     key: "takingDamageBoostsDamageNegation",
