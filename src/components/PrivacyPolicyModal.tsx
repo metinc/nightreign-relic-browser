@@ -58,7 +58,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           1. Verantwortlicher
         </Typography>
         <Typography variant="body1" component={"p"}>
-          Metin Celik (Kontakt über Impressum)
+          Metin Çelik (Kontakt über Impressum)
         </Typography>
 
         <Typography variant="h5" pt={3}>
