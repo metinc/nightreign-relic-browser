@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
+import packageJson from "../../package.json";
 import { Impressum } from "./Impressum";
 import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
-import packageJson from "../../package.json";
 
 export function Footer() {
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
@@ -47,6 +47,30 @@ export function Footer() {
           }}
         >
           Discord
+        </Typography>
+        <Typography
+          sx={{
+            color: "text.secondary",
+            fontSize: "0.75rem",
+          }}
+        >
+          •
+        </Typography>
+        <Typography
+          component="a"
+          href="https://github.com/metinc/nightreign-relic-browser"
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            color: "text.secondary",
+            fontSize: "0.75rem",
+            textDecoration: "none",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
+        >
+          Source Code
         </Typography>
         <Typography
           sx={{

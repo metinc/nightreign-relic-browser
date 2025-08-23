@@ -1,10 +1,10 @@
-import { useState, useCallback } from "react";
-import type { SaveFileData, CharacterSlot } from "../types/SaveFile";
-import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
-import { RelicParser } from "../utils/RelicParser";
-import type { RelicSlotColor } from "../utils/RelicColor";
+import { useCallback, useState } from "react";
+import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import { getCompactCharacterSlot } from "../utils/DataUtils";
+import type { RelicSlotColor } from "../utils/RelicColor";
+import { RelicParser } from "../utils/RelicParser";
 import { findOutclassedRelics } from "../utils/RelicProcessor";
+import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 
 export const useSaveFile = () => {
   const [saveFileData, setSaveFileData] = useState<SaveFileData | null>(null);
@@ -13,7 +13,6 @@ export const useSaveFile = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<RelicSlotColor>("Any");
   const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
-  const [showPlaceholders, setShowPlaceholders] = useState<boolean>(false);
 
   // Load demo data
   const loadDemoData = useCallback(async () => {
@@ -131,7 +130,6 @@ export const useSaveFile = () => {
     setSaveFileData(null);
     setSearchTerm("");
     setSelectedColor("Any");
-    setShowPlaceholders(false);
     setMatchingRelicsCount(0);
     setError(null);
   }, []);
@@ -147,8 +145,6 @@ export const useSaveFile = () => {
     setSearchTerm,
     selectedColor,
     setSelectedColor,
-    showPlaceholders,
-    setShowPlaceholders,
     matchingRelicsCount,
     setMatchingRelicsCount,
     clearSaveFile,

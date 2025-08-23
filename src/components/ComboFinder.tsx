@@ -10,6 +10,7 @@ import {
   LinearProgress,
   Radio,
   RadioGroup,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
@@ -35,6 +36,7 @@ import { RelicCard } from "./RelicCard";
 // Persistent storage keys
 const SETTINGS_STORAGE_KEY = "comboFinder:settings:v1";
 const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v1";
+const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v1";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
@@ -63,8 +65,19 @@ function createInitialSettings(): Record<NightfarerName, ComboFinderSettings> {
 export function ComboFinder(props: ComboFinderProps) {
   const { saveFileData } = props;
   const { t } = useTranslation();
-  const [selectedNightfarer, setSelectedNightfarer] =
-    useState<NightfarerName>("Wylder");
+  const [selectedNightfarer, setSelectedNightfarer] = useState<NightfarerName>(
+    () => {
+      try {
+        const raw = localStorage.getItem(SELECTED_NIGHTFARER_STORAGE_KEY);
+        if (raw && isNightfarerName(raw)) {
+          return raw;
+        }
+      } catch {
+        // ignore
+      }
+      return "Wylder";
+    }
+  );
 
   // Helper to load settings from localStorage with validation and defaults
   function loadSettingsFromStorage(): Record<
@@ -162,10 +175,19 @@ export function ComboFinder(props: ComboFinderProps) {
     }
   }, [selectedEffects]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(SELECTED_NIGHTFARER_STORAGE_KEY, selectedNightfarer);
+    } catch {
+      // ignore
+    }
+  }, [selectedNightfarer]);
+
   const [searchResults, setSearchResults] = useState<ComboSearchResult | null>(
     null
   );
   const [progress, setProgress] = useState<ComboSearchProgress | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   // Track latest search run to avoid race conditions when inputs change quickly
   const runIdRef = useRef<number>(0);
@@ -259,8 +281,12 @@ export function ComboFinder(props: ComboFinderProps) {
 
   const handleEffectChange = useCallback(
     (newEffect: Effect) => {
-      // Only add effect if we have less than 9 effects and the effectKey is not empty
-      if (selectedEffects.length >= 9 || !newEffect) {
+      if (selectedEffects.length >= 9) {
+        setNotice("You can't select more than 9 effects.");
+        return;
+      }
+
+      if (!newEffect) {
         return;
       }
 
@@ -442,18 +468,17 @@ export function ComboFinder(props: ComboFinderProps) {
             sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
           >
             {selectedEffects.map((effect) => (
-              <Box
-                sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+              <Chip
                 key={effect.key}
-              >
-                <Chip
-                  key={effect.key}
-                  label={t(`effects.${effect.key}`)}
-                  onDelete={() => removeEffect(effect)}
-                  variant="filled"
-                  sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
-                />
-              </Box>
+                label={t(`effects.${effect.key}`)}
+                onDelete={() => removeEffect(effect)}
+                variant="filled"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  justifyContent: "space-between",
+                }}
+              />
             ))}
           </Stack>
         )}
@@ -572,6 +597,22 @@ export function ComboFinder(props: ComboFinderProps) {
           </Box>
         )}
       </Box>
+
+      <Snackbar
+        open={Boolean(notice)}
+        autoHideDuration={5000}
+        onClose={() => setNotice(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setNotice(null)}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {notice}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

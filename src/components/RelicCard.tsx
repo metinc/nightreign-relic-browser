@@ -149,7 +149,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           </Typography>
           {relic.redundant && (
             <Chip
-              label="SELL ME"
+              label="SELL"
               size="small"
               sx={{
                 overflow: "clip",
