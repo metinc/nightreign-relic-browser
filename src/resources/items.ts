@@ -59,7 +59,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "darkNightOfTheBeast",
-    color: null,
+    color: "Yellow",
     ids: [2001],
   },
   {
