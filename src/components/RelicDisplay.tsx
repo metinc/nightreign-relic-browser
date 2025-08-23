@@ -41,11 +41,9 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
 
   // Group relics into rows of 8
   const relicRows = useMemo(() => {
-    const filteredRelics = matchingRelics;
-
     const rows: RelicSlot[][] = [];
-    for (let i = 0; i < filteredRelics.length; i += 8) {
-      rows.push(filteredRelics.slice(i, i + 8));
+    for (let i = 0; i < matchingRelics.length; i += 8) {
+      rows.push(matchingRelics.slice(i, i + 8));
     }
     return rows;
   }, [matchingRelics]);
