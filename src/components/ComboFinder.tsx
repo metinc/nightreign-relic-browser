@@ -35,6 +35,7 @@ import { RelicCard } from "./RelicCard";
 // Persistent storage keys
 const SETTINGS_STORAGE_KEY = "comboFinder:settings:v1";
 const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v1";
+const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v1";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
@@ -63,8 +64,19 @@ function createInitialSettings(): Record<NightfarerName, ComboFinderSettings> {
 export function ComboFinder(props: ComboFinderProps) {
   const { saveFileData } = props;
   const { t } = useTranslation();
-  const [selectedNightfarer, setSelectedNightfarer] =
-    useState<NightfarerName>("Wylder");
+  const [selectedNightfarer, setSelectedNightfarer] = useState<NightfarerName>(
+    () => {
+      try {
+        const raw = localStorage.getItem(SELECTED_NIGHTFARER_STORAGE_KEY);
+        if (raw && isNightfarerName(raw)) {
+          return raw;
+        }
+      } catch {
+        // ignore
+      }
+      return "Wylder";
+    }
+  );
 
   // Helper to load settings from localStorage with validation and defaults
   function loadSettingsFromStorage(): Record<
@@ -161,6 +173,14 @@ export function ComboFinder(props: ComboFinderProps) {
       // ignore
     }
   }, [selectedEffects]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(SELECTED_NIGHTFARER_STORAGE_KEY, selectedNightfarer);
+    } catch {
+      // ignore
+    }
+  }, [selectedNightfarer]);
 
   const [searchResults, setSearchResults] = useState<ComboSearchResult | null>(
     null
