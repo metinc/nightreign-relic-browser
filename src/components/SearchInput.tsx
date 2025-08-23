@@ -1,5 +1,5 @@
 import { Box, Chip, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import React from "react";
+import React, { type Dispatch, type SetStateAction } from "react";
 import type { Effect } from "../resources/effects";
 import {
   getChipColor,
@@ -13,6 +13,8 @@ interface SearchInputProps {
   selectedColor: string;
   onColorChange: (color: RelicColor) => void;
   availableEffects: Effect[];
+  filterSell: boolean;
+  onFilterSellChange: Dispatch<SetStateAction<boolean>>;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -20,6 +22,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   selectedColor,
   onColorChange,
   availableEffects,
+  filterSell,
+  onFilterSellChange,
 }) => {
   return (
     <Box
@@ -29,7 +33,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         justifyContent: "center",
         flexWrap: "wrap",
         gap: 2,
-        pt: 2,
+        py: 2,
       }}
     >
       <EffectsAutocomplete
@@ -42,7 +46,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         exclusive
         aria-label="Relic Color Filter"
         value={selectedColor}
-        sx={{ height: 56, mb: 3 }}
         onChange={(_, newColor) => {
           if (newColor !== null) {
             onColorChange(newColor);
@@ -63,6 +66,14 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
+
+      <ToggleButton
+        value="check"
+        selected={filterSell}
+        onChange={() => onFilterSellChange((prevSelected) => !prevSelected)}
+      >
+        <Chip label="SELL" size="small" />
+      </ToggleButton>
     </Box>
   );
 };

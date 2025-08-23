@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { Effect } from "../resources/effects";
 import type { CharacterSlot } from "../types/SaveFile";
 import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
@@ -27,14 +27,19 @@ export function RelicBrowser({
   setSelectedColor,
   handleMatchingRelicsCountChange,
 }: RelicBrowserProps) {
-  // Calculate matching relics count (search matches only, ignoring color filter)
+  const [filterSell, setFilterSell] = useState(false);
+
   const matchingRelics = useMemo(() => {
-    if (!searchTerm.trim() && selectedColor === "Any") {
+    if (!searchTerm.trim() && selectedColor === "Any" && !filterSell) {
       return currentSlot.relics;
     }
 
     return currentSlot.relics.filter((relic) => {
-      const { itemId, effects } = relic;
+      const { itemId, effects, redundant } = relic;
+
+      if (filterSell && redundant === undefined) {
+        return false;
+      }
       const itemName = getItemName(itemId);
       const effectNames = effects.map((effectId: number) =>
         getEffectName(effectId)
@@ -47,7 +52,7 @@ export function RelicBrowser({
 
       return doesRelicMatch(itemName, effectNames, searchTerm);
     });
-  }, [currentSlot.relics, searchTerm, selectedColor]);
+  }, [currentSlot.relics, filterSell, searchTerm, selectedColor]);
 
   return (
     <Box
@@ -65,6 +70,8 @@ export function RelicBrowser({
         selectedColor={selectedColor}
         onColorChange={setSelectedColor}
         availableEffects={availableEffects}
+        filterSell={filterSell}
+        onFilterSellChange={setFilterSell}
       />
 
       <Typography variant="subtitle2" textAlign="center" gutterBottom>
