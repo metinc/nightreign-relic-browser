@@ -126,7 +126,7 @@ export const effectsArray = [
     stacks: false,
   },
   {
-    key: "guardianReflectPortionOfDamageReceived",
+    key: "guardianSuccessfulGuardsSendOutShockwaves",
     ids: [7033400],
     nightfarer: "Guardian",
     stacks: false,

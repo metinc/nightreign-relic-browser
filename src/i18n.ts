@@ -107,8 +107,8 @@ const resources = {
           "[Guardian] Improved Character Skill range",
         guardianIncreasedDurationForCharacterSkill:
           "[Guardian] Increased duration for Character Skill",
-        guardianReflectPortionOfDamageReceived:
-          "[Guardian] Reflect a portion of damage received when ability is activated",
+        guardianSuccessfulGuardsSendOutShockwaves:
+          "[Guardian] Successful guards send out shockwaves while ability is active",
         guardianRestoresAlliesHPWhenCharacterSkillUsed:
           "[Guardian] Restores allies' HP when Character Skill is used",
         guardianSlowlyRestoresNearbyAlliesHP:
