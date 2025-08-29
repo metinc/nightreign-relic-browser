@@ -356,6 +356,25 @@ const itemsArray: ItemArrayElement[] = [
   },
 ];
 
+// relics from bosses or quests
+export const uniqueItemIds = itemsArray
+  .filter(
+    ({ key }) =>
+      key !== "delicateBurningScene" &&
+      key !== "delicateDrizzlyScene" &&
+      key !== "delicateLuminousScene" &&
+      key !== "delicateTranquilScene" &&
+      key !== "polishedBurningScene" &&
+      key !== "polishedDrizzlyScene" &&
+      key !== "polishedLuminousScene" &&
+      key !== "polishedTranquilScene" &&
+      key !== "grandBurningScene" &&
+      key !== "grandDrizzlyScene" &&
+      key !== "grandLuminousScene" &&
+      key !== "grandTranquilScene"
+  )
+  .flatMap(({ ids }) => ids);
+
 interface Item {
   key: string;
   color: RelicColor | null;

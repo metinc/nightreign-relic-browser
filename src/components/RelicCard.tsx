@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
+import { uniqueItemIds } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
 import {
   getEffect,
@@ -58,8 +59,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const itemColor = getRelicColor(itemId);
   const chipColor = getChipColor(itemColor);
   const backgroundColor = getBackgroundColor(effects.length);
-  const isSpecialRelic =
-    !itemName.endsWith(" Scene") && !itemName.startsWith("Unknown Item");
+  const isUniqueRelic = uniqueItemIds.includes(itemId);
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
   const selectedChipColor = getChipColor(selectedColor);
 
@@ -132,7 +132,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               letterSpacing: 0,
               flexGrow: 1,
               fontSize: ".9rem",
-              ...(isSpecialRelic
+              ...(isUniqueRelic
                 ? {
                     color: "primary.main",
                     fontWeight: "bold",
