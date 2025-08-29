@@ -158,8 +158,8 @@ const resources = {
           "[Wylder] Art gauge greatly filled when ability is activated",
         wylderCharacterSkillInflictsBloodLoss:
           "[Wylder] Character Skill inflicts Blood Loss",
-        wylderFollowUpAttacksPossibleWhenUsingCharacterSkill:
-          "[Wylder] Follow-up attacks possible when using Character Skill (greatsword only)",
+        wylderStandardAttacksEnhancedWithFieryFollowUpsWhenUsingCharacterSkill:
+          "[Wylder] Standard attacks enhanced with fiery follow-ups when using Character Skill (greatsword only)",
         wylderImpairedDamageNegationImprovedAttackPowerStaminaAfterArtActivation:
           "[Wylder] Impaired damage negation, improved attack power & stamina after Art activation",
         wylderImprovedAttackPowerWhenAbilityActivated:

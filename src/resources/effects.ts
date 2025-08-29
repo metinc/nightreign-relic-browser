@@ -280,7 +280,7 @@ export const effectsArray = [
     stacks: false,
   },
   {
-    key: "wylderFollowUpAttacksPossibleWhenUsingCharacterSkill",
+    key: "wylderStandardAttacksEnhancedWithFieryFollowUpsWhenUsingCharacterSkill",
     ids: [7020000],
     nightfarer: "Wylder",
     stacks: false,
