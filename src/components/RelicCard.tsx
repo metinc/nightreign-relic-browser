@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
-import { uniqueItemIds } from "../resources/items";
+import { uniqueItemIds, unsellableItemIds } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
 import {
   getEffect,
@@ -147,7 +147,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
           >
             {itemNameHighlight.highlightedText}
           </Typography>
-          {relic.redundant && (
+          {relic.redundant && !unsellableItemIds.includes(relic.itemId) && (
             <Chip
               label="SELL"
               size="small"

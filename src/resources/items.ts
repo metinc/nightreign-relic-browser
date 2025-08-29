@@ -375,6 +375,15 @@ export const uniqueItemIds = itemsArray
   )
   .flatMap(({ ids }) => ids);
 
+// relics bought from shops
+export const unsellableItemIds = [
+  1520, 1050, 1040, 1030, 1020, 1010, 1000, 1100, 1090, 1060, 1170, 1160, 1150,
+  1140, 1130, 1120, 1260, 1270, 1240, 1480, 1460, 1430, 1420, 1400, 1450, 1500,
+  1490, 1440, 1510, 1250, 1210, 1200, 1180, 1230, 1220, 1190, 1070, 1110, 1080,
+  1410, 1470,
+];
+unsellableItemIds.push(...uniqueItemIds);
+
 interface Item {
   key: string;
   color: RelicColor | null;

@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 import type { Effect } from "../resources/effects";
+import { unsellableItemIds } from "../resources/items";
 import type { CharacterSlot } from "../types/SaveFile";
 import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
@@ -37,7 +38,10 @@ export function RelicBrowser({
     return currentSlot.relics.filter((relic) => {
       const { itemId, effects, redundant } = relic;
 
-      if (filterSell && redundant === undefined) {
+      if (
+        filterSell &&
+        (redundant === undefined || unsellableItemIds.includes(itemId))
+      ) {
         return false;
       }
       const itemName = getItemName(itemId);
