@@ -1,3 +1,4 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Alert,
   Box,
@@ -7,7 +8,11 @@ import {
   Chip,
   Divider,
   FormControlLabel,
+  IconButton,
   LinearProgress,
+  List,
+  ListItem,
+  ListItemText,
   Radio,
   RadioGroup,
   Snackbar,
@@ -460,27 +465,31 @@ export function ComboFinder(props: ComboFinderProps) {
           showOrBetterLabels
         />
 
-        {/* Selected Effects Chips */}
         {selectedEffects.length > 0 && (
-          <Stack
-            gap={1}
-            mt={2}
-            sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
-          >
+          <List>
             {selectedEffects.map((effect) => (
-              <Chip
+              <ListItem
                 key={effect.key}
-                label={t(`effects.${effect.key}`)}
-                onDelete={() => removeEffect(effect)}
-                variant="filled"
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="remove"
+                    onClick={() => removeEffect(effect)}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                }
                 sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  justifyContent: "space-between",
+                  "&:not(:last-of-type)": {
+                    borderBottom: 1,
+                    borderColor: "divider",
+                  },
                 }}
-              />
+              >
+                <ListItemText primary={t(`effects.${effect.key}`)} />
+              </ListItem>
             ))}
-          </Stack>
+          </List>
         )}
       </Box>
 
