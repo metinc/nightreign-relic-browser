@@ -550,7 +550,7 @@ export async function searchCombinationsAsync(
             return a.id - b.id;
           });
 
-          const uniqueKey = `${vessel.name}-${relicIds.map(({ id }) => id).join("-")}`;
+          const uniqueKey = relicIds.map(({ id }) => id).join("-");
           combinationsMap.set(uniqueKey, {
             vessel,
             relicCombination,
