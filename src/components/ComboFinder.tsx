@@ -549,7 +549,12 @@ export function ComboFinder(props: ComboFinderProps) {
                   {searchResults.combinations.map(
                     (combo, index) =>
                       index < 50 && (
-                        <Card key={index} elevation={2}>
+                        <Card
+                          key={combo.relicCombination
+                            .map((r) => r?.id)
+                            .join("-")}
+                          elevation={2}
+                        >
                           <CardContent>
                             <Typography fontWeight="bold" gutterBottom>
                               {combo.vessel.name}
