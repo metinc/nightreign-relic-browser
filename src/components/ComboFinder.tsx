@@ -251,7 +251,7 @@ export function ComboFinder(props: ComboFinderProps) {
               setProgress(p);
             }
           },
-          yieldIntervalMs: 12, // update roughly every frame
+          yieldIntervalMs: 100,
         }
       );
 
@@ -516,7 +516,7 @@ export function ComboFinder(props: ComboFinderProps) {
               }
               sx={{
                 "& .MuiLinearProgress-bar": {
-                  transitionDuration: "0.1s",
+                  transitionDuration: "0.2s",
                 },
               }}
             />
