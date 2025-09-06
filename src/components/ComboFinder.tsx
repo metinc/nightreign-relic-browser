@@ -528,6 +528,10 @@ export function ComboFinder(props: ComboFinderProps) {
                   (progress.availableRelicsCount
                     ? ` from ${progress.availableRelicsCount.toLocaleString()} relics`
                     : "")}
+              {import.meta.env.DEV &&
+                progress?.stage === "done" &&
+                searchResults?.searchTime !== undefined &&
+                ` in ${searchResults.searchTime} ms`}
             </Typography>
           </Box>
         )}
