@@ -519,12 +519,6 @@ export async function searchCombinationsAsync(
             r2 ?? fallbackCombinationsMap.get(vessel.name)?.relicCombination[2],
           ];
 
-          const points = calculateComboPoints(
-            nightfarer,
-            relicCombination,
-            selectedEffects
-          );
-
           const relicIds = relicCombination
             .filter((relicSlot) => relicSlot !== undefined)
             .map(({ id, effects }) => ({
@@ -547,6 +541,17 @@ export async function searchCombinationsAsync(
           });
 
           const uniqueKey = relicIds.map(({ id }) => id).join("-");
+
+          if (combinationsMap.has(uniqueKey)) {
+            continue;
+          }
+
+          const points = calculateComboPoints(
+            nightfarer,
+            relicCombination,
+            selectedEffects
+          );
+
           combinationsMap.set(uniqueKey, {
             vessel,
             relicCombination,
