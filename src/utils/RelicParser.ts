@@ -1,5 +1,5 @@
 import type { BND4Entry, RelicSlot } from "../types/SaveFile";
-import { getRelicColor } from "./DataUtils";
+import { getEffect, getRelicColor } from "./DataUtils";
 import type { RelicColor } from "./RelicColor";
 
 export class RelicParser {
@@ -166,7 +166,9 @@ export class RelicParser {
                 this.readIntLE(effect2Bytes),
                 this.readIntLE(effect3Bytes),
                 this.readIntLE(effect4Bytes),
-              ].filter((id) => id !== -1);
+              ]
+                .filter((id) => id !== -1)
+                .map(getEffect);
 
               const slotInfo: RelicSlot = {
                 id,

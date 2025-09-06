@@ -41,13 +41,15 @@ export const getRelicColor = (itemId: number): RelicColor => {
   return color as RelicColor;
 };
 
-const unknownEffect: Effect = { key: "unknown" as EffectKey };
+const unknownEffect: (effectId: number) => Effect = (effectId) => ({
+  key: `Unknown Effect ${effectId}` as EffectKey,
+});
 
-export const getEffect = (id: number) => {
-  const effect = effects.get(id);
+export const getEffect = (effectId: number): Effect => {
+  const effect = effects.get(effectId);
   if (!effect) {
-    console.error(`Effect with ID ${id} not found`);
-    return unknownEffect;
+    console.error(`Effect with ID ${effectId} not found`);
+    return unknownEffect(effectId);
   }
   return effect;
 };
@@ -60,21 +62,13 @@ export const getEffectByKey = (key: EffectKey): Effect | undefined => {
 /**
  * Get effect name by ID using TypeScript resources and i18n
  */
-export const getEffectName = (effectId: number): string => {
-  const effect = effects.get(effectId);
-  if (!effect) {
-    return `Unknown Effect ${effectId}`;
-  }
+export const getEffectName = (effect: Effect): string => {
   return i18n.t(`effects.${effect.key}`, { defaultValue: effect.key });
 };
 
 export const getEffectGroup = (
-  effectId: number
+  effect: Effect
 ): { group: string; level: number } | undefined => {
-  const effect = effects.get(effectId);
-  if (!effect) {
-    return undefined;
-  }
   if (
     "group" in effect &&
     "level" in effect &&
@@ -107,9 +101,10 @@ export const getCompactCharacterSlot = (
   return {
     name: compactCharacterSlot.name,
     relics: compactCharacterSlot.relics.map((relic, index) => {
-      const [itemId, ...effects] = relic;
+      const [itemId, ...effectIds] = relic;
       const color = getRelicColor(itemId);
       const indexByColor = relicsByColor[color].indexOf(relic);
+      const effects = effectIds.map(getEffect);
       return {
         id: index,
         itemId,

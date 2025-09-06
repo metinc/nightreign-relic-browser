@@ -4,7 +4,7 @@ import {
   type Effect,
 } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
-import { getEffect, getRelicColor } from "./DataUtils";
+import { getRelicColor } from "./DataUtils";
 import type { NightfarerName } from "./Nightfarers";
 import {
   relicColors,
@@ -85,8 +85,7 @@ export function relicHasAnyEffect(
   relics: RelicSlot[]
 ): RelicSlot[] {
   return relics.filter((relic) => {
-    return relic.effects.some((effectId) => {
-      const effect = getEffect(effectId);
+    return relic.effects.some((effect) => {
       return selectedEffects.some((selectedEffect) => {
         if (selectedEffect.key === effect.key) {
           return true;
@@ -119,10 +118,9 @@ function calculateComboPoints(
   relicCombination: VesselCombination["relicCombination"],
   selectedEffects: Effect[]
 ): number {
-  const effectIds = relicCombination
+  const effects = relicCombination
     .filter((relic) => relic !== undefined)
     .flatMap((relic) => relic.effects);
-  const effects = effectIds.map(getEffect);
   const satisfiedEffects: Effect[] = [];
 
   let points = 0;
@@ -243,12 +241,8 @@ export async function searchCombinationsAsync(
 
   Object.values(fallbackRelicsByColor).forEach((fallback) => {
     fallback.sort((a, b) => {
-      const aNightfarers = a.effects.map(
-        (effectId) => getEffect(effectId).nightfarer
-      );
-      const bNightfarers = b.effects.map(
-        (effectId) => getEffect(effectId).nightfarer
-      );
+      const aNightfarers = a.effects.map((effect) => effect.nightfarer);
+      const bNightfarers = b.effects.map((effect) => effect.nightfarer);
       const aHasMatching = aNightfarers.some((nf) => nf === nightfarer);
       const bHasMatching = bNightfarers.some((nf) => nf === nightfarer);
       const aHasUndefined = aNightfarers.some((nf) => nf === undefined);
@@ -533,7 +527,7 @@ export async function searchCombinationsAsync(
             .filter((relicSlot) => relicSlot !== undefined)
             .map(({ id, effects }) => ({
               id,
-              effects: effects.map(getEffect),
+              effects,
             }));
 
           // sort to avoid identical relic combinations

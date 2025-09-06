@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { SaveFileData } from "../types/SaveFile";
-import { getEffect } from "../utils/DataUtils";
 import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
 import { CharacterSlotSelect } from "./CharacterSlotSelect";
 import { ComboFinder } from "./ComboFinder";
@@ -65,8 +64,7 @@ export function RelicsPage({
     if (!currentSlot) {
       return [];
     }
-    const effectIds = currentSlot?.relics.flatMap((relic) => relic.effects);
-    const effects = effectIds.map((id) => getEffect(id));
+    const effects = currentSlot?.relics.flatMap((relic) => relic.effects);
     const uniqueEffects = effects.filter(
       (effect, index, arr) =>
         arr.findIndex((e) => e.key === effect.key) === index

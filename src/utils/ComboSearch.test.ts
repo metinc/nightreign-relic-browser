@@ -1,43 +1,43 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import fs from "fs";
+import path from "path";
+import { beforeAll, describe, expect, it } from "vitest";
+import { type Effect } from "../resources/effects";
+import type { RelicSlot } from "../types/SaveFile";
 import {
   canRelicFitInSlot,
   searchCombinationsAsync,
 } from "../utils/ComboSearch";
-import { type Effect } from "../resources/effects";
-import type { RelicSlot } from "../types/SaveFile";
 import { wylderVessels } from "../utils/Vessels";
-import path from "path";
-import fs from "fs";
-import { SaveFileDecryptor } from "./SaveFileDecryptor";
-import { RelicParser } from "./RelicParser";
 import { getEffect } from "./DataUtils";
+import { RelicParser } from "./RelicParser";
+import { SaveFileDecryptor } from "./SaveFileDecryptor";
 
 const mockRelics: RelicSlot[] = [
   {
     id: 1,
     itemId: 100, // red
-    effects: [7001400, 7001500],
+    effects: [getEffect(7001400), getEffect(7001500)],
     coordinates: [0, 0],
     coordinatesByColor: [0, 0],
   },
   {
     id: 2,
     itemId: 131, // green
-    effects: [7001600],
+    effects: [getEffect(7001600)],
     coordinates: [0, 0],
     coordinatesByColor: [0, 0],
   },
   {
     id: 3,
     itemId: 16001, // blue
-    effects: [7001700, 7001800],
+    effects: [getEffect(7001700), getEffect(7001800)],
     coordinates: [0, 0],
     coordinatesByColor: [0, 0],
   },
   {
     id: 4,
     itemId: 13002, // yellow
-    effects: [7001500, 7001700],
+    effects: [getEffect(7001500), getEffect(7001700)],
     coordinates: [0, 0],
     coordinatesByColor: [0, 0],
   },

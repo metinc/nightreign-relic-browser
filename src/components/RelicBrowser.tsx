@@ -45,9 +45,7 @@ export function RelicBrowser({
         return false;
       }
       const itemName = getItemName(itemId);
-      const effectNames = effects.map((effectId: number) =>
-        getEffectName(effectId)
-      );
+      const effectNames = effects.map(getEffectName);
       const itemColor = getRelicColor(itemId);
 
       if (!doesRelicColorMatch(itemColor, selectedColor)) {
