@@ -118,55 +118,57 @@ function calculateComboPoints(
   relicCombination: VesselCombination["relicCombination"],
   selectedEffects: Effect[]
 ): number {
-  const effects = relicCombination
-    .filter((relic) => relic !== undefined)
-    .flatMap((relic) => relic.effects);
   const satisfiedEffects: Effect[] = [];
 
   let points = 0;
-  for (const effect of effects) {
-    const isOverriddenEffect = satisfiedEffects.some((satisfiedEffect) =>
-      isSameStartingBonus(effect, satisfiedEffect)
-    );
-    if (isOverriddenEffect) {
-      // No points for overridden effects
-      satisfiedEffects.push(effect);
+  for (const relicSlot of relicCombination) {
+    if (relicSlot === undefined) {
       continue;
     }
-    const isDuplicate =
-      satisfiedEffects.includes(effect) ||
-      satisfiedEffects.some((satisfiedEffect) =>
-        isSameGroupAndEqualOrBetter(satisfiedEffect, effect)
+    for (const effect of relicSlot.effects) {
+      const isOverriddenEffect = satisfiedEffects.some((satisfiedEffect) =>
+        isSameStartingBonus(effect, satisfiedEffect)
       );
-    const isStackable = effect.stacks;
-    const isSelectedEffect =
-      selectedEffects.includes(effect) ||
-      selectedEffects.some((selected) =>
-        isSameGroupAndEqualOrBetter(selected, effect)
-      );
-    const isCharacterEffect = effect.nightfarer !== undefined;
-    const isUsableCharacterEffect = effect.nightfarer === nightfarer;
-    const levelPointsMultiplier =
-      effect.level === undefined
-        ? 1
-        : 1 + (3 - effect.level) * PENALTY_FOR_MISSING_LEVEL;
-    if (isDuplicate && !isStackable) {
-      points += PENALTY_FOR_NON_STACKABLE_DUPLICATE_EFFECT;
-    } else {
-      if (isSelectedEffect) {
-        if (isDuplicate) {
-          points +=
-            POINTS_FOR_SELECTED_DUPLICATE_EFFECT * levelPointsMultiplier;
-        } else {
-          points += POINTS_FOR_SELECTED_EFFECT * levelPointsMultiplier;
-        }
-      } else if (isUsableCharacterEffect && !isDuplicate) {
-        points += POINTS_FOR_RANDOM_CHARACTER_EFFECT * levelPointsMultiplier;
-      } else if (!isCharacterEffect) {
-        points += POINTS_FOR_RANDOM_EFFECT * levelPointsMultiplier;
+      if (isOverriddenEffect) {
+        // No points for overridden effects
+        satisfiedEffects.push(effect);
+        continue;
       }
+      const isDuplicate =
+        satisfiedEffects.includes(effect) ||
+        satisfiedEffects.some((satisfiedEffect) =>
+          isSameGroupAndEqualOrBetter(satisfiedEffect, effect)
+        );
+      const isStackable = effect.stacks;
+      const isSelectedEffect =
+        selectedEffects.includes(effect) ||
+        selectedEffects.some((selected) =>
+          isSameGroupAndEqualOrBetter(selected, effect)
+        );
+      const isCharacterEffect = effect.nightfarer !== undefined;
+      const isUsableCharacterEffect = effect.nightfarer === nightfarer;
+      const levelPointsMultiplier =
+        effect.level === undefined
+          ? 1
+          : 1 + (3 - effect.level) * PENALTY_FOR_MISSING_LEVEL;
+      if (isDuplicate && !isStackable) {
+        points += PENALTY_FOR_NON_STACKABLE_DUPLICATE_EFFECT;
+      } else {
+        if (isSelectedEffect) {
+          if (isDuplicate) {
+            points +=
+              POINTS_FOR_SELECTED_DUPLICATE_EFFECT * levelPointsMultiplier;
+          } else {
+            points += POINTS_FOR_SELECTED_EFFECT * levelPointsMultiplier;
+          }
+        } else if (isUsableCharacterEffect && !isDuplicate) {
+          points += POINTS_FOR_RANDOM_CHARACTER_EFFECT * levelPointsMultiplier;
+        } else if (!isCharacterEffect) {
+          points += POINTS_FOR_RANDOM_EFFECT * levelPointsMultiplier;
+        }
+      }
+      satisfiedEffects.push(effect);
     }
-    satisfiedEffects.push(effect);
   }
 
   return points;
