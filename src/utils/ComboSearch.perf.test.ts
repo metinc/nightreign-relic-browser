@@ -1,18 +1,17 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import fs from "fs";
+import path from "path";
+import { beforeAll, describe, expect, it } from "vitest";
+import type { RelicSlot } from "../types/SaveFile";
 import { searchCombinationsAsync } from "../utils/ComboSearch";
 import { wylderVessels } from "../utils/Vessels";
-import type { RelicSlot } from "../types/SaveFile";
-import path from "path";
-import fs from "fs";
-import { SaveFileDecryptor } from "./SaveFileDecryptor";
-import { RelicParser } from "./RelicParser";
 import { getEffect } from "./DataUtils";
+import { RelicParser } from "./RelicParser";
+import { SaveFileDecryptor } from "./SaveFileDecryptor";
 
 describe("ComboSearch performance", () => {
   let relics: RelicSlot[];
 
   beforeAll(async () => {
-    // Load the test save file directly from filesystem (first slot only)
     const filePath = path.join(__dirname, "..", "test", "metin.sl2");
     const fileBuffer = fs.readFileSync(filePath);
     const saveFileBuffer = fileBuffer.buffer.slice(
@@ -26,8 +25,17 @@ describe("ComboSearch performance", () => {
   });
 
   it("should complete a typical Wylder search within time budget", async () => {
-    // Choose an effect that exists in many inventories but still prunes well
-    const selectedEffects = [getEffect(7000700), getEffect(7000100)];
+    const selectedEffects = [
+      getEffect(7000700),
+      getEffect(7000100),
+      getEffect(7001800),
+      getEffect(320400),
+      getEffect(312100),
+      getEffect(7006000),
+      getEffect(7000500),
+      getEffect(7001400),
+      getEffect(7000900),
+    ];
 
     let totalToCheck: number | undefined;
     const result = await searchCombinationsAsync(
@@ -51,9 +59,9 @@ describe("ComboSearch performance", () => {
     expect(totalToCheck).toBeDefined();
     expect(result.totalCombinationsChecked).toBe(totalToCheck);
 
-    // Performance expectation: keep this generous to avoid platform flakiness.
     // Adjust if the algorithm improves in the future.
-    const TIME_BUDGET_MS = 220;
+    const TIME_BUDGET_MS = 2500;
+    console.log(`Search time: ${result.searchTime} ms`);
     expect(result.searchTime).toBeLessThanOrEqual(TIME_BUDGET_MS);
   });
 });
