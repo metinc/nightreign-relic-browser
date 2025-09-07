@@ -110,7 +110,6 @@ const POINTS_FOR_SELECTED_EFFECT = 1;
 const POINTS_FOR_SELECTED_DUPLICATE_EFFECT = 0.9;
 const POINTS_FOR_RANDOM_EFFECT = 0.2;
 const POINTS_FOR_RANDOM_CHARACTER_EFFECT = 0.4;
-const PENALTY_FOR_NON_STACKABLE_DUPLICATE_EFFECT = -0.1;
 const PENALTY_FOR_MISSING_LEVEL = -0.1;
 
 function calculateComboPoints(
@@ -138,7 +137,6 @@ function calculateComboPoints(
       );
       if (isOverriddenEffect) {
         // No points for overridden effects
-        satisfiedEffects.push(effect);
         continue;
       }
       const isDuplicate =
@@ -147,31 +145,32 @@ function calculateComboPoints(
           isSameGroupAndEqualOrBetter(satisfiedEffect, effect)
         );
       const isStackable = effect.stacks;
+      if (isDuplicate && !isStackable) {
+        // No points for non-stackable duplicate effects
+        continue;
+      }
       const isSelectedEffect =
         selectedEffects.includes(effect) ||
         selectedEffects.some((selected) =>
           isSameGroupAndEqualOrBetter(selected, effect)
         );
-      if (isDuplicate && !isStackable) {
-        points += PENALTY_FOR_NON_STACKABLE_DUPLICATE_EFFECT;
-      } else {
-        const levelPointsMultiplier =
-          effect.level === undefined
-            ? 1
-            : 1 + (3 - effect.level) * PENALTY_FOR_MISSING_LEVEL;
-        if (isSelectedEffect) {
-          if (isDuplicate) {
-            points +=
-              POINTS_FOR_SELECTED_DUPLICATE_EFFECT * levelPointsMultiplier;
-          } else {
-            points += POINTS_FOR_SELECTED_EFFECT * levelPointsMultiplier;
-          }
-        } else if (isUsableCharacterEffect && !isDuplicate) {
-          points += POINTS_FOR_RANDOM_CHARACTER_EFFECT * levelPointsMultiplier;
-        } else if (!isCharacterEffect) {
-          points += POINTS_FOR_RANDOM_EFFECT * levelPointsMultiplier;
+      const levelPointsMultiplier =
+        effect.level === undefined
+          ? 1
+          : 1 + (3 - effect.level) * PENALTY_FOR_MISSING_LEVEL;
+      if (isSelectedEffect) {
+        if (isDuplicate) {
+          points +=
+            POINTS_FOR_SELECTED_DUPLICATE_EFFECT * levelPointsMultiplier;
+        } else {
+          points += POINTS_FOR_SELECTED_EFFECT * levelPointsMultiplier;
         }
+      } else if (isUsableCharacterEffect && !isDuplicate) {
+        points += POINTS_FOR_RANDOM_CHARACTER_EFFECT * levelPointsMultiplier;
+      } else if (!isCharacterEffect) {
+        points += POINTS_FOR_RANDOM_EFFECT * levelPointsMultiplier;
       }
+
       satisfiedEffects.push(effect);
     }
   }
