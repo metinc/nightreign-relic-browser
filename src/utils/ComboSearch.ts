@@ -152,13 +152,13 @@ function calculateComboPoints(
         selectedEffects.some((selected) =>
           isSameGroupAndEqualOrBetter(selected, effect)
         );
-      const levelPointsMultiplier =
-        effect.level === undefined
-          ? 1
-          : 1 + (3 - effect.level) * PENALTY_FOR_MISSING_LEVEL;
       if (isDuplicate && !isStackable) {
         points += PENALTY_FOR_NON_STACKABLE_DUPLICATE_EFFECT;
       } else {
+        const levelPointsMultiplier =
+          effect.level === undefined
+            ? 1
+            : 1 + (3 - effect.level) * PENALTY_FOR_MISSING_LEVEL;
         if (isSelectedEffect) {
           if (isDuplicate) {
             points +=
