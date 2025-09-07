@@ -126,6 +126,13 @@ function calculateComboPoints(
       continue;
     }
     for (const effect of relicSlot.effects) {
+      const isCharacterEffect = effect.nightfarer !== undefined;
+      const isUsableCharacterEffect = effect.nightfarer === nightfarer;
+      if (isCharacterEffect && !isUsableCharacterEffect) {
+        // No points for other character effects
+        continue;
+      }
+
       const isOverriddenEffect = satisfiedEffects.some((satisfiedEffect) =>
         isSameStartingBonus(effect, satisfiedEffect)
       );
@@ -145,8 +152,6 @@ function calculateComboPoints(
         selectedEffects.some((selected) =>
           isSameGroupAndEqualOrBetter(selected, effect)
         );
-      const isCharacterEffect = effect.nightfarer !== undefined;
-      const isUsableCharacterEffect = effect.nightfarer === nightfarer;
       const levelPointsMultiplier =
         effect.level === undefined
           ? 1
@@ -269,7 +274,7 @@ export async function searchCombinationsAsync(
 
   const availableRelicsCount = relics.length;
 
-  // Preselect limited fallback relics per color (cap to 3 as before)
+  // Preselect limited fallback relics per color
   const preselectedFallbackByColor: Record<RelicColor, RelicSlot[]> = {
     Red: fallbackRelicsByColor.Red.slice(0, 3),
     Blue: fallbackRelicsByColor.Blue.slice(0, 3),
