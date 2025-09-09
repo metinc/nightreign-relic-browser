@@ -334,18 +334,21 @@ export const effectsArray = [
     ids: [7000700],
     group: "arcane",
     level: 1,
+    stacks: true,
   },
   {
     key: "arcanePlus2",
     ids: [7000701],
     group: "arcane",
     level: 2,
+    stacks: true,
   },
   {
     key: "arcanePlus3",
     ids: [7000702],
     group: "arcane",
     level: 3,
+    stacks: true,
   },
   {
     key: "armamentDealsFireDamagePlus1AtStartOfExpedition",
@@ -382,6 +385,7 @@ export const effectsArray = [
   {
     key: "attackPowerPermanentlyIncreasedForEachEvergaolPrisonerDefeated",
     ids: [7060000],
+    stacks: false,
   },
   {
     key: "attackPowerUpAfterDefeatingANightInvader",
@@ -2564,12 +2568,14 @@ export const effectsArray = [
     ids: [7100100],
     group: "staminaRecoveryUponLandingAttacks",
     level: 0,
+    stacks: true,
   },
   {
     key: "staminaRecoveryUponLandingAttacksPlus1",
     ids: [7100110, 7100190],
     group: "staminaRecoveryUponLandingAttacks",
     level: 1,
+    stacks: false,
   },
   {
     key: "starlightShardsInPossessionAtStartOfExpedition",
