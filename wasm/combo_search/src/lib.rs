@@ -71,8 +71,8 @@ fn is_same_starting_bonus(a: &Effect, b: &Effect) -> bool {
     }
 }
 
-fn is_recommended_effect(effect: &Effect, recommended: &[Effect]) -> bool {
-    recommended.iter().any(|r| r.key == effect.key)
+fn is_recommended_effect(effect: &Effect, recommended_keys: &HashSet<String>) -> bool {
+    recommended_keys.contains(&effect.key)
 }
 
 fn generate_unique_key(relic_indices: [Option<usize>; 3], relics: &[RelicSlot]) -> u128 {
@@ -100,12 +100,12 @@ fn add_combination_if_unique(
     relics: &[RelicSlot],
     nightfarer: &str,
     selected_effects: &[Effect],
-    recommended_effects: &[Effect],
+    recommended_keys: &HashSet<String>,
 ) {
     let unique_key = generate_unique_key(relic_indices, relics);
     
     if seen_combinations.insert(unique_key) {
-        let points = calc_points(nightfarer, relic_indices, relics, selected_effects, recommended_effects);
+        let points = calc_points(nightfarer, relic_indices, relics, selected_effects, recommended_keys);
         results.push(VesselCombinationResultEntry {
             vessel_index,
             relic_indices,
@@ -114,7 +114,7 @@ fn add_combination_if_unique(
     }
 }
 
-fn calc_points(nightfarer: &str, relic_indices: [Option<usize>; 3], relics: &[RelicSlot], selected: &[Effect], recommended: &[Effect]) -> f32 {
+fn calc_points(nightfarer: &str, relic_indices: [Option<usize>; 3], relics: &[RelicSlot], selected: &[Effect], recommended_keys: &HashSet<String>) -> f32 {
     let mut satisfied_effects: Vec<&Effect> = Vec::with_capacity(32);
     let mut points: f32 = 0.0;
 
@@ -164,7 +164,7 @@ fn calc_points(nightfarer: &str, relic_indices: [Option<usize>; 3], relics: &[Re
                 } else if is_usable_character_effect && !is_duplicate {
                     points += POINTS_FOR_RANDOM_CHARACTER_EFFECT * level_points_multiplier;
                 } else if !is_character_effect {
-                    let is_recommended = is_recommended_effect(effect, recommended);
+                    let is_recommended = is_recommended_effect(effect, recommended_keys);
                     if is_recommended {
                         points += POINTS_FOR_RANDOM_RECOMMENDED_EFFECT * level_points_multiplier;
                     } else {
@@ -192,6 +192,9 @@ pub fn search_combinations(input: JsValue) -> JsValue {
         }
     }
     let effect_candidate_set: HashSet<usize> = effect_candidates.iter().copied().collect();
+
+    // Precompute recommended keys for O(1) lookup
+    let recommended_keys: HashSet<String> = input.recommended_effects.iter().map(|e| e.key.clone()).collect();
 
     // Pre-split all relics by color for fast filtering (full set, not only candidates)
     let mut by_color_all: std::collections::HashMap<&str, Vec<usize>> = std::collections::HashMap::new();
@@ -238,7 +241,7 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                         // Count attempted combination
                         checked += 1;
                         // (At least one candidate guaranteed by construction)
-                        add_combination_if_unique(&mut results, &mut seen_combinations, v_i, relic_indices, &input.relics, &input.nightfarer, &input.selected_effects, &input.recommended_effects);
+                        add_combination_if_unique(&mut results, &mut seen_combinations, v_i, relic_indices, &input.relics, &input.nightfarer, &input.selected_effects, &recommended_keys);
                     }
                 }
             }
