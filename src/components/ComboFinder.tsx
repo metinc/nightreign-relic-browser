@@ -24,7 +24,8 @@ import { useTranslation } from "react-i18next";
 import type { Effect } from "../resources/effects";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import {
-  searchCombinationsAsync,
+  cancelCurrentSearch,
+  searchCombinations,
   type ComboSearchProgress,
   type ComboSearchResult,
 } from "../utils/ComboSearch";
@@ -207,8 +208,7 @@ export function ComboFinder(props: ComboFinderProps) {
     setProgress({
       totalCombinationsChecked: 0,
       availableRelicsCount: 0,
-      stage: "fallback",
-      totalToCheck: 0,
+      stage: "main",
     });
 
     try {
@@ -239,19 +239,16 @@ export function ComboFinder(props: ComboFinderProps) {
           !settings[selectedNightfarer].disabledVessels.includes(index)
       );
 
-      // Use the async search algorithm with progress updates and yielding
-      const result = await searchCombinationsAsync(
+      const result = await searchCombinations(
         selectedNightfarer,
         selectedEffects,
         availableRelics,
         enabledVessels,
-        {
-          onProgress: (p) => {
-            if (myRunId === runIdRef.current) {
-              setProgress(p);
-            }
-          },
-          yieldIntervalMs: 100,
+        (progress: ComboSearchProgress) => {
+          // Only update progress if this is still the current search
+          if (myRunId === runIdRef.current) {
+            setProgress(progress);
+          }
         }
       );
 
@@ -261,11 +258,17 @@ export function ComboFinder(props: ComboFinderProps) {
           totalCombinationsChecked: result.totalCombinationsChecked,
           availableRelicsCount: result.availableRelicsCount,
           stage: "done",
-          totalToCheck: result.totalCombinationsChecked,
         });
       }
-    } finally {
-      // no-op
+    } catch (error) {
+      if (myRunId === runIdRef.current) {
+        // Only log non-cancellation errors
+        if (error instanceof Error && error.message !== "Search cancelled") {
+          console.error("Search failed:", error);
+        }
+        setProgress(null);
+        setSearchResults(null);
+      }
     }
   }, [selectedEffects, selectedNightfarer, settings, saveFileData, runIdRef]);
 
@@ -283,6 +286,13 @@ export function ComboFinder(props: ComboFinderProps) {
       setSearchResults(null);
     }
   }, [performSearch, selectedEffects.length, selectedNightfarer, settings]);
+
+  // Cleanup: cancel any ongoing search when component unmounts
+  useEffect(() => {
+    return () => {
+      cancelCurrentSearch();
+    };
+  }, []);
 
   const handleEffectChange = useCallback(
     (newEffect: Effect) => {
@@ -502,36 +512,16 @@ export function ComboFinder(props: ComboFinderProps) {
         {selectedEffects.length > 0 && (
           <Box sx={{ mb: 2 }}>
             <LinearProgress
-              variant="determinate"
-              color={progress?.stage === "done" ? "success" : "primary"}
-              value={
-                progress?.totalToCheck === undefined
-                  ? 0
-                  : Math.min(
-                      100,
-                      (progress.totalCombinationsChecked /
-                        progress.totalToCheck) *
-                        100
-                    )
+              variant={
+                progress?.stage === "done" ? "determinate" : "indeterminate"
               }
-              sx={{
-                "& .MuiLinearProgress-bar": {
-                  transitionDuration: "0.2s",
-                },
-              }}
+              color={progress?.stage === "done" ? "success" : "primary"}
+              value={100}
             />
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              {progress &&
-                `Checked ${progress.totalCombinationsChecked.toLocaleString()} / ${
-                  progress.totalToCheck?.toLocaleString() ?? "?"
-                } combinations` +
-                  (progress.availableRelicsCount
-                    ? ` from ${progress.availableRelicsCount.toLocaleString()} relics`
-                    : "")}
-              {import.meta.env.DEV &&
-                progress?.stage === "done" &&
-                searchResults?.searchTime !== undefined &&
-                ` in ${searchResults.searchTime} ms`}
+              {progress?.stage === "done" && searchResults !== null
+                ? `Checked ${progress.totalCombinationsChecked.toLocaleString()} combinations from ${progress.availableRelicsCount.toLocaleString()} relics in ${searchResults.searchTime} ms.`
+                : "Searching..."}
             </Typography>
           </Box>
         )}

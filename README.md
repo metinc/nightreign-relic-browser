@@ -16,7 +16,7 @@ Analyze and optimize your Elden Ring Nightreign relic collection across every ch
 
 ## Tech Stack
 
-React 19, TypeScript, Vite, MUI, i18next, Vitest, ESLint, Prettier.
+React 19, TypeScript, Vite, MUI, i18next, Vitest, ESLint, Prettier. Rust + wasm-bindgen for the high‑performance combo search.
 
 ## Getting Started
 
@@ -36,6 +36,7 @@ React 19, TypeScript, Vite, MUI, i18next, Vitest, ESLint, Prettier.
 | -------------------- | --------------------------------------------------------- |
 | `npm run dev`        | Start the Vite development server                         |
 | `npm run build`      | Type check then build for production (outputs to `dist/`) |
+| `npm run build:wasm` | Builds the Rust combo search crate to WebAssembly         |
 | `npm run lint`       | Run ESLint over the project                               |
 | `npm run test`       | Run unit tests with Vitest                                |
 | `npm run type-check` | Run TypeScript type checking only                         |

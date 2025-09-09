@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# WASM
+wasm-pack.log
+wasm/combo_search/pkg/
+wasm/combo_search/target/
+wasm/combo_search/Cargo.lock

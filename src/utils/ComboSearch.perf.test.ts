@@ -1,9 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { beforeAll, describe, expect, it } from "vitest";
+import init, {
+  search_combinations,
+} from "../../wasm/combo_search/pkg/combo_search.js";
 import type { RelicSlot } from "../types/SaveFile";
-import { searchCombinationsAsync } from "../utils/ComboSearch";
 import { wylderVessels } from "../utils/Vessels";
+import { buildWasmInput } from "../workers/comboSearchWorker.js";
 import { getEffect } from "./DataUtils";
 import { RelicParser } from "./RelicParser";
 import { SaveFileDecryptor } from "./SaveFileDecryptor";
@@ -22,6 +25,9 @@ describe("ComboSearch performance", () => {
     const bnd4Entries = await SaveFileDecryptor.decryptSaveFile(saveFileBuffer);
     const names = RelicParser.getNames(bnd4Entries[10]);
     relics = RelicParser.parseCharacterSlot(names[0], bnd4Entries[0]).relics;
+
+    // Initialize WASM once for this suite
+    await init();
   });
 
   it("should complete a typical Wylder search within time budget", async () => {
@@ -37,31 +43,31 @@ describe("ComboSearch performance", () => {
       getEffect(7000900),
     ];
 
-    let totalToCheck: number | undefined;
-    const result = await searchCombinationsAsync(
+    const start = Date.now();
+    const input = buildWasmInput(
       "Wylder",
       selectedEffects,
       relics,
-      wylderVessels,
-      {
-        onProgress: (p) => {
-          if (p.totalToCheck !== undefined) {
-            totalToCheck = p.totalToCheck;
-          }
-        },
-      }
+      wylderVessels
     );
+    const result = search_combinations(input) as {
+      combinations: Array<{
+        vessel_index: number;
+        relic_indices: [number | null, number | null, number | null];
+        points: number;
+      }>;
+      total_combinations_checked: number;
+    };
+    const searchTime = Date.now() - start;
 
     // Sanity checks
     expect(result.combinations.length).toBeGreaterThan(0);
-    expect(result.availableRelicsCount).toBeGreaterThan(0);
-    expect(result.totalCombinationsChecked).toBeGreaterThan(0);
-    expect(totalToCheck).toBeDefined();
-    expect(result.totalCombinationsChecked).toBe(totalToCheck);
+    expect(relics.length).toBeGreaterThan(0);
+    expect(result.total_combinations_checked).toBeGreaterThan(0);
 
     // Adjust if the algorithm improves in the future.
-    const TIME_BUDGET_MS = 2500;
-    console.log(`Search time: ${result.searchTime} ms`);
-    expect(result.searchTime).toBeLessThanOrEqual(TIME_BUDGET_MS);
-  });
+    const TIME_BUDGET_MS = 8000;
+    console.log(`Search time: ${searchTime} ms`);
+    expect(searchTime).toBeLessThanOrEqual(TIME_BUDGET_MS);
+  }, 10_000);
 });

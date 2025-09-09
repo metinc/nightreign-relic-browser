@@ -1,72 +1,19 @@
 import fs from "fs";
 import path from "path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { type Effect } from "../resources/effects";
+import init, {
+  search_combinations,
+} from "../../wasm/combo_search/pkg/combo_search.js";
+import { effects, type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
-import {
-  canRelicFitInSlot,
-  searchCombinationsAsync,
-} from "../utils/ComboSearch";
 import { wylderVessels } from "../utils/Vessels";
+import { buildWasmInput } from "../workers/comboSearchWorker.js";
 import { getEffect } from "./DataUtils";
 import { RelicParser } from "./RelicParser";
 import { SaveFileDecryptor } from "./SaveFileDecryptor";
 
-const mockRelics: RelicSlot[] = [
-  {
-    id: 1,
-    itemId: 100, // red
-    effects: [getEffect(7001400), getEffect(7001500)],
-    coordinates: [0, 0],
-    coordinatesByColor: [0, 0],
-  },
-  {
-    id: 2,
-    itemId: 131, // green
-    effects: [getEffect(7001600)],
-    coordinates: [0, 0],
-    coordinatesByColor: [0, 0],
-  },
-  {
-    id: 3,
-    itemId: 16001, // blue
-    effects: [getEffect(7001700), getEffect(7001800)],
-    coordinates: [0, 0],
-    coordinatesByColor: [0, 0],
-  },
-  {
-    id: 4,
-    itemId: 13002, // yellow
-    effects: [getEffect(7001500), getEffect(7001700)],
-    coordinates: [0, 0],
-    coordinatesByColor: [0, 0],
-  },
-];
-
 describe("ComboSearch", () => {
-  describe("canRelicFitInSlot", () => {
-    it('should allow any relic in "Any" slot', () => {
-      mockRelics.forEach((relic) => {
-        expect(canRelicFitInSlot(relic, "Any")).toBe(true);
-      });
-    });
-
-    it("should allow matching colors", () => {
-      expect(canRelicFitInSlot(mockRelics[0], "Red")).toBe(true);
-      expect(canRelicFitInSlot(mockRelics[1], "Green")).toBe(true);
-      expect(canRelicFitInSlot(mockRelics[2], "Blue")).toBe(true);
-      expect(canRelicFitInSlot(mockRelics[3], "Yellow")).toBe(true);
-    });
-
-    it("should reject non-matching colors", () => {
-      expect(canRelicFitInSlot(mockRelics[0], "Blue")).toBe(false);
-      expect(canRelicFitInSlot(mockRelics[1], "Red")).toBe(false);
-      expect(canRelicFitInSlot(mockRelics[2], "Red")).toBe(false);
-      expect(canRelicFitInSlot(mockRelics[3], "Red")).toBe(false);
-    });
-  });
-
-  describe("searchCombinationsAsync", () => {
+  describe("searchCombinations", () => {
     let relics: RelicSlot[];
 
     beforeAll(async () => {
@@ -83,28 +30,33 @@ describe("ComboSearch", () => {
         await SaveFileDecryptor.decryptSaveFile(saveFileBuffer);
       const names = RelicParser.getNames(bnd4Entries[10]);
       relics = RelicParser.parseCharacterSlot(names[0], bnd4Entries[0]).relics;
+
+      // Initialize WASM once for all tests
+      await init();
     });
 
     it("should find valid combinations of relics and vessels for single effect", async () => {
       const selectedEffects: Effect[] = [getEffect(7000702)];
-      let totalToCheck: number | undefined;
-      const result = await searchCombinationsAsync(
+
+      const input = buildWasmInput(
         "Wylder",
         selectedEffects,
         relics,
-        wylderVessels,
-        {
-          onProgress: (p) => {
-            if (p.totalToCheck !== undefined) {
-              totalToCheck = p.totalToCheck;
-            }
-          },
-        }
+        wylderVessels
       );
+
+      const result = search_combinations(input) as {
+        combinations: Array<{
+          vessel_index: number;
+          relic_indices: [number | null, number | null, number | null];
+          points: number;
+        }>;
+        total_combinations_checked: number;
+      };
+
+      expect(relics.length).toBeGreaterThan(0);
       expect(result.combinations.length).toBeGreaterThan(0);
-      expect(result.totalCombinationsChecked).toBeGreaterThan(0);
-      expect(totalToCheck).toBeDefined();
-      expect(result.totalCombinationsChecked).toBe(totalToCheck);
+      expect(result.total_combinations_checked).toBeGreaterThan(0);
     });
 
     it("should find valid combinations of relics and vessels for multiple effect", async () => {
@@ -112,24 +64,40 @@ describe("ComboSearch", () => {
         getEffect(7000702),
         getEffect(8440100),
       ];
-      let totalToCheck: number | undefined;
-      const result = await searchCombinationsAsync(
+
+      const input = buildWasmInput(
         "Wylder",
         selectedEffects,
         relics,
-        wylderVessels,
-        {
-          onProgress: (p) => {
-            if (p.totalToCheck !== undefined) {
-              totalToCheck = p.totalToCheck;
-            }
-          },
-        }
+        wylderVessels
       );
+
+      const result = search_combinations(input) as {
+        combinations: Array<{
+          vessel_index: number;
+          relic_indices: [number | null, number | null, number | null];
+          points: number;
+        }>;
+        total_combinations_checked: number;
+      };
+
+      expect(relics.length).toBeGreaterThan(0);
       expect(result.combinations.length).toBeGreaterThan(0);
-      expect(result.totalCombinationsChecked).toBeGreaterThan(0);
-      expect(totalToCheck).toBeDefined();
-      expect(result.totalCombinationsChecked).toBe(totalToCheck);
+      expect(result.total_combinations_checked).toBeGreaterThan(0);
+    });
+
+    it("should fit all effect ids into 24 bits", () => {
+      const allIds = Array.from(effects.keys()).flatMap((id) => id);
+
+      const minId = Math.min(...allIds);
+      expect(minId).toBeGreaterThanOrEqual(0);
+
+      const maxId = Math.max(...allIds);
+      const maxBits = 24;
+      expect(
+        maxId,
+        `Effect ID ${maxId} is too big to fit into 24 bits. Please adjust generate_unique_key() accordingly.`
+      ).toBeLessThan(1 << maxBits);
     });
   });
 });
