@@ -2,6 +2,7 @@ import i18n from "../i18n";
 import {
   effects,
   effectsArray,
+  isSameGroupAndEqualOrBetter,
   type Effect,
   type EffectKey,
 } from "../resources/effects";
@@ -114,4 +115,13 @@ export const getCompactCharacterSlot = (
       };
     }),
   };
+};
+
+export const getStackableHigherLevelEffects = (
+  effect: Effect
+): Effect[] | Effect => {
+  if (effect.level !== undefined && effect.stacks === true) {
+    return effectsArray.filter((e) => isSameGroupAndEqualOrBetter(effect, e));
+  }
+  return effect;
 };

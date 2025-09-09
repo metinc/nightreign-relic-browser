@@ -1,13 +1,12 @@
 import init, {
   search_combinations,
 } from "../../wasm/combo_search/pkg/combo_search.js";
-import {
-  effects,
-  isSameGroupAndEqualOrBetter,
-  type Effect,
-} from "../resources/effects";
+import { type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
-import { getRelicColor } from "../utils/DataUtils.js";
+import {
+  getRelicColor,
+  getStackableHigherLevelEffects,
+} from "../utils/DataUtils.js";
 import type { NightfarerName } from "../utils/Nightfarers";
 import { recommendedEffectsByCharacter } from "../utils/RecommendedEffects.js";
 import type { Vessel } from "../utils/Vessels";
@@ -68,15 +67,9 @@ export function buildWasmInput(
   relics: RelicSlot[],
   enabledVessels: Vessel[]
 ) {
-  const effectsArray = Array.from(effects.values());
-  const selected_effects = selectedEffects.flatMap((selectedEffect) => {
-    if (selectedEffect.level !== undefined && selectedEffect.stacks === true) {
-      return effectsArray.filter((effect) =>
-        isSameGroupAndEqualOrBetter(selectedEffect, effect)
-      );
-    }
-    return selectedEffect;
-  });
+  const selected_effects = selectedEffects.flatMap(
+    getStackableHigherLevelEffects
+  );
 
   return {
     nightfarer,

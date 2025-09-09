@@ -64,13 +64,6 @@ fn is_same_group(a: &Effect, b: &Effect) -> bool {
     }
 }
 
-fn is_same_group_and_equal_or_better(a: &Effect, b: &Effect) -> bool {
-    match (&a.group, &a.level, &b.group, &b.level) {
-        (Some(ga), Some(la), Some(gb), Some(lb)) => ga == gb && la <= lb,
-        _ => false
-    }
-}
-
 fn is_same_starting_bonus(a: &Effect, b: &Effect) -> bool {
     match (a.startingBonus, b.startingBonus) {
         (Some(sa), Some(sb)) => sa == sb,
@@ -79,7 +72,7 @@ fn is_same_starting_bonus(a: &Effect, b: &Effect) -> bool {
 }
 
 fn is_recommended_effect(effect: &Effect, recommended: &[Effect]) -> bool {
-    recommended.iter().any(|r| r.key == effect.key || is_same_group_and_equal_or_better(r, effect))
+    recommended.iter().any(|r| r.key == effect.key)
 }
 
 fn generate_unique_key(relic_indices: [Option<usize>; 3], relics: &[RelicSlot]) -> u128 {
@@ -154,7 +147,7 @@ fn calc_points(nightfarer: &str, relic_indices: [Option<usize>; 3], relics: &[Re
                 }
 
                 let is_selected_effect = selected.iter().any(|s| {
-                    std::ptr::eq(s, effect) || is_same_group_and_equal_or_better(s, effect)
+                    std::ptr::eq(s, effect)
                 });
 
                 let level_points_multiplier: f32 = match effect.level {

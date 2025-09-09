@@ -1,5 +1,5 @@
 import type { Effect, EffectKey } from "../resources/effects";
-import { getEffectByKey } from "./DataUtils";
+import { getEffectByKey, getStackableHigherLevelEffects } from "./DataUtils";
 import type { NightfarerName } from "./Nightfarers";
 
 const getEffectByKeyOrThrow = (key: EffectKey): Effect => {
@@ -20,12 +20,28 @@ const recluseEffects: EffectKey[] = [];
 const executorEffects: EffectKey[] = [];
 
 export const recommendedEffectsByCharacter: Record<NightfarerName, Effect[]> = {
-  Wylder: wylderEffects.map(getEffectByKeyOrThrow),
-  Guardian: guardianEffects.map(getEffectByKeyOrThrow),
-  Ironeye: ironeyeEffects.map(getEffectByKeyOrThrow),
-  Duchess: duchessEffects.map(getEffectByKeyOrThrow),
-  Raider: raiderEffects.map(getEffectByKeyOrThrow),
-  Revenant: revenantEffects.map(getEffectByKeyOrThrow),
-  Recluse: recluseEffects.map(getEffectByKeyOrThrow),
-  Executor: executorEffects.map(getEffectByKeyOrThrow),
+  Wylder: wylderEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  Guardian: guardianEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  Ironeye: ironeyeEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  Duchess: duchessEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  Raider: raiderEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  Revenant: revenantEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  Recluse: recluseEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  Executor: executorEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
 };
