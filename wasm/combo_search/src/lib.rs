@@ -122,7 +122,13 @@ fn calc_points(
     selected: &[Effect],
     recommended_bitmap: &[bool; 584],
 ) -> f32 {
-    let mut satisfied_effects: Vec<&Effect> = Vec::with_capacity(32);
+    // Use key/group sets instead of pointer identity to track duplicates and selections
+    let mut satisfied_keys: HashSet<u16> = HashSet::with_capacity(16);
+    let mut satisfied_groups: HashSet<&str> = HashSet::with_capacity(16);
+
+    let mut selected_keys: HashSet<u16> = HashSet::with_capacity(selected.len());
+    for s in selected { selected_keys.insert(s.key); }
+
     let mut points: f32 = 0.0;
 
     for opt_idx in relic_indices.iter() {
@@ -137,15 +143,9 @@ fn calc_points(
                     continue;
                 }
 
-                let is_overridden_effect = satisfied_effects.iter().any(|e| is_same_starting_bonus(effect, e));
-                if is_overridden_effect {
-                    // No points for overridden effects
-                    continue;
-                }
-
-                let is_duplicate = satisfied_effects.iter().any(|e| {
-                    std::ptr::eq(*e, effect) || is_same_group(e, effect)
-                });
+                let key_duplicate = satisfied_keys.contains(&effect.key);
+                let group_duplicate = match &effect.group { Some(g) => satisfied_groups.contains(g.as_str()), None => false };
+                let is_duplicate = key_duplicate || group_duplicate;
                 let is_stackable = effect.stacks.unwrap_or(false);
                 
                 if is_duplicate && !is_stackable {
@@ -153,9 +153,7 @@ fn calc_points(
                     continue;
                 }
 
-                let is_selected_effect = selected.iter().any(|s| {
-                    std::ptr::eq(s, effect)
-                });
+                let is_selected_effect = selected_keys.contains(&effect.key);
 
                 let level_points_multiplier: f32 = match effect.level {
                     Some(l) => 1.0 + (3 - l) as f32 * PENALTY_FOR_MISSING_LEVEL,
@@ -179,7 +177,9 @@ fn calc_points(
                     }
                 }
 
-                satisfied_effects.push(effect);
+                // Mark this effect as satisfied for duplicate/override checks
+                satisfied_keys.insert(effect.key);
+                if let Some(g) = &effect.group { satisfied_groups.insert(g.as_str()); }
             }
         }
     }

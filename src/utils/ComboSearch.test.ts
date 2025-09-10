@@ -1,14 +1,14 @@
 import fs from "fs";
 import path from "path";
-import { beforeAll, describe, expect, it } from "vitest";
+import { assert, beforeAll, describe, expect, it } from "vitest";
 import init, {
   search_combinations,
 } from "../../wasm/combo_search/pkg/combo_search.js";
-import { effects, type Effect } from "../resources/effects";
+import { EffectKey, effects, type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
-import { wylderVessels } from "../utils/Vessels";
+import { anyoneVessels, wylderVessels } from "../utils/Vessels";
 import { buildWasmInput } from "../workers/comboSearchWorker.js";
-import { getEffect } from "./DataUtils";
+import { getEffect, getEffectByKey } from "./DataUtils";
 import { Nightfarer } from "./Nightfarers";
 import { RelicParser } from "./RelicParser";
 import { SaveFileDecryptor } from "./SaveFileDecryptor";
@@ -99,6 +99,66 @@ describe("ComboSearch", () => {
         maxId,
         `Effect ID ${maxId} is too big to fit into 24 bits. Please adjust generate_unique_key() accordingly.`
       ).toBeLessThan(1 << maxBits);
+    });
+
+    it("should combine stackable effects correctly", () => {
+      const selectedEffect = getEffectByKey(EffectKey.dexterityPlus3);
+      assert(selectedEffect !== undefined);
+
+      const input = buildWasmInput(
+        Nightfarer.Wylder,
+        [selectedEffect],
+        relics,
+        [anyoneVessels[2]]
+      );
+
+      const result = search_combinations(input) as {
+        combinations: Array<{
+          vessel_index: number;
+          relic_indices: [number | null, number | null, number | null];
+          points: number;
+        }>;
+        total_combinations_checked: number;
+      };
+
+      for (const combo of result.combinations[0].relic_indices) {
+        assert(combo !== null);
+        expect(relics[combo].effects).toContain(selectedEffect);
+      }
+      expect(result.combinations[0].points).toBeGreaterThanOrEqual(
+        1 + 0.9 + 0.9
+      );
+    });
+
+    it("should combine stackable effects of higher levels correctly", () => {
+      const selectedEffect = getEffectByKey(EffectKey.poisePlus1);
+      assert(selectedEffect !== undefined);
+      const higherLevelEffect = getEffectByKey(EffectKey.poisePlus3);
+      assert(higherLevelEffect !== undefined);
+
+      const input = buildWasmInput(
+        Nightfarer.Wylder,
+        [selectedEffect],
+        relics,
+        [anyoneVessels[2]]
+      );
+
+      const result = search_combinations(input) as {
+        combinations: Array<{
+          vessel_index: number;
+          relic_indices: [number | null, number | null, number | null];
+          points: number;
+        }>;
+        total_combinations_checked: number;
+      };
+
+      for (const combo of result.combinations[0].relic_indices) {
+        assert(combo !== null);
+        expect(relics[combo].effects).toContain(higherLevelEffect);
+      }
+      expect(result.combinations[0].points).toBeGreaterThanOrEqual(
+        1 + 0.9 + 0.9
+      );
     });
   });
 });

@@ -5,7 +5,7 @@ export type Vessel = {
   slots: [RelicSlotColor, RelicSlotColor, RelicSlotColor];
 };
 
-const anyoneVessels: Vessel[] = [
+export const anyoneVessels: Vessel[] = [
   {
     name: "Giant's Cradle Grail",
     slots: ["Blue", "Blue", "Blue"],
