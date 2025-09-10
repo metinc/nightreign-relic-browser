@@ -3,7 +3,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useEffect, useMemo, useRef } from "react";
 import type { RelicSlot } from "../types/SaveFile";
 import { getEffectName, getItemName } from "../utils/DataUtils";
-import type { RelicSlotColor } from "../utils/RelicColor";
+import { RelicSlotColor } from "../utils/RelicColor";
 import { doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
 
@@ -142,7 +142,9 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                           searchTerm={searchTerm}
                           relicMatches={relicMatches}
                           selectedColor={selectedColor}
-                          coordinatesByColor={selectedColor !== "Any"}
+                          coordinatesByColor={
+                            selectedColor !== RelicSlotColor.Any
+                          }
                         />
                       </Grid>
                     );

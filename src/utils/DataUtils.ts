@@ -13,7 +13,7 @@ import type {
   CompactCharacterSlot,
   CompactRelicSlot,
 } from "../types/SaveFile";
-import type { RelicColor } from "./RelicColor";
+import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
 /**
  * Get item name by ID using TypeScript resources and i18n
@@ -33,12 +33,12 @@ export const getRelicColor = (itemId: number): RelicColor => {
   const item = items.get(itemId);
   if (!item) {
     console.error(`Item ${itemId} not found`);
-    return "Red";
+    return RelicSlotColor.Red;
   }
   const color = item.color;
   if (color === null) {
     console.error(`Item ${itemId} has no color defined`);
-    return "Red";
+    return RelicSlotColor.Red;
   }
   return color as RelicColor;
 };
@@ -88,17 +88,17 @@ export const getCompactCharacterSlot = (
   compactCharacterSlot: CompactCharacterSlot
 ): CharacterSlot => {
   const relicsByColor: Record<RelicColor, CompactRelicSlot[]> = {
-    Red: compactCharacterSlot.relics.filter(
-      ([itemId]) => getRelicColor(itemId) === "Red"
+    [RelicSlotColor.Red]: compactCharacterSlot.relics.filter(
+      ([itemId]) => getRelicColor(itemId) === RelicSlotColor.Red
     ),
-    Blue: compactCharacterSlot.relics.filter(
-      ([itemId]) => getRelicColor(itemId) === "Blue"
+    [RelicSlotColor.Blue]: compactCharacterSlot.relics.filter(
+      ([itemId]) => getRelicColor(itemId) === RelicSlotColor.Blue
     ),
-    Yellow: compactCharacterSlot.relics.filter(
-      ([itemId]) => getRelicColor(itemId) === "Yellow"
+    [RelicSlotColor.Yellow]: compactCharacterSlot.relics.filter(
+      ([itemId]) => getRelicColor(itemId) === RelicSlotColor.Yellow
     ),
-    Green: compactCharacterSlot.relics.filter(
-      ([itemId]) => getRelicColor(itemId) === "Green"
+    [RelicSlotColor.Green]: compactCharacterSlot.relics.filter(
+      ([itemId]) => getRelicColor(itemId) === RelicSlotColor.Green
     ),
   };
 

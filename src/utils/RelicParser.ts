@@ -1,6 +1,6 @@
 import type { BND4Entry, RelicSlot } from "../types/SaveFile";
 import { getEffect, getRelicColor } from "./DataUtils";
-import type { RelicColor } from "./RelicColor";
+import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
 export class RelicParser {
   /**
@@ -249,10 +249,18 @@ export class RelicParser {
 
   public static setCoordinates(relics: RelicSlot[]): RelicSlot[] {
     const relicsByColor: Record<RelicColor, RelicSlot[]> = {
-      Red: relics.filter((r) => getRelicColor(r.itemId) === "Red"),
-      Blue: relics.filter((r) => getRelicColor(r.itemId) === "Blue"),
-      Yellow: relics.filter((r) => getRelicColor(r.itemId) === "Yellow"),
-      Green: relics.filter((r) => getRelicColor(r.itemId) === "Green"),
+      [RelicSlotColor.Red]: relics.filter(
+        (r) => getRelicColor(r.itemId) === RelicSlotColor.Red
+      ),
+      [RelicSlotColor.Blue]: relics.filter(
+        (r) => getRelicColor(r.itemId) === RelicSlotColor.Blue
+      ),
+      [RelicSlotColor.Yellow]: relics.filter(
+        (r) => getRelicColor(r.itemId) === RelicSlotColor.Yellow
+      ),
+      [RelicSlotColor.Green]: relics.filter(
+        (r) => getRelicColor(r.itemId) === RelicSlotColor.Green
+      ),
     };
 
     for (let i = 0; i < relics.length; i++) {

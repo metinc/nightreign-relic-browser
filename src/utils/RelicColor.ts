@@ -1,20 +1,32 @@
 import type { ChipOwnProps } from "@mui/material";
 
-export const relicColors = ["Red", "Blue", "Yellow", "Green"] as const;
+export const enum RelicSlotColor {
+  Any,
+  Red,
+  Blue,
+  Yellow,
+  Green,
+}
+
+export const relicColors = [
+  RelicSlotColor.Red,
+  RelicSlotColor.Blue,
+  RelicSlotColor.Yellow,
+  RelicSlotColor.Green,
+] as const;
 export type RelicColor = (typeof relicColors)[number];
 
-export const relicSlotColors = ["Any", ...relicColors] as const;
-export type RelicSlotColor = (typeof relicSlotColors)[number];
+export const relicSlotColors = [RelicSlotColor.Any, ...relicColors] as const;
 
 export const getChipColor = (color: RelicSlotColor): ChipOwnProps["color"] => {
   switch (color) {
-    case "Red":
+    case RelicSlotColor.Red:
       return "error";
-    case "Blue":
+    case RelicSlotColor.Blue:
       return "primary";
-    case "Yellow":
+    case RelicSlotColor.Yellow:
       return "warning";
-    case "Green":
+    case RelicSlotColor.Green:
       return "success";
     default:
       return "default";

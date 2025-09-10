@@ -1,14 +1,14 @@
-import React from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
 } from "@mui/material";
+import React from "react";
 import type { RelicSlot } from "../types/SaveFile";
-import type { RelicSlotColor } from "../utils/RelicColor";
+import { RelicSlotColor } from "../utils/RelicColor";
 import { RelicCard } from "./RelicCard";
 
 interface RelicComparisonModalProps {
@@ -56,7 +56,7 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
               searchTerm=""
               relicMatches={true}
               selectedColor={selectedColor}
-              coordinatesByColor={selectedColor !== "Any"}
+              coordinatesByColor={selectedColor !== RelicSlotColor.Any}
             />
           </Grid>
           <Grid size={{ xs: 2, sm: 1 }}>
@@ -65,7 +65,7 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
               searchTerm=""
               relicMatches={true}
               selectedColor={selectedColor}
-              coordinatesByColor={selectedColor !== "Any"}
+              coordinatesByColor={selectedColor !== RelicSlotColor.Any}
             />
           </Grid>
         </Grid>

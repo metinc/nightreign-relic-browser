@@ -1,4 +1,4 @@
-import type { RelicColor } from "../utils/RelicColor";
+import { RelicSlotColor, type RelicColor } from "../utils/RelicColor";
 
 interface ItemArrayElement {
   key: string;
@@ -9,12 +9,12 @@ interface ItemArrayElement {
 const itemsArray: ItemArrayElement[] = [
   {
     key: "besmirchedFrame",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [10001],
   },
   {
     key: "blackClawNecklace",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [15002],
   },
   {
@@ -24,72 +24,72 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "blessedFlowers",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [18000],
   },
   {
     key: "blessedIronCoin",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [14002],
   },
   {
     key: "boneLikeStone",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [17002],
   },
   {
     key: "crackedSealingWax",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [13001],
   },
   {
     key: "crackedWitchsBrooch",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [12003],
   },
   {
     key: "crownMedal",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [14001],
   },
   {
     key: "darkNightOfTheBaron",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [2011],
   },
   {
     key: "darkNightOfTheBeast",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [2001],
   },
   {
     key: "darkNightOfTheChampion",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [2051],
   },
   {
     key: "darkNightOfTheDemon",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [2041],
   },
   {
     key: "darkNightOfTheFathom",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [2031],
   },
   {
     key: "darkNightOfTheMiasma",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [2061],
   },
   {
     key: "darkNightOfTheWise",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [2021],
   },
   {
     key: "delicateBurningScene",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [
       100, 103, 106, 1000, 11003, 11004, 20000, 20003, 20006, 1000000, 1000010,
       1000020, 1001000, 1001010, 1001020, 1002000, 1002010, 1002020, 1003000,
@@ -99,7 +99,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "delicateDrizzlyScene",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [
       109, 112, 115, 1010, 12005, 12006, 20009, 20012, 20015, 1000100, 1000110,
       1000120, 1001100, 1001110, 1001120, 1002100, 1002110, 1002120, 1003100,
@@ -109,7 +109,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "delicateLuminousScene",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [
       118, 121, 124, 1020, 1050, 12004, 20018, 20021, 20024, 1000200, 1000210,
       1000220, 1001200, 1001210, 1001220, 1002200, 1002210, 1002220, 1003200,
@@ -119,7 +119,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "delicateTranquilScene",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [
       127, 130, 133, 1030, 12007, 20027, 20030, 20033, 1000300, 1000310,
       1000320, 1001300, 1001310, 1001320, 1002300, 1002310, 1002320, 1003300,
@@ -129,12 +129,12 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "edgeOfOrder",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [13002],
   },
   {
     key: "fellOmenFetish",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [10002],
   },
   {
@@ -144,7 +144,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "goldenDew",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [14000],
   },
   {
@@ -154,12 +154,12 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "goldenSprout",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [18002],
   },
   {
     key: "grandBurningScene",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [
       102, 105, 108, 1180, 1250, 1260, 1410, 1440, 1480, 1500, 20002, 20005,
       20008, 1000002, 1000012, 1000022, 1001002, 1001012, 1001022, 1002002,
@@ -170,7 +170,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "grandDrizzlyScene",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [
       111, 114, 117, 1190, 1230, 1240, 1400, 1460, 1520, 20011, 20014, 20017,
       1000102, 1000112, 1000122, 1001102, 1001112, 1001122, 1002102, 1002112,
@@ -181,7 +181,7 @@ const itemsArray: ItemArrayElement[] = [
   // id 1210 seems buggy because it is yellow but called Grand Tranquil Scene
   {
     key: "grandLuminousScene",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [
       120, 123, 126, 1210, 1220, 1450, 1470, 1510, 20020, 20023, 20026, 1000202,
       1000212, 1000222, 1001202, 1001212, 1001222, 1002202, 1002212, 1002222,
@@ -191,7 +191,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "grandTranquilScene",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [
       129, 132, 135, 1200, 1270, 1420, 1430, 1490, 20029, 20032, 20035, 1000302,
       1000312, 1000322, 1001302, 1001312, 1001322, 1002302, 1002312, 1002322,
@@ -206,42 +206,42 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "nightOfTheBaron",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [2010],
   },
   {
     key: "nightOfTheBeast",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [2000],
   },
   {
     key: "nightOfTheChampion",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [2050],
   },
   {
     key: "nightOfTheDemon",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [2040],
   },
   {
     key: "nightOfTheFathom",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [2030],
   },
   {
     key: "nightOfTheLord",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [2100],
   },
   {
     key: "nightOfTheMiasma",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [2060],
   },
   {
     key: "nightOfTheWise",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [2020],
   },
   {
@@ -251,17 +251,17 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "oldPocketwatch",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [10000],
   },
   {
     key: "oldPortrait",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [16002],
   },
   {
     key: "polishedBurningScene",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [
       101, 104, 107, 1040, 1080, 1110, 1120, 20001, 20004, 20007, 1000001,
       1000011, 1000021, 1001001, 1001011, 1001021, 1002001, 1002011, 1002021,
@@ -271,7 +271,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "polishedDrizzlyScene",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [
       110, 113, 116, 1070, 1160, 1170, 20010, 20013, 20016, 1000101, 1000111,
       1000121, 1001101, 1001111, 1001121, 1002101, 1002111, 1002121, 1003101,
@@ -281,7 +281,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "polishedLuminousScene",
-    color: "Yellow",
+    color: RelicSlotColor.Yellow,
     ids: [
       119, 122, 125, 1140, 1150, 20019, 20022, 20025, 1000201, 1000211, 1000221,
       1001201, 1001211, 1001221, 1002201, 1002211, 1002221, 1003201, 1003211,
@@ -291,7 +291,7 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "polishedTranquilScene",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [
       128, 131, 134, 1060, 1090, 1100, 1130, 20028, 20031, 20034, 1000301,
       1000311, 1000321, 1001301, 1001311, 1001321, 1002301, 1002311, 1002321,
@@ -306,17 +306,17 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "silverTear",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [11002],
   },
   {
     key: "slateWhetstone",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [11000],
   },
   {
     key: "smallMakeupBrush",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [16001],
   },
   {
@@ -326,32 +326,32 @@ const itemsArray: ItemArrayElement[] = [
   },
   {
     key: "stoneStake",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [12001],
   },
   {
     key: "theWyldersEarring",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [11001],
   },
   {
     key: "thirdVolume",
-    color: "Red",
+    color: RelicSlotColor.Red,
     ids: [12000],
   },
   {
     key: "tornBraidedCord",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [15000],
   },
   {
     key: "vestigeOfNight",
-    color: "Green",
+    color: RelicSlotColor.Green,
     ids: [17001],
   },
   {
     key: "witchsBrooch",
-    color: "Blue",
+    color: RelicSlotColor.Blue,
     ids: [12002],
   },
 ];

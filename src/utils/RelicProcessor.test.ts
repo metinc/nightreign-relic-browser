@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { RelicSlot } from "../types/SaveFile";
 import { getEffect, getRelicColor } from "./DataUtils";
+import { RelicSlotColor } from "./RelicColor";
 import { findBetterRelic, sortRelicsByColor } from "./RelicProcessor";
 
 describe("Relic Processor Functions", () => {
@@ -80,7 +81,10 @@ describe("Relic Processor Functions", () => {
         relic,
         betterRelicWithDifferentColor,
       ]);
-      const redundant = findBetterRelic(relic, relicsByColor.Red);
+      const redundant = findBetterRelic(
+        relic,
+        relicsByColor[RelicSlotColor.Red]
+      );
       expect(redundant).toBeUndefined();
     });
   });

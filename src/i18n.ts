@@ -3,6 +3,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import { EffectKey } from "./resources/effects";
 import { Nightfarer } from "./utils/Nightfarers";
+import { RelicSlotColor } from "./utils/RelicColor";
 
 const resources = {
   en: {
@@ -22,6 +23,14 @@ const resources = {
         [Nightfarer.Revenant]: "Revenant",
         [Nightfarer.Recluse]: "Recluse",
         [Nightfarer.Executor]: "Executor",
+      },
+
+      colors: {
+        [RelicSlotColor.Any]: "Any",
+        [RelicSlotColor.Red]: "Red",
+        [RelicSlotColor.Green]: "Green",
+        [RelicSlotColor.Blue]: "Blue",
+        [RelicSlotColor.Yellow]: "Yellow",
       },
 
       // Relics

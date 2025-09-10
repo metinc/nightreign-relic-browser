@@ -31,7 +31,7 @@ import {
 } from "../utils/ComboSearch";
 import { getRelicColor } from "../utils/DataUtils";
 import { isNightfarer, Nightfarer, nightfarers } from "../utils/Nightfarers";
-import { getChipColor } from "../utils/RelicColor";
+import { getChipColor, RelicSlotColor } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
 
@@ -435,12 +435,12 @@ export function ComboFinder(props: ComboFinderProps) {
                               width: "180px",
                             }}
                           >
-                            {vessel.slots.map((slot, slotIndex) => (
+                            {vessel.slots.map((slotColor, slotIndex) => (
                               <Chip
                                 key={slotIndex}
-                                label={slot}
+                                label={t(`colors.${slotColor}`)}
                                 size="small"
-                                color={getChipColor(slot)}
+                                color={getChipColor(slotColor)}
                                 variant={disabled ? "outlined" : "filled"}
                                 disabled={disabled}
                               />
@@ -576,7 +576,8 @@ export function ComboFinder(props: ComboFinderProps) {
                                       )}
                                       highlightedEffects={selectedEffects}
                                       coordinatesByColor={
-                                        combo.vessel.slots[index] !== "Any"
+                                        combo.vessel.slots[index] !==
+                                        RelicSlotColor.Any
                                       }
                                     />
                                   ) : (

@@ -8,6 +8,7 @@ import {
   getItemName,
   getRelicColor,
 } from "../utils/DataUtils";
+import { RelicSlotColor } from "../utils/RelicColor";
 import { RelicParser } from "../utils/RelicParser";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 
@@ -214,7 +215,7 @@ describe("Save File Processing", () => {
 
               const itemColor = getRelicColor(itemId);
               expect(itemColor).toBeDefined();
-              expect(itemColor).toBeTypeOf("string");
+              expect(itemColor).toBeTypeOf("number");
 
               const effectNames = effects.map((effectId) =>
                 getEffectName(effectId)
@@ -252,8 +253,8 @@ describe("Utility Functions", () => {
 
   describe("getRelicColor", () => {
     it("should return the correct color for items with defined colors", () => {
-      expect(getRelicColor(100)).toBe("Red");
-      expect(getRelicColor(101)).toBe("Red");
+      expect(getRelicColor(100)).toBe(RelicSlotColor.Red);
+      expect(getRelicColor(101)).toBe(RelicSlotColor.Red);
     });
 
     it("should return 'Red' as default for items with null color", () => {
@@ -261,7 +262,7 @@ describe("Utility Functions", () => {
       const originalError = console.error;
       console.error = () => {};
 
-      expect(getRelicColor(11)).toBe("Red");
+      expect(getRelicColor(11)).toBe(RelicSlotColor.Red);
 
       // Restore console.error
       console.error = originalError;
@@ -271,8 +272,8 @@ describe("Utility Functions", () => {
       const originalError = console.error;
       console.error = () => {};
 
-      expect(getRelicColor(99999)).toBe("Red");
-      expect(getRelicColor(-1)).toBe("Red");
+      expect(getRelicColor(99999)).toBe(RelicSlotColor.Red);
+      expect(getRelicColor(-1)).toBe(RelicSlotColor.Red);
 
       console.error = originalError;
     });
@@ -317,12 +318,12 @@ describe("Utility Functions", () => {
   describe("Integration with real data structure", () => {
     it("should handle large numeric IDs", () => {
       expect(getItemName(1007322)).toBe("Grand Tranquil Scene");
-      expect(getRelicColor(1007322)).toBe("Green");
+      expect(getRelicColor(1007322)).toBe(RelicSlotColor.Green);
     });
 
     it("should work with non-existing data", () => {
       expect(getItemName(999999999)).toMatch(/^Unknown Item/);
-      expect(getRelicColor(999999999)).toBe("Red");
+      expect(getRelicColor(999999999)).toBe(RelicSlotColor.Red);
       expect(getEffectName(getEffect(999999999))).toMatch(/^Unknown Effect/);
     });
   });

@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
 import { uniqueItemIds, unsellableItemIds } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
@@ -57,6 +58,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const isUniqueRelic = uniqueItemIds.includes(itemId);
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
   const selectedChipColor = getChipColor(selectedColor);
+  const { t } = useTranslation();
 
   const handleSellMeClick = () => {
     setModalOpen(true);
@@ -76,7 +78,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         component="span"
         variant="inherit"
       >
-        {selectedColor.toLowerCase()}
+        {t(`colors.${selectedColor}`)}
       </Typography>
       .
     </Typography>
@@ -157,14 +159,12 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               onClick={handleSellMeClick}
             />
           )}
-          {itemColor && (
-            <Chip
-              label={itemColor}
-              size="small"
-              color={chipColor}
-              sx={{ overflow: "clip" }}
-            />
-          )}
+          <Chip
+            label={t(`colors.${itemColor}`)}
+            size="small"
+            color={chipColor}
+            sx={{ overflow: "clip" }}
+          />
         </Box>
 
         <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>

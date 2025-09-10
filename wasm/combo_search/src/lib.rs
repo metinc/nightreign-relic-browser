@@ -25,14 +25,14 @@ pub struct Effect {
 pub struct RelicSlot {
     pub id: i32,
     pub itemId: i32,
-    pub color: Option<String>,
+    pub color: Option<u8>,
     pub effects: Vec<Effect>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Vessel {
     pub name: String,
-    pub slots: [String;3],
+    pub slots: [u8;3],
 }
 
 #[derive(Serialize, Deserialize)]
@@ -215,8 +215,8 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     }
 
     // Pre-split all relics by color for fast filtering (full set, not only candidates)
-    let mut by_color_all: std::collections::HashMap<&str, Vec<usize>> = std::collections::HashMap::new();
-    for (idx, relic) in input.relics.iter().enumerate() { if let Some(color) = &relic.color { by_color_all.entry(color.as_str()).or_default().push(idx); } }
+    let mut by_color_all: std::collections::HashMap<u8, Vec<usize>> = std::collections::HashMap::new();
+    for (idx, relic) in input.relics.iter().enumerate() { if let Some(color) = relic.color { by_color_all.entry(color).or_default().push(idx); } }
     let all_indices: Vec<usize> = (0..input.relics.len()).collect();
 
     let mut results: Vec<VesselCombinationResultEntry> = Vec::new();
@@ -228,8 +228,8 @@ pub fn search_combinations(input: JsValue) -> JsValue {
         let mut slot_all: [Vec<usize>; 3] = [Vec::new(), Vec::new(), Vec::new()];
         let mut slot_candidates: [Vec<usize>; 3] = [Vec::new(), Vec::new(), Vec::new()];
         for s in 0..3 { 
-            let color_req = &vessel.slots[s];
-            let all_list: Vec<usize> = if color_req == "Any" { all_indices.clone() } else { by_color_all.get(color_req.as_str()).cloned().unwrap_or_default() };
+            let color_req: u8 = vessel.slots[s];
+            let all_list: Vec<usize> = if color_req == 0 { all_indices.clone() } else { by_color_all.get(&color_req).cloned().unwrap_or_default() };
             let cand_list: Vec<usize> = all_list.iter().copied().filter(|i| effect_candidate_set.contains(i)).collect();
             slot_all[s] = all_list;
             slot_candidates[s] = cand_list;

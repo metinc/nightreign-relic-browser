@@ -4,7 +4,7 @@ import type { Effect } from "../resources/effects";
 import { unsellableItemIds } from "../resources/items";
 import type { CharacterSlot } from "../types/SaveFile";
 import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
-import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
+import { RelicSlotColor, type RelicColor } from "../utils/RelicColor";
 import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
@@ -31,7 +31,11 @@ export function RelicBrowser({
   const [filterSell, setFilterSell] = useState(false);
 
   const matchingRelics = useMemo(() => {
-    if (!searchTerm.trim() && selectedColor === "Any" && !filterSell) {
+    if (
+      !searchTerm.trim() &&
+      selectedColor === RelicSlotColor.Any &&
+      !filterSell
+    ) {
       return currentSlot.relics;
     }
 
