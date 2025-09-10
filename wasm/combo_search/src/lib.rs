@@ -14,7 +14,7 @@ const PENALTY_FOR_MISSING_LEVEL: f32 = -0.1;
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Effect {
     pub key: u16,
-    pub nightfarer: Option<String>,
+    pub nightfarer: Option<u8>,
     pub stacks: Option<bool>,
     pub group: Option<String>,
     pub level: Option<i32>,
@@ -44,7 +44,7 @@ pub struct VesselCombinationResultEntry {
 
 #[derive(Serialize, Deserialize)]
 pub struct SearchInput {
-    pub nightfarer: String,
+    pub nightfarer: u8,
     pub selected_effects: Vec<Effect>,
     pub relics: Vec<RelicSlot>,
     pub enabled_vessels: Vec<Vessel>,
@@ -99,7 +99,7 @@ fn add_combination_if_unique(
     vessel_index: usize,
     relic_indices: [Option<usize>; 3],
     relics: &[RelicSlot],
-    nightfarer: &str,
+    nightfarer: u8,
     selected_effects: &[Effect],
     recommended_bitmap: &[bool; 584],
 ) {
@@ -116,7 +116,7 @@ fn add_combination_if_unique(
 }
 
 fn calc_points(
-    nightfarer: &str,
+    nightfarer: u8,
     relic_indices: [Option<usize>; 3],
     relics: &[RelicSlot],
     selected: &[Effect],
@@ -130,7 +130,7 @@ fn calc_points(
             let relic = unsafe { relics.get_unchecked(*idx) }; // bounds checked by construction
             for effect in &relic.effects {
                 let is_character_effect = effect.nightfarer.is_some();
-                let is_usable_character_effect = effect.nightfarer.as_deref() == Some(nightfarer);
+                let is_usable_character_effect = effect.nightfarer == Some(nightfarer);
                 
                 if is_character_effect && !is_usable_character_effect {
                     // No points for other character effects
@@ -265,7 +265,7 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                             v_i,
                             relic_indices,
                             &input.relics,
-                            &input.nightfarer,
+                            input.nightfarer,
                             &input.selected_effects,
                             &recommended_bitmap,
                         );

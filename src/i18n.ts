@@ -2,6 +2,7 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import { EffectKey } from "./resources/effects";
+import { Nightfarer } from "./utils/Nightfarers";
 
 const resources = {
   en: {
@@ -11,6 +12,17 @@ const resources = {
       demo: "Demo",
       demoDescription: "Load sample relics to explore the interface",
       features: "Features",
+
+      nightfarers: {
+        [Nightfarer.Wylder]: "Wylder",
+        [Nightfarer.Guardian]: "Guardian",
+        [Nightfarer.Ironeye]: "Ironeye",
+        [Nightfarer.Duchess]: "Duchess",
+        [Nightfarer.Raider]: "Raider",
+        [Nightfarer.Revenant]: "Revenant",
+        [Nightfarer.Recluse]: "Recluse",
+        [Nightfarer.Executor]: "Executor",
+      },
 
       // Relics
       items: {

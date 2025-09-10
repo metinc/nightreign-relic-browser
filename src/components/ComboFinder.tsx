@@ -30,19 +30,15 @@ import {
   type ComboSearchResult,
 } from "../utils/ComboSearch";
 import { getRelicColor } from "../utils/DataUtils";
-import {
-  isNightfarerName,
-  nightfarers,
-  type NightfarerName,
-} from "../utils/Nightfarers";
+import { isNightfarer, Nightfarer, nightfarers } from "../utils/Nightfarers";
 import { getChipColor } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
 
 // Persistent storage keys
-const SETTINGS_STORAGE_KEY = "comboFinder:settings:v1";
-const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v1";
-const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v1";
+const SETTINGS_STORAGE_KEY = "comboFinder:settings:v2";
+const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v2";
+const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v2";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
@@ -55,41 +51,42 @@ interface ComboFinderSettings {
   disabledVessels: number[];
 }
 
-function createInitialSettings(): Record<NightfarerName, ComboFinderSettings> {
+function createInitialSettings(): Record<Nightfarer, ComboFinderSettings> {
   return {
-    Wylder: { disabledVessels: [] },
-    Guardian: { disabledVessels: [] },
-    Ironeye: { disabledVessels: [] },
-    Duchess: { disabledVessels: [] },
-    Raider: { disabledVessels: [] },
-    Revenant: { disabledVessels: [] },
-    Recluse: { disabledVessels: [] },
-    Executor: { disabledVessels: [] },
+    [Nightfarer.Wylder]: { disabledVessels: [] },
+    [Nightfarer.Guardian]: { disabledVessels: [] },
+    [Nightfarer.Ironeye]: { disabledVessels: [] },
+    [Nightfarer.Duchess]: { disabledVessels: [] },
+    [Nightfarer.Raider]: { disabledVessels: [] },
+    [Nightfarer.Revenant]: { disabledVessels: [] },
+    [Nightfarer.Recluse]: { disabledVessels: [] },
+    [Nightfarer.Executor]: { disabledVessels: [] },
   };
 }
 
 export function ComboFinder(props: ComboFinderProps) {
   const { saveFileData } = props;
   const { t } = useTranslation();
-  const [selectedNightfarer, setSelectedNightfarer] = useState<NightfarerName>(
+  const [selectedNightfarer, setSelectedNightfarer] = useState<Nightfarer>(
     () => {
       try {
         const raw = localStorage.getItem(SELECTED_NIGHTFARER_STORAGE_KEY);
-        if (raw && isNightfarerName(raw)) {
-          return raw;
+
+        if (raw) {
+          const int = parseInt(raw);
+          if (isNightfarer(int)) {
+            return int;
+          }
         }
       } catch {
         // ignore
       }
-      return "Wylder";
+      return Nightfarer.Wylder;
     }
   );
 
   // Helper to load settings from localStorage with validation and defaults
-  function loadSettingsFromStorage(): Record<
-    NightfarerName,
-    ComboFinderSettings
-  > {
+  function loadSettingsFromStorage(): Record<Nightfarer, ComboFinderSettings> {
     try {
       const base = createInitialSettings();
       const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
@@ -97,9 +94,10 @@ export function ComboFinder(props: ComboFinderProps) {
         return base;
       }
       const parsed = JSON.parse(raw) as Partial<
-        Record<NightfarerName, { disabledVessels?: unknown }>
+        Record<Nightfarer, { disabledVessels?: unknown }>
       >;
-      (Object.keys(base) as NightfarerName[]).forEach((nf) => {
+      Object.keys(base).forEach((k) => {
+        const nf = Number(k) as Nightfarer;
         const val = parsed?.[nf];
         if (val && Array.isArray(val.disabledVessels)) {
           base[nf] = {
@@ -116,7 +114,7 @@ export function ComboFinder(props: ComboFinderProps) {
   }
 
   const [settings, setSettings] = useState<
-    Record<NightfarerName, ComboFinderSettings>
+    Record<Nightfarer, ComboFinderSettings>
   >(() => loadSettingsFromStorage());
 
   const [selectedEffects, setSelectedEffects] = useState<Effect[]>([]);
@@ -183,7 +181,10 @@ export function ComboFinder(props: ComboFinderProps) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(SELECTED_NIGHTFARER_STORAGE_KEY, selectedNightfarer);
+      localStorage.setItem(
+        SELECTED_NIGHTFARER_STORAGE_KEY,
+        String(selectedNightfarer)
+      );
     } catch {
       // ignore
     }
@@ -212,9 +213,7 @@ export function ComboFinder(props: ComboFinderProps) {
     });
 
     try {
-      const selectedNightfarerData = nightfarers.find(
-        (nf) => nf.name === selectedNightfarer
-      );
+      const selectedNightfarerData = nightfarers[selectedNightfarer];
 
       if (
         !selectedNightfarerData ||
@@ -339,7 +338,7 @@ export function ComboFinder(props: ComboFinderProps) {
   }, []);
 
   const toggleVessel = useCallback(
-    (nightfarer: NightfarerName, vesselIndex: number) => {
+    (nightfarer: Nightfarer, vesselIndex: number) => {
       setSettings((prevSettings) => {
         const currentSettings = prevSettings[nightfarer];
         const isDisabled =
@@ -361,9 +360,7 @@ export function ComboFinder(props: ComboFinderProps) {
     []
   );
 
-  const selectedNightfarerData = nightfarers.find(
-    (nf) => nf.name === selectedNightfarer
-  );
+  const selectedNightfarerData = nightfarers[selectedNightfarer];
 
   return (
     <Box sx={{ display: "flex", gap: 2, m: 3 }}>
@@ -374,19 +371,23 @@ export function ComboFinder(props: ComboFinderProps) {
         <RadioGroup
           value={selectedNightfarer}
           onChange={(e) => {
-            if (isNightfarerName(e.target.value)) {
-              setSelectedNightfarer(e.target.value);
+            const v = parseInt(e.target.value);
+            if (isNightfarer(v)) {
+              setSelectedNightfarer(v);
             }
           }}
         >
-          {nightfarers.map((nightfarer) => (
-            <FormControlLabel
-              key={nightfarer.name}
-              value={nightfarer.name}
-              control={<Radio />}
-              label={nightfarer.name}
-            />
-          ))}
+          {Object.keys(nightfarers).map((key) => {
+            const k = Number(key) as Nightfarer;
+            return (
+              <FormControlLabel
+                key={key}
+                value={k}
+                control={<Radio />}
+                label={t(`nightfarers.${k}`)}
+              />
+            );
+          })}
         </RadioGroup>
       </Box>
 

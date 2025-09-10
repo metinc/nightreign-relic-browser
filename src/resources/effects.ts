@@ -1,9 +1,9 @@
-import type { NightfarerName } from "../utils/Nightfarers";
+import { Nightfarer } from "../utils/Nightfarers";
 
 interface EffectArrayElement {
   key: EffectKey;
   ids: number[];
-  nightfarer?: NightfarerName;
+  nightfarer?: Nightfarer;
   stacks?: boolean;
   startingBonus?: StartingBonus;
 }
@@ -11,7 +11,7 @@ interface EffectArrayElement {
 interface EffectWithGroupArrayElement {
   key: EffectKey;
   ids: number[];
-  nightfarer?: NightfarerName;
+  nightfarer?: Nightfarer;
   stacks?: boolean;
   group: string;
   level: number;
@@ -613,229 +613,229 @@ export const effectsArray = [
   {
     key: EffectKey.duchessBecomeStealthyAfterCritFromBehind,
     ids: [7031800],
-    nightfarer: "Duchess",
+    nightfarer: Nightfarer.Duchess,
     stacks: false,
   },
   {
     key: EffectKey.duchessCharacterSkillInflictsSleep,
     ids: [7300000],
-    nightfarer: "Duchess",
+    nightfarer: Nightfarer.Duchess,
     stacks: false,
   },
   {
     key: EffectKey.duchessDaggerChainAttackReprises,
     ids: [7010700],
-    nightfarer: "Duchess",
+    nightfarer: Nightfarer.Duchess,
     stacks: false,
   },
   {
     key: EffectKey.duchessDefeatingEnemiesWhileArtActiveUpsAttack,
     ids: [7032700],
-    nightfarer: "Duchess",
+    nightfarer: Nightfarer.Duchess,
     stacks: false,
   },
   {
     key: EffectKey.duchessDurationOfUltimateArtExtended,
     ids: [7033600],
-    nightfarer: "Duchess",
+    nightfarer: Nightfarer.Duchess,
     stacks: false,
   },
   {
     key: EffectKey.duchessImprovedCharacterSkillAttackPower,
     ids: [7290000],
-    nightfarer: "Duchess",
+    nightfarer: Nightfarer.Duchess,
     stacks: false,
   },
   {
     key: EffectKey.executorAttackPowerUpWhileUltimateArtActive,
     ids: [7034200],
-    nightfarer: "Executor",
+    nightfarer: Nightfarer.Executor,
     stacks: false,
   },
   {
     key: EffectKey.executorCharacterSkillBoostsAttackButDrainsHP,
     ids: [7034400],
-    nightfarer: "Executor",
+    nightfarer: Nightfarer.Executor,
     stacks: false,
   },
   {
     key: EffectKey.executorImprovesEffectButLowersResistance,
     ids: [7034300],
-    nightfarer: "Executor",
+    nightfarer: Nightfarer.Executor,
     stacks: false,
   },
   {
     key: EffectKey.executorRoaringRestoresHPWhileArtActive,
     ids: [7011700],
-    nightfarer: "Executor",
+    nightfarer: Nightfarer.Executor,
     stacks: false,
   },
   {
     key: EffectKey.executorUnlockingCursedSwordRestoresHP,
     ids: [7034500],
-    nightfarer: "Executor",
+    nightfarer: Nightfarer.Executor,
     stacks: false,
   },
   {
     key: EffectKey.guardianBecomeTargetOfEnemyAggression,
     ids: [7033300],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.guardianCharacterSkillInflictsHolyDamage,
     ids: [7011900],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.guardianCreatesWhirlwindWhenChargingHalberd,
     ids: [7011600],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.guardianDamageNegationForAlliesImproved,
     ids: [7011100],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.guardianImprovedCharacterSkillRange,
     ids: [7010000],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.guardianIncreasedDurationForCharacterSkill,
     ids: [7011000],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.guardianSuccessfulGuardsSendOutShockwaves,
     ids: [7033400],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.guardianRestoresAlliesHPWhenCharacterSkillUsed,
     ids: [7011400],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.guardianSlowlyRestoresNearbyAlliesHP,
     ids: [12002, 7012000],
-    nightfarer: "Guardian",
+    nightfarer: Nightfarer.Guardian,
     stacks: false,
   },
   {
     key: EffectKey.ironeyeAdditionalCharacterSkillUse,
     ids: [7270100],
-    nightfarer: "Ironeye",
+    nightfarer: Nightfarer.Ironeye,
     stacks: false,
   },
   {
     key: EffectKey.ironeyeArtChargeActivationAddsPoisonEffect,
     ids: [7034600],
-    nightfarer: "Ironeye",
+    nightfarer: Nightfarer.Ironeye,
     stacks: false,
   },
   {
     key: EffectKey.ironeyeBoostsThrustingCounterattacksAfterArt,
     ids: [7034700],
-    nightfarer: "Ironeye",
+    nightfarer: Nightfarer.Ironeye,
     stacks: false,
   },
   {
     key: EffectKey.ironeyeExtendsDurationOfWeakPoint,
     ids: [7280000],
-    nightfarer: "Ironeye",
+    nightfarer: Nightfarer.Ironeye,
     stacks: false,
   },
   {
     key: EffectKey.raiderCharacterSkillDamageUp,
     ids: [7010800],
-    nightfarer: "Raider",
+    nightfarer: Nightfarer.Raider,
     stacks: false,
   },
   {
     key: EffectKey.raiderDamageTakenWhileUsingCharacterSkillImprovesAttack,
     ids: [7031300],
-    nightfarer: "Raider",
+    nightfarer: Nightfarer.Raider,
     stacks: false,
   },
   {
     key: EffectKey.raiderDurationOfUltimateArtExtended,
     ids: [7310000],
-    nightfarer: "Raider",
+    nightfarer: Nightfarer.Raider,
     stacks: false,
   },
   {
     key: EffectKey.raiderPermanentlyIncreaseAttackPower,
     ids: [7033800],
-    nightfarer: "Raider",
+    nightfarer: Nightfarer.Raider,
     stacks: false,
   },
   {
     key: EffectKey.recluseActivatingUltimateArtRaisesMaxHP,
     ids: [7034100],
-    nightfarer: "Recluse",
+    nightfarer: Nightfarer.Recluse,
     stacks: false,
   },
   {
     key: EffectKey.recluseCollecting4AffinityResiduesImprovesAffinityAttackPower,
     ids: [7034000],
-    nightfarer: "Recluse",
+    nightfarer: Nightfarer.Recluse,
     stacks: false,
   },
   {
     key: EffectKey.recluseCollectingAffinityResidueActivatesTerraMagica,
     ids: [7032800],
-    nightfarer: "Recluse",
+    nightfarer: Nightfarer.Recluse,
     stacks: false,
   },
   {
     key: EffectKey.recluseExtendsDurationOfBloodSigils,
     ids: [7033900],
-    nightfarer: "Recluse",
+    nightfarer: Nightfarer.Recluse,
     stacks: false,
   },
   {
     key: EffectKey.recluseSufferBloodLossAndIncreaseAttackPower,
     ids: [17002, 7032900],
-    nightfarer: "Recluse",
+    nightfarer: Nightfarer.Recluse,
     stacks: false,
   },
   {
     key: EffectKey.revenantAbilityActivationChanceIncreased,
     ids: [7320000],
-    nightfarer: "Revenant",
+    nightfarer: Nightfarer.Revenant,
     stacks: false,
   },
   {
     key: EffectKey.revenantExpendOwnHPToFullyHealNearbyAllies,
     ids: [16002, 7010900],
-    nightfarer: "Revenant",
+    nightfarer: Nightfarer.Revenant,
     stacks: false,
   },
   {
     key: EffectKey.revenantPowerUpWhileFightingAlongsideFamily,
     ids: [7220000],
-    nightfarer: "Revenant",
+    nightfarer: Nightfarer.Revenant,
     stacks: false,
   },
   {
     key: EffectKey.revenantStrengthensFamilyAndAlliesWhenUltimateArtActivated,
     ids: [7031200],
-    nightfarer: "Revenant",
+    nightfarer: Nightfarer.Revenant,
     stacks: false,
   },
   {
     key: EffectKey.revenantTriggerGhostflameExplosionDuringUltimateArtActivation,
     ids: [7011200],
-    nightfarer: "Revenant",
+    nightfarer: Nightfarer.Revenant,
     stacks: false,
   },
   {
@@ -845,55 +845,55 @@ export const effectsArray = [
   {
     key: EffectKey.wylderAdditionalCharacterSkillUse,
     ids: [11000, 7033200],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
     key: EffectKey.wylderArtActivationSpreadsFireInArea,
     ids: [7010500],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
     key: EffectKey.wylderArtGaugeGreatlyFilledWhenAbilityActivated,
     ids: [11002, 7032400],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
     key: EffectKey.wylderCharacterSkillInflictsBloodLoss,
     ids: [7011500],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
     key: EffectKey.wylderStandardAttacksEnhancedWithFieryFollowUpsWhenUsingCharacterSkill,
     ids: [7020000],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
     key: EffectKey.wylderImpairedDamageNegationImprovedAttackPowerStaminaAfterArtActivation,
     ids: [7030500],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
     key: EffectKey.wylderImprovedAttackPowerWhenAbilityActivated,
     ids: [7033000],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
     key: EffectKey.wylderImprovedAttackPowerWhenCharacterSkillActivated,
     ids: [7032300],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
     key: EffectKey.wylderReducedCooldownTimeForCharacterSkill,
     ids: [7031400],
-    nightfarer: "Wylder",
+    nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
   {
@@ -1390,7 +1390,7 @@ export const effectsArray = [
   {
     key: EffectKey.defeatingEnemiesNearTotemStelaRestoresHP,
     ids: [7090300],
-    nightfarer: "Raider",
+    nightfarer: Nightfarer.Raider,
     stacks: false,
   },
   {
@@ -2376,7 +2376,7 @@ export const effectsArray = [
   {
     key: EffectKey.improvedPoiseNearTotemStela,
     ids: [7030000],
-    nightfarer: "Raider",
+    nightfarer: Nightfarer.Raider,
     stacks: false,
   },
   {
@@ -3411,7 +3411,7 @@ export const effectsArray = [
 
 export interface Effect {
   key: EffectKey;
-  nightfarer?: NightfarerName;
+  nightfarer?: Nightfarer;
   stacks?: boolean;
   group?: string;
   level?: number;

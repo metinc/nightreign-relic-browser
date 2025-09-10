@@ -4,7 +4,7 @@ import type {
   ComboSearchWorkerInput,
   ComboSearchWorkerMessage,
 } from "../workers/comboSearchWorker";
-import type { NightfarerName } from "./Nightfarers";
+import { Nightfarer } from "./Nightfarers";
 import type { Vessel } from "./Vessels";
 
 export interface VesselCombination {
@@ -43,7 +43,7 @@ export function cancelCurrentSearch(): void {
 }
 
 export async function searchCombinations(
-  nightfarer: NightfarerName,
+  nightfarer: Nightfarer,
   selectedEffects: Effect[],
   relics: RelicSlot[],
   enabledVessels: Vessel[],

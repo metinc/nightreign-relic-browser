@@ -9,6 +9,7 @@ import type { RelicSlot } from "../types/SaveFile";
 import { wylderVessels } from "../utils/Vessels";
 import { buildWasmInput } from "../workers/comboSearchWorker.js";
 import { getEffect } from "./DataUtils";
+import { Nightfarer } from "./Nightfarers";
 import { RelicParser } from "./RelicParser";
 import { SaveFileDecryptor } from "./SaveFileDecryptor";
 
@@ -39,7 +40,7 @@ describe("ComboSearch", () => {
       const selectedEffects: Effect[] = [getEffect(7000702)];
 
       const input = buildWasmInput(
-        "Wylder",
+        Nightfarer.Wylder,
         selectedEffects,
         relics,
         wylderVessels
@@ -66,7 +67,7 @@ describe("ComboSearch", () => {
       ];
 
       const input = buildWasmInput(
-        "Wylder",
+        Nightfarer.Wylder,
         selectedEffects,
         relics,
         wylderVessels

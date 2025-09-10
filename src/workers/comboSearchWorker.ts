@@ -7,12 +7,12 @@ import {
   getRelicColor,
   getStackableHigherLevelEffects,
 } from "../utils/DataUtils.js";
-import type { NightfarerName } from "../utils/Nightfarers";
+import { Nightfarer } from "../utils/Nightfarers";
 import { recommendedEffectsByCharacter } from "../utils/RecommendedEffects.js";
 import type { Vessel } from "../utils/Vessels";
 
 export interface ComboSearchWorkerInput {
-  nightfarer: NightfarerName;
+  nightfarer: Nightfarer;
   selectedEffects: Effect[];
   relics: RelicSlot[];
   enabledVessels: Vessel[];
@@ -62,7 +62,7 @@ async function initComboSearchWasm(): Promise<void> {
 }
 
 export function buildWasmInput(
-  nightfarer: NightfarerName,
+  nightfarer: Nightfarer,
   selectedEffects: Effect[],
   relics: RelicSlot[],
   enabledVessels: Vessel[]
@@ -94,8 +94,6 @@ self.onmessage = async (event: MessageEvent<ComboSearchWorkerInput>) => {
     const { nightfarer, selectedEffects, relics, enabledVessels } = event.data;
     const startTime = Date.now();
     const availableRelicsCount = relics.length;
-    console.log("relics :", relics);
-    console.log("relics.length :", relics.length);
 
     // Send initial progress
     const progressMessage: ComboSearchWorkerProgress = {
