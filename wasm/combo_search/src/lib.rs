@@ -11,6 +11,14 @@ const POINTS_FOR_RANDOM_RECOMMENDED_EFFECT: f32 = 0.2;
 const POINTS_FOR_RANDOM_EFFECT: f32 = 0.1;
 const PENALTY_FOR_MISSING_LEVEL: f32 = -0.1;
 
+const SELECTED_EFFECTS_SPACE: usize = 9*3;
+const RECOMMENDED_EFFECTS_SPACE: usize = 22;
+const EFFECT_KEY_SPACE: usize = 584;
+const EFFECT_GROUP_SPACE: usize = 30;
+// Color domain: 0=Any, 1=Red, 2=Blue, 3=Yellow, 4=Green
+const COLOR_SPACE: usize = 5;
+const ANY_COLOR: usize = 0;
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Effect {
     pub key: u16,
@@ -57,6 +65,7 @@ pub struct SearchOutput {
     pub total_combinations_checked: u32,
 }
 
+#[inline(always)]
 fn is_same_group(a: &Effect, b: &Effect) -> bool {
     match (a.group, b.group) {
         (Some(ga), Some(gb)) => ga == gb,
@@ -64,6 +73,7 @@ fn is_same_group(a: &Effect, b: &Effect) -> bool {
     }
 }
 
+#[inline(always)]
 fn is_same_starting_bonus(a: &Effect, b: &Effect) -> bool {
     match (a.startingBonus, b.startingBonus) {
         (Some(sa), Some(sb)) => sa == sb,
@@ -71,11 +81,14 @@ fn is_same_starting_bonus(a: &Effect, b: &Effect) -> bool {
     }
 }
 
-fn is_recommended_effect(effect: &Effect, recommended_bitmap: &[bool; 584]) -> bool {
+#[inline(always)]
+fn is_recommended_effect(effect: &Effect, recommended_bitmap: &[bool; EFFECT_KEY_SPACE]) -> bool {
     let k = effect.key as usize;
+    debug_assert!(k < EFFECT_KEY_SPACE);
     unsafe { *recommended_bitmap.get_unchecked(k) }
 }
 
+#[inline(always)]
 fn generate_unique_key(relic_indices: [Option<usize>; 3], relics: &[RelicSlot]) -> u128 {
     // Pack up to three sorted relic IDs (each < 2^24) plus count into a u128
     let mut ids: [u32; 3] = [0, 0, 0];
@@ -93,6 +106,7 @@ fn generate_unique_key(relic_indices: [Option<usize>; 3], relics: &[RelicSlot]) 
         | (ids[2] as u128)
 }
 
+#[inline(always)]
 fn add_combination_if_unique(
     results: &mut Vec<VesselCombinationResultEntry>,
     seen_combinations: &mut std::collections::HashSet<u128>,
@@ -101,7 +115,7 @@ fn add_combination_if_unique(
     relics: &[RelicSlot],
     nightfarer: u8,
     selected_effects: &[Effect],
-    recommended_bitmap: &[bool; 584],
+    recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
 ) {
     let unique_key = generate_unique_key(relic_indices, relics);
     
@@ -115,19 +129,23 @@ fn add_combination_if_unique(
     }
 }
 
+#[inline(always)]
 fn calc_points(
     nightfarer: u8,
     relic_indices: [Option<usize>; 3],
     relics: &[RelicSlot],
     selected: &[Effect],
-    recommended_bitmap: &[bool; 584],
+    recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
 ) -> f32 {
-    // Use key/group sets instead of pointer identity to track duplicates and selections
-    let mut satisfied_keys: HashSet<u16> = HashSet::with_capacity(16);
-    let mut satisfied_groups: HashSet<u8> = HashSet::with_capacity(16);
+    let mut satisfied_keys: [bool; EFFECT_KEY_SPACE] = [false; EFFECT_KEY_SPACE];
+    let mut satisfied_groups: [bool; EFFECT_GROUP_SPACE] = [false; EFFECT_GROUP_SPACE];
 
-    let mut selected_keys: HashSet<u16> = HashSet::with_capacity(selected.len());
-    for s in selected { selected_keys.insert(s.key); }
+    let mut selected_keys: [bool; EFFECT_KEY_SPACE] = [false; EFFECT_KEY_SPACE];
+    for s in selected {
+        let k = s.key as usize;
+        debug_assert!(k < EFFECT_KEY_SPACE);
+        unsafe { *selected_keys.get_unchecked_mut(k) = true; }
+    }
 
     let mut points: f32 = 0.0;
 
@@ -139,21 +157,26 @@ fn calc_points(
                 let is_usable_character_effect = effect.nightfarer == Some(nightfarer);
                 
                 if is_character_effect && !is_usable_character_effect {
-                    // No points for other character effects
                     continue;
                 }
 
-                let key_duplicate = satisfied_keys.contains(&effect.key);
-                let group_duplicate = match effect.group { Some(g) => satisfied_groups.contains(&g), None => false };
+                let k = effect.key as usize;
+                debug_assert!(k < EFFECT_KEY_SPACE);
+                let key_duplicate = unsafe { *satisfied_keys.get_unchecked(k) };
+                let group_duplicate = match effect.group {
+                    Some(g) => {
+                        let gu = g as usize;
+                        debug_assert!(gu < EFFECT_GROUP_SPACE);
+                        unsafe { *satisfied_groups.get_unchecked(gu) }
+                    },
+                    None => false,
+                };
                 let is_duplicate = key_duplicate || group_duplicate;
                 let is_stackable = effect.stacks.unwrap_or(false);
                 
-                if is_duplicate && !is_stackable {
-                    // No points for non-stackable duplicate effects
-                    continue;
-                }
+                if is_duplicate && !is_stackable { continue; }
 
-                let is_selected_effect = selected_keys.contains(&effect.key);
+                let is_selected_effect = unsafe { *selected_keys.get_unchecked(k) };
 
                 let level_points_multiplier: f32 = match effect.level {
                     Some(l) => 1.0 + (3 - l) as f32 * PENALTY_FOR_MISSING_LEVEL,
@@ -177,9 +200,12 @@ fn calc_points(
                     }
                 }
 
-                // Mark this effect as satisfied for duplicate/override checks
-                satisfied_keys.insert(effect.key);
-                if let Some(g) = effect.group { satisfied_groups.insert(g); }
+                unsafe { *satisfied_keys.get_unchecked_mut(k) = true; }
+                if let Some(g) = effect.group {
+                    let gu = g as usize;
+                    debug_assert!(gu < EFFECT_GROUP_SPACE);
+                    unsafe { *satisfied_groups.get_unchecked_mut(gu) = true; }
+                }
             }
         }
     }
@@ -190,75 +216,124 @@ fn calc_points(
 pub fn search_combinations(input: JsValue) -> JsValue {
     let input: SearchInput = serde_wasm_bindgen::from_value(input).unwrap();
 
-    // Build candidate relic list: relics that contain at least one selected effect (by exact key)
-    let mut selected_bitmap = [false; 584];
+    debug_assert!(input.selected_effects.len() <= SELECTED_EFFECTS_SPACE, "selected_effects exceeds SELECTED_EFFECTS_SPACE");
+    debug_assert!(input.recommended_effects.len() <= RECOMMENDED_EFFECTS_SPACE, "recommended_effects exceeds RECOMMENDED_EFFECTS_SPACE");
+
+    let mut selected_bitmap = [false; EFFECT_KEY_SPACE];
     for e in &input.selected_effects {
         let k = e.key as usize;
+        debug_assert!(k < EFFECT_KEY_SPACE);
         unsafe { *selected_bitmap.get_unchecked_mut(k) = true; }
     }
+
     let mut effect_candidates: Vec<usize> = Vec::new();
-    for (idx, relic) in input.relics.iter().enumerate() { 
-        if relic.effects.iter().any(|e| {
+    effect_candidates.reserve(input.relics.len());
+
+    let mut is_candidate: Vec<bool> = vec![false; input.relics.len()];
+
+    for (idx, relic) in input.relics.iter().enumerate() {
+        let mut any_selected = false;
+        for e in &relic.effects {
             let k = e.key as usize;
-            unsafe { *selected_bitmap.get_unchecked(k) }
-        }) {
+            if unsafe { *selected_bitmap.get_unchecked(k) } {
+                any_selected = true;
+                break;
+            }
+        }
+        if any_selected {
             effect_candidates.push(idx);
+            unsafe { *is_candidate.get_unchecked_mut(idx) = true; }
         }
     }
-    let effect_candidate_set: std::collections::HashSet<usize> = effect_candidates.iter().copied().collect();
 
     // Precompute recommended keys for O(1) lookup using bitmap
-    let mut recommended_bitmap = [false; 584];
+    let mut recommended_bitmap = [false; EFFECT_KEY_SPACE];
     for e in &input.recommended_effects {
         let k = e.key as usize;
         unsafe { *recommended_bitmap.get_unchecked_mut(k) = true; }
     }
 
-    // Pre-split all relics by color for fast filtering (full set, not only candidates)
-    let mut by_color_all: std::collections::HashMap<u8, Vec<usize>> = std::collections::HashMap::new();
-    for (idx, relic) in input.relics.iter().enumerate() { if let Some(color) = relic.color { by_color_all.entry(color).or_default().push(idx); } }
-    let all_indices: Vec<usize> = (0..input.relics.len()).collect();
+    // Precompute indices by color (ANY_COLOR => all relics)
+    let relics_len = input.relics.len();
+    let all_indices: Vec<usize> = (0..relics_len).collect();
+
+    // by_color_all[c]: indices of relics that can fit color c (c>0); by_color_all[ANY_COLOR] = all relic indices
+    let mut by_color_all: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
+    // Fill colored slots
+    for (idx, relic) in input.relics.iter().enumerate() {
+        if let Some(color) = relic.color {
+            let c = color as usize;
+            if c != ANY_COLOR {
+                debug_assert!(c < COLOR_SPACE);
+                by_color_all[c].push(idx);
+            }
+        }
+    }
+    // Any color uses all indices (including those without a color)
+    by_color_all[ANY_COLOR] = all_indices.clone();
+
+    // by_color_cand[c]: candidate indices that can fit color c (c>0); by_color_cand[ANY_COLOR] = all candidate indices
+    let mut by_color_cand: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
+    by_color_cand[ANY_COLOR] = effect_candidates.clone();
+    for c in 1usize..COLOR_SPACE {
+        let list = &by_color_all[c];
+        if list.is_empty() { continue; }
+        let mut v = Vec::with_capacity(list.len());
+        for &idx in list {
+            if unsafe { *is_candidate.get_unchecked(idx) } { v.push(idx); }
+        }
+        by_color_cand[c] = v;
+    }
 
     let mut results: Vec<VesselCombinationResultEntry> = Vec::new();
     let mut checked: u32 = 0;
-    let mut seen_combinations: HashSet<u128> = HashSet::new();
+    // Pre-size seen combinations to reduce rehashing (heuristic)
+    let mut seen_combinations: HashSet<u128> = HashSet::with_capacity(effect_candidates.len().saturating_mul(8));
 
     for (v_i, vessel) in input.enabled_vessels.iter().enumerate() {
-        // For each slot build: (a) all relics matching color, (b) candidate relics (subset)
-        let mut slot_all: [Vec<usize>; 3] = [Vec::new(), Vec::new(), Vec::new()];
-        let mut slot_candidates: [Vec<usize>; 3] = [Vec::new(), Vec::new(), Vec::new()];
-        for s in 0..3 { 
-            let color_req: u8 = vessel.slots[s];
-            let all_list: Vec<usize> = if color_req == 0 { all_indices.clone() } else { by_color_all.get(&color_req).cloned().unwrap_or_default() };
-            let cand_list: Vec<usize> = all_list.iter().copied().filter(|i| effect_candidate_set.contains(i)).collect();
-            slot_all[s] = all_list;
-            slot_candidates[s] = cand_list;
-        }
-
         // Enumerate combinations: anchor one slot with a candidate relic, fill others with any relic (or None)
         for anchor_slot in 0..3 {
-            // Skip if no candidate can occupy this slot
-            if slot_candidates[anchor_slot].is_empty() { continue; }
-            // Identify the other two slots
+            let color_req_anchor = vessel.slots[anchor_slot] as usize;
+            let anchor_candidates: &Vec<usize> = if color_req_anchor == ANY_COLOR {
+                unsafe { by_color_cand.get_unchecked(ANY_COLOR) }
+            } else {
+                debug_assert!(color_req_anchor < COLOR_SPACE);
+                unsafe { by_color_cand.get_unchecked(color_req_anchor) }
+            };
+
+            if anchor_candidates.is_empty() { continue; }
+
             let other_slots: [usize; 2] = match anchor_slot { 0 => [1,2], 1 => [0,2], _ => [0,1] };
-            for &cand_idx in &slot_candidates[anchor_slot] {
-                // Build choice lists (including None) for the other two slots
-                let mut other_choices: [Vec<Option<usize>>;2] = [Vec::new(), Vec::new()];
-                for (ci, &slot_id) in other_slots.iter().enumerate() {
-                    other_choices[ci].push(None); // empty slot option
-                    for &idx in &slot_all[slot_id] { if idx != cand_idx { other_choices[ci].push(Some(idx)); } }
-                }
-                // Nested loops over other slot choices
-                for choice_a in &other_choices[0] {
-                    for choice_b in &other_choices[1] {
-                        if choice_a.is_some() && choice_a == choice_b { continue; } // no duplicate relics
+
+            let list_a: &Vec<usize> = {
+                let c = vessel.slots[other_slots[0]] as usize;
+                if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } }
+            };
+            let list_b: &Vec<usize> = {
+                let c = vessel.slots[other_slots[1]] as usize;
+                if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } }
+            };
+
+            for &cand_idx in anchor_candidates.iter() {
+                // Iterate choice for first other slot: i == 0 => None, else Some(list_a[i-1])
+                let len_a = list_a.len();
+                for i in 0..=len_a {
+                    let choice_a = if i == 0 { None } else { Some(unsafe { *list_a.get_unchecked(i - 1) }) };
+                    if choice_a == Some(cand_idx) { continue; } // no duplicate relics
+
+                    let len_b = list_b.len();
+                    for j in 0..=len_b {
+                        let choice_b = if j == 0 { None } else { Some(unsafe { *list_b.get_unchecked(j - 1) }) };
+                        if choice_b == Some(cand_idx) { continue; }
+                        if choice_a.is_some() && choice_a == choice_b { continue; }
+
                         let mut relic_indices: [Option<usize>;3] = [None,None,None];
                         relic_indices[anchor_slot] = Some(cand_idx);
-                        relic_indices[other_slots[0]] = *choice_a;
-                        relic_indices[other_slots[1]] = *choice_b;
-                        // Count attempted combination
+                        relic_indices[other_slots[0]] = choice_a;
+                        relic_indices[other_slots[1]] = choice_b;
+
                         checked += 1;
-                        // (At least one candidate guaranteed by construction)
+
                         add_combination_if_unique(
                             &mut results,
                             &mut seen_combinations,
