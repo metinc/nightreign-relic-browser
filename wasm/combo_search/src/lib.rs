@@ -13,7 +13,7 @@ const PENALTY_FOR_MISSING_LEVEL: f32 = -0.1;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Effect {
-    pub key: String,
+    pub key: u16,
     pub nightfarer: Option<String>,
     pub stacks: Option<bool>,
     pub group: Option<String>,
@@ -71,8 +71,9 @@ fn is_same_starting_bonus(a: &Effect, b: &Effect) -> bool {
     }
 }
 
-fn is_recommended_effect(effect: &Effect, recommended_keys: &HashSet<String>) -> bool {
-    recommended_keys.contains(&effect.key)
+fn is_recommended_effect(effect: &Effect, recommended_bitmap: &[bool; 584]) -> bool {
+    let k = effect.key as usize;
+    unsafe { *recommended_bitmap.get_unchecked(k) }
 }
 
 fn generate_unique_key(relic_indices: [Option<usize>; 3], relics: &[RelicSlot]) -> u128 {
@@ -94,18 +95,18 @@ fn generate_unique_key(relic_indices: [Option<usize>; 3], relics: &[RelicSlot]) 
 
 fn add_combination_if_unique(
     results: &mut Vec<VesselCombinationResultEntry>,
-    seen_combinations: &mut HashSet<u128>,
+    seen_combinations: &mut std::collections::HashSet<u128>,
     vessel_index: usize,
     relic_indices: [Option<usize>; 3],
     relics: &[RelicSlot],
     nightfarer: &str,
     selected_effects: &[Effect],
-    recommended_keys: &HashSet<String>,
+    recommended_bitmap: &[bool; 584],
 ) {
     let unique_key = generate_unique_key(relic_indices, relics);
     
     if seen_combinations.insert(unique_key) {
-        let points = calc_points(nightfarer, relic_indices, relics, selected_effects, recommended_keys);
+        let points = calc_points(nightfarer, relic_indices, relics, selected_effects, recommended_bitmap);
         results.push(VesselCombinationResultEntry {
             vessel_index,
             relic_indices,
@@ -114,7 +115,13 @@ fn add_combination_if_unique(
     }
 }
 
-fn calc_points(nightfarer: &str, relic_indices: [Option<usize>; 3], relics: &[RelicSlot], selected: &[Effect], recommended_keys: &HashSet<String>) -> f32 {
+fn calc_points(
+    nightfarer: &str,
+    relic_indices: [Option<usize>; 3],
+    relics: &[RelicSlot],
+    selected: &[Effect],
+    recommended_bitmap: &[bool; 584],
+) -> f32 {
     let mut satisfied_effects: Vec<&Effect> = Vec::with_capacity(32);
     let mut points: f32 = 0.0;
 
@@ -164,7 +171,7 @@ fn calc_points(nightfarer: &str, relic_indices: [Option<usize>; 3], relics: &[Re
                 } else if is_usable_character_effect && !is_duplicate {
                     points += POINTS_FOR_RANDOM_CHARACTER_EFFECT * level_points_multiplier;
                 } else if !is_character_effect {
-                    let is_recommended = is_recommended_effect(effect, recommended_keys);
+                    let is_recommended = is_recommended_effect(effect, recommended_bitmap);
                     if is_recommended {
                         points += POINTS_FOR_RANDOM_RECOMMENDED_EFFECT * level_points_multiplier;
                     } else {
@@ -184,17 +191,28 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     let input: SearchInput = serde_wasm_bindgen::from_value(input).unwrap();
 
     // Build candidate relic list: relics that contain at least one selected effect (by exact key)
-    let selected_keys: HashSet<&str> = input.selected_effects.iter().map(|e| e.key.as_str()).collect();
+    let mut selected_bitmap = [false; 584];
+    for e in &input.selected_effects {
+        let k = e.key as usize;
+        unsafe { *selected_bitmap.get_unchecked_mut(k) = true; }
+    }
     let mut effect_candidates: Vec<usize> = Vec::new();
     for (idx, relic) in input.relics.iter().enumerate() { 
-        if relic.effects.iter().any(|e| selected_keys.contains(e.key.as_str())) {
+        if relic.effects.iter().any(|e| {
+            let k = e.key as usize;
+            unsafe { *selected_bitmap.get_unchecked(k) }
+        }) {
             effect_candidates.push(idx);
         }
     }
-    let effect_candidate_set: HashSet<usize> = effect_candidates.iter().copied().collect();
+    let effect_candidate_set: std::collections::HashSet<usize> = effect_candidates.iter().copied().collect();
 
-    // Precompute recommended keys for O(1) lookup
-    let recommended_keys: HashSet<String> = input.recommended_effects.iter().map(|e| e.key.clone()).collect();
+    // Precompute recommended keys for O(1) lookup using bitmap
+    let mut recommended_bitmap = [false; 584];
+    for e in &input.recommended_effects {
+        let k = e.key as usize;
+        unsafe { *recommended_bitmap.get_unchecked_mut(k) = true; }
+    }
 
     // Pre-split all relics by color for fast filtering (full set, not only candidates)
     let mut by_color_all: std::collections::HashMap<&str, Vec<usize>> = std::collections::HashMap::new();
@@ -241,7 +259,16 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                         // Count attempted combination
                         checked += 1;
                         // (At least one candidate guaranteed by construction)
-                        add_combination_if_unique(&mut results, &mut seen_combinations, v_i, relic_indices, &input.relics, &input.nightfarer, &input.selected_effects, &recommended_keys);
+                        add_combination_if_unique(
+                            &mut results,
+                            &mut seen_combinations,
+                            v_i,
+                            relic_indices,
+                            &input.relics,
+                            &input.nightfarer,
+                            &input.selected_effects,
+                            &recommended_bitmap,
+                        );
                     }
                 }
             }

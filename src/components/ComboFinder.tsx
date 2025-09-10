@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { Effect } from "../resources/effects";
+import { EffectKey, type Effect } from "../resources/effects";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import {
   cancelCurrentSearch,
@@ -140,7 +140,7 @@ export function ComboFinder(props: ComboFinderProps) {
       }
       const restored = keys
         .map((k: unknown) =>
-          typeof k === "string"
+          typeof k === "number"
             ? props.availableEffects.find((e) => e.key === k)
             : undefined
         )
@@ -159,8 +159,8 @@ export function ComboFinder(props: ComboFinderProps) {
     (effect) =>
       effect.nightfarer === undefined ||
       effect.nightfarer === selectedNightfarer ||
-      effect.key === "improvedPoiseNearTotemStela" ||
-      effect.key === "defeatingEnemiesNearTotemStelaRestoresHP"
+      effect.key === EffectKey.improvedPoiseNearTotemStela ||
+      effect.key === EffectKey.defeatingEnemiesNearTotemStelaRestoresHP
   );
 
   // Persist settings and selected effects

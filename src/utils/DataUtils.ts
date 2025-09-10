@@ -43,7 +43,7 @@ export const getRelicColor = (itemId: number): RelicColor => {
 };
 
 const unknownEffect: (effectId: number) => Effect = (effectId) => ({
-  key: `Unknown Effect ${effectId}` as EffectKey,
+  key: effectId as EffectKey,
 });
 
 export const getEffect = (effectId: number): Effect => {

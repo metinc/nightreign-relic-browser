@@ -1,4 +1,5 @@
-import type { Effect, EffectKey } from "../resources/effects";
+import type { Effect } from "../resources/effects";
+import { EffectKey } from "../resources/effects";
 import { getEffectByKey, getStackableHigherLevelEffects } from "./DataUtils";
 import type { NightfarerName } from "./Nightfarers";
 
@@ -10,7 +11,17 @@ const getEffectByKeyOrThrow = (key: EffectKey): Effect => {
   return effect;
 };
 
-const wylderEffects: EffectKey[] = [];
+const wylderEffects: EffectKey[] = [
+  EffectKey.characterSkillCooldownReduction,
+  EffectKey.improvedGreatswordAttackPower,
+  EffectKey.fireAttackPowerUp,
+  EffectKey.improvedStanceBreakingWhenTwoHanding,
+  EffectKey.improvedStanceBreakingWhenWieldingTwoArmaments,
+  EffectKey.vigorPlus1,
+  EffectKey.poisePlus1,
+  EffectKey.strengthPlus1,
+  EffectKey.dexterityPlus1,
+];
 const guardianEffects: EffectKey[] = [];
 const ironeyeEffects: EffectKey[] = [];
 const duchessEffects: EffectKey[] = [];
