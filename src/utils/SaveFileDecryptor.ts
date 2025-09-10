@@ -96,8 +96,6 @@ export class SaveFileDecryptor {
     const raw = new Uint8Array(fileBuffer);
     const bnd4Entries: BND4Entry[] = [];
 
-    console.log(`Read ${raw.length} bytes from file.`);
-
     // Check BND4 header
     const bnd4Magic = new Uint8Array([0x42, 0x4e, 0x44, 0x34]); // "BND4"
     if (!this.arrayStartsWith(raw, bnd4Magic)) {
@@ -105,15 +103,8 @@ export class SaveFileDecryptor {
         "BND4 header not found! This doesn't appear to be a valid SL2 file."
       );
     }
-    console.log("Found BND4 header.");
 
     const numBnd4Entries = this.readInt32LE(raw, 12);
-    console.log(`Number of BND4 entries: ${numBnd4Entries}`);
-
-    const unicodeFlag = raw[48] === 1;
-    console.log(`Unicode flag: ${unicodeFlag}`);
-
-    let successfulDecryptions = 0;
 
     // Process all BND4 entries
     for (let i = 0; i < numBnd4Entries; i++) {
@@ -162,10 +153,6 @@ export class SaveFileDecryptor {
         continue;
       }
 
-      console.log(
-        `Processing Entry #${i} (Size: ${entrySize}, Offset: ${entryDataOffset})`
-      );
-
       try {
         const encryptedData = raw.slice(
           entryDataOffset,
@@ -190,17 +177,12 @@ export class SaveFileDecryptor {
 
         await this.decryptEntry(entry);
         bnd4Entries.push(entry);
-        successfulDecryptions++;
-        console.log(`Successfully decrypted entry #${i}: ${entry.name}`);
       } catch (error) {
         console.error(`Error processing entry #${i}:`, error);
         continue;
       }
     }
 
-    console.log(
-      `DONE! Successfully decrypted ${successfulDecryptions} of ${numBnd4Entries} entries.`
-    );
     return bnd4Entries;
   }
 }
