@@ -16,7 +16,7 @@ pub struct Effect {
     pub key: u16,
     pub nightfarer: Option<u8>,
     pub stacks: Option<bool>,
-    pub group: Option<String>,
+    pub group: Option<u8>,
     pub level: Option<i32>,
     pub startingBonus: Option<i32>,
 }
@@ -58,7 +58,7 @@ pub struct SearchOutput {
 }
 
 fn is_same_group(a: &Effect, b: &Effect) -> bool {
-    match (&a.group, &b.group) {
+    match (a.group, b.group) {
         (Some(ga), Some(gb)) => ga == gb,
         _ => false,
     }
@@ -124,7 +124,7 @@ fn calc_points(
 ) -> f32 {
     // Use key/group sets instead of pointer identity to track duplicates and selections
     let mut satisfied_keys: HashSet<u16> = HashSet::with_capacity(16);
-    let mut satisfied_groups: HashSet<&str> = HashSet::with_capacity(16);
+    let mut satisfied_groups: HashSet<u8> = HashSet::with_capacity(16);
 
     let mut selected_keys: HashSet<u16> = HashSet::with_capacity(selected.len());
     for s in selected { selected_keys.insert(s.key); }
@@ -144,7 +144,7 @@ fn calc_points(
                 }
 
                 let key_duplicate = satisfied_keys.contains(&effect.key);
-                let group_duplicate = match &effect.group { Some(g) => satisfied_groups.contains(g.as_str()), None => false };
+                let group_duplicate = match effect.group { Some(g) => satisfied_groups.contains(&g), None => false };
                 let is_duplicate = key_duplicate || group_duplicate;
                 let is_stackable = effect.stacks.unwrap_or(false);
                 
@@ -179,7 +179,7 @@ fn calc_points(
 
                 // Mark this effect as satisfied for duplicate/override checks
                 satisfied_keys.insert(effect.key);
-                if let Some(g) = &effect.group { satisfied_groups.insert(g.as_str()); }
+                if let Some(g) = effect.group { satisfied_groups.insert(g); }
             }
         }
     }

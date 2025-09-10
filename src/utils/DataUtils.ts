@@ -1,5 +1,6 @@
 import i18n from "../i18n";
 import {
+  EffectGroup,
   effects,
   effectsArray,
   isSameGroupAndEqualOrBetter,
@@ -64,12 +65,14 @@ export const getEffectByKey = (key: EffectKey): Effect | undefined => {
  * Get effect name by ID using TypeScript resources and i18n
  */
 export const getEffectName = (effect: Effect): string => {
-  return i18n.t(`effects.${effect.key}`, { defaultValue: effect.key });
+  return i18n.t(`effects.${effect.key}`, {
+    defaultValue: `Unknown Effect ${effect.key}`,
+  });
 };
 
 export const getEffectGroup = (
   effect: Effect
-): { group: string; level: number } | undefined => {
+): { group: EffectGroup; level: number } | undefined => {
   if (
     "group" in effect &&
     "level" in effect &&

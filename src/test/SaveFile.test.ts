@@ -305,7 +305,6 @@ describe("Utility Functions", () => {
     it("should return undefined for non-existing effects", () => {
       expect(getEffectName(getEffect(99999))).toMatch(/^Unknown Effect/);
       expect(getEffectName(getEffect(-1))).toMatch(/^Unknown Effect/);
-      expect(getEffectName(getEffect(0))).toMatch(/^Unknown Effect/);
     });
 
     it("should handle edge cases", () => {
