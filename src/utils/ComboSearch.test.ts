@@ -160,5 +160,37 @@ describe("ComboSearch", () => {
         1 + 0.9 + 0.9
       );
     });
+
+    it("should not combine non-stackable effects", () => {
+      const selectedEffect = getEffectByKey(
+        EffectKey.attackPowerPermanentlyIncreasedForEachEvergaolPrisonerDefeated
+      );
+      assert(selectedEffect !== undefined);
+
+      const input = buildWasmInput(
+        Nightfarer.Wylder,
+        [selectedEffect],
+        relics,
+        [anyoneVessels[2]]
+      );
+
+      const result = search_combinations(input) as {
+        combinations: Array<{
+          vessel_index: number;
+          relic_indices: [number | null, number | null, number | null];
+          points: number;
+        }>;
+        total_combinations_checked: number;
+      };
+
+      let stacks = 0;
+      for (const combo of result.combinations[0].relic_indices) {
+        assert(combo !== null);
+        if (relics[combo].effects.includes(selectedEffect)) {
+          stacks++;
+        }
+      }
+      expect(stacks).toBe(1);
+    });
   });
 });
