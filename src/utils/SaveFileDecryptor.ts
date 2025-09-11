@@ -78,9 +78,6 @@ export class SaveFileDecryptor {
       );
       entry.cleanData = decryptedRaw.slice(4); // Remove first 4 bytes
       entry.decrypted = true;
-      console.log(
-        `Entry ${entry.index}: Decrypted ${decryptedRaw.length} bytes`
-      );
     } catch (error) {
       console.error(`Error decrypting entry ${entry.index}:`, error);
       throw error;
