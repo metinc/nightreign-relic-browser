@@ -51,7 +51,7 @@ pub struct Effect {
     pub nightfarer: Option<u8>,
     pub stacks: Option<bool>,
     pub group: Option<u8>,
-    pub level: Option<i32>,
+    pub level: Option<u8>,
     pub startingBonus: Option<u8>,
 }
 
@@ -181,7 +181,10 @@ fn calc_points(
                 let is_stackable = effect.stacks.unwrap_or(false);
                 if is_duplicate && !is_stackable { continue; }
                 let is_selected_effect = unsafe { *selected_keys.get_unchecked(k) };
-                let level_points_multiplier: f32 = match effect.level { Some(l) => 1.0 + (3 - l) as f32 * PENALTY_FOR_MISSING_LEVEL, None => 1.0 };
+                let level_points_multiplier: f32 = match effect.level {
+                    Some(l) => { debug_assert!(l <= 3); let missing: i32 = 3 - l as i32; 1.0 + (missing as f32) * PENALTY_FOR_MISSING_LEVEL },
+                    None => 1.0
+                };
                 if is_selected_effect {
                     if is_duplicate { points += POINTS_FOR_SELECTED_DUPLICATE_EFFECT * level_points_multiplier; }
                     else { points += POINTS_FOR_SELECTED_EFFECT * level_points_multiplier; }
