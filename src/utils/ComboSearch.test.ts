@@ -10,6 +10,7 @@ import { anyoneVessels, wylderVessels } from "../utils/Vessels";
 import { buildWasmInput } from "../workers/comboSearchWorker.js";
 import { getEffect, getEffectByKey } from "./DataUtils";
 import { Nightfarer } from "./Nightfarers";
+import { RelicSlotColor } from "./RelicColor.js";
 import { RelicParser } from "./RelicParser";
 import { SaveFileDecryptor } from "./SaveFileDecryptor";
 
@@ -265,6 +266,50 @@ describe("ComboSearch", () => {
       };
 
       expect(result.combinations.length).toBe(1);
+    });
+
+    it("should not give points for overridden effect", () => {
+      const selectedEffect = getEffectByKey(
+        EffectKey.startingArmamentDealsFireDamage
+      );
+      assert(selectedEffect !== undefined);
+      const overridingEffect = getEffectByKey(
+        EffectKey.startingArmamentDealsHolyDamage
+      );
+      assert(overridingEffect !== undefined);
+
+      const relics = [
+        { itemId: 120, effects: [selectedEffect] }, // yellow
+        { itemId: 102, effects: [overridingEffect] }, // red
+      ] as RelicSlot[];
+
+      const input = buildWasmInput(
+        Nightfarer.Guardian,
+        [selectedEffect],
+        relics,
+        [
+          {
+            name: "Test Vessel",
+            slots: [
+              RelicSlotColor.Red,
+              RelicSlotColor.Green,
+              RelicSlotColor.Yellow,
+            ],
+          },
+        ]
+      );
+
+      const result = search_combinations(input) as {
+        combinations: Array<{
+          vessel_index: number;
+          relic_indices: [number | null, number | null, number | null];
+          points: number;
+        }>;
+        total_combinations_checked: number;
+      };
+
+      expect(result.combinations.length).toBe(1);
+      expect(result.combinations[0].points).toBeCloseTo(0.1);
     });
   });
 });

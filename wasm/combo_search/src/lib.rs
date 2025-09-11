@@ -52,7 +52,7 @@ pub struct Effect {
     pub stacks: Option<bool>,
     pub group: Option<u8>,
     pub level: Option<i32>,
-    pub startingBonus: Option<i32>,
+    pub startingBonus: Option<u8>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -171,6 +171,8 @@ fn calc_points(
 ) -> f32 {
     ctx.next_generation();
     let mut points: f32 = 0.0;
+    // Bit mask tracking which startingBonus values have already contributed points (supports 0..=7)
+    let mut starting_bonus_mask: u8 = 0;
 
     for opt_idx in relic_indices.iter() {
         if let Some(idx) = opt_idx {
@@ -179,6 +181,14 @@ fn calc_points(
                 let is_character_effect = effect.nightfarer.is_some();
                 let is_usable_character_effect = effect.nightfarer == Some(nightfarer);
                 if is_character_effect && !is_usable_character_effect { continue; }
+
+                // If this effect has a starting bonus already seen, skip entirely (no points, no duplicate marking)
+                if let Some(sb) = effect.startingBonus {
+                    let bit: u8 = 1u8 << (sb & 7);
+                    if (starting_bonus_mask & bit) != 0 { continue; }
+                    starting_bonus_mask |= bit; // first time this starting bonus contributes
+                }
+
                 let k = effect.key as usize;
                 debug_assert!(k < EFFECT_KEY_SPACE);
                 let key_duplicate = ctx.is_key(k);
