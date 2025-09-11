@@ -34,15 +34,8 @@ pub struct Effect {
 #[derive(Serialize, Deserialize, Clone)]
 pub struct RelicSlot {
     pub id: i32,
-    pub itemId: i32,
     pub color: Option<u8>,
     pub effects: Vec<Effect>,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct Vessel {
-    pub name: String,
-    pub slots: [u8;3],
 }
 
 #[derive(Serialize, Deserialize)]
@@ -57,7 +50,7 @@ pub struct SearchInput {
     pub nightfarer: u8,
     pub selected_effects: Vec<Effect>,
     pub relics: Vec<RelicSlot>,
-    pub enabled_vessels: Vec<Vessel>,
+    pub enabled_vessels: Vec<[u8;3]>,
     pub recommended_effects: Vec<Effect>,
 }
 
@@ -118,7 +111,7 @@ fn add_combination_if_unique(
     nightfarer: u8,
     selected_effects: &[Effect],
     recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
-    min_tracker: &mut (usize, f32), // (min_index, min_points)
+    min_tracker: &mut (usize, f32),
 ) {
     let unique_key = generate_unique_key(relic_indices, relics);
     if !seen_combinations.insert(unique_key) { return; }
@@ -309,50 +302,41 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     let mut seen_combinations: HashSet<u128> = HashSet::with_capacity(effect_candidates.len().saturating_mul(4));
     let mut min_tracker: (usize, f32) = (0, f32::INFINITY);
 
-    for (v_i, vessel) in input.enabled_vessels.iter().enumerate() {
+    for (v_i, vessel_slots) in input.enabled_vessels.iter().enumerate() {
         // Enumerate combinations: anchor one slot with a candidate relic, fill others with any relic (or None)
         for anchor_slot in 0..3 {
-            let color_req_anchor = vessel.slots[anchor_slot] as usize;
+            let color_req_anchor = vessel_slots[anchor_slot] as usize;
             let anchor_candidates: &Vec<usize> = if color_req_anchor == ANY_COLOR {
                 unsafe { by_color_cand.get_unchecked(ANY_COLOR) }
             } else {
                 debug_assert!(color_req_anchor < COLOR_SPACE);
                 unsafe { by_color_cand.get_unchecked(color_req_anchor) }
             };
-
             if anchor_candidates.is_empty() { continue; }
-
             let other_slots: [usize; 2] = match anchor_slot { 0 => [1,2], 1 => [0,2], _ => [0,1] };
-
             let list_a: &Vec<usize> = {
-                let c = vessel.slots[other_slots[0]] as usize;
+                let c = vessel_slots[other_slots[0]] as usize;
                 if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } }
             };
             let list_b: &Vec<usize> = {
-                let c = vessel.slots[other_slots[1]] as usize;
+                let c = vessel_slots[other_slots[1]] as usize;
                 if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } }
             };
-
             for &cand_idx in anchor_candidates.iter() {
-                // Iterate choice for first other slot: i == 0 => None, else Some(list_a[i-1])
                 let len_a = list_a.len();
                 for i in 0..=len_a {
                     let choice_a = if i == 0 { None } else { Some(unsafe { *list_a.get_unchecked(i - 1) }) };
-                    if choice_a == Some(cand_idx) { continue; } // no duplicate relics
-
+                    if choice_a == Some(cand_idx) { continue; }
                     let len_b = list_b.len();
                     for j in 0..=len_b {
                         let choice_b = if j == 0 { None } else { Some(unsafe { *list_b.get_unchecked(j - 1) }) };
                         if choice_b == Some(cand_idx) { continue; }
                         if choice_a.is_some() && choice_a == choice_b { continue; }
-
                         let mut relic_indices: [Option<usize>;3] = [None,None,None];
                         relic_indices[anchor_slot] = Some(cand_idx);
                         relic_indices[other_slots[0]] = choice_a;
                         relic_indices[other_slots[1]] = choice_b;
-
                         checked += 1;
-
                         add_combination_if_unique(
                             &mut results,
                             &mut seen_combinations,

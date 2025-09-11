@@ -76,14 +76,10 @@ export function buildWasmInput(
     selected_effects,
     relics: relics.map((r) => ({
       id: r.id,
-      itemId: r.itemId,
       color: getRelicColor(r.itemId),
       effects: r.effects,
     })),
-    enabled_vessels: enabledVessels.map((v) => ({
-      name: v.name,
-      slots: v.slots,
-    })),
+    enabled_vessels: enabledVessels.map(({ slots }) => slots),
     recommended_effects: recommendedEffectsByCharacter[nightfarer],
   };
 }
