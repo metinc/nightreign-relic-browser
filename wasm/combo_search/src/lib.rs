@@ -84,22 +84,6 @@ pub struct SearchOutput {
 }
 
 #[inline(always)]
-fn is_same_group(a: &Effect, b: &Effect) -> bool {
-    match (a.group, b.group) {
-        (Some(ga), Some(gb)) => ga == gb,
-        _ => false,
-    }
-}
-
-#[inline(always)]
-fn is_same_starting_bonus(a: &Effect, b: &Effect) -> bool {
-    match (a.startingBonus, b.startingBonus) {
-        (Some(sa), Some(sb)) => sa == sb,
-        _ => false
-    }
-}
-
-#[inline(always)]
 fn is_recommended_effect(effect: &Effect, recommended_bitmap: &[bool; EFFECT_KEY_SPACE]) -> bool {
     let k = effect.key as usize;
     debug_assert!(k < EFFECT_KEY_SPACE);
