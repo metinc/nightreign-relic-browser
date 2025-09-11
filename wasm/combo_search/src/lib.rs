@@ -253,13 +253,12 @@ pub fn search_combinations(input: JsValue) -> JsValue {
             let list_a: &Vec<usize> = { let c = vessel_slots[other_slots[0]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } } };
             let list_b: &Vec<usize> = { let c = vessel_slots[other_slots[1]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } } };
             for &cand_idx in anchor_candidates.iter() {
-                // Determine if other slots have any valid (non-anchor) relics
-                let mut any_valid_a = false; for &a_idx in list_a { if a_idx != cand_idx { any_valid_a = true; break; } }
-                let mut any_valid_b = false; for &b_idx in list_b { if b_idx != cand_idx { any_valid_b = true; break; } }
+                // Build filtered lists excluding the anchor candidate
+                let valid_a: Vec<usize> = list_a.iter().copied().filter(|&i| i != cand_idx).collect();
+                let valid_b: Vec<usize> = list_b.iter().copied().filter(|&i| i != cand_idx).collect();
 
                 // Closure to emit a single combination
                 let mut emit = |a_opt: Option<usize>, b_opt: Option<usize>| {
-                    // Skip if both concrete and duplicate
                     if let (Some(a_i), Some(b_i)) = (a_opt, b_opt) { if a_i == b_i { return; } }
                     let mut relic_indices: [Option<usize>;3] = [None,None,None];
                     relic_indices[anchor_slot] = Some(cand_idx);
@@ -280,11 +279,21 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                     );
                 };
 
-                match (any_valid_a, any_valid_b) {
-                    (true, true) => { for &a_idx in list_a { if a_idx == cand_idx { continue; } for &b_idx in list_b { if b_idx == cand_idx || b_idx == a_idx { continue; } emit(Some(a_idx), Some(b_idx)); } } },
-                    (true, false) => { for &a_idx in list_a { if a_idx == cand_idx { continue; } emit(Some(a_idx), None); } },
-                    (false, true) => { for &b_idx in list_b { if b_idx == cand_idx { continue; } emit(None, Some(b_idx)); } },
-                    (false, false) => { emit(None, None); }
+                if valid_a.is_empty() && valid_b.is_empty() {
+                    // Only anchor relic available
+                    emit(None, None);
+                } else if !valid_a.is_empty() && !valid_b.is_empty() {
+                    // Both sides have options: try pairs
+                    let mut any_pair = false;
+                    for &a in &valid_a { for &b in &valid_b { if a == b { continue; } emit(Some(a), Some(b)); any_pair = true; } }
+                    if !any_pair {
+                        // Degenerate overlap to a single relic appearing in both lists
+                        emit(Some(valid_a[0]), None);
+                    }
+                } else if !valid_a.is_empty() {
+                    for &a in &valid_a { emit(Some(a), None); }
+                } else { // !valid_b.is_empty()
+                    for &b in &valid_b { emit(None, Some(b)); }
                 }
             }
         }
