@@ -323,31 +323,55 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                 if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } }
             };
             for &cand_idx in anchor_candidates.iter() {
-                let len_a = list_a.len();
-                for i in 0..=len_a {
-                    let choice_a = if i == 0 { None } else { Some(unsafe { *list_a.get_unchecked(i - 1) }) };
-                    if choice_a == Some(cand_idx) { continue; }
-                    let len_b = list_b.len();
-                    for j in 0..=len_b {
-                        let choice_b = if j == 0 { None } else { Some(unsafe { *list_b.get_unchecked(j - 1) }) };
-                        if choice_b == Some(cand_idx) { continue; }
-                        if choice_a.is_some() && choice_a == choice_b { continue; }
-                        let mut relic_indices: [Option<usize>;3] = [None,None,None];
-                        relic_indices[anchor_slot] = Some(cand_idx);
-                        relic_indices[other_slots[0]] = choice_a;
-                        relic_indices[other_slots[1]] = choice_b;
-                        checked += 1;
-                        add_combination_if_unique(
-                            &mut results,
-                            &mut seen_combinations,
-                            v_i,
-                            relic_indices,
-                            &input.relics,
-                            input.nightfarer,
-                            &input.selected_effects,
-                            &recommended_bitmap,
-                            &mut min_tracker,
-                        );
+                // Determine if other slots have any valid (non-anchor) relics
+                let mut any_valid_a = false;
+                for &a_idx in list_a { if a_idx != cand_idx { any_valid_a = true; break; } }
+                let mut any_valid_b = false;
+                for &b_idx in list_b { if b_idx != cand_idx { any_valid_b = true; break; } }
+
+                // Closure to emit a single combination
+                let mut emit = |a_opt: Option<usize>, b_opt: Option<usize>| {
+                    // Skip if both concrete and duplicate
+                    if let (Some(a_i), Some(b_i)) = (a_opt, b_opt) { if a_i == b_i { return; } }
+                    let mut relic_indices: [Option<usize>;3] = [None,None,None];
+                    relic_indices[anchor_slot] = Some(cand_idx);
+                    relic_indices[other_slots[0]] = a_opt;
+                    relic_indices[other_slots[1]] = b_opt;
+                    checked += 1;
+                    add_combination_if_unique(
+                        &mut results,
+                        &mut seen_combinations,
+                        v_i,
+                        relic_indices,
+                        &input.relics,
+                        input.nightfarer,
+                        &input.selected_effects,
+                        &recommended_bitmap,
+                        &mut min_tracker,
+                    );
+                };
+
+                match (any_valid_a, any_valid_b) {
+                    (true, true) => {
+                        for &a_idx in list_a { if a_idx == cand_idx { continue; }
+                            for &b_idx in list_b { if b_idx == cand_idx || b_idx == a_idx { continue; }
+                                emit(Some(a_idx), Some(b_idx));
+                            }
+                        }
+                    },
+                    (true, false) => {
+                        for &a_idx in list_a { if a_idx == cand_idx { continue; }
+                            emit(Some(a_idx), None);
+                        }
+                    },
+                    (false, true) => {
+                        for &b_idx in list_b { if b_idx == cand_idx { continue; }
+                            emit(None, Some(b_idx));
+                        }
+                    },
+                    (false, false) => {
+                        // Only the anchor relic; both other slots are None
+                        emit(None, None);
                     }
                 }
             }
