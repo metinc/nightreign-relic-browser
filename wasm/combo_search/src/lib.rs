@@ -18,6 +18,8 @@ const EFFECT_GROUP_SPACE: usize = 30;
 // Color domain: 0=Any, 1=Red, 2=Blue, 3=Yellow, 4=Green
 const COLOR_SPACE: usize = 5;
 const ANY_COLOR: usize = 0;
+// Limit of combinations returned to UI
+const TOP_RESULTS: usize = 50;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Effect {
@@ -116,17 +118,34 @@ fn add_combination_if_unique(
     nightfarer: u8,
     selected_effects: &[Effect],
     recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
+    min_tracker: &mut (usize, f32), // (min_index, min_points)
 ) {
     let unique_key = generate_unique_key(relic_indices, relics);
-    
-    if seen_combinations.insert(unique_key) {
-        let points = calc_points(nightfarer, relic_indices, relics, selected_effects, recommended_bitmap);
-        results.push(VesselCombinationResultEntry {
-            vessel_index,
-            relic_indices,
-            points,
-        });
+    if !seen_combinations.insert(unique_key) { return; }
+
+    let points = calc_points(nightfarer, relic_indices, relics, selected_effects, recommended_bitmap);
+
+    if results.len() < TOP_RESULTS {
+        results.push(VesselCombinationResultEntry { vessel_index, relic_indices, points });
+        // Update min tracker
+        if points < min_tracker.1 { *min_tracker = (results.len() - 1, points); }
+        return;
     }
+
+    // Fast reject if not better than current minimum
+    if points <= min_tracker.1 { return; }
+
+    // Replace the current minimum entry
+    let min_i = min_tracker.0;
+    results[min_i] = VesselCombinationResultEntry { vessel_index, relic_indices, points };
+
+    // Recompute new minimum (only on replacements)
+    let mut new_min_i = 0usize;
+    let mut new_min_p = results[0].points;
+    for (i, r) in results.iter().enumerate().skip(1) {
+        if r.points < new_min_p { new_min_p = r.points; new_min_i = i; }
+    }
+    *min_tracker = (new_min_i, new_min_p);
 }
 
 #[inline(always)]
@@ -285,10 +304,10 @@ pub fn search_combinations(input: JsValue) -> JsValue {
         by_color_cand[c] = v;
     }
 
-    let mut results: Vec<VesselCombinationResultEntry> = Vec::new();
+    let mut results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
     let mut checked: u32 = 0;
-    // Pre-size seen combinations to reduce rehashing (heuristic)
-    let mut seen_combinations: HashSet<u128> = HashSet::with_capacity(effect_candidates.len().saturating_mul(8));
+    let mut seen_combinations: HashSet<u128> = HashSet::with_capacity(effect_candidates.len().saturating_mul(4));
+    let mut min_tracker: (usize, f32) = (0, f32::INFINITY);
 
     for (v_i, vessel) in input.enabled_vessels.iter().enumerate() {
         // Enumerate combinations: anchor one slot with a candidate relic, fill others with any relic (or None)
@@ -343,6 +362,7 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                             input.nightfarer,
                             &input.selected_effects,
                             &recommended_bitmap,
+                            &mut min_tracker,
                         );
                     }
                 }

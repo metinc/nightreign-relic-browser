@@ -535,72 +535,62 @@ export function ComboFinder(props: ComboFinderProps) {
             ) : (
               <>
                 <Typography gutterBottom>
-                  {`Showing the best ${Math.min(
-                    50,
-                    searchResults.combinations.length
-                  )} combos out of ${searchResults.combinations.length} total`}
+                  {`Showing the best ${searchResults.combinations.length} combos`}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  {searchResults.combinations.map(
-                    (combo, index) =>
-                      index < 50 && (
-                        <Card
-                          key={combo.relicCombination
-                            .map((r) => r?.id)
-                            .join("-")}
-                          elevation={2}
-                        >
-                          <CardContent>
-                            <Typography fontWeight="bold" gutterBottom>
-                              {combo.vessel.name}
-                              {import.meta.env.DEV &&
-                                ` (${combo.points.toFixed(2)} points)`}
-                            </Typography>
+                  {searchResults.combinations.map((combo) => (
+                    <Card
+                      key={combo.relicCombination.map((r) => r?.id).join("-")}
+                      elevation={2}
+                    >
+                      <CardContent>
+                        <Typography fontWeight="bold" gutterBottom>
+                          {combo.vessel.name}
+                          {import.meta.env.DEV &&
+                            ` (${combo.points.toFixed(2)} points)`}
+                        </Typography>
 
-                            <Box
-                              sx={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(3, 1fr)",
-                                gap: 2,
-                              }}
-                            >
-                              {combo.relicCombination.map((relic, index) => (
-                                <Box key={relic?.id ?? index}>
-                                  {relic ? (
-                                    <RelicCard
-                                      relic={relic}
-                                      searchTerm=""
-                                      relicMatches={true}
-                                      selectedColor={getRelicColor(
-                                        relic.itemId
-                                      )}
-                                      highlightedEffects={selectedEffects}
-                                      coordinatesByColor={
-                                        combo.vessel.slots[index] !==
-                                        RelicSlotColor.Any
-                                      }
-                                    />
-                                  ) : (
-                                    <Card
-                                      variant="outlined"
-                                      sx={{
-                                        height: "100%",
-                                        transition: "0.3s ease",
-                                        overflow: "hidden",
-                                        position: "relative",
-                                        borderRadius: 3,
-                                      }}
-                                    >
-                                      <CardContent>No Relic</CardContent>
-                                    </Card>
-                                  )}
-                                </Box>
-                              ))}
+                        <Box
+                          sx={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(3, 1fr)",
+                            gap: 2,
+                          }}
+                        >
+                          {combo.relicCombination.map((relic, index) => (
+                            <Box key={relic?.id ?? index}>
+                              {relic ? (
+                                <RelicCard
+                                  relic={relic}
+                                  searchTerm=""
+                                  relicMatches={true}
+                                  selectedColor={getRelicColor(relic.itemId)}
+                                  highlightedEffects={selectedEffects}
+                                  coordinatesByColor={
+                                    combo.vessel.slots[index] !==
+                                    RelicSlotColor.Any
+                                  }
+                                />
+                              ) : (
+                                <Card
+                                  variant="outlined"
+                                  sx={{
+                                    height: "100%",
+                                    transition: "0.3s ease",
+                                    overflow: "hidden",
+                                    position: "relative",
+                                    borderRadius: 3,
+                                  }}
+                                >
+                                  <CardContent>No Relic</CardContent>
+                                </Card>
+                              )}
                             </Box>
-                          </CardContent>
-                        </Card>
-                      )
-                  )}
+                          ))}
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </Box>
               </>
             )}
