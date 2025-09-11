@@ -117,9 +117,9 @@ describe("ComboSearch", () => {
     });
 
     it("should combine stackable effects of higher levels correctly", () => {
-      const selectedEffect = getEffectByKey(EffectKey.poisePlus1);
+      const selectedEffect = getEffectByKey(EffectKey.mindPlus1);
       assert(selectedEffect !== undefined);
-      const higherLevelEffect = getEffectByKey(EffectKey.poisePlus3);
+      const higherLevelEffect = getEffectByKey(EffectKey.mindPlus3);
       assert(higherLevelEffect !== undefined);
 
       const input = buildWasmInput(
