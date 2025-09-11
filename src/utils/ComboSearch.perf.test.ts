@@ -65,7 +65,7 @@ describe("ComboSearch performance", () => {
     expect(result.total_combinations_checked).toBe(25617068);
 
     // Adjust if the algorithm improves in the future.
-    const TIME_BUDGET_MS = 3200;
+    const TIME_BUDGET_MS = 2300;
     console.log(`Search time: ${searchTime} ms`);
     expect(searchTime).toBeLessThanOrEqual(TIME_BUDGET_MS);
   });
