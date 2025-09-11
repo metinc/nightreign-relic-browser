@@ -75,7 +75,6 @@ export function buildWasmInput(
     nightfarer,
     selected_effects,
     relics: relics.map((r) => ({
-      id: r.id,
       color: getRelicColor(r.itemId),
       effects: r.effects,
     })),

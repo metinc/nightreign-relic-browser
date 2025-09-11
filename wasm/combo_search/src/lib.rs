@@ -33,7 +33,6 @@ pub struct Effect {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct RelicSlot {
-    pub id: i32,
     pub color: Option<u8>,
     pub effects: Vec<Effect>,
 }
@@ -84,27 +83,22 @@ fn is_recommended_effect(effect: &Effect, recommended_bitmap: &[bool; EFFECT_KEY
 }
 
 #[inline(always)]
-fn generate_unique_key(relic_indices: [Option<usize>; 3], relics: &[RelicSlot]) -> u128 {
-    // Pack up to three sorted relic IDs (each < 2^24) plus count into a u128
-    let mut ids: [u32; 3] = [0, 0, 0];
-    let mut n: usize = 0;
-    for opt_idx in relic_indices.iter() {
-        if let Some(idx) = opt_idx {
-            ids[n] = relics[*idx].id as u32;
-            n += 1;
-        }
-    }
-    ids[..n].sort_unstable();
-    ((n as u128) << 72)
-        | ((ids[0] as u128) << 48)
-        | ((ids[1] as u128) << 24)
-        | (ids[2] as u128)
+fn generate_unique_key(relic_indices: [Option<usize>; 3]) -> u32 {
+    // Pack up to three sorted relic indices (each < 1023) into 30 bits (3 * 10).
+    // Missing indices are represented by sentinel 1023 (all 1s in 10 bits) placed at the end after sorting.
+    const SENTINEL: u16 = 1023; // 10-bit all ones; reserved (assert real indices < 1023)
+    let mut ids: [u16; 3] = [SENTINEL, SENTINEL, SENTINEL];
+    let mut n = 0usize;
+    for opt_idx in relic_indices.iter() { if let Some(idx) = opt_idx { debug_assert!(*idx < SENTINEL as usize); ids[n] = *idx as u16; n += 1; } }
+    // Sort so that real indices ( < SENTINEL ) come before sentinels, making representation independent of order & count
+    ids.sort_unstable();
+    (ids[0] as u32) | ((ids[1] as u32) << 10) | ((ids[2] as u32) << 20)
 }
 
 #[inline(always)]
 fn add_combination_if_unique(
     results: &mut Vec<VesselCombinationResultEntry>,
-    seen_combinations: &mut std::collections::HashSet<u128>,
+    seen_combinations: &mut std::collections::HashSet<u32>,
     vessel_index: usize,
     relic_indices: [Option<usize>; 3],
     relics: &[RelicSlot],
@@ -113,7 +107,7 @@ fn add_combination_if_unique(
     recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
     min_tracker: &mut (usize, f32),
 ) {
-    let unique_key = generate_unique_key(relic_indices, relics);
+    let unique_key = generate_unique_key(relic_indices);
     if !seen_combinations.insert(unique_key) { return; }
 
     let points = calc_points(nightfarer, relic_indices, relics, selected_effects, recommended_bitmap);
@@ -299,7 +293,7 @@ pub fn search_combinations(input: JsValue) -> JsValue {
 
     let mut results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
     let mut checked: u32 = 0;
-    let mut seen_combinations: HashSet<u128> = HashSet::with_capacity(effect_candidates.len().saturating_mul(4));
+    let mut seen_combinations: HashSet<u32> = HashSet::with_capacity(effect_candidates.len().saturating_mul(4));
     let mut min_tracker: (usize, f32) = (0, f32::INFINITY);
 
     for (v_i, vessel_slots) in input.enabled_vessels.iter().enumerate() {

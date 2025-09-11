@@ -4,7 +4,7 @@ import { assert, beforeAll, describe, expect, it } from "vitest";
 import init, {
   search_combinations,
 } from "../../wasm/combo_search/pkg/combo_search.js";
-import { EffectKey, effects, type Effect } from "../resources/effects";
+import { EffectKey, type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
 import { anyoneVessels, wylderVessels } from "../utils/Vessels";
 import { buildWasmInput } from "../workers/comboSearchWorker.js";
@@ -85,20 +85,6 @@ describe("ComboSearch", () => {
       expect(relics.length).toBeGreaterThan(0);
       expect(result.combinations.length).toBeGreaterThan(0);
       expect(result.total_combinations_checked).toBeGreaterThan(0);
-    });
-
-    it("should fit all effect ids into 24 bits", () => {
-      const allIds = Array.from(effects.keys()).flatMap((id) => id);
-
-      const minId = Math.min(...allIds);
-      expect(minId).toBeGreaterThanOrEqual(0);
-
-      const maxId = Math.max(...allIds);
-      const maxBits = 24;
-      expect(
-        maxId,
-        `Effect ID ${maxId} is too big to fit into 24 bits. Please adjust generate_unique_key() accordingly.`
-      ).toBeLessThan(1 << maxBits);
     });
 
     it("should combine stackable effects correctly", () => {
