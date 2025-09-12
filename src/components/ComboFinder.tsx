@@ -200,10 +200,6 @@ export function ComboFinder(props: ComboFinderProps) {
   const runIdRef = useRef<number>(0);
 
   const performSearch = useCallback(async () => {
-    if (selectedEffects.length === 0) {
-      return;
-    }
-
     const myRunId = ++runIdRef.current;
 
     setProgress({
@@ -514,15 +510,17 @@ export function ComboFinder(props: ComboFinderProps) {
           <Box sx={{ mb: 2 }}>
             <LinearProgress
               variant={
-                progress?.stage === "done" ? "determinate" : "indeterminate"
+                progress?.stage === "main" ? "indeterminate" : "determinate"
               }
-              color={progress?.stage === "done" ? "success" : "primary"}
+              color={progress?.stage === "main" ? "primary" : "success"}
               value={100}
             />
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              {progress?.stage === "done" && searchResults !== null
-                ? `Checked ${progress.totalCombinationsChecked.toLocaleString()} combinations from ${progress.availableRelicsCount.toLocaleString()} relics in ${searchResults.searchTime} ms.`
-                : "Searching..."}
+              {progress?.stage === "done" && searchResults !== null ? (
+                `Checked ${progress.totalCombinationsChecked.toLocaleString()} combinations from ${progress.availableRelicsCount.toLocaleString()} relics in ${searchResults.searchTime} ms.`
+              ) : (
+                <>&nbsp;</>
+              )}
             </Typography>
           </Box>
         )}
