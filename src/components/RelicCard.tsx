@@ -168,7 +168,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         </Box>
 
         <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
-          {effects.map((effect) => {
+          {effects.map((effect, index) => {
             const effectName = getEffectName(effect);
             const effectHighlight = highlightSearchTerm(effectName, searchTerm);
             const highlightEffect =
@@ -178,7 +178,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               );
 
             return (
-              <Box key={effect.key} sx={{ mb: 0.5, display: "list-item" }}>
+              <Box key={index} sx={{ mb: 0.5, display: "list-item" }}>
                 <Typography
                   variant="body2"
                   sx={{
