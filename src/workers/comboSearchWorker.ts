@@ -1,4 +1,5 @@
 import init, {
+  initThreadPool,
   search_combinations,
 } from "../../wasm/combo_search/pkg/combo_search.js";
 import { type Effect } from "../resources/effects";
@@ -51,12 +52,37 @@ let initialized: Promise<boolean> | undefined;
 
 async function initComboSearchWasm(): Promise<void> {
   if (!initialized) {
-    initialized = init()
-      .then(() => true)
-      .catch((e: unknown) => {
-        console.error("Failed to init WASM in worker", e);
-        throw e;
-      });
+    initialized = (async () => {
+      await init();
+      // Initialize Rayon thread pool if supported (SharedArrayBuffer required)
+      if (
+        typeof initThreadPool === "function" &&
+        typeof SharedArrayBuffer !== "undefined"
+      ) {
+        try {
+          const navHW = (
+            globalThis as unknown as {
+              navigator?: { hardwareConcurrency?: number };
+            }
+          ).navigator?.hardwareConcurrency;
+          const hw = typeof navHW === "number" && navHW > 0 ? navHW : 4;
+          const threads = Math.min(8, hw); // cap at max vessels
+          await initThreadPool(threads);
+        } catch (e) {
+          // Fallback silently if threads not available
+          console.warn(
+            "initThreadPool failed, falling back to single-thread",
+            e
+          );
+        }
+      } else {
+        // Threads unavailable (e.g. missing COOP/COEP or test env)
+      }
+      return true;
+    })().catch((e: unknown) => {
+      console.error("Failed to init WASM in worker", e);
+      throw e;
+    });
   }
   await initialized;
 }

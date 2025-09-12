@@ -2,6 +2,10 @@ use wasm_bindgen::prelude::*;
 use serde::{Serialize, Deserialize};
 use serde_wasm_bindgen;
 use std::collections::HashSet;
+// Added: rayon parallel iteration
+use rayon::prelude::*;
+// Re-export for JS thread pool init
+pub use wasm_bindgen_rayon::init_thread_pool;
 
 // Constants for scoring
 const POINTS_FOR_SELECTED_EFFECT: f32 = 1.0;
@@ -234,14 +238,21 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     by_color_cand[ANY_COLOR] = effect_candidates.clone();
     for c in 1usize..COLOR_SPACE { let list = &by_color_all[c]; if list.is_empty() { continue; } let mut v = Vec::with_capacity(list.len()); for &idx in list { if unsafe { *is_candidate.get_unchecked(idx) } { v.push(idx); } } by_color_cand[c] = v; }
 
-    let mut results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
-    let mut checked: u32 = 0;
-    let mut seen_combinations: HashSet<u32> = HashSet::with_capacity(effect_candidates.len().saturating_mul(4));
-    let mut min_tracker: (usize, f32) = (0, f32::INFINITY);
-    let mut score_ctx = ScoreContext::new();
+    // Parallelize over vessels: clone cheap read-only data into Arc if needed (slices & Vecs already share)
+    let enabled_vessels = input.enabled_vessels.clone();
+    let relics = input.relics.clone();
+    let nightfarer = input.nightfarer;
+    let selected_bitmap_shared = selected_bitmap; // Copy arrays (small)
+    let recommended_bitmap_shared = recommended_bitmap;
 
-    for (v_i, vessel_slots) in input.enabled_vessels.iter().enumerate() {
-        // Enumerate combinations: anchor one slot with a candidate relic, fill others with any relic (or None)
+    // Each thread accumulates its own results and then we merge.
+    let per_vessel: Vec<(Vec<VesselCombinationResultEntry>, u32)> = enabled_vessels.par_iter().enumerate().map(|(v_i, vessel_slots)| {
+        let mut local_results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
+        let mut local_seen: HashSet<u32> = HashSet::new();
+        let mut min_tracker: (usize, f32) = (0, f32::INFINITY);
+        let mut score_ctx = ScoreContext::new();
+        let mut checked_local: u32 = 0;
+
         for anchor_slot in 0..3 {
             let color_req_anchor = vessel_slots[anchor_slot] as usize;
             let anchor_candidates: &Vec<usize> = if color_req_anchor == ANY_COLOR { unsafe { by_color_cand.get_unchecked(ANY_COLOR) } } else { debug_assert!(color_req_anchor < COLOR_SPACE); unsafe { by_color_cand.get_unchecked(color_req_anchor) } };
@@ -250,52 +261,57 @@ pub fn search_combinations(input: JsValue) -> JsValue {
             let list_a: &Vec<usize> = { let c = vessel_slots[other_slots[0]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } } };
             let list_b: &Vec<usize> = { let c = vessel_slots[other_slots[1]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } } };
             for &cand_idx in anchor_candidates.iter() {
-                // Build filtered lists excluding the anchor candidate
                 let valid_a: Vec<usize> = list_a.iter().copied().filter(|&i| i != cand_idx).collect();
                 let valid_b: Vec<usize> = list_b.iter().copied().filter(|&i| i != cand_idx).collect();
 
-                // Closure to emit a single combination
                 let mut emit = |a_opt: Option<usize>, b_opt: Option<usize>| {
                     if let (Some(a_i), Some(b_i)) = (a_opt, b_opt) { if a_i == b_i { return; } }
                     let mut relic_indices: [Option<usize>;3] = [None,None,None];
                     relic_indices[anchor_slot] = Some(cand_idx);
                     relic_indices[other_slots[0]] = a_opt;
                     relic_indices[other_slots[1]] = b_opt;
-                    checked += 1;
+                    checked_local += 1;
                     add_combination_if_unique(
-                        &mut results,
-                        &mut seen_combinations,
+                        &mut local_results,
+                        &mut local_seen,
                         v_i,
                         relic_indices,
-                        &input.relics,
-                        input.nightfarer,
-                        &selected_bitmap,
-                        &recommended_bitmap,
+                        &relics,
+                        nightfarer,
+                        &selected_bitmap_shared,
+                        &recommended_bitmap_shared,
                         &mut min_tracker,
                         &mut score_ctx,
                     );
                 };
 
                 if valid_a.is_empty() && valid_b.is_empty() {
-                    // Only anchor relic available
                     emit(None, None);
                 } else if !valid_a.is_empty() && !valid_b.is_empty() {
-                    // Both sides have options: try pairs
                     let mut any_pair = false;
                     for &a in &valid_a { for &b in &valid_b { if a == b { continue; } emit(Some(a), Some(b)); any_pair = true; } }
-                    if !any_pair {
-                        // Degenerate overlap to a single relic appearing in both lists
-                        emit(Some(valid_a[0]), None);
-                    }
+                    if !any_pair { emit(Some(valid_a[0]), None); }
                 } else if !valid_a.is_empty() {
                     for &a in &valid_a { emit(Some(a), None); }
-                } else { // !valid_b.is_empty()
+                } else {
                     for &b in &valid_b { emit(None, Some(b)); }
                 }
             }
         }
-    }
+        (local_results, checked_local)
+    }).collect();
 
+    // Merge results
+    let mut results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
+    let mut total_checked: u32 = 0;
+    for (mut local, checked) in per_vessel.into_iter() {
+        total_checked += checked;
+        // Insert & maintain TOP_RESULTS global
+        for entry in local.drain(..) { results.push(entry); }
+    }
+    // Keep top unique combos globally (they are already unique per vessel; duplicates across vessels not expected due to vessel_index included in key; still sort and truncate)
     results.sort_by(|a,b| b.points.partial_cmp(&a.points).unwrap());
-    serde_wasm_bindgen::to_value(&SearchOutput { combinations: results, total_combinations_checked: checked }).unwrap()
+    if results.len() > TOP_RESULTS { results.truncate(TOP_RESULTS); }
+
+    serde_wasm_bindgen::to_value(&SearchOutput { combinations: results, total_combinations_checked: total_checked }).unwrap()
 }
