@@ -79,10 +79,6 @@ export class RelicParser {
     const validB3Values = new Set([0x80, 0x83, 0x81, 0x82, 0x84, 0x85]);
     const validB4Values = new Set([0x80, 0x90, 0xc0]);
 
-    console.log(
-      `Loaded section of ${currentEntryOffset.length} bytes from ${patternOffsetStart} to ${patternOffsetEnd}`
-    );
-
     // Find alignment point by scanning for valid slots
     const isValidSlotStart = (
       pos: number
@@ -121,7 +117,6 @@ export class RelicParser {
 
         if (validNext || isEmptyNext) {
           startOffset = i;
-          console.log(`Found valid slot alignment at offset ${i}`);
           break;
         }
       }
@@ -237,9 +232,6 @@ export class RelicParser {
 
     foundSlots.length = 0;
     foundSlots.push(...validSlots);
-
-    console.log(`Found ${emptySlotCount} empty slots`);
-    console.log(`Found ${foundSlots.length} slots with b4=0xC0`);
 
     // Sort relics by sort key
     foundSlots.sort((a, b) => (b.sortKey || 0) - (a.sortKey || 0));
