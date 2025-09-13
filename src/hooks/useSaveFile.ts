@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import { getCompactCharacterSlot } from "../utils/DataUtils";
-import type { RelicSlotColor } from "../utils/RelicColor";
+import { RelicSlotColor } from "../utils/RelicColor";
 import { RelicParser } from "../utils/RelicParser";
 import { findOutclassedRelics } from "../utils/RelicProcessor";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
@@ -11,7 +11,9 @@ export const useSaveFile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [selectedColor, setSelectedColor] = useState<RelicSlotColor>("Any");
+  const [selectedColor, setSelectedColor] = useState<RelicSlotColor>(
+    RelicSlotColor.Any
+  );
   const [matchingRelicsCount, setMatchingRelicsCount] = useState<number>(0);
 
   // Load demo data
@@ -129,7 +131,7 @@ export const useSaveFile = () => {
   const clearSaveFile = useCallback(() => {
     setSaveFileData(null);
     setSearchTerm("");
-    setSelectedColor("Any");
+    setSelectedColor(RelicSlotColor.Any);
     setMatchingRelicsCount(0);
     setError(null);
   }, []);

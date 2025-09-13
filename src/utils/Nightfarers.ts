@@ -49,19 +49,28 @@ const wylder = {
   vessels: wylderVessels,
 } as const;
 
-export const nightfarers = [
-  wylder,
-  guardian,
-  ironeye,
-  duchess,
-  raider,
-  revenant,
-  recluse,
-  executor,
-] as const;
+export const enum Nightfarer {
+  Wylder,
+  Guardian,
+  Ironeye,
+  Duchess,
+  Raider,
+  Revenant,
+  Recluse,
+  Executor,
+}
 
-export type NightfarerName = (typeof nightfarers)[number]["name"];
+export const nightfarers = {
+  [Nightfarer.Wylder]: wylder,
+  [Nightfarer.Guardian]: guardian,
+  [Nightfarer.Ironeye]: ironeye,
+  [Nightfarer.Duchess]: duchess,
+  [Nightfarer.Raider]: raider,
+  [Nightfarer.Revenant]: revenant,
+  [Nightfarer.Recluse]: recluse,
+  [Nightfarer.Executor]: executor,
+} as const;
 
-export const isNightfarerName = (name: string): name is NightfarerName => {
-  return nightfarers.some((nf) => nf.name === name);
+export const isNightfarer = (value: unknown): value is Nightfarer => {
+  return typeof value === "number" && value in nightfarers;
 };

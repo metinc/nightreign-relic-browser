@@ -21,27 +21,24 @@ import {
 } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { Effect } from "../resources/effects";
+import { EffectKey, type Effect } from "../resources/effects";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import {
-  searchCombinationsAsync,
+  cancelCurrentSearch,
+  searchCombinations,
   type ComboSearchProgress,
   type ComboSearchResult,
 } from "../utils/ComboSearch";
 import { getRelicColor } from "../utils/DataUtils";
-import {
-  isNightfarerName,
-  nightfarers,
-  type NightfarerName,
-} from "../utils/Nightfarers";
-import { getChipColor } from "../utils/RelicColor";
+import { isNightfarer, Nightfarer, nightfarers } from "../utils/Nightfarers";
+import { getChipColor, RelicSlotColor } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
 
 // Persistent storage keys
-const SETTINGS_STORAGE_KEY = "comboFinder:settings:v1";
-const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v1";
-const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v1";
+const SETTINGS_STORAGE_KEY = "comboFinder:settings:v2";
+const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v2";
+const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v2";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
@@ -54,41 +51,42 @@ interface ComboFinderSettings {
   disabledVessels: number[];
 }
 
-function createInitialSettings(): Record<NightfarerName, ComboFinderSettings> {
+function createInitialSettings(): Record<Nightfarer, ComboFinderSettings> {
   return {
-    Wylder: { disabledVessels: [] },
-    Guardian: { disabledVessels: [] },
-    Ironeye: { disabledVessels: [] },
-    Duchess: { disabledVessels: [] },
-    Raider: { disabledVessels: [] },
-    Revenant: { disabledVessels: [] },
-    Recluse: { disabledVessels: [] },
-    Executor: { disabledVessels: [] },
+    [Nightfarer.Wylder]: { disabledVessels: [] },
+    [Nightfarer.Guardian]: { disabledVessels: [] },
+    [Nightfarer.Ironeye]: { disabledVessels: [] },
+    [Nightfarer.Duchess]: { disabledVessels: [] },
+    [Nightfarer.Raider]: { disabledVessels: [] },
+    [Nightfarer.Revenant]: { disabledVessels: [] },
+    [Nightfarer.Recluse]: { disabledVessels: [] },
+    [Nightfarer.Executor]: { disabledVessels: [] },
   };
 }
 
 export function ComboFinder(props: ComboFinderProps) {
   const { saveFileData } = props;
   const { t } = useTranslation();
-  const [selectedNightfarer, setSelectedNightfarer] = useState<NightfarerName>(
+  const [selectedNightfarer, setSelectedNightfarer] = useState<Nightfarer>(
     () => {
       try {
         const raw = localStorage.getItem(SELECTED_NIGHTFARER_STORAGE_KEY);
-        if (raw && isNightfarerName(raw)) {
-          return raw;
+
+        if (raw) {
+          const int = parseInt(raw);
+          if (isNightfarer(int)) {
+            return int;
+          }
         }
       } catch {
         // ignore
       }
-      return "Wylder";
+      return Nightfarer.Wylder;
     }
   );
 
   // Helper to load settings from localStorage with validation and defaults
-  function loadSettingsFromStorage(): Record<
-    NightfarerName,
-    ComboFinderSettings
-  > {
+  function loadSettingsFromStorage(): Record<Nightfarer, ComboFinderSettings> {
     try {
       const base = createInitialSettings();
       const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
@@ -96,9 +94,10 @@ export function ComboFinder(props: ComboFinderProps) {
         return base;
       }
       const parsed = JSON.parse(raw) as Partial<
-        Record<NightfarerName, { disabledVessels?: unknown }>
+        Record<Nightfarer, { disabledVessels?: unknown }>
       >;
-      (Object.keys(base) as NightfarerName[]).forEach((nf) => {
+      Object.keys(base).forEach((k) => {
+        const nf = Number(k) as Nightfarer;
         const val = parsed?.[nf];
         if (val && Array.isArray(val.disabledVessels)) {
           base[nf] = {
@@ -115,7 +114,7 @@ export function ComboFinder(props: ComboFinderProps) {
   }
 
   const [settings, setSettings] = useState<
-    Record<NightfarerName, ComboFinderSettings>
+    Record<Nightfarer, ComboFinderSettings>
   >(() => loadSettingsFromStorage());
 
   const [selectedEffects, setSelectedEffects] = useState<Effect[]>([]);
@@ -139,7 +138,7 @@ export function ComboFinder(props: ComboFinderProps) {
       }
       const restored = keys
         .map((k: unknown) =>
-          typeof k === "string"
+          typeof k === "number"
             ? props.availableEffects.find((e) => e.key === k)
             : undefined
         )
@@ -158,8 +157,8 @@ export function ComboFinder(props: ComboFinderProps) {
     (effect) =>
       effect.nightfarer === undefined ||
       effect.nightfarer === selectedNightfarer ||
-      effect.key === "improvedPoiseNearTotemStela" ||
-      effect.key === "defeatingEnemiesNearTotemStelaRestoresHP"
+      effect.key === EffectKey.improvedPoiseNearTotemStela ||
+      effect.key === EffectKey.defeatingEnemiesNearTotemStelaRestoresHP
   );
 
   // Persist settings and selected effects
@@ -182,7 +181,10 @@ export function ComboFinder(props: ComboFinderProps) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(SELECTED_NIGHTFARER_STORAGE_KEY, selectedNightfarer);
+      localStorage.setItem(
+        SELECTED_NIGHTFARER_STORAGE_KEY,
+        String(selectedNightfarer)
+      );
     } catch {
       // ignore
     }
@@ -198,23 +200,16 @@ export function ComboFinder(props: ComboFinderProps) {
   const runIdRef = useRef<number>(0);
 
   const performSearch = useCallback(async () => {
-    if (selectedEffects.length === 0) {
-      return;
-    }
-
     const myRunId = ++runIdRef.current;
 
     setProgress({
       totalCombinationsChecked: 0,
       availableRelicsCount: 0,
-      stage: "fallback",
-      totalToCheck: 0,
+      stage: "main",
     });
 
     try {
-      const selectedNightfarerData = nightfarers.find(
-        (nf) => nf.name === selectedNightfarer
-      );
+      const selectedNightfarerData = nightfarers[selectedNightfarer];
 
       if (
         !selectedNightfarerData ||
@@ -239,19 +234,16 @@ export function ComboFinder(props: ComboFinderProps) {
           !settings[selectedNightfarer].disabledVessels.includes(index)
       );
 
-      // Use the async search algorithm with progress updates and yielding
-      const result = await searchCombinationsAsync(
+      const result = await searchCombinations(
         selectedNightfarer,
         selectedEffects,
         availableRelics,
         enabledVessels,
-        {
-          onProgress: (p) => {
-            if (myRunId === runIdRef.current) {
-              setProgress(p);
-            }
-          },
-          yieldIntervalMs: 100,
+        (progress: ComboSearchProgress) => {
+          // Only update progress if this is still the current search
+          if (myRunId === runIdRef.current) {
+            setProgress(progress);
+          }
         }
       );
 
@@ -261,11 +253,17 @@ export function ComboFinder(props: ComboFinderProps) {
           totalCombinationsChecked: result.totalCombinationsChecked,
           availableRelicsCount: result.availableRelicsCount,
           stage: "done",
-          totalToCheck: result.totalCombinationsChecked,
         });
       }
-    } finally {
-      // no-op
+    } catch (error) {
+      if (myRunId === runIdRef.current) {
+        // Only log non-cancellation errors
+        if (error instanceof Error && error.message !== "Search cancelled") {
+          console.error("Search failed:", error);
+        }
+        setProgress(null);
+        setSearchResults(null);
+      }
     }
   }, [selectedEffects, selectedNightfarer, settings, saveFileData, runIdRef]);
 
@@ -283,6 +281,13 @@ export function ComboFinder(props: ComboFinderProps) {
       setSearchResults(null);
     }
   }, [performSearch, selectedEffects.length, selectedNightfarer, settings]);
+
+  // Cleanup: cancel any ongoing search when component unmounts
+  useEffect(() => {
+    return () => {
+      cancelCurrentSearch();
+    };
+  }, []);
 
   const handleEffectChange = useCallback(
     (newEffect: Effect) => {
@@ -329,7 +334,7 @@ export function ComboFinder(props: ComboFinderProps) {
   }, []);
 
   const toggleVessel = useCallback(
-    (nightfarer: NightfarerName, vesselIndex: number) => {
+    (nightfarer: Nightfarer, vesselIndex: number) => {
       setSettings((prevSettings) => {
         const currentSettings = prevSettings[nightfarer];
         const isDisabled =
@@ -351,9 +356,7 @@ export function ComboFinder(props: ComboFinderProps) {
     []
   );
 
-  const selectedNightfarerData = nightfarers.find(
-    (nf) => nf.name === selectedNightfarer
-  );
+  const selectedNightfarerData = nightfarers[selectedNightfarer];
 
   return (
     <Box sx={{ display: "flex", gap: 2, m: 3 }}>
@@ -364,19 +367,23 @@ export function ComboFinder(props: ComboFinderProps) {
         <RadioGroup
           value={selectedNightfarer}
           onChange={(e) => {
-            if (isNightfarerName(e.target.value)) {
-              setSelectedNightfarer(e.target.value);
+            const v = parseInt(e.target.value);
+            if (isNightfarer(v)) {
+              setSelectedNightfarer(v);
             }
           }}
         >
-          {nightfarers.map((nightfarer) => (
-            <FormControlLabel
-              key={nightfarer.name}
-              value={nightfarer.name}
-              control={<Radio />}
-              label={nightfarer.name}
-            />
-          ))}
+          {Object.keys(nightfarers).map((key) => {
+            const k = Number(key) as Nightfarer;
+            return (
+              <FormControlLabel
+                key={key}
+                value={k}
+                control={<Radio />}
+                label={t(`nightfarers.${k}`)}
+              />
+            );
+          })}
         </RadioGroup>
       </Box>
 
@@ -424,12 +431,12 @@ export function ComboFinder(props: ComboFinderProps) {
                               width: "180px",
                             }}
                           >
-                            {vessel.slots.map((slot, slotIndex) => (
+                            {vessel.slots.map((slotColor, slotIndex) => (
                               <Chip
                                 key={slotIndex}
-                                label={slot}
+                                label={t(`colors.${slotColor}`)}
                                 size="small"
-                                color={getChipColor(slot)}
+                                color={getChipColor(slotColor)}
                                 variant={disabled ? "outlined" : "filled"}
                                 disabled={disabled}
                               />
@@ -502,32 +509,18 @@ export function ComboFinder(props: ComboFinderProps) {
         {selectedEffects.length > 0 && (
           <Box sx={{ mb: 2 }}>
             <LinearProgress
-              variant="determinate"
-              color={progress?.stage === "done" ? "success" : "primary"}
-              value={
-                progress?.totalToCheck === undefined
-                  ? 0
-                  : Math.min(
-                      100,
-                      (progress.totalCombinationsChecked /
-                        progress.totalToCheck) *
-                        100
-                    )
+              variant={
+                progress?.stage === "main" ? "indeterminate" : "determinate"
               }
-              sx={{
-                "& .MuiLinearProgress-bar": {
-                  transitionDuration: "0.2s",
-                },
-              }}
+              color={progress?.stage === "main" ? "primary" : "success"}
+              value={100}
             />
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              {progress &&
-                `Checked ${progress.totalCombinationsChecked.toLocaleString()} / ${
-                  progress.totalToCheck?.toLocaleString() ?? "?"
-                } combinations` +
-                  (progress.availableRelicsCount
-                    ? ` from ${progress.availableRelicsCount.toLocaleString()} relics`
-                    : "")}
+              {progress?.stage === "done" && searchResults !== null ? (
+                `Checked ${progress.totalCombinationsChecked.toLocaleString()} combinations from ${progress.availableRelicsCount.toLocaleString()} relics in ${searchResults.searchTime} ms.`
+              ) : (
+                <>&nbsp;</>
+              )}
             </Typography>
           </Box>
         )}
@@ -540,71 +533,62 @@ export function ComboFinder(props: ComboFinderProps) {
             ) : (
               <>
                 <Typography gutterBottom>
-                  {`Showing the best ${Math.min(
-                    50,
-                    searchResults.combinations.length
-                  )} combos out of ${searchResults.combinations.length} total`}
+                  {`Showing the best ${searchResults.combinations.length} combos`}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  {searchResults.combinations.map(
-                    (combo, index) =>
-                      index < 50 && (
-                        <Card
-                          key={combo.relicCombination
-                            .map((r) => r?.id)
-                            .join("-")}
-                          elevation={2}
-                        >
-                          <CardContent>
-                            <Typography fontWeight="bold" gutterBottom>
-                              {combo.vessel.name}
-                              {import.meta.env.DEV &&
-                                ` (${combo.points.toFixed(2)} points)`}
-                            </Typography>
+                  {searchResults.combinations.map((combo) => (
+                    <Card
+                      key={combo.relicCombination.map((r) => r?.id).join("-")}
+                      elevation={2}
+                    >
+                      <CardContent>
+                        <Typography fontWeight="bold" gutterBottom>
+                          {combo.vessel.name}
+                          {import.meta.env.DEV &&
+                            ` (${combo.points.toFixed(2)} points)`}
+                        </Typography>
 
-                            <Box
-                              sx={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(3, 1fr)",
-                                gap: 2,
-                              }}
-                            >
-                              {combo.relicCombination.map((relic, index) => (
-                                <Box key={relic?.id ?? index}>
-                                  {relic ? (
-                                    <RelicCard
-                                      relic={relic}
-                                      searchTerm=""
-                                      relicMatches={true}
-                                      selectedColor={getRelicColor(
-                                        relic.itemId
-                                      )}
-                                      highlightedEffects={selectedEffects}
-                                      coordinatesByColor={
-                                        combo.vessel.slots[index] !== "Any"
-                                      }
-                                    />
-                                  ) : (
-                                    <Card
-                                      variant="outlined"
-                                      sx={{
-                                        height: "100%",
-                                        transition: "0.3s ease",
-                                        overflow: "hidden",
-                                        position: "relative",
-                                        borderRadius: 3,
-                                      }}
-                                    >
-                                      <CardContent>No Relic</CardContent>
-                                    </Card>
-                                  )}
-                                </Box>
-                              ))}
+                        <Box
+                          sx={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(3, 1fr)",
+                            gap: 2,
+                          }}
+                        >
+                          {combo.relicCombination.map((relic, index) => (
+                            <Box key={relic?.id ?? index}>
+                              {relic ? (
+                                <RelicCard
+                                  relic={relic}
+                                  searchTerm=""
+                                  relicMatches={true}
+                                  selectedColor={getRelicColor(relic.itemId)}
+                                  highlightedEffects={selectedEffects}
+                                  coordinatesByColor={
+                                    combo.vessel.slots[index] !==
+                                    RelicSlotColor.Any
+                                  }
+                                />
+                              ) : (
+                                <Card
+                                  variant="outlined"
+                                  sx={{
+                                    height: "100%",
+                                    transition: "0.3s ease",
+                                    overflow: "hidden",
+                                    position: "relative",
+                                    borderRadius: 3,
+                                  }}
+                                >
+                                  <CardContent>No Relic</CardContent>
+                                </Card>
+                              )}
                             </Box>
-                          </CardContent>
-                        </Card>
-                      )
-                  )}
+                          ))}
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </Box>
               </>
             )}

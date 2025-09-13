@@ -8,15 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
 import { uniqueItemIds, unsellableItemIds } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
-import {
-  getEffect,
-  getEffectName,
-  getItemName,
-  getRelicColor,
-} from "../utils/DataUtils";
+import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
 import { getChipColor, type RelicSlotColor } from "../utils/RelicColor";
 import { highlightSearchTerm } from "../utils/SearchUtils";
 import { RelicComparisonModal } from "./RelicComparisonModal";
@@ -62,6 +58,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const isUniqueRelic = uniqueItemIds.includes(itemId);
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
   const selectedChipColor = getChipColor(selectedColor);
+  const { t } = useTranslation();
 
   const handleSellMeClick = () => {
     setModalOpen(true);
@@ -81,7 +78,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         component="span"
         variant="inherit"
       >
-        {selectedColor.toLowerCase()}
+        {t(`colors.${selectedColor}`)}
       </Typography>
       .
     </Typography>
@@ -162,20 +159,17 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               onClick={handleSellMeClick}
             />
           )}
-          {itemColor && (
-            <Chip
-              label={itemColor}
-              size="small"
-              color={chipColor}
-              sx={{ overflow: "clip" }}
-            />
-          )}
+          <Chip
+            label={t(`colors.${itemColor}`)}
+            size="small"
+            color={chipColor}
+            sx={{ overflow: "clip" }}
+          />
         </Box>
 
         <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
-          {effects.map((effectId) => {
-            const effect = getEffect(effectId);
-            const effectName = getEffectName(effectId);
+          {effects.map((effect, index) => {
+            const effectName = getEffectName(effect);
             const effectHighlight = highlightSearchTerm(effectName, searchTerm);
             const highlightEffect =
               highlightedEffects.includes(effect) ||
@@ -184,7 +178,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               );
 
             return (
-              <Box key={effectId} sx={{ mb: 0.5, display: "list-item" }}>
+              <Box key={index} sx={{ mb: 0.5, display: "list-item" }}>
                 <Typography
                   variant="body2"
                   sx={{

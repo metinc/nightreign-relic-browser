@@ -1,5 +1,5 @@
 import React from "react";
-import type { RelicColor } from "./RelicColor";
+import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
 export interface SearchResult {
   hasMatch: boolean;
@@ -56,8 +56,8 @@ export const highlightSearchTerm = (
 
 export const doesRelicColorMatch = (
   itemColor: RelicColor,
-  selectedColor: RelicColor | "Any"
-) => selectedColor === "Any" || selectedColor === itemColor;
+  selectedColor: RelicSlotColor
+) => selectedColor === RelicSlotColor.Any || selectedColor === itemColor;
 
 /**
  * Checks if a relic matches the search term in either its name or effects

@@ -1,15 +1,15 @@
 import type { RelicSlot } from "../types/SaveFile";
 import { getEffectGroup, getRelicColor } from "./DataUtils";
-import type { RelicColor } from "./RelicColor";
+import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
 export function sortRelicsByColor(
   relics: RelicSlot[]
 ): Record<RelicColor, RelicSlot[]> {
   const sortedRelics: Record<RelicColor, RelicSlot[]> = {
-    Red: [],
-    Blue: [],
-    Yellow: [],
-    Green: [],
+    [RelicSlotColor.Red]: [],
+    [RelicSlotColor.Blue]: [],
+    [RelicSlotColor.Yellow]: [],
+    [RelicSlotColor.Green]: [],
   };
 
   relics.forEach((relic) => {

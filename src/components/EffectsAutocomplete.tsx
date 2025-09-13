@@ -26,15 +26,16 @@ export function EffectsAutocomplete({
 
   const getOptionLabel = useCallback(
     (option: string) => {
-      const label = t(`effects.${option}`);
-      if (isEffectKey(option)) {
-        const effect = getEffectByKey(option);
+      const effectKey = parseInt(option);
+      if (isEffectKey(effectKey)) {
+        const label = t(`effects.${effectKey}`);
+        const effect = getEffectByKey(effectKey);
         if (showOrBetterLabels && effect !== undefined && !isMaxLevel(effect)) {
           return label + " (or better)";
         }
         return label;
       }
-      return "Unknown Effect";
+      return `Unknown Effect ${option}`;
     },
     [showOrBetterLabels, t]
   );
@@ -42,16 +43,17 @@ export function EffectsAutocomplete({
   return (
     <Autocomplete
       disablePortal
-      options={availableEffects.map((effect) => effect.key)}
+      options={availableEffects.map((effect) => String(effect.key))}
       freeSolo
       sx={{ width: 350 }}
       onInputChange={(_e, value) => onSearchChange(value)}
       onChange={(_e, value) => {
-        if (onChange === undefined) {
+        if (onChange === undefined || value === null) {
           return;
         }
-        if (isEffectKey(value)) {
-          const effect = getEffectByKey(value);
+        const effectKey = parseInt(value);
+        if (isEffectKey(effectKey)) {
+          const effect = getEffectByKey(effectKey);
           if (effect) {
             onChange(effect);
           }

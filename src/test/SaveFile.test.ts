@@ -2,7 +2,13 @@ import fs from "fs";
 import path from "path";
 import { beforeAll, describe, expect, it } from "vitest";
 import type { BND4Entry, RelicSlot } from "../types/SaveFile";
-import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
+import {
+  getEffect,
+  getEffectName,
+  getItemName,
+  getRelicColor,
+} from "../utils/DataUtils";
+import { RelicSlotColor } from "../utils/RelicColor";
 import { RelicParser } from "../utils/RelicParser";
 import { SaveFileDecryptor } from "../utils/SaveFileDecryptor";
 
@@ -209,7 +215,7 @@ describe("Save File Processing", () => {
 
               const itemColor = getRelicColor(itemId);
               expect(itemColor).toBeDefined();
-              expect(itemColor).toBeTypeOf("string");
+              expect(itemColor).toBeTypeOf("number");
 
               const effectNames = effects.map((effectId) =>
                 getEffectName(effectId)
@@ -247,8 +253,8 @@ describe("Utility Functions", () => {
 
   describe("getRelicColor", () => {
     it("should return the correct color for items with defined colors", () => {
-      expect(getRelicColor(100)).toBe("Red");
-      expect(getRelicColor(101)).toBe("Red");
+      expect(getRelicColor(100)).toBe(RelicSlotColor.Red);
+      expect(getRelicColor(101)).toBe(RelicSlotColor.Red);
     });
 
     it("should return 'Red' as default for items with null color", () => {
@@ -256,7 +262,7 @@ describe("Utility Functions", () => {
       const originalError = console.error;
       console.error = () => {};
 
-      expect(getRelicColor(11)).toBe("Red");
+      expect(getRelicColor(11)).toBe(RelicSlotColor.Red);
 
       // Restore console.error
       console.error = originalError;
@@ -266,8 +272,8 @@ describe("Utility Functions", () => {
       const originalError = console.error;
       console.error = () => {};
 
-      expect(getRelicColor(99999)).toBe("Red");
-      expect(getRelicColor(-1)).toBe("Red");
+      expect(getRelicColor(99999)).toBe(RelicSlotColor.Red);
+      expect(getRelicColor(-1)).toBe(RelicSlotColor.Red);
 
       console.error = originalError;
     });
@@ -288,36 +294,37 @@ describe("Utility Functions", () => {
 
   describe("getEffectName", () => {
     it("should return the correct effect name for existing effects", () => {
-      expect(getEffectName(10000)).toBe(
+      expect(getEffectName(getEffect(10000))).toBe(
         "FP Restoration upon Successive Attacks"
       );
-      expect(getEffectName(10001)).toBe("Taking attacks improves attack power");
-      expect(getEffectName(310000)).toBe("Increased Maximum HP");
+      expect(getEffectName(getEffect(10001))).toBe(
+        "Taking attacks improves attack power"
+      );
+      expect(getEffectName(getEffect(310000))).toBe("Increased Maximum HP");
     });
 
     it("should return undefined for non-existing effects", () => {
-      expect(getEffectName(99999)).toMatch(/^Unknown Effect/);
-      expect(getEffectName(-1)).toMatch(/^Unknown Effect/);
-      expect(getEffectName(0)).toMatch(/^Unknown Effect/);
+      expect(getEffectName(getEffect(99999))).toMatch(/^Unknown Effect/);
+      expect(getEffectName(getEffect(-1))).toMatch(/^Unknown Effect/);
     });
 
     it("should handle edge cases", () => {
       // Test with a known effect from the new TypeScript data
-      expect(getEffectName(7000000)).toBe("Vigor +1");
-      expect(getEffectName(1000000)).toMatch(/^Unknown Effect/);
+      expect(getEffectName(getEffect(7000000))).toBe("Vigor +1");
+      expect(getEffectName(getEffect(1000000))).toMatch(/^Unknown Effect/);
     });
   });
 
   describe("Integration with real data structure", () => {
     it("should handle large numeric IDs", () => {
       expect(getItemName(1007322)).toBe("Grand Tranquil Scene");
-      expect(getRelicColor(1007322)).toBe("Green");
+      expect(getRelicColor(1007322)).toBe(RelicSlotColor.Green);
     });
 
     it("should work with non-existing data", () => {
       expect(getItemName(999999999)).toMatch(/^Unknown Item/);
-      expect(getRelicColor(999999999)).toBe("Red");
-      expect(getEffectName(999999999)).toMatch(/^Unknown Effect/);
+      expect(getRelicColor(999999999)).toBe(RelicSlotColor.Red);
+      expect(getEffectName(getEffect(999999999))).toMatch(/^Unknown Effect/);
     });
   });
 });

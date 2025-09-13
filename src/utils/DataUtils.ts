@@ -1,7 +1,9 @@
 import i18n from "../i18n";
 import {
+  EffectGroup,
   effects,
   effectsArray,
+  isSameGroupAndEqualOrBetter,
   type Effect,
   type EffectKey,
 } from "../resources/effects";
@@ -11,7 +13,7 @@ import type {
   CompactCharacterSlot,
   CompactRelicSlot,
 } from "../types/SaveFile";
-import type { RelicColor } from "./RelicColor";
+import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
 /**
  * Get item name by ID using TypeScript resources and i18n
@@ -31,23 +33,25 @@ export const getRelicColor = (itemId: number): RelicColor => {
   const item = items.get(itemId);
   if (!item) {
     console.error(`Item ${itemId} not found`);
-    return "Red";
+    return RelicSlotColor.Red;
   }
   const color = item.color;
   if (color === null) {
     console.error(`Item ${itemId} has no color defined`);
-    return "Red";
+    return RelicSlotColor.Red;
   }
   return color as RelicColor;
 };
 
-const unknownEffect: Effect = { key: "unknown" as EffectKey };
+const unknownEffect: (effectId: number) => Effect = (effectId) => ({
+  key: effectId as EffectKey,
+});
 
-export const getEffect = (id: number) => {
-  const effect = effects.get(id);
+export const getEffect = (effectId: number): Effect => {
+  const effect = effects.get(effectId);
   if (!effect) {
-    console.error(`Effect with ID ${id} not found`);
-    return unknownEffect;
+    console.error(`Effect with ID ${effectId} not found`);
+    return unknownEffect(effectId);
   }
   return effect;
 };
@@ -60,21 +64,15 @@ export const getEffectByKey = (key: EffectKey): Effect | undefined => {
 /**
  * Get effect name by ID using TypeScript resources and i18n
  */
-export const getEffectName = (effectId: number): string => {
-  const effect = effects.get(effectId);
-  if (!effect) {
-    return `Unknown Effect ${effectId}`;
-  }
-  return i18n.t(`effects.${effect.key}`, { defaultValue: effect.key });
+export const getEffectName = (effect: Effect): string => {
+  return i18n.t(`effects.${effect.key}`, {
+    defaultValue: `Unknown Effect ${effect.key}`,
+  });
 };
 
 export const getEffectGroup = (
-  effectId: number
-): { group: string; level: number } | undefined => {
-  const effect = effects.get(effectId);
-  if (!effect) {
-    return undefined;
-  }
+  effect: Effect
+): { group: EffectGroup; level: number } | undefined => {
   if (
     "group" in effect &&
     "level" in effect &&
@@ -90,26 +88,27 @@ export const getCompactCharacterSlot = (
   compactCharacterSlot: CompactCharacterSlot
 ): CharacterSlot => {
   const relicsByColor: Record<RelicColor, CompactRelicSlot[]> = {
-    Red: compactCharacterSlot.relics.filter(
-      ([itemId]) => getRelicColor(itemId) === "Red"
+    [RelicSlotColor.Red]: compactCharacterSlot.relics.filter(
+      ([itemId]) => getRelicColor(itemId) === RelicSlotColor.Red
     ),
-    Blue: compactCharacterSlot.relics.filter(
-      ([itemId]) => getRelicColor(itemId) === "Blue"
+    [RelicSlotColor.Blue]: compactCharacterSlot.relics.filter(
+      ([itemId]) => getRelicColor(itemId) === RelicSlotColor.Blue
     ),
-    Yellow: compactCharacterSlot.relics.filter(
-      ([itemId]) => getRelicColor(itemId) === "Yellow"
+    [RelicSlotColor.Yellow]: compactCharacterSlot.relics.filter(
+      ([itemId]) => getRelicColor(itemId) === RelicSlotColor.Yellow
     ),
-    Green: compactCharacterSlot.relics.filter(
-      ([itemId]) => getRelicColor(itemId) === "Green"
+    [RelicSlotColor.Green]: compactCharacterSlot.relics.filter(
+      ([itemId]) => getRelicColor(itemId) === RelicSlotColor.Green
     ),
   };
 
   return {
     name: compactCharacterSlot.name,
     relics: compactCharacterSlot.relics.map((relic, index) => {
-      const [itemId, ...effects] = relic;
+      const [itemId, ...effectIds] = relic;
       const color = getRelicColor(itemId);
       const indexByColor = relicsByColor[color].indexOf(relic);
+      const effects = effectIds.map(getEffect);
       return {
         id: index,
         itemId,
@@ -119,4 +118,13 @@ export const getCompactCharacterSlot = (
       };
     }),
   };
+};
+
+export const getStackableHigherLevelEffects = (
+  effect: Effect
+): Effect[] | Effect => {
+  if (effect.level !== undefined && effect.stacks === true) {
+    return effectsArray.filter((e) => isSameGroupAndEqualOrBetter(effect, e));
+  }
+  return effect;
 };

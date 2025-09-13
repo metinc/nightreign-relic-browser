@@ -1,3 +1,5 @@
+import type { Effect } from "../resources/effects";
+
 export interface BND4Entry {
   index: number;
   size: number;
@@ -15,7 +17,7 @@ export interface BND4Entry {
 export interface RelicSlot {
   id: number;
   itemId: number;
-  effects: number[];
+  effects: Effect[];
   coordinates: [row: number, column: number];
   coordinatesByColor: [row: number, column: number];
   sortKey?: number;
