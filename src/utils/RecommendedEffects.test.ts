@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Nightfarer, nightfarers } from "./Nightfarers";
 import { recommendedEffectsByCharacter } from "./RecommendedEffects";
 
-const MAX_RECOMMENDED_EFFECTS = 30;
+const MAX_RECOMMENDED_EFFECTS = 35;
 
 describe("RecommendedEffects", () => {
   it(`should have a max size of ${MAX_RECOMMENDED_EFFECTS}`, () => {

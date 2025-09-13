@@ -92,6 +92,18 @@ const resources = {
         tornBraidedCord: "Torn Braided Cord",
         vestigeOfNight: "Vestige of Night",
         witchsBrooch: "Witch's Brooch",
+        deepDelicateBurningScene: "Deep Delicate Burning Scene",
+        deepPolishedBurningScene: "Deep Polished Burning Scene",
+        deepGrandBurningScene: "Deep Grand Burning Scene",
+        deepDelicateDrizzlyScene: "Deep Delicate Drizzly Scene",
+        deepPolishedDrizzlyScene: "Deep Polished Drizzly Scene",
+        deepGrandDrizzlyScene: "Deep Grand Drizzly Scene",
+        deepDelicateLuminousScene: "Deep Delicate Luminous Scene",
+        deepPolishedLuminousScene: "Deep Polished Luminous Scene",
+        deepGrandLuminousScene: "Deep Grand Luminous Scene",
+        deepDelicateTranquilScene: "Deep Delicate Tranquil Scene",
+        deepPolishedTranquilScene: "Deep Polished Tranquil Scene",
+        deepGrandTranquilScene: "Deep Grand Tranquil Scene",
       },
 
       effects: {
@@ -259,7 +271,7 @@ const resources = {
         [EffectKey.blackFlamesUponChargedSlash]:
           "Black Flames upon Charged Slash",
         [EffectKey.bloodLossCritThornsOfPunishment]:
-          "Blood Loss Crit]: Thorns of Punishment",
+          "Blood Loss Crit: Thorns of Punishment",
         [EffectKey.bloodLossInVicinityIncreasesAttackPower]:
           "Blood Loss in Vicinity Increases Attack Power",
         [EffectKey.bloodLossIncreasesAttackPower]:
@@ -557,8 +569,8 @@ const resources = {
           "HP Restoration upon Whip Attacks",
         [EffectKey.hpRestorationWithHeadShots]:
           "HP Restoration with Head Shots",
-        [EffectKey.hpRestoredWhenUsingCuredMeatsMedicinalBolusesEtc]:
-          "HP restored when using cured meats, medicinal boluses, etc.",
+        [EffectKey.hpRestoredWhenUsingMedicinalBolusesEtc]:
+          "HP restored when using medicinal boluses, etc.",
         [EffectKey.hugeRuneDiscountForShopPurchasesWhileOnExpedition]:
           "Huge rune discount for shop purchases while on expedition",
         [EffectKey.iceStormSurgeSprint]: "Ice Storm Surge Sprint",
@@ -647,7 +659,7 @@ const resources = {
           "Improved Colossal Weapon Attack Power",
         [EffectKey.improvedCriticalHits]: "Improved Critical Hits",
         [EffectKey.improvedCriticalHitsPlus1]: "Improved Critical Hits +1",
-        [EffectKey.improvedCrystalianSorcery]: "Improved Crystalian sorcery",
+        [EffectKey.improvedCrystalianSorcery]: "Improved Crystalian Sorcery",
         [EffectKey.improvedCurvedGreatswordAttackPower]:
           "Improved Curved Greatsword Attack Power",
         [EffectKey.improvedCurvedSwordAttackPower]:
@@ -669,7 +681,6 @@ const resources = {
         [EffectKey.improvedFireDamageNegation]: "Improved Fire Damage Negation",
         [EffectKey.improvedFistAttackPower]: "Improved Fist Attack Power",
         [EffectKey.improvedFlailAttackPower]: "Improved Flail Attack Power",
-        [EffectKey.improvedFlaskHPRecovery]: "Improved Flask HP Restoration",
         [EffectKey.improvedFrenziedFlameIncantations]:
           "Improved Frenzied Flame Incantations",
         [EffectKey.improvedFrostResistance]: "Improved Frost Resistance",
@@ -740,7 +751,8 @@ const resources = {
         [EffectKey.improvedRangedWeaponAttacks]:
           "Improved Ranged Weapon Attacks",
         [EffectKey.improvedReaperAttackPower]: "Improved Reaper Attack Power",
-        [EffectKey.improvedRoarBreathAttacks]: "Improved Roar & Breath Attacks",
+        [EffectKey.improvedRoarAndBreathAttacks]:
+          "Improved Roar & Breath Attacks",
         [EffectKey.improvedRotResistance]: "Improved Rot Resistance",
         [EffectKey.improvedSkillAttackPower]: "Improved Skill Attack Power",
         [EffectKey.improvedSleepMadnessResistance]:
@@ -855,7 +867,7 @@ const resources = {
           "More Runes From Defeated Enemies",
         [EffectKey.multiplePeriodicalGlintblades]:
           "Multiple Periodical Glintblades",
-        [EffectKey.nearbyFrostbiteConcealsSeIf]:
+        [EffectKey.nearbyFrostbiteConcealsSelf]:
           "Nearby Frostbite Conceals Self",
         [EffectKey.noRuneLossOrLevelDownUponDeath]:
           "No Rune Loss or Level Down Upon Death",
@@ -943,7 +955,6 @@ const resources = {
           "Raises resistance to all ailments",
         [EffectKey.raisesSorceryIncantationPotency]:
           "Raises sorcery/incantation potency",
-        [EffectKey.reducedFpConsumption]: "Reduced FP Consumption",
         [EffectKey.reducedSkillFpCost]: "Reduced Skill FP Cost",
         [EffectKey.reducedSpellFpCost]: "Reduced Spell FP Cost",
         [EffectKey.reducedStaminaConsumption]: "Reduced Stamina Consumption",
@@ -1061,6 +1072,428 @@ const resources = {
         [EffectKey.wraithCallingBellInPossessionAtStartOfExpedition]:
           "Wraith Calling Bell in possession at start of expedition",
         [EffectKey.wraithsWhileWalking]: "Wraiths While Walking",
+        [EffectKey.continuousHPLoss]: "Continuous HP Loss",
+        [EffectKey.characterSkillCooldownReductionPlus4]:
+          "Character Skill Cooldown Reduction +4",
+        [EffectKey.characterSkillCooldownReductionPlus5]:
+          "Character Skill Cooldown Reduction +5",
+        [EffectKey.ultimateArtGaugePlus4]: "Ultimate Art Gauge +4",
+        [EffectKey.ultimateArtGaugePlus5]: "Ultimate Art Gauge +5",
+        [EffectKey.poisePlus4]: "Poise +4",
+        [EffectKey.poisePlus5]: "Poise +5",
+        [EffectKey.physicalAttackUpPlus4]: "Physical Attack Up +4",
+        [EffectKey.magicAttackPowerUpPlus3]: "Magic Attack Power Up +3",
+        [EffectKey.magicAttackPowerUpPlus4]: "Magic Attack Power Up +4",
+        [EffectKey.fireAttackPowerUpPlus3]: "Fire Attack Power Up +3",
+        [EffectKey.fireAttackPowerUpPlus4]: "Fire Attack Power Up +4",
+        [EffectKey.lightningAttackPowerUpPlus3]: "Lightning Attack Power Up +3",
+        [EffectKey.lightningAttackPowerUpPlus4]: "Lightning Attack Power Up +4",
+        [EffectKey.holyAttackPowerUpPlus3]: "Holy Attack Power Up +3",
+        [EffectKey.holyAttackPowerUpPlus4]: "Holy Attack Power Up +4",
+        [EffectKey.improvedMagicDamageNegationPlus1]:
+          "Improved Magic Damage Negation +1",
+        [EffectKey.improvedMagicDamageNegationPlus2]:
+          "Improved Magic Damage Negation +2",
+        [EffectKey.improvedFireDamageNegationPlus1]:
+          "Improved Fire Damage Negation +1",
+        [EffectKey.improvedFireDamageNegationPlus2]:
+          "Improved Fire Damage Negation +2",
+        [EffectKey.improvedLightningDamageNegationPlus1]:
+          "Improved Lightning Damage Negation +1",
+        [EffectKey.improvedLightningDamageNegationPlus2]:
+          "Improved Lightning Damage Negation +2",
+        [EffectKey.improvedHolyDamageNegationPlus1]:
+          "Improved Holy Damage Negation +1",
+        [EffectKey.improvedHolyDamageNegationPlus2]:
+          "Improved Holy Damage Negation +2",
+        [EffectKey.improvedPoisonResistancePlus1]:
+          "Improved Poison Resistance +1",
+        [EffectKey.improvedPoisonResistancePlus2]:
+          "Improved Poison Resistance +2",
+        [EffectKey.improvedBloodLossResistancePlus1]:
+          "Improved Blood Loss Resistance +1",
+        [EffectKey.improvedBloodLossResistancePlus2]:
+          "Improved Blood Loss Resistance +2",
+        [EffectKey.improvedSleepResistancePlus1]:
+          "Improved Sleep Resistance +1",
+        [EffectKey.improvedSleepResistancePlus2]:
+          "Improved Sleep Resistance +2",
+        [EffectKey.improvedDeathBlightResistancePlus1]:
+          "Improved Death Blight Resistance +1",
+        [EffectKey.improvedDeathBlightResistancePlus2]:
+          "Improved Death Blight Resistance +2",
+        [EffectKey.improvedRotResistancePlus1]: "Improved Rot Resistance +1",
+        [EffectKey.improvedRotResistancePlus2]: "Improved Rot Resistance +2",
+        [EffectKey.improvedFrostResistancePlus1]:
+          "Improved Frost Resistance +1",
+        [EffectKey.improvedFrostResistancePlus2]:
+          "Improved Frost Resistance +2",
+        [EffectKey.improvedMadnessResistancePlus1]:
+          "Improved Madness Resistance +1",
+        [EffectKey.improvedMadnessResistancePlus2]:
+          "Improved Madness Resistance +2",
+        [EffectKey.partialHPRestorationUponPostDamageAttacksPlus1]:
+          "Partial HP Restoration upon Post-Damage Attacks +1",
+        [EffectKey.partialHPRestorationUponPostDamageAttacksPlus2]:
+          "Partial HP Restoration upon Post-Damage Attacks +2",
+        [EffectKey.hpRestoredWhenUsingMedicinalBolusesEtcPlus1]:
+          "HP restored when using medicinal boluses, etc. +1",
+        [EffectKey.hpRestoredWhenUsingMedicinalBolusesEtcPlus2]:
+          "HP restored when using medicinal boluses, etc. +2",
+        [EffectKey.artGaugeChargedFromSuccessfulGuardingPlus1]:
+          "Art gauge charged from successful guarding +1",
+        [EffectKey.artGaugeChargedFromSuccessfulGuardingPlus2]:
+          "Art gauge charged from successful guarding +2",
+        [EffectKey.artGaugeFillsModeratelyUponCriticalHitPlus1]:
+          "Art gauge fills moderately upon critical hit +1",
+        [EffectKey.artGaugeFillsModeratelyUponCriticalHitPlus2]:
+          "Art gauge fills moderately upon critical hit +2",
+        [EffectKey.physicalAttackPowerIncreasesAfterUsingGreaseItemsPlus1]:
+          "Physical attack power increases after using grease items +1",
+        [EffectKey.physicalAttackPowerIncreasesAfterUsingGreaseItemsPlus2]:
+          "Physical attack power increases after using grease items +2",
+        [EffectKey.criticalHitBoostsStaminaRecoverySpeedPlus1]:
+          "Critical Hit Boosts Stamina Recovery Speed +1",
+        [EffectKey.improvedGuardCountersPlus1]: "Improved Guard Counters +1",
+        [EffectKey.improvedGuardCountersPlus2]: "Improved Guard Counters +2",
+        [EffectKey.improvedThrowingPotDamagePlus1]:
+          "Improved Throwing Pot Damage +1",
+        [EffectKey.improvedThrowingPotDamagePlus2]:
+          "Improved Throwing Pot Damage +2",
+        [EffectKey.improvedThrowingKnifeDamagePlus1]:
+          "Improved Throwing Knife Damage +1",
+        [EffectKey.improvedThrowingKnifeDamagePlus2]:
+          "Improved Throwing Knife Damage +2",
+        [EffectKey.improvedGlintstoneAndGravityStoneDamagePlus1]:
+          "Improved Glintstone and Gravity Stone Damage +1",
+        [EffectKey.improvedGlintstoneAndGravityStoneDamagePlus2]:
+          "Improved Glintstone and Gravity Stone Damage +2",
+        [EffectKey.improvedRoarAndBreathAttacksPlus1]:
+          "Improved Roar & Breath Attacks +1",
+        [EffectKey.improvedRoarAndBreathAttacksPlus2]:
+          "Improved Roar & Breath Attacks +2",
+        [EffectKey.improvedPerfumingArtsPlus1]: "Improved Perfuming Arts +1",
+        [EffectKey.improvedPerfumingArtsPlus2]: "Improved Perfuming Arts +2",
+        [EffectKey.maxHPIncreasedForEachGreatEnemyDefeatedAtAGreatChurch]:
+          "Max HP increased for each great enemy defeated at a Great Church.",
+        [EffectKey.runesAndItemDiscoveryIncreasedForEachGreatEnemyDefeatedAtAFort]:
+          "Runes and Item Discovery increased for each great enemy defeated at a Fort",
+        [EffectKey.arcaneIncreasedForEachGreatEnemyDefeatedAtARuin]:
+          "Arcane increased for each great enemy defeated at a Ruin",
+        [EffectKey.maxStaminaIncreasedForEachGreatEnemyDefeatedAtAGreatEncampment]:
+          "Max stamina increased for each great enemy defeated at a Great Encampment",
+        [EffectKey.defeatingEnemiesFillsMoreOfTheArtGaugePlus1]:
+          "Defeating enemies fills more of the Art gauge +1",
+        [EffectKey.defeatingEnemiesFillsMoreOfTheArtGaugePlus2]:
+          "Defeating enemies fills more of the Art gauge +2",
+        [EffectKey.hpRestorationUponThrustingCounterattackPlus1]:
+          "HP Restoration upon Thrusting Counterattack +1",
+        [EffectKey.hpRestorationUponThrustingCounterattackPlus2]:
+          "HP Restoration upon Thrusting Counterattack +2",
+        [EffectKey.attackPowerUpWhenFacingPoisonAfflictedEnemyPlus1]:
+          "Attack power up when facing poison-afflicted enemy +1",
+        [EffectKey.attackPowerUpWhenFacingPoisonAfflictedEnemyPlus2]:
+          "Attack power up when facing poison-afflicted enemy +2",
+        [EffectKey.attackPowerUpWhenFacingScarletRotAfflictedEnemyPlus1]:
+          "Attack power up when facing scarlet rot-afflicted enemy +1",
+        [EffectKey.attackPowerUpWhenFacingScarletRotAfflictedEnemyPlus2]:
+          "Attack power up when facing scarlet rot-afflicted enemy +2",
+        [EffectKey.attackPowerUpWhenFacingFrostbiteAfflictedEnemyPlus1]:
+          "Attack power up when facing frostbite-afflicted enemy +1",
+        [EffectKey.attackPowerUpWhenFacingFrostbiteAfflictedEnemyPlus2]:
+          "Attack power up when facing frostbite-afflicted enemy +2",
+        [EffectKey.guardianCharacterSkillBoostsDamageNegationOfNearbyAllies]:
+          "[Guardian] Character Skill Boosts Damage Negation of Nearby Allies",
+        [EffectKey.ironeyeCharacterSkillInflictsHeavyPoisonDamageOnPoisonedEnemies]:
+          "[Ironeye] Character Skill Inflicts Heavy Poison Damage on Poisoned Enemies",
+        [EffectKey.duchessUseCharacterSkillForBriefInvulnerability]:
+          "[Duchess] Use Character Skill for Brief Invulnerability",
+        [EffectKey.raiderHitWithCharacterSkillToReduceEnemyAttackPower]:
+          "[Raider] Hit With Character Skill to Reduce Enemy Attack Power",
+        [EffectKey.revenantIncreasedMaxFPUponAbilityActivation]:
+          "[Revenant] Increased Max FP upon Ability Activation",
+        [EffectKey.recluseCollectAffinityResiduesToNegateAffinity]:
+          "[Recluse] Collect Affinity Residues to Negate Affinity",
+        [EffectKey.executorSlowlyRestoreHPUponAbilityActivation]:
+          "[Executor] Slowly Restore HP upon Ability Activation",
+        [EffectKey.sleepInVicinityImprovesAttackPower]:
+          "Sleep in Vicinity Improves Attack Power",
+        [EffectKey.sleepInVicinityImprovesAttackPowerPlus1]:
+          "Sleep in Vicinity Improves Attack Power +1",
+        [EffectKey.sleepInVicinityImprovesAttackPowerPlus2]:
+          "Sleep in Vicinity Improves Attack Power +2",
+        [EffectKey.madnessInVicinityImprovesAttackPower]:
+          "Madness in Vicinity Improves Attack Power",
+        [EffectKey.madnessInVicinityImprovesAttackPowerPlus1]:
+          "Madness in Vicinity Improves Attack Power +1",
+        [EffectKey.madnessInVicinityImprovesAttackPowerPlus2]:
+          "Madness in Vicinity Improves Attack Power +2",
+        [EffectKey.reducedFPConsumption]: "Reduced FP Consumption",
+        [EffectKey.reducedFPConsumptionPlus1]: "Reduced FP Consumption +1",
+        [EffectKey.reducedFPConsumptionPlus2]: "Reduced FP Consumption +2",
+        [EffectKey.improvedAffinityAttackPower]:
+          "Improved Affinity Attack Power",
+        [EffectKey.improvedAffinityAttackPowerPlus1]:
+          "Improved Affinity Attack Power +1",
+        [EffectKey.improvedAffinityAttackPowerPlus2]:
+          "Improved Affinity Attack Power +2",
+        [EffectKey.improvedPhysicalDamageNegationPlus1]:
+          "Improved Physical Damage Negation +1",
+        [EffectKey.improvedPhysicalDamageNegationPlus2]:
+          "Improved Physical Damage Negation +2",
+        [EffectKey.improvedAffinityDamageNegation]:
+          "Improved Affinity Damage Negation",
+        [EffectKey.improvedAffinityDamageNegationPlus1]:
+          "Improved Affinity Damage Negation +1",
+        [EffectKey.improvedAffinityDamageNegationPlus2]:
+          "Improved Affinity Damage Negation +2",
+        [EffectKey.improvedSorceriesPlus1]: "Improved Sorceries +1",
+        [EffectKey.improvedSorceriesPlus2]: "Improved Sorceries +2",
+        [EffectKey.improvedIncantationsPlus1]: "Improved Incantations +1",
+        [EffectKey.improvedIncantationsPlus2]: "Improved Incantations +2",
+        [EffectKey.improvedFlaskHPRestoration]: "Improved Flask HP Restoration",
+        [EffectKey.crimsonspillCrystalTearInPossessionAtStartOfExpedition]:
+          "Crimsonspill Crystal Tear in possession at start of expedition",
+        [EffectKey.crimsonCrystalTearInPossessionAtStartOfExpedition]:
+          "Crimson Crystal Tear in possession at start of expedition",
+        [EffectKey.ceruleanCrystalTearInPossessionAtStartOfExpedition]:
+          "Cerulean Crystal Tear in possession at start of expedition",
+        [EffectKey.speckledHardtearInPossessionAtStartOfExpedition]:
+          "Speckled Hardtear in possession at start of expedition",
+        [EffectKey.crimsonBubbletearInPossessionAtStartOfExpedition]:
+          "Crimson Bubbletear in possession at start of expedition",
+        [EffectKey.opalineBubbletearInPossessionAtStartOfExpedition]:
+          "Opaline Bubbletear in possession at start of expedition",
+        [EffectKey.crimsonburstCrystalTearInPossessionAtStartOfExpedition]:
+          "Crimsonburst Crystal Tear in possession at start of expedition",
+        [EffectKey.greenburstCrystalTearInPossessionAtStartOfExpedition]:
+          "Greenburst Crystal Tear in possession at start of expedition",
+        [EffectKey.opalineHardtearInPossessionAtStartOfExpedition]:
+          "Opaline Hardtear in possession at start of expedition",
+        [EffectKey.thornyCrackedTearInPossessionAtStartOfExpedition]:
+          "Thorny Cracked Tear in possession at start of expedition",
+        [EffectKey.spikedCrackedTearInPossessionAtStartOfExpedition]:
+          "Spiked Cracked Tear in possession at start of expedition",
+        [EffectKey.windyCrystalTearInPossessionAtStartOfExpedition]:
+          "Windy Crystal Tear in possession at start of expedition",
+        [EffectKey.rupturedCrystalTearInPossessionAtStartOfExpedition]:
+          "Ruptured Crystal Tear in possession at start of expedition",
+        [EffectKey.leadenHardtearInPossessionAtStartOfExpedition]:
+          "Leaden Hardtear in possession at start of expedition",
+        [EffectKey.twiggyCrackedTearInPossessionAtStartOfExpedition]:
+          "Twiggy Cracked Tear in possession at start of expedition",
+        [EffectKey.crimsonwhorlBubbletearInPossessionAtStartOfExpedition]:
+          "Crimsonwhorl Bubbletear in possession at start of expedition",
+        [EffectKey.ceruleanHiddenTearInPossessionAtStartOfExpedition]:
+          "Cerulean Hidden Tear in possession at start of expedition",
+        [EffectKey.stonebarbCrackedTearInPossessionAtStartOfExpedition]:
+          "Stonebarb Cracked Tear in possession at start of expedition",
+        [EffectKey.flameShroudingCrackedTearInPossessionAtStartOfExpedition]:
+          "Flame-Shrouding Cracked Tear in possession at start of expedition",
+        [EffectKey.magicShroudingCrackedTearInPossessionAtStartOfExpedition]:
+          "Magic-Shrouding Cracked Tear in possession at start of expedition",
+        [EffectKey.lightningShroudingCrackedTearInPossessionAtStartOfExpedition]:
+          "Lightning-Shrouding Cracked Tear in possession at start of expedition",
+        [EffectKey.holyShroudingCrackedTearInPossessionAtStartOfExpedition]:
+          "Holy-Shrouding Cracked Tear in possession at start of expedition",
+        [EffectKey.upliftingAromaticInPossessionAtStartOfExpedition]:
+          "Uplifting Aromatic in possession at start of expedition",
+        [EffectKey.sparkAromaticInPossessionAtStartOfExpedition]:
+          "Spark Aromatic in possession at start of expedition",
+        [EffectKey.ironjarAromaticInPossessionAtStartOfExpedition]:
+          "Ironjar Aromatic in possession at start of expedition",
+        [EffectKey.bloodboilAromaticInPossessionAtStartOfExpedition]:
+          "Bloodboil Aromatic in possession at start of expedition",
+        [EffectKey.poisonSpraymistInPossessionAtStartOfExpedition]:
+          "Poison Spraymist in possession at start of expedition",
+        [EffectKey.acidSpraymistInPossessionAtStartOfExpedition]:
+          "Acid Spraymist in possession at start of expedition",
+        [EffectKey.dormantPowerHelpsDiscoverDaggers]:
+          "Dormant Power Helps Discover Daggers",
+        [EffectKey.dormantPowerHelpsDiscoverStraightSwords]:
+          "Dormant Power Helps Discover Straight Swords",
+        [EffectKey.dormantPowerHelpsDiscoverGreatswords]:
+          "Dormant Power Helps Discover Greatswords",
+        [EffectKey.dormantPowerHelpsDiscoverColossalSwords]:
+          "Dormant Power Helps Discover Colossal Swords",
+        [EffectKey.dormantPowerHelpsDiscoverCurvedSwords]:
+          "Dormant Power Helps Discover Curved Swords",
+        [EffectKey.dormantPowerHelpsDiscoverCurvedGreatswords]:
+          "Dormant Power Helps Discover Curved Greatswords",
+        [EffectKey.dormantPowerHelpsDiscoverKatana]:
+          "Dormant Power Helps Discover Katana",
+        [EffectKey.dormantPowerHelpsDiscoverTwinblades]:
+          "Dormant Power Helps Discover Twinblades",
+        [EffectKey.dormantPowerHelpsDiscoverThrustingSwords]:
+          "Dormant Power Helps Discover Thrusting Swords",
+        [EffectKey.dormantPowerHelpsDiscoverHeavyThrustingSwords]:
+          "Dormant Power Helps Discover Heavy Thrusting Swords",
+        [EffectKey.dormantPowerHelpsDiscoverAxes]:
+          "Dormant Power Helps Discover Axes",
+        [EffectKey.dormantPowerHelpsDiscoverGreataxes]:
+          "Dormant Power Helps Discover Greataxes",
+        [EffectKey.dormantPowerHelpsDiscoverHammers]:
+          "Dormant Power Helps Discover Hammers",
+        [EffectKey.dormantPowerHelpsDiscoverGreatHammers]:
+          "Dormant Power Helps Discover Great Hammers",
+        [EffectKey.dormantPowerHelpsDiscoverFlails]:
+          "Dormant Power Helps Discover Flails",
+        [EffectKey.dormantPowerHelpsDiscoverSpears]:
+          "Dormant Power Helps Discover Spears",
+        [EffectKey.dormantPowerHelpsDiscoverGreatSpears]:
+          "Dormant Power Helps Discover Great Spears",
+        [EffectKey.dormantPowerHelpsDiscoverHalberds]:
+          "Dormant Power Helps Discover Halberds",
+        [EffectKey.dormantPowerHelpsDiscoverReapers]:
+          "Dormant Power Helps Discover Reapers",
+        [EffectKey.dormantPowerHelpsDiscoverFists]:
+          "Dormant Power Helps Discover Fists",
+        [EffectKey.dormantPowerHelpsDiscoverClaws]:
+          "Dormant Power Helps Discover Claws",
+        [EffectKey.dormantPowerHelpsDiscoverWhips]:
+          "Dormant Power Helps Discover Whips",
+        [EffectKey.dormantPowerHelpsDiscoverColossalWeapons]:
+          "Dormant Power Helps Discover Colossal Weapons",
+        [EffectKey.dormantPowerHelpsDiscoverBows]:
+          "Dormant Power Helps Discover Bows",
+        [EffectKey.dormantPowerHelpsDiscoverGreatbows]:
+          "Dormant Power Helps Discover Greatbows",
+        [EffectKey.dormantPowerHelpsDiscoverCrossbows]:
+          "Dormant Power Helps Discover Crossbows",
+        [EffectKey.dormantPowerHelpsDiscoverBallistas]:
+          "Dormant Power Helps Discover Ballistas",
+        [EffectKey.dormantPowerHelpsDiscoverSmallShields]:
+          "Dormant Power Helps Discover Small Shields",
+        [EffectKey.dormantPowerHelpsDiscoverMediumShields]:
+          "Dormant Power Helps Discover Medium Shields",
+        [EffectKey.dormantPowerHelpsDiscoverGreatshields]:
+          "Dormant Power Helps Discover Greatshields",
+        [EffectKey.dormantPowerHelpsDiscoverStaves]:
+          "Dormant Power Helps Discover Staves",
+        [EffectKey.dormantPowerHelpsDiscoverSacredSeals]:
+          "Dormant Power Helps Discover Sacred Seals",
+        [EffectKey.dormantPowerHelpsDiscoverTorches]:
+          "Dormant Power Helps Discover Torches",
+        [EffectKey.wylderImprovedMindReducedVigor]:
+          "[Wylder] Improved Mind, Reduced Vigor",
+        [EffectKey.wylderImprovedIntelligenceAndFaithReducedStrengthAndDexterity]:
+          "[Wylder] Improved Intelligence and Faith, Reduced Strength and Dexterity",
+        [EffectKey.guardianImprovedStrengthAndDexterityReducedVigor]:
+          "[Guardian] Improved Strength and Dexterity, Reduced Vigor",
+        [EffectKey.guardianImprovedMindAndFaithReducedVigor]:
+          "[Guardian] Improved Mind and Faith, Reduced Vigor",
+        [EffectKey.ironeyeImprovedArcaneReducedDexterity]:
+          "[Ironeye] Improved Arcane, Reduced Dexterity",
+        [EffectKey.ironeyeImprovedVigorAndStrengthReducedDexterity]:
+          "[Ironeye] Improved Vigor and Strength, Reduced Dexterity",
+        [EffectKey.duchessImprovedVigorAndStrengthReducedMind]:
+          "[Duchess] Improved Vigor and Strength, Reduced Mind",
+        [EffectKey.duchessImprovedMindAndFaithReducedIntelligence]:
+          "[Duchess] Improved Mind and Faith, Reduced Intelligence",
+        [EffectKey.raiderImprovedMindAndIntelligenceReducedVigorAndEndurance]:
+          "[Raider] Improved Mind and Intelligence, Reduced Vigor and Endurance",
+        [EffectKey.raiderImprovedArcaneReducedVigor]:
+          "[Raider] Improved Arcane, Reduced Vigor",
+        [EffectKey.revenantImprovedVigorAndEnduranceReducedMind]:
+          "[Revenant] Improved Vigor and Endurance, Reduced Mind",
+        [EffectKey.revenantImprovedStrengthReducedFaith]:
+          "[Revenant] Improved Strength, Reduced Faith",
+        [EffectKey.recluseImprovedVigorEnduranceAndDexterityReducedIntelligenceAndFaith]:
+          "[Recluse] Improved Vigor, Endurance, and Dexterity, Reduced Intelligence and Faith",
+        [EffectKey.recluseImprovedIntelligenceAndFaithReducedMind]:
+          "[Recluse] Improved Intelligence and Faith, Reduced Mind",
+        [EffectKey.executorImprovedVigorAndEnduranceReducedArcane]:
+          "[Executor] Improved Vigor and Endurance, Reduced Arcane",
+        [EffectKey.executorImprovedDexterityAndArcaneReducedVigor]:
+          "[Executor] Improved Dexterity and Arcane, Reduced Vigor",
+        [EffectKey.reducedVigor]: "Reduced Vigor",
+        [EffectKey.reducedEndurance]: "Reduced Endurance",
+        [EffectKey.takingDamageCausesPoisonBuildup]:
+          "Taking Damage Causes Poison Buildup",
+        [EffectKey.takingDamageCausesRotBuildup]:
+          "Taking Damage Causes Rot Buildup",
+        [EffectKey.takingDamageCausesFrostBuildup]:
+          "Taking Damage Causes Frost Buildup",
+        [EffectKey.takingDamageCausesBloodLossBuildup]:
+          "Taking Damage Causes Blood Loss Buildup",
+        [EffectKey.takingDamageCausesMadnessBuildup]:
+          "Taking Damage Causes Madness Buildup",
+        [EffectKey.takingDamageCausesSleepBuildup]:
+          "Taking Damage Causes Sleep Buildup",
+        [EffectKey.takingDamageCausesDeathBuildup]:
+          "Taking Damage Causes Death Buildup",
+        [EffectKey.reducedStrengthAndIntelligence]:
+          "Reduced Strength and Intelligence",
+        [EffectKey.reducedDexterityAndFaith]: "Reduced Dexterity and Faith",
+        [EffectKey.reducedIntelligenceAndDexterity]:
+          "Reduced Intelligence and Dexterity",
+        [EffectKey.reducedFaithAndStrength]: "Reduced Faith and Strength",
+        [EffectKey.reducedVigorAndArcane]: "Reduced Vigor and Arcane",
+        [EffectKey.reducedRuneAcquisition]: "Reduced Rune Acquisition",
+        [EffectKey.reducedFlaskHPRestoration]: "Reduced Flask HP Restoration",
+        [EffectKey.ultimateArtChargingImpaired]:
+          "Ultimate Art Charging Impaired",
+        [EffectKey.impairedAffinityDamageNegation]:
+          "Impaired Affinity Damage Negation",
+        [EffectKey.allResistancesDown]: "All Resistances Down",
+        [EffectKey.surgeSprintingDrainsMoreStamina]:
+          "Surge Sprinting Drains More Stamina",
+        [EffectKey.increasedDrainOnStaminaForEvasion]:
+          "Increased Drain on Stamina for Evasion",
+        [EffectKey.moreDamageTakenAfterEvasion]:
+          "More Damage Taken After Evasion",
+        [EffectKey.repeatedEvasionsLowerDamageNegation]:
+          "Repeated Evasions Lower Damage Negation",
+        [EffectKey.reducedDamageNegationForFlaskUsages]:
+          "Reduced Damage Negation for Flask Usages",
+        [EffectKey.sleepBuildupForFlaskUsages]:
+          "Sleep Buildup for Flask Usages",
+        [EffectKey.madnessBuildupForFlaskUsages]:
+          "Madness Buildup for Flask Usages",
+        [EffectKey.lowerAttackWhenBelowMaxHP]: "Lower Attack When Below Max HP",
+        [EffectKey.poisonBuildupWhenBelowMaxHP]:
+          "Poison Buildup When Below Max HP",
+        [EffectKey.rotBuildupWhenBelowMaxHP]: "Rot Buildup When Below Max HP",
+        [EffectKey.maxHPReducesAttackPower]: "Max HP Reduces Attack Power",
+        [EffectKey.nearDeathSpillsFlask]: "Near Death Spills Flask",
+        [EffectKey.nearDeathReducesMaxHP]: "Near Death Reduces Max HP",
+        [EffectKey.improvedGreatbowAttackPower]:
+          "Improved Greatbow Attack Power",
+        [EffectKey.improvedCrossbowAttackPower]:
+          "Improved Crossbow Attack Power",
+        [EffectKey.improvedBallistaAttackPower]:
+          "Improved Ballista Attack Power",
+        [EffectKey.hpRestorationUponGreatbowAttacks]:
+          "HP Restoration upon Greatbow Attacks",
+        [EffectKey.hpRestorationUponCrossbowAttacks]:
+          "HP Restoration upon Crossbow Attacks",
+        [EffectKey.hpRestorationUponBallistaAttacks]:
+          "HP Restoration upon Ballista Attacks",
+        [EffectKey.fpRestorationUponGreatbowAttacks]:
+          "FP Restoration upon Greatbow Attacks",
+        [EffectKey.fpRestorationUponCrossbowAttacks]:
+          "FP Restoration upon Crossbow Attacks",
+        [EffectKey.fpRestorationUponBallistaAttacks]:
+          "FP Restoration upon Ballista Attacks",
+        [EffectKey.reducedMaximumHP]: "Reduced Maximum HP",
+        [EffectKey.reducedMaximumFP]: "Reduced Maximum FP",
+        [EffectKey.reducedMaximumStamina]: "Reduced Maximum Stamina",
+        [EffectKey.nightsTideDamageIncreased]: "Night's Tide Damage Increased",
+        [EffectKey.damageIncreasedByNightsEncroachment]:
+          "Damage Increased by Night's Encroachment",
+        [EffectKey.slowerArtGaugeWhenBelowMaxHP]:
+          "Slower Art Gauge When Below Max HP",
+        [EffectKey.lowerStaminaImpairsDmgNegation]:
+          "Lower Stamina Impairs Dmg Negation",
+        [EffectKey.attacksImpairedOnOccasion]: "Attacks Impaired on Occasion",
+        [EffectKey.ailmentsCauseIncreasedDamage]:
+          "Ailments Cause Increased Damage",
+        [EffectKey.nearDeathReducesArtGauge]: "Near Death Reduces Art Gauge",
+        [EffectKey.allResistancesUp]: "All Resistances Up",
+        [EffectKey.improvedSorceriesAndIncantations]:
+          "Improved Sorceries & Incantations",
+        [EffectKey.increasedSorceryAndIncantationDuration]:
+          "Increased Sorcery & Incantation Duration",
       },
     },
   },
