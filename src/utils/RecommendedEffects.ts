@@ -22,13 +22,100 @@ const wylderEffects: EffectKey[] = [
   EffectKey.strengthPlus1,
   EffectKey.dexterityPlus1,
 ];
-const guardianEffects: EffectKey[] = [];
-const ironeyeEffects: EffectKey[] = [];
-const duchessEffects: EffectKey[] = [];
-const raiderEffects: EffectKey[] = [];
-const revenantEffects: EffectKey[] = [];
-const recluseEffects: EffectKey[] = [];
-const executorEffects: EffectKey[] = [];
+const guardianEffects: EffectKey[] = [
+  EffectKey.artGaugeChargedFromSuccessfulGuarding,
+  EffectKey.hpRecoveryFromSuccessfulGuarding,
+  EffectKey.drawEnemyAttentionWhileGuarding,
+  EffectKey.improvedGuardCounters,
+  EffectKey.guardCounterIsGivenABoostBasedOnCurrentHP,
+  EffectKey.endurancePlus1,
+  EffectKey.vigorPlus1,
+  EffectKey.strengthPlus1,
+];
+const ironeyeEffects: EffectKey[] = [
+  EffectKey.ironeyeAdditionalCharacterSkillUse,
+  EffectKey.characterSkillCooldownReduction,
+  EffectKey.changesCompatibleArmamentsSkillToRainOfArrowsAtStartOfExpedition,
+  EffectKey.improvedInitialStandardAttack,
+  EffectKey.improvedBowAttackPower,
+  EffectKey.endurancePlus1,
+  EffectKey.vigorPlus1,
+  EffectKey.dexterityPlus1,
+];
+const duchessEffects: EffectKey[] = [
+  EffectKey.duchessBecomeStealthyAfterCritFromBehind,
+  EffectKey.staminaRecoveryUponLandingAttacks,
+  EffectKey.startingArmamentInflictsBloodLoss,
+  EffectKey.startingArmamentInflictsFrost,
+  EffectKey.improvedCriticalHits,
+  EffectKey.characterSkillCooldownReduction,
+  EffectKey.magicAttackPowerUp,
+  EffectKey.vigorPlus1,
+  EffectKey.endurancePlus1,
+  EffectKey.poisePlus1,
+  EffectKey.intelligencePlus1,
+  EffectKey.dexterityPlus1,
+];
+const raiderEffects: EffectKey[] = [
+  EffectKey.improvedStanceBreakingWhenTwoHanding,
+  EffectKey.improvedStanceBreakingWhenWieldingTwoArmaments,
+  EffectKey.takingAttacksImprovesAttackPower,
+  EffectKey.characterSkillCooldownReduction,
+  EffectKey.raiderDurationOfUltimateArtExtended,
+  EffectKey.improvedInitialStandardAttack,
+  EffectKey.partialHpRestorationUponPostDamageAttacks,
+  EffectKey.poisePlus1,
+  EffectKey.vigorPlus1,
+  EffectKey.strengthPlus1,
+  EffectKey.endurancePlus1,
+];
+const revenantEffects: EffectKey[] = [
+  EffectKey.revenantStrengthensFamilyAndAlliesWhenUltimateArtActivated,
+  EffectKey.starlightShardsInPossessionAtStartOfExpedition,
+  EffectKey.wraithCallingBellInPossessionAtStartOfExpedition,
+  EffectKey.maxFpPermanentlyIncreasedAfterReleasingSorcerersRiseMechanism,
+  EffectKey.fireAttackPowerUp,
+  EffectKey.holyAttackPowerUp,
+  EffectKey.lightningAttackPowerUp,
+  EffectKey.vigorPlus1,
+  EffectKey.mindPlus1,
+  EffectKey.faithPlus1,
+];
+const recluseEffects: EffectKey[] = [
+  EffectKey.maxFpUpWith3PlusSacredSealsEquipped,
+  EffectKey.maxFpUpWith3PlusStavesEquipped,
+  EffectKey.maxFpPermanentlyIncreasedAfterReleasingSorcerersRiseMechanism,
+  EffectKey.defeatingEnemiesFillsMoreOfTheArtGauge,
+  EffectKey.improvedBestialIncantations,
+  EffectKey.improvedDragonCommunionIncantations,
+  EffectKey.improvedDragonCultIncantations,
+  EffectKey.improvedFrenziedFlameIncantations,
+  EffectKey.improvedFundamentalistIncantations,
+  EffectKey.improvedGiantsFlameIncantations,
+  EffectKey.improvedGodslayerIncantations,
+  EffectKey.improvedCarianSwordSorcery,
+  EffectKey.improvedCrystalianSorcery,
+  EffectKey.improvedGlintbladeSorcery,
+  EffectKey.improvedGravitySorcery,
+  EffectKey.improvedInvisibilitySorcery,
+  EffectKey.improvedStonediggerSorcery,
+  EffectKey.improvedThornSorcery,
+  EffectKey.magicAttackPowerUp,
+  EffectKey.ultimateArtGaugePlus1,
+  EffectKey.intelligencePlus1,
+  EffectKey.mindPlus1,
+];
+const executorEffects: EffectKey[] = [
+  EffectKey.partialHpRestorationUponPostDamageAttacks,
+  EffectKey.drawEnemyAttentionWhileGuarding,
+  EffectKey.artGaugeChargedFromSuccessfulGuarding,
+  EffectKey.changesCompatibleArmamentsSkillToSeppukuAtStartOfExpedition,
+  EffectKey.vigorPlus1,
+  EffectKey.endurancePlus1,
+  EffectKey.poisePlus1,
+  EffectKey.dexterityPlus1,
+  EffectKey.arcanePlus1,
+];
 
 export const recommendedEffectsByCharacter: Record<Nightfarer, Effect[]> = {
   [Nightfarer.Wylder]: wylderEffects
