@@ -93,19 +93,28 @@ export function buildWasmInput(
   relics: RelicSlot[],
   enabledVessels: Vessel[]
 ) {
-  const selected_effects = selectedEffects.flatMap(
+  const expandedSelectedEffects = selectedEffects.flatMap(
     getStackableHigherLevelEffects
+  );
+
+  const filteredRecommendedEffects = recommendedEffectsByCharacter[
+    nightfarer
+  ].filter(
+    (recommendedEffect) =>
+      !expandedSelectedEffects.some(
+        (selectedEffect) => selectedEffect.key === recommendedEffect.key
+      )
   );
 
   return {
     nightfarer,
-    selected_effects,
+    selected_effects: expandedSelectedEffects,
     relics: relics.map((r) => ({
       color: getRelicColor(r.itemId),
       effects: r.effects,
     })),
     enabled_vessels: enabledVessels.map(({ slots }) => slots),
-    recommended_effects: recommendedEffectsByCharacter[nightfarer],
+    recommended_effects: filteredRecommendedEffects,
   };
 }
 
