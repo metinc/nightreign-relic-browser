@@ -1,12 +1,6 @@
 import { RelicSlotColor, type RelicColor } from "../utils/RelicColor";
 
-interface ItemArrayElement {
-  key: string;
-  color: RelicColor | null;
-  ids: number[];
-}
-
-const itemsArray: ItemArrayElement[] = [
+const itemsArray = [
   {
     key: "besmirchedFrame",
     color: RelicSlotColor.Blue,
@@ -371,10 +365,102 @@ const itemsArray: ItemArrayElement[] = [
     color: RelicSlotColor.Blue,
     ids: [12002],
   },
-];
+  {
+    key: "deepDelicateBurningScene",
+    color: RelicSlotColor.Red,
+    ids: [
+      30000, 30003, 30006, 2000000, 2000010, 2000020, 2003000, 2003010, 2003020,
+    ],
+  },
+  {
+    key: "deepPolishedBurningScene",
+    color: RelicSlotColor.Red,
+    ids: [
+      30001, 30004, 30007, 2000001, 2000011, 2000021, 2001001, 2001011, 2001021,
+      2003001, 2003011, 2003021,
+    ],
+  },
+  {
+    key: "deepGrandBurningScene",
+    color: RelicSlotColor.Red,
+    ids: [
+      30002, 30005, 30008, 2000002, 2000012, 2000022, 2001002, 2001012, 2001022,
+      2002002, 2002012, 2002022, 2003002, 2003012, 2003022,
+    ],
+  },
+  {
+    key: "deepDelicateDrizzlyScene",
+    color: RelicSlotColor.Blue,
+    ids: [
+      30009, 30012, 30015, 2000100, 2000110, 2000120, 2003100, 2003110, 2003120,
+    ],
+  },
+  {
+    key: "deepPolishedDrizzlyScene",
+    color: RelicSlotColor.Blue,
+    ids: [
+      30010, 30013, 30016, 2000101, 2000111, 2000121, 2001101, 2001111, 2001121,
+      2003101, 2003111, 2003121,
+    ],
+  },
+  {
+    key: "deepGrandDrizzlyScene",
+    color: RelicSlotColor.Blue,
+    ids: [
+      30011, 30014, 30017, 2000102, 2000112, 2000122, 2001102, 2001112, 2001122,
+      2002102, 2002112, 2002122, 2003102, 2003112, 2003122,
+    ],
+  },
+  {
+    key: "deepDelicateLuminousScene",
+    color: RelicSlotColor.Yellow,
+    ids: [
+      30018, 30021, 30024, 2000200, 2000210, 2000220, 2003200, 2003210, 2003220,
+    ],
+  },
+  {
+    key: "deepPolishedLuminousScene",
+    color: RelicSlotColor.Yellow,
+    ids: [
+      30019, 30022, 30025, 2000201, 2000211, 2000221, 2001201, 2001211, 2001221,
+      2003201, 2003211, 2003221,
+    ],
+  },
+  {
+    key: "deepGrandLuminousScene",
+    color: RelicSlotColor.Yellow,
+    ids: [
+      30020, 30023, 30026, 2000202, 2000212, 2000222, 2001202, 2001212, 2001222,
+      2002202, 2002212, 2002222, 2003202, 2003212, 2003222,
+    ],
+  },
+  {
+    key: "deepDelicateTranquilScene",
+    color: RelicSlotColor.Green,
+    ids: [
+      30027, 30030, 30033, 2000300, 2000310, 2000320, 2003300, 2003310, 2003320,
+    ],
+  },
+  {
+    key: "deepPolishedTranquilScene",
+    color: RelicSlotColor.Green,
+    ids: [
+      30028, 30031, 30034, 2000301, 2000311, 2000321, 2001301, 2001311, 2001321,
+      2003301, 2003311, 2003321,
+    ],
+  },
+  {
+    key: "deepGrandTranquilScene",
+    color: RelicSlotColor.Green,
+    ids: [
+      30029, 30032, 30035, 2000302, 2000312, 2000322, 2001302, 2001312, 2001322,
+      2002302, 2002312, 2002322, 2003302, 2003312, 2003322,
+    ],
+  },
+] as const;
 
 // relics from bosses or quests
-export const uniqueItemIds = itemsArray
+export const uniqueItemIds: number[] = itemsArray
   .filter(
     ({ key }) =>
       key !== "delicateBurningScene" &&
@@ -388,7 +474,19 @@ export const uniqueItemIds = itemsArray
       key !== "grandBurningScene" &&
       key !== "grandDrizzlyScene" &&
       key !== "grandLuminousScene" &&
-      key !== "grandTranquilScene"
+      key !== "grandTranquilScene" &&
+      key !== "deepDelicateBurningScene" &&
+      key !== "deepPolishedBurningScene" &&
+      key !== "deepGrandBurningScene" &&
+      key !== "deepDelicateDrizzlyScene" &&
+      key !== "deepPolishedDrizzlyScene" &&
+      key !== "deepGrandDrizzlyScene" &&
+      key !== "deepDelicateLuminousScene" &&
+      key !== "deepPolishedLuminousScene" &&
+      key !== "deepGrandLuminousScene" &&
+      key !== "deepDelicateTranquilScene" &&
+      key !== "deepPolishedTranquilScene" &&
+      key !== "deepGrandTranquilScene"
   )
   .flatMap(({ ids }) => ids);
 
@@ -416,5 +514,4 @@ for (const item of itemsArray) {
     }
     items.set(id, item);
   }
-  delete (item as Partial<ItemArrayElement>).ids;
 }

@@ -92,6 +92,18 @@ const resources = {
         tornBraidedCord: "Torn Braided Cord",
         vestigeOfNight: "Vestige of Night",
         witchsBrooch: "Witch's Brooch",
+        deepDelicateBurningScene: "Deep Delicate Burning Scene",
+        deepPolishedBurningScene: "Deep Polished Burning Scene",
+        deepGrandBurningScene: "Deep Grand Burning Scene",
+        deepDelicateDrizzlyScene: "Deep Delicate Drizzly Scene",
+        deepPolishedDrizzlyScene: "Deep Polished Drizzly Scene",
+        deepGrandDrizzlyScene: "Deep Grand Drizzly Scene",
+        deepDelicateLuminousScene: "Deep Delicate Luminous Scene",
+        deepPolishedLuminousScene: "Deep Polished Luminous Scene",
+        deepGrandLuminousScene: "Deep Grand Luminous Scene",
+        deepDelicateTranquilScene: "Deep Delicate Tranquil Scene",
+        deepPolishedTranquilScene: "Deep Polished Tranquil Scene",
+        deepGrandTranquilScene: "Deep Grand Tranquil Scene",
       },
 
       effects: {
