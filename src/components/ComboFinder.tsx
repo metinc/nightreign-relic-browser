@@ -22,6 +22,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EffectKey, type Effect } from "../resources/effects";
+import { items, ItemType } from "../resources/items";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import {
   cancelCurrentSearch,
@@ -227,8 +228,12 @@ export function ComboFinder(props: ComboFinderProps) {
         return;
       }
 
-      const availableRelics =
-        saveFileData.slots[saveFileData.currentSlot].relics;
+      const availableRelics = saveFileData.slots[
+        saveFileData.currentSlot
+      ].relics.filter((relic) => {
+        const itemType = items.get(relic.itemId)?.type;
+        return itemType === ItemType.Relic || itemType === ItemType.UniqueRelic;
+      });
       const enabledVessels = selectedNightfarerData.vessels.filter(
         (_, index) =>
           !settings[selectedNightfarer].disabledVessels.includes(index)
