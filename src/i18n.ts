@@ -271,7 +271,7 @@ const resources = {
         [EffectKey.blackFlamesUponChargedSlash]:
           "Black Flames upon Charged Slash",
         [EffectKey.bloodLossCritThornsOfPunishment]:
-          "Blood Loss Crit]: Thorns of Punishment",
+          "Blood Loss Crit: Thorns of Punishment",
         [EffectKey.bloodLossInVicinityIncreasesAttackPower]:
           "Blood Loss in Vicinity Increases Attack Power",
         [EffectKey.bloodLossIncreasesAttackPower]:
@@ -569,8 +569,8 @@ const resources = {
           "HP Restoration upon Whip Attacks",
         [EffectKey.hpRestorationWithHeadShots]:
           "HP Restoration with Head Shots",
-        [EffectKey.hpRestoredWhenUsingCuredMeatsMedicinalBolusesEtc]:
-          "HP restored when using cured meats, medicinal boluses, etc.",
+        [EffectKey.hpRestoredWhenUsingMedicinalBolusesEtc]:
+          "HP restored when using medicinal boluses, etc.",
         [EffectKey.hugeRuneDiscountForShopPurchasesWhileOnExpedition]:
           "Huge rune discount for shop purchases while on expedition",
         [EffectKey.iceStormSurgeSprint]: "Ice Storm Surge Sprint",
@@ -681,7 +681,6 @@ const resources = {
         [EffectKey.improvedFireDamageNegation]: "Improved Fire Damage Negation",
         [EffectKey.improvedFistAttackPower]: "Improved Fist Attack Power",
         [EffectKey.improvedFlailAttackPower]: "Improved Flail Attack Power",
-        [EffectKey.improvedFlaskHPRecovery]: "Improved Flask HP Restoration",
         [EffectKey.improvedFrenziedFlameIncantations]:
           "Improved Frenzied Flame Incantations",
         [EffectKey.improvedFrostResistance]: "Improved Frost Resistance",
@@ -752,7 +751,8 @@ const resources = {
         [EffectKey.improvedRangedWeaponAttacks]:
           "Improved Ranged Weapon Attacks",
         [EffectKey.improvedReaperAttackPower]: "Improved Reaper Attack Power",
-        [EffectKey.improvedRoarBreathAttacks]: "Improved Roar & Breath Attacks",
+        [EffectKey.improvedRoarAndBreathAttacks]:
+          "Improved Roar & Breath Attacks",
         [EffectKey.improvedRotResistance]: "Improved Rot Resistance",
         [EffectKey.improvedSkillAttackPower]: "Improved Skill Attack Power",
         [EffectKey.improvedSleepMadnessResistance]:
@@ -867,7 +867,7 @@ const resources = {
           "More Runes From Defeated Enemies",
         [EffectKey.multiplePeriodicalGlintblades]:
           "Multiple Periodical Glintblades",
-        [EffectKey.nearbyFrostbiteConcealsSeIf]:
+        [EffectKey.nearbyFrostbiteConcealsSelf]:
           "Nearby Frostbite Conceals Self",
         [EffectKey.noRuneLossOrLevelDownUponDeath]:
           "No Rune Loss or Level Down Upon Death",
@@ -955,7 +955,6 @@ const resources = {
           "Raises resistance to all ailments",
         [EffectKey.raisesSorceryIncantationPotency]:
           "Raises sorcery/incantation potency",
-        [EffectKey.reducedFpConsumption]: "Reduced FP Consumption",
         [EffectKey.reducedSkillFpCost]: "Reduced Skill FP Cost",
         [EffectKey.reducedSpellFpCost]: "Reduced Spell FP Cost",
         [EffectKey.reducedStaminaConsumption]: "Reduced Stamina Consumption",

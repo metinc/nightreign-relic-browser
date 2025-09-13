@@ -320,7 +320,7 @@ export const enum EffectKey {
   hpRestorationUponTwinbladeAttacks,
   hpRestorationUponWhipAttacks,
   hpRestorationWithHeadShots,
-  hpRestoredWhenUsingCuredMeatsMedicinalBolusesEtc,
+  hpRestoredWhenUsingMedicinalBolusesEtc,
   hugeRuneDiscountForShopPurchasesWhileOnExpedition,
   iceStormSurgeSprint,
   iceStormUponChargedSlash,
@@ -386,7 +386,6 @@ export const enum EffectKey {
   improvedFireDamageNegation,
   improvedFistAttackPower,
   improvedFlailAttackPower,
-  improvedFlaskHPRecovery,
   improvedFrenziedFlameIncantations,
   improvedFrostResistance,
   improvedFundamentalistIncantations,
@@ -433,7 +432,6 @@ export const enum EffectKey {
   improvedPoisonResistance,
   improvedRangedWeaponAttacks,
   improvedReaperAttackPower,
-  improvedRoarBreathAttacks,
   improvedRotResistance,
   improvedSkillAttackPower,
   improvedSleepMadnessResistance,
@@ -510,7 +508,7 @@ export const enum EffectKey {
   mindPlus3,
   moreRunesFromDefeatedEnemies,
   multiplePeriodicalGlintblades,
-  nearbyFrostbiteConcealsSeIf,
+  nearbyFrostbiteConcealsSelf,
   noRuneLossOrLevelDownUponDeath,
   parriesActivateGoldenRetaliation,
   partialHpRestorationUponPostDamageAttacks,
@@ -702,6 +700,7 @@ export const enum EffectKey {
   improvedThrowingKnifeDamagePlus2,
   improvedGlintstoneAndGravityStoneDamagePlus1,
   improvedGlintstoneAndGravityStoneDamagePlus2,
+  improvedRoarAndBreathAttacks,
   improvedRoarAndBreathAttacksPlus1,
   improvedRoarAndBreathAttacksPlus2,
   improvedPerfumingArtsPlus1,
@@ -2308,7 +2307,7 @@ export const effectsArray = [
     ids: [7200000],
   },
   {
-    key: EffectKey.hpRestoredWhenUsingCuredMeatsMedicinalBolusesEtc,
+    key: EffectKey.hpRestoredWhenUsingMedicinalBolusesEtc,
     ids: [7030200],
   },
   {
@@ -2595,10 +2594,6 @@ export const effectsArray = [
     stacks: true,
   },
   {
-    key: EffectKey.improvedFlaskHPRecovery,
-    ids: [350000, 8440000],
-  },
-  {
     key: EffectKey.improvedFrenziedFlameIncantations,
     ids: [7044500],
   },
@@ -2811,7 +2806,7 @@ export const effectsArray = [
     stacks: true,
   },
   {
-    key: EffectKey.improvedRoarBreathAttacks,
+    key: EffectKey.improvedRoarAndBreathAttacks,
     ids: [321900, 7043000, 8380000],
     stacks: true,
   },
@@ -3190,7 +3185,7 @@ export const effectsArray = [
     ids: [8530000],
   },
   {
-    key: EffectKey.nearbyFrostbiteConcealsSeIf,
+    key: EffectKey.nearbyFrostbiteConcealsSelf,
     ids: [7260700],
   },
   {
@@ -4326,7 +4321,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedFlaskHPRestoration,
-    ids: [8851900, 6611400],
+    ids: [8851900, 6611400, 350000, 8440000],
     stacks: true,
   },
   {
