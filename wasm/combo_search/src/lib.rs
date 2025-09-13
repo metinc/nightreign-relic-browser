@@ -17,7 +17,7 @@ const PENALTY_FOR_MISSING_LEVEL: f32 = -0.1;
 
 const SELECTED_EFFECTS_SPACE: usize = 9*3;
 const RECOMMENDED_EFFECTS_SPACE: usize = 30;
-const EFFECT_KEY_SPACE: usize = 584;
+const EFFECT_KEY_SPACE: usize = 819;
 const EFFECT_GROUP_SPACE: usize = 30;
 // Color domain: 0=Any, 1=Red, 2=Blue, 3=Yellow, 4=Green
 const COLOR_SPACE: usize = 5;
@@ -43,10 +43,10 @@ impl ScoreContext {
             self.current_gen = 1;
         }
     }
-    #[inline(always)] fn is_key(&self, k: usize) -> bool { unsafe { *self.satisfied_keys_gen.get_unchecked(k) == self.current_gen } }
-    #[inline(always)] fn set_key(&mut self, k: usize) { unsafe { *self.satisfied_keys_gen.get_unchecked_mut(k) = self.current_gen; } }
-    #[inline(always)] fn is_group(&self, g: usize) -> bool { unsafe { *self.satisfied_groups_gen.get_unchecked(g) == self.current_gen } }
-    #[inline(always)] fn set_group(&mut self, g: usize) { unsafe { *self.satisfied_groups_gen.get_unchecked_mut(g) = self.current_gen; } }
+    #[inline(always)] fn is_key(&self, k: usize) -> bool { if k >= EFFECT_KEY_SPACE { return false; } unsafe { *self.satisfied_keys_gen.get_unchecked(k) == self.current_gen } }
+    #[inline(always)] fn set_key(&mut self, k: usize) { if k < EFFECT_KEY_SPACE { unsafe { *self.satisfied_keys_gen.get_unchecked_mut(k) = self.current_gen; } } }
+    #[inline(always)] fn is_group(&self, g: usize) -> bool { if g >= EFFECT_GROUP_SPACE { return false; } unsafe { *self.satisfied_groups_gen.get_unchecked(g) == self.current_gen } }
+    #[inline(always)] fn set_group(&mut self, g: usize) { if g < EFFECT_GROUP_SPACE { unsafe { *self.satisfied_groups_gen.get_unchecked_mut(g) = self.current_gen; } } }
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -90,7 +90,7 @@ pub struct SearchOutput {
 #[inline(always)]
 fn is_recommended_effect(effect: &Effect, recommended_bitmap: &[bool; EFFECT_KEY_SPACE]) -> bool {
     let k = effect.key as usize;
-    debug_assert!(k < EFFECT_KEY_SPACE);
+    if k >= EFFECT_KEY_SPACE { return false; } // Prevent OOB -> unreachable trap
     unsafe { *recommended_bitmap.get_unchecked(k) }
 }
 
@@ -164,7 +164,7 @@ fn calc_points(
 
     for opt_idx in relic_indices.iter() {
         if let Some(idx) = opt_idx {
-            let relic = unsafe { relics.get_unchecked(*idx) };
+            let relic = unsafe { relics.get_unchecked(*idx) }; // relic indices constructed internally
             for effect in &relic.effects {
                 let is_character_effect = effect.nightfarer.is_some();
                 let is_usable_character_effect = effect.nightfarer == Some(nightfarer);
@@ -178,9 +178,9 @@ fn calc_points(
                 }
 
                 let k = effect.key as usize;
-                debug_assert!(k < EFFECT_KEY_SPACE);
+                if k >= EFFECT_KEY_SPACE { continue; } // CRASH GUARD: skip unknown effect key
                 let key_duplicate = ctx.is_key(k);
-                let group_duplicate = match effect.group { Some(g) => { let gu = g as usize; debug_assert!(gu < EFFECT_GROUP_SPACE); ctx.is_group(gu) }, None => false };
+                let group_duplicate = match effect.group { Some(g) => { let gu = g as usize; ctx.is_group(gu) }, None => false };
                 let is_duplicate = key_duplicate || group_duplicate;
                 let is_stackable = effect.stacks.unwrap_or(false);
                 if is_duplicate && !is_stackable { continue; }
@@ -200,7 +200,7 @@ fn calc_points(
                     else { points += POINTS_FOR_RANDOM_EFFECT * level_points_multiplier; }
                 }
                 ctx.set_key(k);
-                if let Some(g) = effect.group { let gu = g as usize; debug_assert!(gu < EFFECT_GROUP_SPACE); ctx.set_group(gu); }
+                if let Some(g) = effect.group { let gu = g as usize; ctx.set_group(gu); }
             }
         }
     }
@@ -209,43 +209,45 @@ fn calc_points(
 
 #[wasm_bindgen]
 pub fn search_combinations(input: JsValue) -> JsValue {
-    let input: SearchInput = serde_wasm_bindgen::from_value(input).unwrap();
-    debug_assert!(input.selected_effects.len() <= SELECTED_EFFECTS_SPACE, "selected_effects exceeds SELECTED_EFFECTS_SPACE");
-    debug_assert!(input.recommended_effects.len() <= RECOMMENDED_EFFECTS_SPACE, "recommended_effects exceeds RECOMMENDED_EFFECTS_SPACE");
+    let input: SearchInput = match serde_wasm_bindgen::from_value(input) {
+        Ok(v) => v,
+        Err(_) => { return serde_wasm_bindgen::to_value(&SearchOutput { combinations: vec![], total_combinations_checked: 0 }).unwrap(); }
+    };
+    // Soft validation (avoid panics which produce unreachable)
+    if input.selected_effects.len() > SELECTED_EFFECTS_SPACE || input.recommended_effects.len() > RECOMMENDED_EFFECTS_SPACE { return serde_wasm_bindgen::to_value(&SearchOutput { combinations: vec![], total_combinations_checked: 0 }).unwrap(); }
 
     let mut selected_bitmap = [false; EFFECT_KEY_SPACE];
-    for e in &input.selected_effects { let k = e.key as usize; debug_assert!(k < EFFECT_KEY_SPACE); unsafe { *selected_bitmap.get_unchecked_mut(k) = true; } }
+    for e in &input.selected_effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE { unsafe { *selected_bitmap.get_unchecked_mut(k) = true; } } }
 
     let mut effect_candidates: Vec<usize> = Vec::new();
     effect_candidates.reserve(input.relics.len());
     let mut is_candidate: Vec<bool> = vec![false; input.relics.len()];
     for (idx, relic) in input.relics.iter().enumerate() {
         let mut any_selected = false;
-        for e in &relic.effects { let k = e.key as usize; if unsafe { *selected_bitmap.get_unchecked(k) } { any_selected = true; break; } }
+        for e in &relic.effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE && unsafe { *selected_bitmap.get_unchecked(k) } { any_selected = true; break; } }
         if any_selected { effect_candidates.push(idx); unsafe { *is_candidate.get_unchecked_mut(idx) = true; } }
     }
 
     let mut recommended_bitmap = [false; EFFECT_KEY_SPACE];
-    for e in &input.recommended_effects { let k = e.key as usize; unsafe { *recommended_bitmap.get_unchecked_mut(k) = true; } }
+    for e in &input.recommended_effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE { unsafe { *recommended_bitmap.get_unchecked_mut(k) = true; } } }
 
     let relics_len = input.relics.len();
     let all_indices: Vec<usize> = (0..relics_len).collect();
     let mut by_color_all: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
-    for (idx, relic) in input.relics.iter().enumerate() { if let Some(color) = relic.color { let c = color as usize; if c != ANY_COLOR { debug_assert!(c < COLOR_SPACE); by_color_all[c].push(idx); } } }
+    for (idx, relic) in input.relics.iter().enumerate() { if let Some(color) = relic.color { let c = color as usize; if c != ANY_COLOR && c < COLOR_SPACE { by_color_all[c].push(idx); } } }
     by_color_all[ANY_COLOR] = all_indices.clone();
 
     let mut by_color_cand: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
     by_color_cand[ANY_COLOR] = effect_candidates.clone();
     for c in 1usize..COLOR_SPACE { let list = &by_color_all[c]; if list.is_empty() { continue; } let mut v = Vec::with_capacity(list.len()); for &idx in list { if unsafe { *is_candidate.get_unchecked(idx) } { v.push(idx); } } by_color_cand[c] = v; }
 
-    // Parallelize over vessels: clone cheap read-only data into Arc if needed (slices & Vecs already share)
+    // Parallelize over vessels
     let enabled_vessels = input.enabled_vessels.clone();
     let relics = input.relics.clone();
     let nightfarer = input.nightfarer;
     let selected_bitmap_shared = selected_bitmap; // Copy arrays (small)
     let recommended_bitmap_shared = recommended_bitmap;
 
-    // Each thread accumulates its own results and then we merge.
     let per_vessel: Vec<(Vec<VesselCombinationResultEntry>, u32)> = enabled_vessels.par_iter().enumerate().map(|(v_i, vessel_slots)| {
         let mut local_results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
         let mut local_seen: HashSet<u32> = HashSet::new();
@@ -255,15 +257,15 @@ pub fn search_combinations(input: JsValue) -> JsValue {
 
         for anchor_slot in 0..3 {
             let color_req_anchor = vessel_slots[anchor_slot] as usize;
-            let anchor_candidates: &Vec<usize> = if color_req_anchor == ANY_COLOR { unsafe { by_color_cand.get_unchecked(ANY_COLOR) } } else { debug_assert!(color_req_anchor < COLOR_SPACE); unsafe { by_color_cand.get_unchecked(color_req_anchor) } };
+            if color_req_anchor >= COLOR_SPACE { continue; }
+            let anchor_candidates: &Vec<usize> = if color_req_anchor == ANY_COLOR { unsafe { by_color_cand.get_unchecked(ANY_COLOR) } } else { unsafe { by_color_cand.get_unchecked(color_req_anchor) } };
             if anchor_candidates.is_empty() { continue; }
             let other_slots: [usize; 2] = match anchor_slot { 0 => [1,2], 1 => [0,2], _ => [0,1] };
-            let list_a: &Vec<usize> = { let c = vessel_slots[other_slots[0]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } } };
-            let list_b: &Vec<usize> = { let c = vessel_slots[other_slots[1]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else { debug_assert!(c < COLOR_SPACE); unsafe { by_color_all.get_unchecked(c) } } };
+            let list_a: &Vec<usize> = { let c = vessel_slots[other_slots[0]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else if c < COLOR_SPACE { unsafe { by_color_all.get_unchecked(c) } } else { &EMPTY_VEC } };
+            let list_b: &Vec<usize> = { let c = vessel_slots[other_slots[1]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else if c < COLOR_SPACE { unsafe { by_color_all.get_unchecked(c) } } else { &EMPTY_VEC } };
             for &cand_idx in anchor_candidates.iter() {
                 let valid_a: Vec<usize> = list_a.iter().copied().filter(|&i| i != cand_idx).collect();
                 let valid_b: Vec<usize> = list_b.iter().copied().filter(|&i| i != cand_idx).collect();
-
                 let mut emit = |a_opt: Option<usize>, b_opt: Option<usize>| {
                     if let (Some(a_i), Some(b_i)) = (a_opt, b_opt) { if a_i == b_i { return; } }
                     let mut relic_indices: [Option<usize>;3] = [None,None,None];
@@ -284,18 +286,12 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                         &mut score_ctx,
                     );
                 };
-
-                if valid_a.is_empty() && valid_b.is_empty() {
-                    emit(None, None);
-                } else if !valid_a.is_empty() && !valid_b.is_empty() {
+                if valid_a.is_empty() && valid_b.is_empty() { emit(None, None); }
+                else if !valid_a.is_empty() && !valid_b.is_empty() {
                     let mut any_pair = false;
                     for &a in &valid_a { for &b in &valid_b { if a == b { continue; } emit(Some(a), Some(b)); any_pair = true; } }
                     if !any_pair { emit(Some(valid_a[0]), None); }
-                } else if !valid_a.is_empty() {
-                    for &a in &valid_a { emit(Some(a), None); }
-                } else {
-                    for &b in &valid_b { emit(None, Some(b)); }
-                }
+                } else if !valid_a.is_empty() { for &a in &valid_a { emit(Some(a), None); } } else { for &b in &valid_b { emit(None, Some(b)); } }
             }
         }
         (local_results, checked_local)
@@ -306,12 +302,13 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     let mut total_checked: u32 = 0;
     for (mut local, checked) in per_vessel.into_iter() {
         total_checked += checked;
-        // Insert & maintain TOP_RESULTS global
         for entry in local.drain(..) { results.push(entry); }
     }
-    // Keep top unique combos globally (they are already unique per vessel; duplicates across vessels not expected due to vessel_index included in key; still sort and truncate)
     results.sort_by(|a,b| b.points.partial_cmp(&a.points).unwrap());
     if results.len() > TOP_RESULTS { results.truncate(TOP_RESULTS); }
 
     serde_wasm_bindgen::to_value(&SearchOutput { combinations: results, total_combinations_checked: total_checked }).unwrap()
 }
+
+// Fallback empty vec for invalid colors in parallel loops
+static EMPTY_VEC: Vec<usize> = Vec::new();
