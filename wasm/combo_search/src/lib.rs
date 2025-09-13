@@ -51,7 +51,7 @@ impl ScoreContext {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Effect {
-    pub key: u16,
+    pub key: u32,
     pub nightfarer: Option<u8>,
     pub stacks: Option<bool>,
     pub group: Option<u8>,
