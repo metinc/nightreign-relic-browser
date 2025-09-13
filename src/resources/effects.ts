@@ -10,7 +10,7 @@ interface EffectArrayElement {
 
 interface EffectWithGroupArrayElement {
   key: EffectKey;
-  ids: number[];
+  ids: [number, ...number[]];
   type?: EffectType;
   nightfarer?: Nightfarer;
   stacks?: boolean;
@@ -880,6 +880,7 @@ export const enum EffectKey {
   allResistancesUp,
   improvedSorceriesAndIncantations,
   increasedSorceryAndIncantationDuration,
+  LENGTH,
 }
 
 export const effectsArray = [
@@ -3819,12 +3820,6 @@ export const effectsArray = [
     ids: [8460300],
   },
   {
-    key: EffectKey.continuousHPLoss,
-    ids: [370002],
-    stacks: false,
-    type: EffectType.Debuff,
-  },
-  {
     key: EffectKey.characterSkillCooldownReductionPlus4,
     ids: [6000800],
     stacks: false,
@@ -4301,7 +4296,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedFlaskHPRestoration,
-    ids: [6611400],
+    ids: [8851900, 6611400],
     stacks: true,
   },
   {
@@ -4701,7 +4696,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.reducedFlaskHPRestoration,
-    ids: [6840100],
+    ids: [6840100, 6850300, 8763000],
     stacks: true,
     type: EffectType.Debuff,
   },
@@ -4713,20 +4708,14 @@ export const effectsArray = [
   },
   {
     key: EffectKey.impairedAffinityDamageNegation,
-    ids: [6850100],
+    ids: [6850100, 8761100],
     stacks: false,
     type: EffectType.Debuff,
   },
   {
     key: EffectKey.allResistancesDown,
-    ids: [6850200],
+    ids: [6850200, 8762000],
     stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.reducedFlaskHPRestoration,
-    ids: [6850300],
-    stacks: false,
     type: EffectType.Debuff,
   },
   {
@@ -4737,7 +4726,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.continuousHPLoss,
-    ids: [6850500],
+    ids: [370002, 8766000, 6850500],
     stacks: true,
     type: EffectType.Debuff,
   },
@@ -4749,19 +4738,19 @@ export const effectsArray = [
   },
   {
     key: EffectKey.moreDamageTakenAfterEvasion,
-    ids: [6850700],
+    ids: [6850700, 8800100],
     stacks: true,
     type: EffectType.Debuff,
   },
   {
     key: EffectKey.repeatedEvasionsLowerDamageNegation,
-    ids: [6850800],
+    ids: [6850800, 8800200],
     stacks: true,
     type: EffectType.Debuff,
   },
   {
     key: EffectKey.reducedDamageNegationForFlaskUsages,
-    ids: [6850900],
+    ids: [6850900, 8801000],
     stacks: true,
     type: EffectType.Debuff,
   },
@@ -4779,19 +4768,19 @@ export const effectsArray = [
   },
   {
     key: EffectKey.lowerAttackWhenBelowMaxHP,
-    ids: [6851200],
+    ids: [6851200, 8810000],
     stacks: true,
     type: EffectType.Debuff,
   },
   {
     key: EffectKey.poisonBuildupWhenBelowMaxHP,
-    ids: [6851300],
+    ids: [6851300, 8810300],
     stacks: true,
     type: EffectType.Debuff,
   },
   {
     key: EffectKey.rotBuildupWhenBelowMaxHP,
-    ids: [6851400],
+    ids: [6851400, 8810400],
     stacks: true,
     type: EffectType.Debuff,
   },
@@ -4809,7 +4798,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.nearDeathReducesMaxHP,
-    ids: [6851700],
+    ids: [6851700, 8831200],
     stacks: true,
     type: EffectType.Debuff,
   },
@@ -4877,30 +4866,6 @@ export const effectsArray = [
     type: EffectType.Debuff,
   },
   {
-    key: EffectKey.impairedAffinityDamageNegation,
-    ids: [8761100],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.allResistancesDown,
-    ids: [8762000],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.reducedFlaskHPRestoration,
-    ids: [8763000],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.continuousHPLoss,
-    ids: [8766000],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
     key: EffectKey.nightsTideDamageIncreased,
     ids: [8770000],
     stacks: true,
@@ -4913,44 +4878,8 @@ export const effectsArray = [
     type: EffectType.Debuff,
   },
   {
-    key: EffectKey.moreDamageTakenAfterEvasion,
-    ids: [8800100],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.repeatedEvasionsLowerDamageNegation,
-    ids: [8800200],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.reducedDamageNegationForFlaskUsages,
-    ids: [8801000],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.lowerAttackWhenBelowMaxHP,
-    ids: [8810000],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
     key: EffectKey.slowerArtGaugeWhenBelowMaxHP,
     ids: [8810200],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.poisonBuildupWhenBelowMaxHP,
-    ids: [8810300],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
-    key: EffectKey.rotBuildupWhenBelowMaxHP,
-    ids: [8810400],
     stacks: true,
     type: EffectType.Debuff,
   },
@@ -4979,12 +4908,6 @@ export const effectsArray = [
     type: EffectType.Debuff,
   },
   {
-    key: EffectKey.nearDeathReducesMaxHP,
-    ids: [8831200],
-    stacks: true,
-    type: EffectType.Debuff,
-  },
-  {
     key: EffectKey.allResistancesUp,
     ids: [8851000],
     stacks: true,
@@ -4997,11 +4920,6 @@ export const effectsArray = [
   {
     key: EffectKey.increasedSorceryAndIncantationDuration,
     ids: [8851300],
-    stacks: true,
-  },
-  {
-    key: EffectKey.improvedFlaskHPRestoration,
-    ids: [8851900],
     stacks: true,
   },
 ] as const satisfies (EffectArrayElement | EffectWithGroupArrayElement)[];
