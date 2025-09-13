@@ -659,7 +659,7 @@ const resources = {
           "Improved Colossal Weapon Attack Power",
         [EffectKey.improvedCriticalHits]: "Improved Critical Hits",
         [EffectKey.improvedCriticalHitsPlus1]: "Improved Critical Hits +1",
-        [EffectKey.improvedCrystalianSorcery]: "Improved Crystalian sorcery",
+        [EffectKey.improvedCrystalianSorcery]: "Improved Crystalian Sorcery",
         [EffectKey.improvedCurvedGreatswordAttackPower]:
           "Improved Curved Greatsword Attack Power",
         [EffectKey.improvedCurvedSwordAttackPower]:
