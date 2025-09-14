@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EffectKey, type Effect } from "../resources/effects";
+import { EffectKey, EffectType, type Effect } from "../resources/effects";
 import { items, ItemType } from "../resources/items";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import {
@@ -296,6 +296,12 @@ export function ComboFinder(props: ComboFinderProps) {
 
   const handleEffectChange = useCallback(
     (newEffect: Effect) => {
+      if (newEffect.type === EffectType.Debuff) {
+        setNotice(
+          "Sorry, debuffs are not supported yet. I'll add support for them soon!"
+        );
+        return;
+      }
       if (selectedEffects.length >= 9) {
         setNotice("You can't select more than 9 effects.");
         return;

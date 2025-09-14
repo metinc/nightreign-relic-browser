@@ -56,7 +56,7 @@ export const enum EffectGroup {
   vigor,
 }
 
-const enum EffectType {
+export const enum EffectType {
   Debuff,
 }
 
@@ -4956,6 +4956,7 @@ export interface Effect {
   group?: EffectGroup;
   level?: number;
   startingBonus?: StartingBonus;
+  type?: EffectType;
 }
 
 export const effects: Map<number, Effect> = new Map();
