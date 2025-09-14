@@ -438,19 +438,29 @@ export function ComboFinder(props: ComboFinderProps) {
                             sx={{
                               display: "flex",
                               flexWrap: "wrap",
-                              justifyContent: "space-between",
                               width: "180px",
+                              // Ensure 3 chips per row
+                              "& > .vessel-slot-chip-wrapper": {
+                                flex: "0 0 33.333%",
+                                display: "flex",
+                                justifyContent: "center",
+                                pb: 0.5,
+                              },
                             }}
                           >
                             {vessel.slots.map((slotColor, slotIndex) => (
-                              <Chip
+                              <Box
                                 key={slotIndex}
-                                label={t(`colors.${slotColor}`)}
-                                size="small"
-                                color={getChipColor(slotColor)}
-                                variant={disabled ? "outlined" : "filled"}
-                                disabled={disabled}
-                              />
+                                className="vessel-slot-chip-wrapper"
+                              >
+                                <Chip
+                                  label={t(`colors.${slotColor}`)}
+                                  size="small"
+                                  color={getChipColor(slotColor)}
+                                  variant={disabled ? "outlined" : "filled"}
+                                  disabled={disabled}
+                                />
+                              </Box>
                             ))}
                           </Box>
                           <Checkbox
