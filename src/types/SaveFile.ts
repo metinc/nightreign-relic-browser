@@ -17,7 +17,7 @@ export interface BND4Entry {
 export interface RelicSlot {
   id: number;
   itemId: number;
-  effects: Effect[];
+  effects: [effect: Effect, debuff?: Effect][];
   coordinates: [row: number, column: number];
   coordinatesByColor: [row: number, column: number];
   sortKey?: number;
