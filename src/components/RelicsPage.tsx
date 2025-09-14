@@ -64,7 +64,9 @@ export function RelicsPage({
     if (!currentSlot) {
       return [];
     }
-    const effects = currentSlot?.relics.flatMap((relic) => relic.effects);
+    const effects = currentSlot?.relics.flatMap((relic) =>
+      relic.effects.map(([effect]) => effect)
+    );
     const uniqueEffects = effects.filter(
       (effect, index, arr) =>
         arr.findIndex((e) => e.key === effect.key) === index

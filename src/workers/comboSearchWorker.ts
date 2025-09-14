@@ -111,7 +111,7 @@ export function buildWasmInput(
     selected_effects: expandedSelectedEffects,
     relics: relics.map((r) => ({
       color: getRelicColor(r.itemId),
-      effects: r.effects,
+      effects: r.effects.map(([effect]) => effect),
     })),
     enabled_vessels: enabledVessels.map(({ slots }) => slots),
     recommended_effects: filteredRecommendedEffects,

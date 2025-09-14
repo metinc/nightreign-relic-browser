@@ -1,4 +1,8 @@
-import type { BND4Entry, RelicSlot } from "../types/SaveFile";
+import type {
+  BND4Entry,
+  EffectWithOptionalDebuff,
+  RelicSlot,
+} from "../types/SaveFile";
 import { getEffect, getRelicColor } from "./DataUtils";
 import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
@@ -168,9 +172,12 @@ export class RelicParser {
                 .map((effectKey, index) => {
                   const debuffKey = debuffKeys[index];
                   if (debuffKey !== -1) {
-                    return [getEffect(effectKey), getEffect(debuffKey)];
+                    return [
+                      getEffect(effectKey),
+                      getEffect(debuffKey),
+                    ] as EffectWithOptionalDebuff;
                   }
-                  return [getEffect(effectKey)];
+                  return [getEffect(effectKey)] as EffectWithOptionalDebuff;
                 });
 
               const slotInfo: RelicSlot = {
@@ -178,7 +185,10 @@ export class RelicParser {
                 itemId,
                 effects,
                 idBytes,
-              } as RelicSlot;
+                // coordinates will be set later
+                coordinates: [0, 0],
+                coordinatesByColor: [0, 0],
+              };
               foundSlots.push(slotInfo);
             }
 

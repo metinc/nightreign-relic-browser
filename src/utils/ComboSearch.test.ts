@@ -14,6 +14,18 @@ import { RelicSlotColor } from "./RelicColor.js";
 import { RelicParser } from "./RelicParser";
 import { SaveFileDecryptor } from "./SaveFileDecryptor";
 
+// helper to build minimal RelicSlot for tests
+let testRelicId = 100000;
+function makeRelic(itemId: number, effect: Effect): RelicSlot {
+  return {
+    id: testRelicId++,
+    itemId,
+    effects: [[effect]],
+    coordinates: [0, 0],
+    coordinatesByColor: [0, 0],
+  } as RelicSlot;
+}
+
 describe("ComboSearch", () => {
   describe("searchCombinations", () => {
     let relics: RelicSlot[];
@@ -110,7 +122,9 @@ describe("ComboSearch", () => {
 
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
-        expect(relics[combo].effects).toContain(selectedEffect);
+        expect(relics[combo].effects.some(([e]) => e === selectedEffect)).toBe(
+          true
+        );
       }
       expect(result.combinations[0].points).toBeGreaterThanOrEqual(
         1 + 0.9 + 0.9
@@ -141,7 +155,9 @@ describe("ComboSearch", () => {
 
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
-        expect(relics[combo].effects).toContain(higherLevelEffect);
+        expect(
+          relics[combo].effects.some(([e]) => e === higherLevelEffect)
+        ).toBe(true);
       }
       expect(result.combinations[0].points).toBeGreaterThanOrEqual(
         1 + 0.9 + 0.9
@@ -173,7 +189,7 @@ describe("ComboSearch", () => {
       let stacks = 0;
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
-        if (relics[combo].effects.includes(selectedEffect)) {
+        if (relics[combo].effects.some(([e]) => e === selectedEffect)) {
           stacks++;
         }
       }
@@ -184,9 +200,7 @@ describe("ComboSearch", () => {
       const selectedEffect = getEffectByKey(EffectKey.strengthPlus1);
       assert(selectedEffect !== undefined);
 
-      const relics = [
-        { itemId: 129, effects: [selectedEffect] },
-      ] as RelicSlot[];
+      const relics = [makeRelic(129, selectedEffect)];
 
       const input = buildWasmInput(
         Nightfarer.Wylder,
@@ -214,9 +228,9 @@ describe("ComboSearch", () => {
       assert(otherEffect !== undefined);
 
       const relics = [
-        { itemId: 129, effects: [otherEffect] },
-        { itemId: 129, effects: [selectedEffect] },
-      ] as RelicSlot[];
+        makeRelic(129, otherEffect),
+        makeRelic(129, selectedEffect),
+      ];
 
       const input = buildWasmInput(
         Nightfarer.Wylder,
@@ -244,10 +258,10 @@ describe("ComboSearch", () => {
       assert(otherEffect !== undefined);
 
       const relics = [
-        { itemId: 129, effects: [otherEffect] },
-        { itemId: 129, effects: [selectedEffect] },
-        { itemId: 129, effects: [otherEffect] },
-      ] as RelicSlot[];
+        makeRelic(129, otherEffect),
+        makeRelic(129, selectedEffect),
+        makeRelic(129, otherEffect),
+      ];
 
       const input = buildWasmInput(
         Nightfarer.Wylder,
@@ -279,8 +293,8 @@ describe("ComboSearch", () => {
       assert(overridingEffect !== undefined);
 
       const relics = [
-        { itemId: 120, effects: [selectedEffect] }, // yellow
-        { itemId: 102, effects: [overridingEffect] }, // red
+        makeRelic(120, selectedEffect), // yellow
+        makeRelic(102, overridingEffect), // red
       ] as RelicSlot[];
 
       const input = buildWasmInput(

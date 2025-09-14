@@ -168,7 +168,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         </Box>
 
         <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
-          {effects.map((effect, index) => {
+          {effects.map(([effect], index) => {
             const effectName = getEffectName(effect);
             const effectHighlight = highlightSearchTerm(effectName, searchTerm);
             const highlightEffect =
@@ -269,8 +269,8 @@ export const RelicCard = React.memo(
     }
 
     // Check if any effect highlighting changed
-    for (const effectId of effects) {
-      const effectName = getEffectName(effectId);
+    for (const [effect] of effects) {
+      const effectName = getEffectName(effect);
       const prevEffectHighlight = highlightSearchTerm(
         effectName,
         prevProps.searchTerm
