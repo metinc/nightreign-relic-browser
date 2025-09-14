@@ -308,6 +308,9 @@ describe("ComboSearch", () => {
               RelicSlotColor.Red,
               RelicSlotColor.Green,
               RelicSlotColor.Yellow,
+              RelicSlotColor.Red,
+              RelicSlotColor.Green,
+              RelicSlotColor.Yellow,
             ],
           },
         ]
