@@ -12,6 +12,7 @@ import type {
   CharacterSlot,
   CompactCharacterSlot,
   CompactRelicSlot,
+  EffectWithOptionalDebuff,
 } from "../types/SaveFile";
 import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
@@ -108,7 +109,9 @@ export const getCompactCharacterSlot = (
       const [itemId, ...effectIds] = relic;
       const color = getRelicColor(itemId);
       const indexByColor = relicsByColor[color].indexOf(relic);
-      const effects = effectIds.map(getEffect);
+      const effects = effectIds.map(
+        (id) => [getEffect(id)] as EffectWithOptionalDebuff
+      );
       return {
         id: index,
         itemId,

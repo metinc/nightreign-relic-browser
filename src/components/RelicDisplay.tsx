@@ -122,7 +122,11 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   {rowRelics.flatMap((relic) => {
                     const { itemId, effects } = relic;
                     const itemName = getItemName(itemId);
-                    const effectNames = effects.map(getEffectName);
+                    const effectNames = effects.flatMap(([effect, debuff]) =>
+                      debuff !== undefined
+                        ? [getEffectName(effect), getEffectName(debuff)]
+                        : [getEffectName(effect)]
+                    );
 
                     // Check if this relic matches the search
                     const relicMatches = doesRelicMatch(

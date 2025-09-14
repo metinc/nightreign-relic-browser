@@ -24,7 +24,7 @@ export function findBetterRelic(
   relic: RelicSlot,
   relics: RelicSlot[]
 ): RelicSlot["redundant"] {
-  const effects = relic.effects;
+  const effects = relic.effects.map(([effect]) => effect);
   const relicsWithEnoughEffects = relics.filter(
     (r) => r.effects.length >= effects.length
   );
@@ -32,14 +32,15 @@ export function findBetterRelic(
     if (relic === r) {
       return false;
     }
+    const otherEffects = r.effects.map(([effect]) => effect);
     const isRedundant = effects.every((effect) => {
       const effectGroup = getEffectGroup(effect);
-      if (!effectGroup && r.effects.includes(effect)) {
+      if (!effectGroup && otherEffects.includes(effect)) {
         // The effect is present in both relics.
         return true;
       }
       if (effectGroup) {
-        const otherEffectGroups = r.effects.map((e) => getEffectGroup(e));
+        const otherEffectGroups = otherEffects.map(getEffectGroup);
         const otherEffectGroup = otherEffectGroups.find(
           (g) => g && g.group === effectGroup.group
         );
@@ -68,8 +69,8 @@ export function findBetterRelic(
       for (const effect of effects) {
         const effectGroup = getEffectGroup(effect);
         if (effectGroup) {
-          const otherEffectGroups = betterOrEqualRelic.effects.map((e) =>
-            getEffectGroup(e)
+          const otherEffectGroups = betterOrEqualRelic.effects.map(([effect]) =>
+            getEffectGroup(effect)
           );
           const otherEffectGroup = otherEffectGroups.find(
             (g) => g && g.group === effectGroup.group

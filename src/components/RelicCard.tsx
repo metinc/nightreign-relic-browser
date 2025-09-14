@@ -168,7 +168,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         </Box>
 
         <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>
-          {effects.map((effect, index) => {
+          {effects.map(([effect, debuff], index) => {
             const effectName = getEffectName(effect);
             const effectHighlight = highlightSearchTerm(effectName, searchTerm);
             const highlightEffect =
@@ -176,6 +176,20 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               highlightedEffects.some((highlighted) =>
                 isSameGroupAndEqualOrBetter(highlighted, effect)
               );
+
+            const debuffName =
+              debuff !== undefined ? getEffectName(debuff) : "";
+            const debuffHighlight =
+              debuff !== undefined
+                ? highlightSearchTerm(debuffName, searchTerm)
+                : undefined;
+            const highlightDebuff =
+              debuff !== undefined
+                ? highlightedEffects.includes(debuff) ||
+                  highlightedEffects.some((highlighted) =>
+                    isSameGroupAndEqualOrBetter(highlighted, debuff)
+                  )
+                : false;
 
             return (
               <Box key={index} sx={{ mb: 0.5, display: "list-item" }}>
@@ -191,6 +205,22 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
                   }}
                 >
                   {effectHighlight.highlightedText}
+
+                  {debuffHighlight && (
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color:
+                          highlightedEffects.length === 0
+                            ? "#76adde"
+                            : highlightDebuff
+                              ? "primary.main"
+                              : "#76adde",
+                      }}
+                    >
+                      {debuffHighlight.highlightedText}
+                    </Typography>
+                  )}
                 </Typography>
               </Box>
             );
@@ -269,8 +299,8 @@ export const RelicCard = React.memo(
     }
 
     // Check if any effect highlighting changed
-    for (const effectId of effects) {
-      const effectName = getEffectName(effectId);
+    for (const [effect, debuff] of effects) {
+      const effectName = getEffectName(effect);
       const prevEffectHighlight = highlightSearchTerm(
         effectName,
         prevProps.searchTerm
@@ -285,6 +315,25 @@ export const RelicCard = React.memo(
         nextEffectHighlight.hasMatch === true
       ) {
         return false;
+      }
+
+      if (debuff !== undefined) {
+        const debuffName = getEffectName(debuff);
+        const prevDebuffHighlight = highlightSearchTerm(
+          debuffName,
+          prevProps.searchTerm
+        );
+        const nextDebuffHighlight = highlightSearchTerm(
+          debuffName,
+          nextProps.searchTerm
+        );
+
+        if (
+          prevDebuffHighlight.hasMatch === true ||
+          nextDebuffHighlight.hasMatch === true
+        ) {
+          return false;
+        }
       }
     }
 

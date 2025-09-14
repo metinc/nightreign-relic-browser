@@ -1,4 +1,8 @@
-import type { BND4Entry, RelicSlot } from "../types/SaveFile";
+import type {
+  BND4Entry,
+  EffectWithOptionalDebuff,
+  RelicSlot,
+} from "../types/SaveFile";
 import { getEffect, getRelicColor } from "./DataUtils";
 import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
@@ -150,26 +154,41 @@ export class RelicParser {
               const itemId = this.readIntLE(itemIdBytes);
 
               // Extract effect IDs
-              const effect1Bytes = slotData.slice(16, 20);
-              const effect2Bytes = slotData.slice(20, 24);
-              const effect3Bytes = slotData.slice(24, 28);
-              const effect4Bytes = slotData.slice(28, 32);
+              const effectKeys = [
+                slotData.slice(16, 20),
+                slotData.slice(20, 24),
+                slotData.slice(24, 28),
+                slotData.slice(28, 32),
+              ].map(this.readIntLE);
+              const debuffKeys = [
+                slotData.slice(56, 60),
+                slotData.slice(60, 64),
+                slotData.slice(64, 68),
+                slotData.slice(68, 72),
+              ].map(this.readIntLE);
 
-              const effects = [
-                this.readIntLE(effect1Bytes),
-                this.readIntLE(effect2Bytes),
-                this.readIntLE(effect3Bytes),
-                this.readIntLE(effect4Bytes),
-              ]
+              const effects = effectKeys
                 .filter((id) => id !== -1)
-                .map(getEffect);
+                .map((effectKey, index) => {
+                  const debuffKey = debuffKeys[index];
+                  if (debuffKey !== -1) {
+                    return [
+                      getEffect(effectKey),
+                      getEffect(debuffKey),
+                    ] as EffectWithOptionalDebuff;
+                  }
+                  return [getEffect(effectKey)] as EffectWithOptionalDebuff;
+                });
 
               const slotInfo: RelicSlot = {
                 id,
                 itemId,
                 effects,
                 idBytes,
-              } as RelicSlot;
+                // coordinates will be set later
+                coordinates: [0, 0],
+                coordinatesByColor: [0, 0],
+              };
               foundSlots.push(slotInfo);
             }
 

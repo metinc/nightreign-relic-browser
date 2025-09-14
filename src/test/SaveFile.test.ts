@@ -217,8 +217,8 @@ describe("Save File Processing", () => {
               expect(itemColor).toBeDefined();
               expect(itemColor).toBeTypeOf("number");
 
-              const effectNames = effects.map((effectId) =>
-                getEffectName(effectId)
+              const effectNames = effects.map(([effect]) =>
+                getEffectName(effect)
               );
               effectNames.forEach((effectName, index) => {
                 expect(

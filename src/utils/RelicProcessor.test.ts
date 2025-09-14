@@ -9,14 +9,14 @@ describe("Relic Processor Functions", () => {
     it("should return a better relic", () => {
       const relic: RelicSlot = {
         id: 1,
-        effects: [getEffect(7000201)],
+        effects: [[getEffect(7000201)]],
         itemId: 104,
         coordinates: [0, 0],
         coordinatesByColor: [0, 0],
       };
       const betterRelic: RelicSlot = {
         id: 2,
-        effects: [getEffect(7000202)],
+        effects: [[getEffect(7000202)]],
         itemId: 107,
         coordinates: [0, 0],
         coordinatesByColor: [0, 0],
@@ -29,21 +29,21 @@ describe("Relic Processor Functions", () => {
     it("should return an equal relic", () => {
       const relic: RelicSlot = {
         id: 1,
-        effects: [getEffect(7000201)],
+        effects: [[getEffect(7000201)]],
         itemId: 104,
         coordinates: [0, 0],
         coordinatesByColor: [0, 0],
       };
       const betterRelic: RelicSlot = {
         id: 2,
-        effects: [getEffect(7000202)],
+        effects: [[getEffect(7000202)]],
         itemId: 107,
         coordinates: [0, 0],
         coordinatesByColor: [0, 0],
       };
       const equalRelic: RelicSlot = {
         id: 4,
-        effects: [getEffect(7000201)],
+        effects: [[getEffect(7000201)]],
         itemId: 107,
         coordinates: [0, 0],
         coordinatesByColor: [0, 0],
@@ -60,14 +60,14 @@ describe("Relic Processor Functions", () => {
     it("should not return any relic if colors are different", () => {
       const relic: RelicSlot = {
         id: 1,
-        effects: [getEffect(7000201)],
+        effects: [[getEffect(7000201)]],
         itemId: 104,
         coordinates: [0, 0],
         coordinatesByColor: [0, 0],
       };
       const betterRelicWithDifferentColor: RelicSlot = {
         id: 3,
-        effects: [getEffect(7000202)],
+        effects: [[getEffect(7000202)]],
         itemId: 1005100,
         coordinates: [0, 0],
         coordinatesByColor: [0, 0],
