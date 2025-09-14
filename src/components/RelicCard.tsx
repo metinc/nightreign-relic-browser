@@ -299,7 +299,7 @@ export const RelicCard = React.memo(
     }
 
     // Check if any effect highlighting changed
-    for (const [effect] of effects) {
+    for (const [effect, debuff] of effects) {
       const effectName = getEffectName(effect);
       const prevEffectHighlight = highlightSearchTerm(
         effectName,
@@ -315,6 +315,25 @@ export const RelicCard = React.memo(
         nextEffectHighlight.hasMatch === true
       ) {
         return false;
+      }
+
+      if (debuff !== undefined) {
+        const debuffName = getEffectName(debuff);
+        const prevDebuffHighlight = highlightSearchTerm(
+          debuffName,
+          prevProps.searchTerm
+        );
+        const nextDebuffHighlight = highlightSearchTerm(
+          debuffName,
+          nextProps.searchTerm
+        );
+
+        if (
+          prevDebuffHighlight.hasMatch === true ||
+          nextDebuffHighlight.hasMatch === true
+        ) {
+          return false;
+        }
       }
     }
 

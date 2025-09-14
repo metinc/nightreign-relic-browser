@@ -49,7 +49,11 @@ export function RelicBrowser({
         return false;
       }
       const itemName = getItemName(itemId);
-      const effectNames = effects.map(([effect]) => getEffectName(effect));
+      const effectNames = effects.flatMap(([effect, debuff]) =>
+        debuff !== undefined
+          ? [getEffectName(effect), getEffectName(debuff)]
+          : [getEffectName(effect)]
+      );
       const itemColor = getRelicColor(itemId);
 
       if (!doesRelicColorMatch(itemColor, selectedColor)) {
