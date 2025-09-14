@@ -128,7 +128,6 @@ export class RelicParser {
     }
 
     // Process all slots from alignment with variable slot sizes
-    let emptySlotCount = 0;
     let i = startOffset;
 
     while (i < currentEntryOffset.length - 4) {
@@ -188,7 +187,6 @@ export class RelicParser {
           emptyPattern.slice(4, 8).every((b) => b === 0xff);
 
         if (isEmptySlot) {
-          emptySlotCount++;
           i += 8; // Empty slots are typically 8 bytes
           continue;
         }
