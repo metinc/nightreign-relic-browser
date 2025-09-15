@@ -211,23 +211,22 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
                   }}
                 >
                   {effectHighlight.highlightedText}
-
-                  {debuffHighlight && (
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color:
-                          highlightedEffects.length === 0
-                            ? "#76adde"
-                            : highlightDebuff
-                              ? "primary.main"
-                              : "#76adde",
-                      }}
-                    >
-                      {debuffHighlight.highlightedText}
-                    </Typography>
-                  )}
                 </Typography>
+                {debuffHighlight && (
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color:
+                        highlightedEffects.length === 0
+                          ? "#76adde"
+                          : highlightDebuff
+                            ? "primary.main"
+                            : "#76adde",
+                    }}
+                  >
+                    {debuffHighlight.highlightedText}
+                  </Typography>
+                )}
               </Box>
             );
           })}
