@@ -10,7 +10,12 @@ import {
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { isSameGroupAndEqualOrBetter, type Effect } from "../resources/effects";
-import { uniqueItemIds, unsellableItemIds } from "../resources/items";
+import {
+  items,
+  ItemType,
+  uniqueItemIds,
+  unsellableItemIds,
+} from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
 import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
 import { getChipColor, type RelicSlotColor } from "../utils/RelicColor";
@@ -20,7 +25,6 @@ import { RelicComparisonModal } from "./RelicComparisonModal";
 interface RelicCardProps {
   relic: RelicSlot;
   searchTerm: string;
-  relicMatches: boolean;
   selectedColor: RelicSlotColor;
   highlightedEffects?: Effect[];
   coordinatesByColor: boolean;
@@ -44,7 +48,6 @@ const getBackgroundColor = (effectsCount: number) => {
 const RelicCardComponent: React.FC<RelicCardProps> = ({
   relic,
   searchTerm,
-  relicMatches,
   selectedColor,
   highlightedEffects = [],
   coordinatesByColor,
@@ -58,6 +61,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const isUniqueRelic = uniqueItemIds.includes(itemId);
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
   const selectedChipColor = getChipColor(selectedColor);
+  const isDeepRelic = items.get(itemId)?.type === ItemType.DeepRelic;
   const { t } = useTranslation();
 
   const handleSellMeClick = () => {
@@ -94,7 +98,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
     <Card
       variant="outlined"
       sx={{
-        height: relicMatches ? "100%" : "2px",
+        height: "100%",
         background: `radial-gradient(circle at 100% 100%, ${backgroundColor} 0%, #000000 130%)`,
         transition: "0.3s ease",
         overflow: "hidden",
@@ -131,15 +135,17 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               fontSize: ".9rem",
               ...(isUniqueRelic
                 ? {
-                    color: "primary.main",
+                    color: "white",
                     fontWeight: "bold",
                     textShadow: "0 0 8px rgba(33, 150, 243, 0.8)",
                     padding: "8px 8px",
                     margin: "-8px -8px",
                   }
-                : {
-                    color: "text.secondary",
-                  }),
+                : isDeepRelic
+                  ? { color: "#76adde" }
+                  : {
+                      color: "text.secondary",
+                    }),
             }}
           >
             {itemNameHighlight.highlightedText}
@@ -268,7 +274,6 @@ export const RelicCard = React.memo(
       prevProps.relic !== nextProps.relic ||
       prevProps.selectedColor !== nextProps.selectedColor ||
       prevProps.coordinatesByColor !== nextProps.coordinatesByColor ||
-      prevProps.relicMatches !== nextProps.relicMatches ||
       prevProps.highlightedEffects !== nextProps.highlightedEffects
     ) {
       return false;

@@ -54,7 +54,6 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
             <RelicCard
               relic={currentRelicClean}
               searchTerm=""
-              relicMatches={true}
               selectedColor={selectedColor}
               coordinatesByColor={selectedColor !== RelicSlotColor.Any}
             />
@@ -63,7 +62,6 @@ export const RelicComparisonModal: React.FC<RelicComparisonModalProps> = ({
             <RelicCard
               relic={betterRelicClean}
               searchTerm=""
-              relicMatches={true}
               selectedColor={selectedColor}
               coordinatesByColor={selectedColor !== RelicSlotColor.Any}
             />

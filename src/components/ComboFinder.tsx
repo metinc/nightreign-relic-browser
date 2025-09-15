@@ -582,7 +582,6 @@ export function ComboFinder(props: ComboFinderProps) {
                                 <RelicCard
                                   relic={relic}
                                   searchTerm=""
-                                  relicMatches={true}
                                   selectedColor={getRelicColor(relic.itemId)}
                                   highlightedEffects={selectedEffects}
                                   coordinatesByColor={

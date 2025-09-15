@@ -2,9 +2,7 @@ import { Box, Grid, Paper, Typography, useMediaQuery } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useEffect, useMemo, useRef } from "react";
 import type { RelicSlot } from "../types/SaveFile";
-import { getEffectName, getItemName } from "../utils/DataUtils";
 import { RelicSlotColor } from "../utils/RelicColor";
-import { doesRelicMatch } from "../utils/SearchUtils";
 import { RelicCard } from "./RelicCard";
 
 const RELICS_PER_ROW = 8;
@@ -119,40 +117,22 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                   rowSpacing={bigScreen ? 2 : 0}
                 >
                   {/* Relics in this row */}
-                  {rowRelics.flatMap((relic) => {
-                    const { itemId, effects } = relic;
-                    const itemName = getItemName(itemId);
-                    const effectNames = effects.flatMap(([effect, debuff]) =>
-                      debuff !== undefined
-                        ? [getEffectName(effect), getEffectName(debuff)]
-                        : [getEffectName(effect)]
-                    );
-
-                    // Check if this relic matches the search
-                    const relicMatches = doesRelicMatch(
-                      itemName,
-                      effectNames,
-                      searchTerm
-                    );
-
-                    return (
-                      <Grid
-                        size={{ xs: COLUMNS, md: COLUMNS_PER_RELIC }}
-                        py={1}
-                        key={relic.id}
-                      >
-                        <RelicCard
-                          relic={relic}
-                          searchTerm={searchTerm}
-                          relicMatches={relicMatches}
-                          selectedColor={selectedColor}
-                          coordinatesByColor={
-                            selectedColor !== RelicSlotColor.Any
-                          }
-                        />
-                      </Grid>
-                    );
-                  })}
+                  {rowRelics.flatMap((relic) => (
+                    <Grid
+                      size={{ xs: COLUMNS, md: COLUMNS_PER_RELIC }}
+                      py={1}
+                      key={relic.id}
+                    >
+                      <RelicCard
+                        relic={relic}
+                        searchTerm={searchTerm}
+                        selectedColor={selectedColor}
+                        coordinatesByColor={
+                          selectedColor !== RelicSlotColor.Any
+                        }
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
               </div>
             );
