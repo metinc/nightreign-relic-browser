@@ -22,7 +22,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run build && vite",
+    "dev": "npm run build:wasm && vite",
     "build": "npm run build:wasm && tsc -b && vite build",
     "build:wasm": "wasm-pack build wasm/combo_search --target web --release --out-dir pkg",
     "lint": "eslint .",
