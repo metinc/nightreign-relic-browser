@@ -30,7 +30,7 @@ import {
   type ComboSearchProgress,
   type ComboSearchResult,
 } from "../utils/ComboSearch";
-import { getRelicColor } from "../utils/DataUtils";
+import { getEffectByKey, getRelicColor } from "../utils/DataUtils";
 import { isNightfarer, Nightfarer, nightfarers } from "../utils/Nightfarers";
 import { getChipColor, RelicSlotColor } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
@@ -132,18 +132,18 @@ export function ComboFinder(props: ComboFinderProps) {
         loadedEffectsRef.current = true;
         return;
       }
-      const keys = JSON.parse(raw);
-      if (!Array.isArray(keys)) {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
         loadedEffectsRef.current = true;
         return;
       }
-      const restored = keys
-        .map((k: unknown) =>
-          typeof k === "number"
-            ? props.availableEffects.find((e) => e.key === k)
-            : undefined
-        )
-        .filter((e): e is Effect => Boolean(e));
+      const effectKeys = (parsed as unknown[]).filter(
+        (k): k is number => typeof k === "number"
+      );
+
+      const restored = effectKeys
+        .map(getEffectByKey)
+        .filter((e) => e !== undefined);
       if (restored.length) {
         setSelectedEffects(restored);
       }
