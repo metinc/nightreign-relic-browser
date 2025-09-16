@@ -206,7 +206,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
                       highlightedEffects.length === 0
                         ? "text.primary"
                         : highlightEffect
-                          ? "primary.main"
+                          ? "success.main"
                           : "text.secondary",
                   }}
                 >
@@ -220,7 +220,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
                         highlightedEffects.length === 0
                           ? "#76adde"
                           : highlightDebuff
-                            ? "primary.main"
+                            ? "success.main"
                             : "#76adde",
                     }}
                   >
