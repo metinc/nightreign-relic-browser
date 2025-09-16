@@ -8,6 +8,7 @@ import { EffectKey, type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
 import { anyoneVessels, wylderVessels } from "../utils/Vessels";
 import { buildWasmInput } from "../workers/comboSearchWorker.js";
+import { buildWorkerInput } from "./ComboSearch.js";
 import { getEffect, getEffectByKey } from "./DataUtils";
 import { Nightfarer } from "./Nightfarers";
 import { RelicSlotColor } from "./RelicColor.js";
@@ -52,12 +53,14 @@ describe("ComboSearch", () => {
     it("should find valid combinations of relics and vessels for single effect", async () => {
       const selectedEffects: Effect[] = [getEffect(7000702)];
 
-      const input = buildWasmInput(
+      const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
         selectedEffects,
         relics,
+        [],
         wylderVessels
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{
@@ -79,12 +82,14 @@ describe("ComboSearch", () => {
         getEffect(8440100),
       ];
 
-      const input = buildWasmInput(
+      const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
         selectedEffects,
         relics,
+        [],
         wylderVessels
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{
@@ -104,12 +109,14 @@ describe("ComboSearch", () => {
       const selectedEffect = getEffectByKey(EffectKey.dexterityPlus3);
       assert(selectedEffect !== undefined);
 
-      const input = buildWasmInput(
+      const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
         [selectedEffect],
         relics,
+        [],
         [anyoneVessels[2]]
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{
@@ -122,9 +129,12 @@ describe("ComboSearch", () => {
 
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
-        expect(relics[combo].effects.some(([e]) => e === selectedEffect)).toBe(
-          true
-        );
+        if (workerInput.relics[combo] === undefined) {
+          continue;
+        }
+        expect(
+          workerInput.relics[combo].effects.some(([e]) => e === selectedEffect)
+        ).toBe(true);
       }
       expect(result.combinations[0].points).toBeGreaterThanOrEqual(
         1 + 0.9 + 0.9
@@ -137,12 +147,14 @@ describe("ComboSearch", () => {
       const higherLevelEffect = getEffectByKey(EffectKey.mindPlus3);
       assert(higherLevelEffect !== undefined);
 
-      const input = buildWasmInput(
+      const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
         [selectedEffect],
         relics,
+        [],
         [anyoneVessels[2]]
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{
@@ -155,8 +167,13 @@ describe("ComboSearch", () => {
 
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
+        if (workerInput.relics[combo] === undefined) {
+          continue;
+        }
         expect(
-          relics[combo].effects.some(([e]) => e === higherLevelEffect)
+          workerInput.relics[combo].effects.some(
+            ([e]) => e === higherLevelEffect
+          )
         ).toBe(true);
       }
       expect(result.combinations[0].points).toBeGreaterThanOrEqual(
@@ -170,12 +187,14 @@ describe("ComboSearch", () => {
       );
       assert(selectedEffect !== undefined);
 
-      const input = buildWasmInput(
+      const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
         [selectedEffect],
         relics,
+        [],
         [anyoneVessels[2]]
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{
@@ -189,25 +208,32 @@ describe("ComboSearch", () => {
       let stacks = 0;
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
-        if (relics[combo].effects.some(([e]) => e === selectedEffect)) {
+        if (workerInput.relics[combo] === undefined) {
+          continue;
+        }
+        if (
+          workerInput.relics[combo].effects.some(([e]) => e === selectedEffect)
+        ) {
           stacks++;
         }
       }
       expect(stacks).toBe(1);
     });
 
-    it("should find a combo when there is just 1 relic", () => {
+    it("should find exactly 1 combo when there is just 1 relic", () => {
       const selectedEffect = getEffectByKey(EffectKey.strengthPlus1);
       assert(selectedEffect !== undefined);
 
       const relics = [makeRelic(129, selectedEffect)];
 
-      const input = buildWasmInput(
+      const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
         [selectedEffect],
         relics,
-        [anyoneVessels[2]]
+        [],
+        [anyoneVessels[2], wylderVessels[1]]
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{
@@ -232,12 +258,14 @@ describe("ComboSearch", () => {
         makeRelic(129, selectedEffect),
       ];
 
-      const input = buildWasmInput(
+      const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
         [selectedEffect],
         relics,
+        [],
         [anyoneVessels[2]]
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{
@@ -263,12 +291,14 @@ describe("ComboSearch", () => {
         makeRelic(129, otherEffect),
       ];
 
-      const input = buildWasmInput(
+      const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
         [selectedEffect],
         relics,
+        [],
         [anyoneVessels[2]]
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{
@@ -297,10 +327,11 @@ describe("ComboSearch", () => {
         makeRelic(102, overridingEffect), // red
       ] as RelicSlot[];
 
-      const input = buildWasmInput(
-        Nightfarer.Guardian,
+      const workerInput = buildWorkerInput(
+        Nightfarer.Wylder,
         [selectedEffect],
         relics,
+        [],
         [
           {
             name: "Test Vessel",
@@ -308,10 +339,14 @@ describe("ComboSearch", () => {
               RelicSlotColor.Red,
               RelicSlotColor.Green,
               RelicSlotColor.Yellow,
+              RelicSlotColor.Red,
+              RelicSlotColor.Green,
+              RelicSlotColor.Yellow,
             ],
           },
         ]
       );
+      const input = buildWasmInput(workerInput);
 
       const result = search_combinations(input) as {
         combinations: Array<{

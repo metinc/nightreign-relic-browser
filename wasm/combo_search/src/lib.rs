@@ -24,6 +24,8 @@ const COLOR_SPACE: usize = 5;
 const ANY_COLOR: usize = 0;
 // Limit of combinations returned to UI
 const TOP_RESULTS: usize = 50;
+// Internal caps when enumerating normal/deep triples before merging
+const TOP_GROUP_RESULTS: usize = 200;
 
 // Reusable scoring context avoiding per-combination clears
 struct ScoreContext {
@@ -68,7 +70,7 @@ pub struct RelicSlot {
 #[derive(Serialize, Deserialize)]
 pub struct VesselCombinationResultEntry {
     pub vessel_index: usize,
-    pub relic_indices: [Option<usize>;3],
+    pub relic_indices: [Option<usize>;6],
     pub points: f32,
 }
 
@@ -77,7 +79,8 @@ pub struct SearchInput {
     pub nightfarer: u8,
     pub selected_effects: Vec<Effect>,
     pub relics: Vec<RelicSlot>,
-    pub enabled_vessels: Vec<[u8;3]>,
+    pub deepRelics: Vec<RelicSlot>,
+    pub enabled_vessels: Vec<[u8;6]>,
     pub recommended_effects: Vec<Effect>,
 }
 
@@ -95,7 +98,7 @@ fn is_recommended_effect(effect: &Effect, recommended_bitmap: &[bool; EFFECT_KEY
 }
 
 #[inline(always)]
-fn generate_unique_key(relic_indices: [Option<usize>; 3]) -> u32 {
+fn pack_triple_key(relic_indices: [Option<usize>; 3]) -> u32 {
     // Pack up to three sorted relic indices (each < 1023) into 30 bits (3 * 10).
     // Missing indices are represented by sentinel 1023 (all 1s in 10 bits) placed at the end after sorting.
     const SENTINEL: u16 = 1023; // 10-bit all ones; reserved (assert real indices < 1023)
@@ -108,25 +111,36 @@ fn generate_unique_key(relic_indices: [Option<usize>; 3]) -> u32 {
 }
 
 #[inline(always)]
-fn add_combination_if_unique(
+fn generate_unique_key6(relic_indices6: [Option<usize>; 6]) -> u64 {
+    let normal_key = pack_triple_key([relic_indices6[0], relic_indices6[1], relic_indices6[2]]) as u64;
+    let deep_key = pack_triple_key([relic_indices6[3], relic_indices6[4], relic_indices6[5]]) as u64;
+    normal_key | (deep_key << 30)
+}
+
+#[inline(always)]
+fn add_combination_if_unique6(
     results: &mut Vec<VesselCombinationResultEntry>,
-    seen_combinations: &mut std::collections::HashSet<u32>,
+    seen_combinations: &mut std::collections::HashSet<u64>,
     vessel_index: usize,
-    relic_indices: [Option<usize>; 3],
-    relics: &[RelicSlot],
+    relic_indices6: [Option<usize>; 6],
+    relics_normal: &[RelicSlot],
+    relics_deep: &[RelicSlot],
     nightfarer: u8,
     selected_keys: &[bool; EFFECT_KEY_SPACE],
     recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
     min_tracker: &mut (usize, f32),
     score_ctx: &mut ScoreContext,
 ) {
-    let unique_key = generate_unique_key(relic_indices);
+    // Skip combos where all 6 slots are empty
+    if relic_indices6.iter().all(|x| x.is_none()) { return; }
+
+    let unique_key = generate_unique_key6(relic_indices6);
     if !seen_combinations.insert(unique_key) { return; }
 
-    let points = calc_points(nightfarer, relic_indices, relics, selected_keys, recommended_bitmap, score_ctx);
+    let points = calc_points6(nightfarer, relic_indices6, relics_normal, relics_deep, selected_keys, recommended_bitmap, score_ctx);
 
     if results.len() < TOP_RESULTS {
-        results.push(VesselCombinationResultEntry { vessel_index, relic_indices, points });
+        results.push(VesselCombinationResultEntry { vessel_index, relic_indices: relic_indices6, points });
         // Update min tracker
         if points < min_tracker.1 { *min_tracker = (results.len() - 1, points); }
         return;
@@ -137,7 +151,7 @@ fn add_combination_if_unique(
 
     // Replace the current minimum entry
     let min_i = min_tracker.0;
-    results[min_i] = VesselCombinationResultEntry { vessel_index, relic_indices, points };
+    results[min_i] = VesselCombinationResultEntry { vessel_index, relic_indices: relic_indices6, points };
 
     // Recompute new minimum (only on replacements)
     let mut new_min_i = 0usize;
@@ -149,10 +163,11 @@ fn add_combination_if_unique(
 }
 
 #[inline(always)]
-fn calc_points(
+fn calc_points6(
     nightfarer: u8,
-    relic_indices: [Option<usize>; 3],
-    relics: &[RelicSlot],
+    relic_indices6: [Option<usize>; 6],
+    relics_normal: &[RelicSlot],
+    relics_deep: &[RelicSlot],
     selected_keys: &[bool; EFFECT_KEY_SPACE],
     recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
     ctx: &mut ScoreContext,
@@ -162,9 +177,13 @@ fn calc_points(
     // Bit mask tracking which startingBonus values have already contributed points (supports 0..=7)
     let mut starting_bonus_mask: u8 = 0;
 
-    for opt_idx in relic_indices.iter() {
+    for (slot_i, opt_idx) in relic_indices6.iter().enumerate() {
         if let Some(idx) = opt_idx {
-            let relic = unsafe { relics.get_unchecked(*idx) }; // relic indices constructed internally
+            let relic = if slot_i < 3 {
+                unsafe { relics_normal.get_unchecked(*idx) }
+            } else {
+                unsafe { relics_deep.get_unchecked(*idx) }
+            };
             for effect in &relic.effects {
                 let is_character_effect = effect.nightfarer.is_some();
                 let is_usable_character_effect = effect.nightfarer == Some(nightfarer);
@@ -207,6 +226,104 @@ fn calc_points(
     points
 }
 
+fn search_group_triples(
+    group_slots: [u8;3],
+    by_color_all: &Vec<Vec<usize>>,
+    by_color_cand: &Vec<Vec<usize>>,
+    relics_normal: &[RelicSlot],
+    relics_deep: &[RelicSlot],
+    is_deep_group: bool,
+    nightfarer: u8,
+    selected_bitmap: &[bool; EFFECT_KEY_SPACE],
+    recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
+) -> (Vec<([Option<usize>;3], f32)>, u32) {
+    let mut local_results: Vec<([Option<usize>;3], f32)> = Vec::with_capacity(TOP_GROUP_RESULTS);
+    let mut local_seen: HashSet<u32> = HashSet::new();
+    let mut min_tracker: (usize, f32) = (0, f32::INFINITY);
+    let mut score_ctx = ScoreContext::new();
+    let mut checked_local: u32 = 0;
+
+    for anchor_slot in 0..3 {
+        let color_req_anchor = group_slots[anchor_slot] as usize;
+        if color_req_anchor >= COLOR_SPACE { continue; }
+        // Prefer candidates (relics containing selected effects). If none exist for this group/color,
+        // fall back to all relics for that color so this group can still be populated as a filler.
+        let anchor_candidates_cand: &Vec<usize> = if color_req_anchor == ANY_COLOR {
+            unsafe { by_color_cand.get_unchecked(ANY_COLOR) }
+        } else {
+            unsafe { by_color_cand.get_unchecked(color_req_anchor) }
+        };
+        let anchor_candidates_all: &Vec<usize> = if color_req_anchor == ANY_COLOR {
+            unsafe { by_color_all.get_unchecked(ANY_COLOR) }
+        } else if color_req_anchor < COLOR_SPACE {
+            unsafe { by_color_all.get_unchecked(color_req_anchor) }
+        } else { &EMPTY_VEC };
+        let anchor_candidates: &Vec<usize> = if anchor_candidates_cand.is_empty() { anchor_candidates_all } else { anchor_candidates_cand };
+        if anchor_candidates.is_empty() { continue; }
+        let other_slots: [usize; 2] = match anchor_slot { 0 => [1,2], 1 => [0,2], _ => [0,1] };
+        let list_a: &Vec<usize> = { let c = group_slots[other_slots[0]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else if c < COLOR_SPACE { unsafe { by_color_all.get_unchecked(c) } } else { &EMPTY_VEC } };
+        let list_b: &Vec<usize> = { let c = group_slots[other_slots[1]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else if c < COLOR_SPACE { unsafe { by_color_all.get_unchecked(c) } } else { &EMPTY_VEC } };
+        for &cand_idx in anchor_candidates.iter() {
+            let valid_a: Vec<usize> = list_a.iter().copied().filter(|&i| i != cand_idx).collect();
+            let valid_b: Vec<usize> = list_b.iter().copied().filter(|&i| i != cand_idx).collect();
+            let mut emit = |a_opt: Option<usize>, b_opt: Option<usize>| {
+                if let (Some(a_i), Some(b_i)) = (a_opt, b_opt) { if a_i == b_i { return; } }
+                let mut group_indices: [Option<usize>;3] = [None,None,None];
+                group_indices[anchor_slot] = Some(cand_idx);
+                group_indices[other_slots[0]] = a_opt;
+                group_indices[other_slots[1]] = b_opt;
+                checked_local += 1;
+
+                // Calculate points for this group in isolation (other group empty)
+                let mut full_indices6: [Option<usize>;6] = [None;6];
+                if is_deep_group { full_indices6[3] = group_indices[0]; full_indices6[4] = group_indices[1]; full_indices6[5] = group_indices[2]; }
+                else { full_indices6[0] = group_indices[0]; full_indices6[1] = group_indices[1]; full_indices6[2] = group_indices[2]; }
+
+                let points = calc_points6(
+                    nightfarer,
+                    full_indices6,
+                    relics_normal,
+                    relics_deep,
+                    selected_bitmap,
+                    recommended_bitmap,
+                    &mut score_ctx,
+                );
+
+                let unique_key = pack_triple_key(group_indices);
+                if !local_seen.insert(unique_key) { return; }
+
+                if local_results.len() < TOP_GROUP_RESULTS {
+                    local_results.push((group_indices, points));
+                    if points < min_tracker.1 { min_tracker = (local_results.len() - 1, points); }
+                    return;
+                }
+                if points <= min_tracker.1 { return; }
+                // Replace min
+                let min_i = min_tracker.0;
+                local_results[min_i] = (group_indices, points);
+                // Recompute min
+                let mut new_min_i = 0usize;
+                let mut new_min_p = local_results[0].1;
+                for (i, r) in local_results.iter().enumerate().skip(1) {
+                    if r.1 < new_min_p { new_min_p = r.1; new_min_i = i; }
+                }
+                min_tracker = (new_min_i, new_min_p);
+            };
+            if valid_a.is_empty() && valid_b.is_empty() { emit(None, None); }
+            else if !valid_a.is_empty() && !valid_b.is_empty() {
+                let mut any_pair = false;
+                for &a in &valid_a { for &b in &valid_b { if a == b { continue; } emit(Some(a), Some(b)); any_pair = true; } }
+                if !any_pair { emit(Some(valid_a[0]), None); }
+            } else if !valid_a.is_empty() { for &a in &valid_a { emit(Some(a), None); } } else { for &b in &valid_b { emit(None, Some(b)); } }
+        }
+    }
+
+    // Ensure at least an empty triple so merging can still happen
+    if local_results.is_empty() { local_results.push(([None, None, None], 0.0)); }
+
+    (local_results, checked_local)
+}
+
 #[wasm_bindgen]
 pub fn search_combinations(input: JsValue) -> JsValue {
     let input: SearchInput = match serde_wasm_bindgen::from_value(input) {
@@ -219,90 +336,140 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     let mut selected_bitmap = [false; EFFECT_KEY_SPACE];
     for e in &input.selected_effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE { unsafe { *selected_bitmap.get_unchecked_mut(k) = true; } } }
 
-    let mut effect_candidates: Vec<usize> = Vec::new();
-    effect_candidates.reserve(input.relics.len());
-    let mut is_candidate: Vec<bool> = vec![false; input.relics.len()];
+    // Build candidate bitmaps for normal and deep relics
+    let mut effect_candidates_norm: Vec<usize> = Vec::new();
+    effect_candidates_norm.reserve(input.relics.len());
+    let mut is_candidate_norm: Vec<bool> = vec![false; input.relics.len()];
     for (idx, relic) in input.relics.iter().enumerate() {
         let mut any_selected = false;
         for e in &relic.effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE && unsafe { *selected_bitmap.get_unchecked(k) } { any_selected = true; break; } }
-        if any_selected { effect_candidates.push(idx); unsafe { *is_candidate.get_unchecked_mut(idx) = true; } }
+        if any_selected { effect_candidates_norm.push(idx); unsafe { *is_candidate_norm.get_unchecked_mut(idx) = true; } }
+    }
+
+    let mut effect_candidates_deep: Vec<usize> = Vec::new();
+    effect_candidates_deep.reserve(input.deepRelics.len());
+    let mut is_candidate_deep: Vec<bool> = vec![false; input.deepRelics.len()];
+    for (idx, relic) in input.deepRelics.iter().enumerate() {
+        let mut any_selected = false;
+        for e in &relic.effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE && unsafe { *selected_bitmap.get_unchecked(k) } { any_selected = true; break; } }
+        if any_selected { effect_candidates_deep.push(idx); unsafe { *is_candidate_deep.get_unchecked_mut(idx) = true; } }
     }
 
     let mut recommended_bitmap = [false; EFFECT_KEY_SPACE];
     for e in &input.recommended_effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE { unsafe { *recommended_bitmap.get_unchecked_mut(k) = true; } } }
 
+    // Build by-color indices for normal relics
     let relics_len = input.relics.len();
-    let all_indices: Vec<usize> = (0..relics_len).collect();
-    let mut by_color_all: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
-    for (idx, relic) in input.relics.iter().enumerate() { if let Some(color) = relic.color { let c = color as usize; if c != ANY_COLOR && c < COLOR_SPACE { by_color_all[c].push(idx); } } }
-    by_color_all[ANY_COLOR] = all_indices.clone();
+    let all_indices_norm: Vec<usize> = (0..relics_len).collect();
+    let mut by_color_all_norm: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
+    for (idx, relic) in input.relics.iter().enumerate() { if let Some(color) = relic.color { let c = color as usize; if c != ANY_COLOR && c < COLOR_SPACE { by_color_all_norm[c].push(idx); } } }
+    by_color_all_norm[ANY_COLOR] = all_indices_norm.clone();
 
-    let mut by_color_cand: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
-    by_color_cand[ANY_COLOR] = effect_candidates.clone();
-    for c in 1usize..COLOR_SPACE { let list = &by_color_all[c]; if list.is_empty() { continue; } let mut v = Vec::with_capacity(list.len()); for &idx in list { if unsafe { *is_candidate.get_unchecked(idx) } { v.push(idx); } } by_color_cand[c] = v; }
+    let mut by_color_cand_norm: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
+    by_color_cand_norm[ANY_COLOR] = effect_candidates_norm.clone();
+    for c in 1usize..COLOR_SPACE { let list = &by_color_all_norm[c]; if list.is_empty() { continue; } let mut v = Vec::with_capacity(list.len()); for &idx in list { if unsafe { *is_candidate_norm.get_unchecked(idx) } { v.push(idx); } } by_color_cand_norm[c] = v; }
+
+    // Build by-color indices for deep relics
+    let deep_len = input.deepRelics.len();
+    let all_indices_deep: Vec<usize> = (0..deep_len).collect();
+    let mut by_color_all_deep: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
+    for (idx, relic) in input.deepRelics.iter().enumerate() { if let Some(color) = relic.color { let c = color as usize; if c != ANY_COLOR && c < COLOR_SPACE { by_color_all_deep[c].push(idx); } } }
+    by_color_all_deep[ANY_COLOR] = all_indices_deep.clone();
+
+    let mut by_color_cand_deep: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
+    by_color_cand_deep[ANY_COLOR] = effect_candidates_deep.clone();
+    for c in 1usize..COLOR_SPACE { let list = &by_color_all_deep[c]; if list.is_empty() { continue; } let mut v = Vec::with_capacity(list.len()); for &idx in list { if unsafe { *is_candidate_deep.get_unchecked(idx) } { v.push(idx); } } by_color_cand_deep[c] = v; }
 
     // Parallelize over vessels
     let enabled_vessels = input.enabled_vessels.clone();
-    let relics = input.relics.clone();
+    let relics_normal = input.relics.clone();
+    let relics_deep = input.deepRelics.clone();
     let nightfarer = input.nightfarer;
     let selected_bitmap_shared = selected_bitmap; // Copy arrays (small)
     let recommended_bitmap_shared = recommended_bitmap;
 
     let per_vessel: Vec<(Vec<VesselCombinationResultEntry>, u32)> = enabled_vessels.par_iter().enumerate().map(|(v_i, vessel_slots)| {
         let mut local_results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
-        let mut local_seen: HashSet<u32> = HashSet::new();
+        let mut local_seen: HashSet<u64> = HashSet::new();
         let mut min_tracker: (usize, f32) = (0, f32::INFINITY);
-        let mut score_ctx = ScoreContext::new();
         let mut checked_local: u32 = 0;
 
-        for anchor_slot in 0..3 {
-            let color_req_anchor = vessel_slots[anchor_slot] as usize;
-            if color_req_anchor >= COLOR_SPACE { continue; }
-            let anchor_candidates: &Vec<usize> = if color_req_anchor == ANY_COLOR { unsafe { by_color_cand.get_unchecked(ANY_COLOR) } } else { unsafe { by_color_cand.get_unchecked(color_req_anchor) } };
-            if anchor_candidates.is_empty() { continue; }
-            let other_slots: [usize; 2] = match anchor_slot { 0 => [1,2], 1 => [0,2], _ => [0,1] };
-            let list_a: &Vec<usize> = { let c = vessel_slots[other_slots[0]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else if c < COLOR_SPACE { unsafe { by_color_all.get_unchecked(c) } } else { &EMPTY_VEC } };
-            let list_b: &Vec<usize> = { let c = vessel_slots[other_slots[1]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else if c < COLOR_SPACE { unsafe { by_color_all.get_unchecked(c) } } else { &EMPTY_VEC } };
-            for &cand_idx in anchor_candidates.iter() {
-                let valid_a: Vec<usize> = list_a.iter().copied().filter(|&i| i != cand_idx).collect();
-                let valid_b: Vec<usize> = list_b.iter().copied().filter(|&i| i != cand_idx).collect();
-                let mut emit = |a_opt: Option<usize>, b_opt: Option<usize>| {
-                    if let (Some(a_i), Some(b_i)) = (a_opt, b_opt) { if a_i == b_i { return; } }
-                    let mut relic_indices: [Option<usize>;3] = [None,None,None];
-                    relic_indices[anchor_slot] = Some(cand_idx);
-                    relic_indices[other_slots[0]] = a_opt;
-                    relic_indices[other_slots[1]] = b_opt;
-                    checked_local += 1;
-                    add_combination_if_unique(
-                        &mut local_results,
-                        &mut local_seen,
-                        v_i,
-                        relic_indices,
-                        &relics,
-                        nightfarer,
-                        &selected_bitmap_shared,
-                        &recommended_bitmap_shared,
-                        &mut min_tracker,
-                        &mut score_ctx,
-                    );
-                };
-                if valid_a.is_empty() && valid_b.is_empty() { emit(None, None); }
-                else if !valid_a.is_empty() && !valid_b.is_empty() {
-                    let mut any_pair = false;
-                    for &a in &valid_a { for &b in &valid_b { if a == b { continue; } emit(Some(a), Some(b)); any_pair = true; } }
-                    if !any_pair { emit(Some(valid_a[0]), None); }
-                } else if !valid_a.is_empty() { for &a in &valid_a { emit(Some(a), None); } } else { for &b in &valid_b { emit(None, Some(b)); } }
+        // Split vessel slots into normal (0..2) and deep (3..5)
+        let norm_slots: [u8;3] = [vessel_slots[0], vessel_slots[1], vessel_slots[2]];
+        let deep_slots: [u8;3] = [vessel_slots[3], vessel_slots[4], vessel_slots[5]];
+
+        // Search triples within each group
+        let (norm_triples, checked_norm) = search_group_triples(
+            norm_slots,
+            &by_color_all_norm,
+            &by_color_cand_norm,
+            &relics_normal,
+            &relics_deep,
+            false,
+            nightfarer,
+            &selected_bitmap_shared,
+            &recommended_bitmap_shared,
+        );
+        checked_local += checked_norm;
+
+        let (deep_triples, checked_deep) = search_group_triples(
+            deep_slots,
+            &by_color_all_deep,
+            &by_color_cand_deep,
+            &relics_normal,
+            &relics_deep,
+            true,
+            nightfarer,
+            &selected_bitmap_shared,
+            &recommended_bitmap_shared,
+        );
+        checked_local += checked_deep;
+
+        // Merge the two groups and score full 6-slot combinations
+        let mut score_ctx = ScoreContext::new();
+        for (norm_idxs, _) in norm_triples.iter() {
+            for (deep_idxs, _) in deep_triples.iter() {
+                let relic_indices6: [Option<usize>;6] = [
+                    norm_idxs[0], norm_idxs[1], norm_idxs[2],
+                    deep_idxs[0], deep_idxs[1], deep_idxs[2],
+                ];
+                checked_local += 1;
+                add_combination_if_unique6(
+                    &mut local_results,
+                    &mut local_seen,
+                    v_i,
+                    relic_indices6,
+                    &relics_normal,
+                    &relics_deep,
+                    nightfarer,
+                    &selected_bitmap_shared,
+                    &recommended_bitmap_shared,
+                    &mut min_tracker,
+                    &mut score_ctx,
+                );
             }
         }
+
         (local_results, checked_local)
     }).collect();
 
-    // Merge results
-    let mut results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
+    // Merge results with global deduplication across vessels
+    let mut results_map: std::collections::HashMap<u64, usize> = std::collections::HashMap::new();
+    let mut results: Vec<VesselCombinationResultEntry> = Vec::new();
     let mut total_checked: u32 = 0;
     for (mut local, checked) in per_vessel.into_iter() {
         total_checked += checked;
-        for entry in local.drain(..) { results.push(entry); }
+        for entry in local.drain(..) {
+            let key = generate_unique_key6(entry.relic_indices);
+            if let Some(&i) = results_map.get(&key) {
+                if entry.points > results[i].points {
+                    results[i] = entry;
+                }
+            } else {
+                results_map.insert(key, results.len());
+                results.push(entry);
+            }
+        }
     }
     results.sort_by(|a,b| b.points.partial_cmp(&a.points).unwrap());
     if results.len() > TOP_RESULTS { results.truncate(TOP_RESULTS); }

@@ -30,16 +30,16 @@ import {
   type ComboSearchProgress,
   type ComboSearchResult,
 } from "../utils/ComboSearch";
-import { getRelicColor } from "../utils/DataUtils";
+import { getEffectByKey, getRelicColor } from "../utils/DataUtils";
 import { isNightfarer, Nightfarer, nightfarers } from "../utils/Nightfarers";
 import { getChipColor, RelicSlotColor } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
 
 // Persistent storage keys
-const SETTINGS_STORAGE_KEY = "comboFinder:settings:v2";
-const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v2";
-const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v2";
+const SETTINGS_STORAGE_KEY = "comboFinder:settings:v3";
+const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v3";
+const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v3";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
@@ -132,18 +132,18 @@ export function ComboFinder(props: ComboFinderProps) {
         loadedEffectsRef.current = true;
         return;
       }
-      const keys = JSON.parse(raw);
-      if (!Array.isArray(keys)) {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
         loadedEffectsRef.current = true;
         return;
       }
-      const restored = keys
-        .map((k: unknown) =>
-          typeof k === "number"
-            ? props.availableEffects.find((e) => e.key === k)
-            : undefined
-        )
-        .filter((e): e is Effect => Boolean(e));
+      const effectKeys = (parsed as unknown[]).filter(
+        (k): k is number => typeof k === "number"
+      );
+
+      const restored = effectKeys
+        .map(getEffectByKey)
+        .filter((e) => e !== undefined);
       if (restored.length) {
         setSelectedEffects(restored);
       }
@@ -234,6 +234,14 @@ export function ComboFinder(props: ComboFinderProps) {
         const itemType = items.get(relic.itemId)?.type;
         return itemType === ItemType.Relic || itemType === ItemType.UniqueRelic;
       });
+
+      const availableDeepRelics = saveFileData.slots[
+        saveFileData.currentSlot
+      ].relics.filter((relic) => {
+        const itemType = items.get(relic.itemId)?.type;
+        return itemType === ItemType.DeepRelic;
+      });
+
       const enabledVessels = selectedNightfarerData.vessels.filter(
         (_, index) =>
           !settings[selectedNightfarer].disabledVessels.includes(index)
@@ -243,6 +251,7 @@ export function ComboFinder(props: ComboFinderProps) {
         selectedNightfarer,
         selectedEffects,
         availableRelics,
+        availableDeepRelics,
         enabledVessels,
         (progress: ComboSearchProgress) => {
           // Only update progress if this is still the current search
@@ -438,19 +447,29 @@ export function ComboFinder(props: ComboFinderProps) {
                             sx={{
                               display: "flex",
                               flexWrap: "wrap",
-                              justifyContent: "space-between",
                               width: "180px",
+                              // Ensure 3 chips per row
+                              "& > .vessel-slot-chip-wrapper": {
+                                flex: "0 0 33.333%",
+                                display: "flex",
+                                justifyContent: "center",
+                                pb: 0.5,
+                              },
                             }}
                           >
                             {vessel.slots.map((slotColor, slotIndex) => (
-                              <Chip
+                              <Box
                                 key={slotIndex}
-                                label={t(`colors.${slotColor}`)}
-                                size="small"
-                                color={getChipColor(slotColor)}
-                                variant={disabled ? "outlined" : "filled"}
-                                disabled={disabled}
-                              />
+                                className="vessel-slot-chip-wrapper"
+                              >
+                                <Chip
+                                  label={t(`colors.${slotColor}`)}
+                                  size="small"
+                                  color={getChipColor(slotColor)}
+                                  variant={disabled ? "outlined" : "filled"}
+                                  disabled={disabled}
+                                />
+                              </Box>
                             ))}
                           </Box>
                           <Checkbox
@@ -572,7 +591,6 @@ export function ComboFinder(props: ComboFinderProps) {
                                 <RelicCard
                                   relic={relic}
                                   searchTerm=""
-                                  relicMatches={true}
                                   selectedColor={getRelicColor(relic.itemId)}
                                   highlightedEffects={selectedEffects}
                                   coordinatesByColor={
@@ -589,9 +607,18 @@ export function ComboFinder(props: ComboFinderProps) {
                                     overflow: "hidden",
                                     position: "relative",
                                     borderRadius: 3,
+                                    display: "flex",
+                                    justifyContent: "center",
                                   }}
                                 >
-                                  <CardContent>No Relic</CardContent>
+                                  <CardContent>
+                                    <Typography
+                                      fontStyle="italic"
+                                      color="text.secondary"
+                                    >
+                                      {index < 3 ? "No Relic" : "No Deep Relic"}
+                                    </Typography>
+                                  </CardContent>
                                 </Card>
                               )}
                             </Box>

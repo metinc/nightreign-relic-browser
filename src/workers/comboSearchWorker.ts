@@ -4,18 +4,16 @@ import init, {
 } from "../../wasm/combo_search/pkg/combo_search.js";
 import { type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
-import {
-  getRelicColor,
-  getStackableHigherLevelEffects,
-} from "../utils/DataUtils.js";
+import { getRelicColor } from "../utils/DataUtils.js";
 import { Nightfarer } from "../utils/Nightfarers";
-import { recommendedEffectsByCharacter } from "../utils/RecommendedEffects.js";
 import type { Vessel } from "../utils/Vessels";
 
 export interface ComboSearchWorkerInput {
   nightfarer: Nightfarer;
   selectedEffects: Effect[];
+  recommendedEffects: Effect[];
   relics: RelicSlot[];
+  deepRelics: RelicSlot[];
   enabledVessels: Vessel[];
 }
 
@@ -30,7 +28,14 @@ export interface ComboSearchWorkerResult {
   type: "result";
   combinations: Array<{
     vessel_index: number;
-    relic_indices: [number | null, number | null, number | null];
+    relic_indices: [
+      number | null,
+      number | null,
+      number | null,
+      number | null,
+      number | null,
+      number | null,
+    ];
     points: number;
   }>;
   searchTime: number;
@@ -87,43 +92,36 @@ async function initComboSearchWasm(): Promise<void> {
   await initialized;
 }
 
-export function buildWasmInput(
-  nightfarer: Nightfarer,
-  selectedEffects: Effect[],
-  relics: RelicSlot[],
-  enabledVessels: Vessel[]
-) {
-  const expandedSelectedEffects = selectedEffects.flatMap(
-    getStackableHigherLevelEffects
-  );
-
-  const filteredRecommendedEffects = recommendedEffectsByCharacter[
-    nightfarer
-  ].filter(
-    (recommendedEffect) =>
-      !expandedSelectedEffects.some(
-        (selectedEffect) => selectedEffect.key === recommendedEffect.key
-      )
-  );
-
+export function buildWasmInput({
+  nightfarer,
+  selectedEffects,
+  recommendedEffects,
+  relics,
+  deepRelics,
+  enabledVessels,
+}: ComboSearchWorkerInput) {
   return {
     nightfarer,
-    selected_effects: expandedSelectedEffects,
+    selected_effects: selectedEffects,
     relics: relics.map((r) => ({
       color: getRelicColor(r.itemId),
       effects: r.effects.map(([effect]) => effect),
     })),
+    deepRelics: deepRelics.map((r) => ({
+      color: getRelicColor(r.itemId),
+      effects: r.effects.map(([effect]) => effect),
+    })),
     enabled_vessels: enabledVessels.map(({ slots }) => slots),
-    recommended_effects: filteredRecommendedEffects,
+    recommended_effects: recommendedEffects,
   };
 }
 
 // Worker script
 self.onmessage = async (event: MessageEvent<ComboSearchWorkerInput>) => {
   try {
-    const { nightfarer, selectedEffects, relics, enabledVessels } = event.data;
+    const { relics, deepRelics } = event.data;
     const startTime = Date.now();
-    const availableRelicsCount = relics.length;
+    const availableRelicsCount = relics.length + deepRelics.length;
 
     // Send initial progress
     const progressMessage: ComboSearchWorkerProgress = {
@@ -138,18 +136,20 @@ self.onmessage = async (event: MessageEvent<ComboSearchWorkerInput>) => {
     await initComboSearchWasm();
 
     // Prepare input for WASM
-    const input = buildWasmInput(
-      nightfarer,
-      selectedEffects,
-      relics,
-      enabledVessels
-    );
+    const input = buildWasmInput(event.data);
 
     // Perform the search
     const wasmResult = search_combinations(input) as {
       combinations: Array<{
         vessel_index: number;
-        relic_indices: [number | null, number | null, number | null];
+        relic_indices: [
+          number | null,
+          number | null,
+          number | null,
+          number | null,
+          number | null,
+          number | null,
+        ];
         points: number;
       }>;
       total_combinations_checked: number;
