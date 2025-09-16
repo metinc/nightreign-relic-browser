@@ -200,21 +200,39 @@ function filterRelics(
   });
 
   const relicsByColor = sortRelicsByColor(filteredRelics);
+  // Gap filling: prioritize relics with more effects, then those matching selected effects
+  const effectsSet = new Set(effects);
   Object.entries(relicsByColor).forEach(([color, filteredRelicsByColor]) => {
-    const gapFillerRelics: RelicSlot[] = [];
-    for (const relic of relics) {
-      // TODO: better gap filling strategy
-      if (gapFillerRelics.length >= 10) {
-        break;
+    // Build candidate list (exclude already included ones)
+    const candidates = relics
+      .map((relic, index) => ({ relic, index }))
+      .filter(({ relic }) => {
+        const item = items.get(relic.itemId);
+        return (
+          item?.color === Number(color) &&
+          !filteredRelicsByColor.includes(relic)
+        );
+      })
+      .map(({ relic, index }) => ({
+        relic,
+        index,
+        effectCount: relic.effects.length,
+        hasMatching: relic.effects.some(([relicEffect]) =>
+          effectsSet.has(relicEffect)
+        ),
+      }));
+
+    candidates.sort((a, b) => {
+      if (b.effectCount !== a.effectCount) {
+        return b.effectCount - a.effectCount; // more effects first
       }
-      const item = items.get(relic.itemId);
-      if (
-        item?.color === Number(color) &&
-        !filteredRelicsByColor.includes(relic)
-      ) {
-        gapFillerRelics.push(relic);
+      if (a.hasMatching !== b.hasMatching) {
+        return Number(b.hasMatching) - Number(a.hasMatching); // those with matching effect first
       }
-    }
+      return a.index - b.index; // stable original order fallback
+    });
+
+    const gapFillerRelics = candidates.slice(0, 10).map((c) => c.relic);
     filteredRelics.push(...gapFillerRelics);
   });
 
