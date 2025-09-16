@@ -142,7 +142,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
                     margin: "-8px -8px",
                   }
                 : isDeepRelic
-                  ? { color: "#76adde" }
+                  ? { color: "#457cacff" }
                   : {
                       color: "text.secondary",
                     }),
