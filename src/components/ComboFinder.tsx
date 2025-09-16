@@ -607,9 +607,18 @@ export function ComboFinder(props: ComboFinderProps) {
                                     overflow: "hidden",
                                     position: "relative",
                                     borderRadius: 3,
+                                    display: "flex",
+                                    justifyContent: "center",
                                   }}
                                 >
-                                  <CardContent>No Relic</CardContent>
+                                  <CardContent>
+                                    <Typography
+                                      fontStyle="italic"
+                                      color="text.secondary"
+                                    >
+                                      {index < 3 ? "No Relic" : "No Deep Relic"}
+                                    </Typography>
+                                  </CardContent>
                                 </Card>
                               )}
                             </Box>
