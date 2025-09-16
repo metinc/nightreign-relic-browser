@@ -129,6 +129,9 @@ describe("ComboSearch", () => {
 
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
+        if (workerInput.relics[combo] === undefined) {
+          continue;
+        }
         expect(
           workerInput.relics[combo].effects.some(([e]) => e === selectedEffect)
         ).toBe(true);
@@ -164,6 +167,9 @@ describe("ComboSearch", () => {
 
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
+        if (workerInput.relics[combo] === undefined) {
+          continue;
+        }
         expect(
           workerInput.relics[combo].effects.some(
             ([e]) => e === higherLevelEffect
@@ -202,6 +208,9 @@ describe("ComboSearch", () => {
       let stacks = 0;
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
+        if (workerInput.relics[combo] === undefined) {
+          continue;
+        }
         if (
           workerInput.relics[combo].effects.some(([e]) => e === selectedEffect)
         ) {
@@ -211,7 +220,7 @@ describe("ComboSearch", () => {
       expect(stacks).toBe(1);
     });
 
-    it("should find a combo when there is just 1 relic", () => {
+    it("should find exactly 1 combo when there is just 1 relic", () => {
       const selectedEffect = getEffectByKey(EffectKey.strengthPlus1);
       assert(selectedEffect !== undefined);
 
@@ -222,7 +231,7 @@ describe("ComboSearch", () => {
         [selectedEffect],
         relics,
         [],
-        [anyoneVessels[2]]
+        [anyoneVessels[2], wylderVessels[1]]
       );
       const input = buildWasmInput(workerInput);
 

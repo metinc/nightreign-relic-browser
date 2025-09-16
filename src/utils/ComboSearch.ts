@@ -17,6 +17,9 @@ export interface VesselCombination {
     RelicSlot | undefined,
     RelicSlot | undefined,
     RelicSlot | undefined,
+    RelicSlot | undefined,
+    RelicSlot | undefined,
+    RelicSlot | undefined,
   ];
   points: number;
 }
@@ -83,6 +86,8 @@ export async function searchCombinations(
       deepRelics,
       enabledVessels
     );
+    console.log("relics :", relics);
+    console.log("deepRelics :", deepRelics);
 
     worker.onmessage = (event: MessageEvent<ComboSearchWorkerMessage>) => {
       // Check if this search was cancelled
@@ -115,6 +120,9 @@ export async function searchCombinations(
                 RelicSlot | undefined,
                 RelicSlot | undefined,
                 RelicSlot | undefined,
+                RelicSlot | undefined,
+                RelicSlot | undefined,
+                RelicSlot | undefined,
               ] = [
                 entry.relic_indices[0] === null
                   ? undefined
@@ -125,6 +133,15 @@ export async function searchCombinations(
                 entry.relic_indices[2] === null
                   ? undefined
                   : data.relics[entry.relic_indices[2]],
+                entry.relic_indices[3] === null
+                  ? undefined
+                  : data.deepRelics[entry.relic_indices[3]],
+                entry.relic_indices[4] === null
+                  ? undefined
+                  : data.deepRelics[entry.relic_indices[4]],
+                entry.relic_indices[5] === null
+                  ? undefined
+                  : data.deepRelics[entry.relic_indices[5]],
               ];
               return { vessel, relicCombination, points: entry.points };
             }

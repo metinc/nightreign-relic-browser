@@ -28,7 +28,14 @@ export interface ComboSearchWorkerResult {
   type: "result";
   combinations: Array<{
     vessel_index: number;
-    relic_indices: [number | null, number | null, number | null];
+    relic_indices: [
+      number | null,
+      number | null,
+      number | null,
+      number | null,
+      number | null,
+      number | null,
+    ];
     points: number;
   }>;
   searchTime: number;
@@ -135,7 +142,14 @@ self.onmessage = async (event: MessageEvent<ComboSearchWorkerInput>) => {
     const wasmResult = search_combinations(input) as {
       combinations: Array<{
         vessel_index: number;
-        relic_indices: [number | null, number | null, number | null];
+        relic_indices: [
+          number | null,
+          number | null,
+          number | null,
+          number | null,
+          number | null,
+          number | null,
+        ];
         points: number;
       }>;
       total_combinations_checked: number;
