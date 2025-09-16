@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EffectKey, EffectType, type Effect } from "../resources/effects";
+import { EffectKey, type Effect } from "../resources/effects";
 import { items, ItemType } from "../resources/items";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import {
@@ -305,12 +305,6 @@ export function ComboFinder(props: ComboFinderProps) {
 
   const handleEffectChange = useCallback(
     (newEffect: Effect) => {
-      if (newEffect.type === EffectType.Debuff) {
-        setNotice(
-          "Sorry, debuffs are not supported yet. I'll add support for them soon!"
-        );
-        return;
-      }
       if (selectedEffects.length >= 9) {
         setNotice("You can't select more than 9 effects.");
         return;
@@ -415,7 +409,7 @@ export function ComboFinder(props: ComboFinderProps) {
             <Typography variant="h6" gutterBottom noWrap>
               2. Select Vessels
             </Typography>
-            <Stack gap={2}>
+            <Stack gap={1}>
               {selectedNightfarerData.vessels.map((vessel, index) => {
                 const disabled =
                   settings[selectedNightfarer].disabledVessels.includes(index);
@@ -426,7 +420,14 @@ export function ComboFinder(props: ComboFinderProps) {
                     elevation={disabled ? 1 : 2}
                     sx={{ cursor: "pointer", minWidth: 270, m: 0, p: 0 }}
                   >
-                    <CardContent>
+                    <CardContent
+                      sx={{
+                        p: 1.5,
+                        "&:last-child": {
+                          paddingBottom: 1.5,
+                        },
+                      }}
+                    >
                       <Typography
                         fontWeight="bold"
                         gutterBottom
