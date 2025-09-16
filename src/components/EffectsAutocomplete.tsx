@@ -40,7 +40,7 @@ export function EffectsAutocomplete({
         }
         return label;
       }
-      return `Unknown Effect ${option}`;
+      return option;
     },
     [showOrBetterLabels, t]
   );
@@ -48,6 +48,7 @@ export function EffectsAutocomplete({
   return (
     <Autocomplete
       disablePortal
+      autoHighlight
       options={availableEffects.map((effect) => String(effect.key))}
       freeSolo
       sx={{ width: 350 }}
