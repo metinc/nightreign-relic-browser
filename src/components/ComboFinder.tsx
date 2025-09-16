@@ -234,6 +234,14 @@ export function ComboFinder(props: ComboFinderProps) {
         const itemType = items.get(relic.itemId)?.type;
         return itemType === ItemType.Relic || itemType === ItemType.UniqueRelic;
       });
+
+      const availableDeepRelics = saveFileData.slots[
+        saveFileData.currentSlot
+      ].relics.filter((relic) => {
+        const itemType = items.get(relic.itemId)?.type;
+        return itemType === ItemType.DeepRelic;
+      });
+
       const enabledVessels = selectedNightfarerData.vessels.filter(
         (_, index) =>
           !settings[selectedNightfarer].disabledVessels.includes(index)
@@ -243,6 +251,7 @@ export function ComboFinder(props: ComboFinderProps) {
         selectedNightfarer,
         selectedEffects,
         availableRelics,
+        availableDeepRelics,
         enabledVessels,
         (progress: ComboSearchProgress) => {
           // Only update progress if this is still the current search

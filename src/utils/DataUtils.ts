@@ -13,6 +13,7 @@ import type {
   CompactCharacterSlot,
   CompactRelicSlot,
   EffectWithOptionalDebuff,
+  RelicSlot,
 } from "../types/SaveFile";
 import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
@@ -131,3 +132,7 @@ export const getStackableHigherLevelEffects = (
   }
   return effect;
 };
+
+export function relicHasEffect(relic: RelicSlot, effect: Effect): boolean {
+  return relic.effects.some(([relicEffect]) => relicEffect === effect);
+}

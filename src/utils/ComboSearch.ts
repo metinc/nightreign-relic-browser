@@ -1,10 +1,14 @@
 import type { Effect } from "../resources/effects";
+import { items } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
 import type {
   ComboSearchWorkerInput,
   ComboSearchWorkerMessage,
 } from "../workers/comboSearchWorker";
+import { getStackableHigherLevelEffects, relicHasEffect } from "./DataUtils";
 import { Nightfarer } from "./Nightfarers";
+import { recommendedEffectsByCharacter } from "./RecommendedEffects";
+import { sortRelicsByColor } from "./RelicProcessor";
 import type { Vessel } from "./Vessels";
 
 export interface VesselCombination {
@@ -46,6 +50,7 @@ export async function searchCombinations(
   nightfarer: Nightfarer,
   selectedEffects: Effect[],
   relics: RelicSlot[],
+  deepRelics: RelicSlot[],
   enabledVessels: Vessel[],
   onProgress?: (progress: ComboSearchProgress) => void
 ): Promise<ComboSearchResult> {
@@ -70,6 +75,14 @@ export async function searchCombinations(
       }
       worker.terminate();
     };
+
+    const data = buildWorkerInput(
+      nightfarer,
+      selectedEffects,
+      relics,
+      deepRelics,
+      enabledVessels
+    );
 
     worker.onmessage = (event: MessageEvent<ComboSearchWorkerMessage>) => {
       // Check if this search was cancelled
@@ -105,13 +118,13 @@ export async function searchCombinations(
               ] = [
                 entry.relic_indices[0] === null
                   ? undefined
-                  : relics[entry.relic_indices[0]],
+                  : data.relics[entry.relic_indices[0]],
                 entry.relic_indices[1] === null
                   ? undefined
-                  : relics[entry.relic_indices[1]],
+                  : data.relics[entry.relic_indices[1]],
                 entry.relic_indices[2] === null
                   ? undefined
-                  : relics[entry.relic_indices[2]],
+                  : data.relics[entry.relic_indices[2]],
               ];
               return { vessel, relicCombination, points: entry.points };
             }
@@ -140,14 +153,98 @@ export async function searchCombinations(
       reject(error);
     };
 
-    // Send the search input to the worker
-    const input: ComboSearchWorkerInput = {
-      nightfarer,
-      selectedEffects,
-      relics,
-      enabledVessels,
-    };
-
-    worker.postMessage(input);
+    worker.postMessage(data);
   });
+}
+
+function filterRelics(
+  relics: RelicSlot[],
+  effects: Effect[],
+  enabledVessels: Vessel[],
+  deepRelics: boolean
+): RelicSlot[] {
+  const vesselSlots = deepRelics
+    ? enabledVessels.slice(3)
+    : enabledVessels.slice(0, 3);
+  const enabledRelicColors = new Set(
+    vesselSlots.flatMap((vessel) => vessel.slots)
+  );
+
+  const filteredRelics = relics.filter((relic) => {
+    const item = items.get(relic.itemId);
+    if (
+      item === undefined ||
+      item?.color === null ||
+      !enabledRelicColors.has(item.color)
+    ) {
+      return false;
+    }
+    return effects.some((effect) => relicHasEffect(relic, effect));
+  });
+
+  const relicsByColor = sortRelicsByColor(filteredRelics);
+  Object.entries(relicsByColor).forEach(([color, filteredRelicsByColor]) => {
+    const gapFillerRelics: RelicSlot[] = [];
+    for (const relic of relics) {
+      // TODO: better gap filling strategy
+      if (gapFillerRelics.length >= 10) {
+        break;
+      }
+      const item = items.get(relic.itemId);
+      if (
+        item?.color === Number(color) &&
+        !filteredRelicsByColor.includes(relic)
+      ) {
+        gapFillerRelics.push(relic);
+      }
+    }
+    filteredRelics.push(...gapFillerRelics);
+  });
+
+  return filteredRelics;
+}
+
+function filterRecommendedEffects(
+  nightfarer: Nightfarer,
+  selectedEffects: Effect[]
+): Effect[] {
+  return recommendedEffectsByCharacter[nightfarer].filter(
+    (recommendedEffect) =>
+      !selectedEffects.some(
+        (selectedEffect) => selectedEffect.key === recommendedEffect.key
+      )
+  );
+}
+
+export function buildWorkerInput(
+  nightfarer: Nightfarer,
+  selectedEffects: Effect[],
+  relics: RelicSlot[],
+  deepRelics: RelicSlot[],
+  enabledVessels: Vessel[]
+): ComboSearchWorkerInput {
+  const expandedSelectedEffects = selectedEffects.flatMap(
+    getStackableHigherLevelEffects
+  );
+  return {
+    nightfarer,
+    selectedEffects: expandedSelectedEffects,
+    recommendedEffects: filterRecommendedEffects(
+      nightfarer,
+      expandedSelectedEffects
+    ),
+    relics: filterRelics(
+      relics,
+      expandedSelectedEffects,
+      enabledVessels,
+      false
+    ),
+    deepRelics: filterRelics(
+      deepRelics,
+      expandedSelectedEffects,
+      enabledVessels,
+      true
+    ),
+    enabledVessels,
+  };
 }
