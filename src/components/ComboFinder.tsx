@@ -37,9 +37,9 @@ import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
 
 // Persistent storage keys
-const SETTINGS_STORAGE_KEY = "comboFinder:settings:v2";
-const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v2";
-const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v2";
+const SETTINGS_STORAGE_KEY = "comboFinder:settings:v3";
+const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v3";
+const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v3";
 
 interface ComboFinderProps {
   saveFileData: SaveFileData;
