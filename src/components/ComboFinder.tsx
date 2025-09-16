@@ -548,7 +548,7 @@ export function ComboFinder(props: ComboFinderProps) {
             />
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
               {progress?.stage === "done" && searchResults !== null ? (
-                `Checked ${progress.totalCombinationsChecked.toLocaleString()} combinations from ${progress.availableRelicsCount.toLocaleString()} relics in ${searchResults.searchTime} ms.`
+                `Checked ${progress.totalCombinationsChecked.toLocaleString()} combinations in ${searchResults.searchTime} ms.`
               ) : (
                 <>&nbsp;</>
               )}
