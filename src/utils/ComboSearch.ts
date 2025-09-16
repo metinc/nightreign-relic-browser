@@ -86,8 +86,6 @@ export async function searchCombinations(
       deepRelics,
       enabledVessels
     );
-    console.log("relics :", relics);
-    console.log("deepRelics :", deepRelics);
 
     worker.onmessage = (event: MessageEvent<ComboSearchWorkerMessage>) => {
       // Check if this search was cancelled
