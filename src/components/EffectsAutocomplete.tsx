@@ -1,10 +1,15 @@
 import { Search } from "@mui/icons-material";
-import { InputAdornment } from "@mui/material";
+import { InputAdornment, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { isEffectKey, isMaxLevel, type Effect } from "../resources/effects";
+import {
+  EffectType,
+  isEffectKey,
+  isMaxLevel,
+  type Effect,
+} from "../resources/effects";
 import { getEffectByKey } from "../utils/DataUtils";
 
 interface EffectsAutocompleteProps {
@@ -76,6 +81,19 @@ export function EffectsAutocomplete({
           }}
         />
       )}
+      renderOption={(props, option) => {
+        const debuff =
+          getEffectByKey(parseInt(option))?.type === EffectType.Debuff;
+        return (
+          <Typography
+            {...props}
+            key={option}
+            color={debuff ? "#76adde" : "text.primary"}
+          >
+            {getOptionLabel(option)}
+          </Typography>
+        );
+      }}
     />
   );
 }
