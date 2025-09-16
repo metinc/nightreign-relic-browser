@@ -1,6 +1,6 @@
-import { Box, Typography, Alert, Button, Paper, Grid } from "@mui/material";
-import { useState, useRef, useEffect } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { Alert, Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface HomePageProps {
@@ -90,7 +90,6 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
               {t("features")}
             </Typography>
             <Typography component="ul" sx={{ pl: 2 }}>
-              <li>Browse all relics across multiple character slots</li>
               <li>
                 <Typography
                   variant="inherit"
@@ -100,24 +99,19 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
                 >
                   {"New: "}
                 </Typography>
+                Deep of Night relic support with full effect details
+              </li>
+              <li>Browse all relics across multiple character slots</li>
+              <li>
                 Find the best relics for the effects you are looking for using
                 the <b>Combo Finder</b>
               </li>
               <li>
-                <Typography
-                  variant="inherit"
-                  color="success"
-                  component="span"
-                  fontWeight={"bold"}
-                >
-                  {"New: "}
-                </Typography>
                 Detect outclassed and duplicate relics that should be sold
               </li>
               <li>Search relics by name or effect</li>
               <li>Filter relics by color</li>
               <li>View detailed relic information and effects</li>
-              <li>Fast and responsive interface</li>
             </Typography>
           </Paper>
         </Grid>
