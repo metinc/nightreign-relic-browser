@@ -524,7 +524,14 @@ export function ComboFinder(props: ComboFinderProps) {
                   },
                 }}
               >
-                <ListItemText primary={t(`effects.${effect.key}`)} />
+                <ListItemText
+                  primary={t(`effects.${effect.key}`)}
+                  sx={{
+                    ...(effect.type === EffectType.Debuff && {
+                      color: "#76adde",
+                    }),
+                  }}
+                />
               </ListItem>
             ))}
           </List>
