@@ -3,7 +3,7 @@ import type {
   EffectWithOptionalDebuff,
   RelicSlot,
 } from "../types/SaveFile";
-import { getEffect, getRelicColor } from "./DataUtils";
+import { getEffect, getItemName, getRelicColor } from "./DataUtils";
 import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
 export class RelicParser {
@@ -257,30 +257,68 @@ export class RelicParser {
   }
 
   public static setCoordinates(relics: RelicSlot[]): RelicSlot[] {
+    const normalRelics = relics.filter(
+      ({ itemId }) => !getItemName(itemId).startsWith("Deep")
+    );
+    const deepRelics = relics.filter(({ itemId }) =>
+      getItemName(itemId).startsWith("Deep")
+    );
     const relicsByColor: Record<RelicColor, RelicSlot[]> = {
-      [RelicSlotColor.Red]: relics.filter(
+      [RelicSlotColor.Red]: normalRelics.filter(
         (r) => getRelicColor(r.itemId) === RelicSlotColor.Red
       ),
-      [RelicSlotColor.Blue]: relics.filter(
+      [RelicSlotColor.Blue]: normalRelics.filter(
         (r) => getRelicColor(r.itemId) === RelicSlotColor.Blue
       ),
-      [RelicSlotColor.Yellow]: relics.filter(
+      [RelicSlotColor.Yellow]: normalRelics.filter(
         (r) => getRelicColor(r.itemId) === RelicSlotColor.Yellow
       ),
-      [RelicSlotColor.Green]: relics.filter(
+      [RelicSlotColor.Green]: normalRelics.filter(
         (r) => getRelicColor(r.itemId) === RelicSlotColor.Green
       ),
     };
 
-    for (let i = 0; i < relics.length; i++) {
+    const deepRelicsByColor: Record<RelicColor, RelicSlot[]> = {
+      [RelicSlotColor.Red]: deepRelics.filter(
+        (r) => getRelicColor(r.itemId) === RelicSlotColor.Red
+      ),
+      [RelicSlotColor.Blue]: deepRelics.filter(
+        (r) => getRelicColor(r.itemId) === RelicSlotColor.Blue
+      ),
+      [RelicSlotColor.Yellow]: deepRelics.filter(
+        (r) => getRelicColor(r.itemId) === RelicSlotColor.Yellow
+      ),
+      [RelicSlotColor.Green]: deepRelics.filter(
+        (r) => getRelicColor(r.itemId) === RelicSlotColor.Green
+      ),
+    };
+
+    for (let i = 0; i < normalRelics.length; i++) {
       // 8 per row
-      const relic = relics[i];
+      const relic = normalRelics[i];
       const row = Math.floor(i / 8);
       const column = i % 8;
       const coordinates: [number, number] = [row, column];
 
       const color = getRelicColor(relic.itemId);
       const index = relicsByColor[color].indexOf(relic);
+      const rowByColor = Math.floor(index / 8);
+      const columnByColor = index % 8;
+      const coordinatesByColor: [number, number] = [rowByColor, columnByColor];
+
+      relic.coordinates = coordinates;
+      relic.coordinatesByColor = coordinatesByColor;
+    }
+
+    for (let i = 0; i < deepRelics.length; i++) {
+      // 8 per row
+      const relic = deepRelics[i];
+      const row = Math.floor(i / 8);
+      const column = i % 8;
+      const coordinates: [number, number] = [row, column];
+
+      const color = getRelicColor(relic.itemId);
+      const index = deepRelicsByColor[color].indexOf(relic);
       const rowByColor = Math.floor(index / 8);
       const columnByColor = index % 8;
       const coordinatesByColor: [number, number] = [rowByColor, columnByColor];
