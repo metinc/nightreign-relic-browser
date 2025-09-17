@@ -51,7 +51,7 @@ impl ScoreContext {
     #[inline(always)] fn set_group(&mut self, g: usize) { if g < EFFECT_GROUP_SPACE { unsafe { *self.satisfied_groups_gen.get_unchecked_mut(g) = self.current_gen; } } }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize)]
 pub struct Effect {
     pub key: u32,
     pub nightfarer: Option<u8>,
@@ -61,7 +61,7 @@ pub struct Effect {
     pub startingBonus: Option<u8>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize)]
 pub struct RelicSlot {
     pub color: Option<u8>,
     pub effects: Vec<Effect>,
@@ -380,13 +380,11 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     by_color_cand_deep[ANY_COLOR] = effect_candidates_deep.clone();
     for c in 1usize..COLOR_SPACE { let list = &by_color_all_deep[c]; if list.is_empty() { continue; } let mut v = Vec::with_capacity(list.len()); for &idx in list { if unsafe { *is_candidate_deep.get_unchecked(idx) } { v.push(idx); } } by_color_cand_deep[c] = v; }
 
-    // Parallelize over vessels
-    let enabled_vessels = input.enabled_vessels.clone();
-    let relics_normal = input.relics.clone();
-    let relics_deep = input.deepRelics.clone();
+    // Parallelize over vessels (avoid cloning large vectors)
+    let enabled_vessels = &input.enabled_vessels;
+    let relics_normal: &[RelicSlot] = &input.relics;
+    let relics_deep: &[RelicSlot] = &input.deepRelics;
     let nightfarer = input.nightfarer;
-    let selected_bitmap_shared = selected_bitmap; // Copy arrays (small)
-    let recommended_bitmap_shared = recommended_bitmap;
 
     let per_vessel: Vec<(Vec<VesselCombinationResultEntry>, u32)> = enabled_vessels.par_iter().enumerate().map(|(v_i, vessel_slots)| {
         let mut local_results: Vec<VesselCombinationResultEntry> = Vec::with_capacity(TOP_RESULTS);
@@ -403,12 +401,12 @@ pub fn search_combinations(input: JsValue) -> JsValue {
             norm_slots,
             &by_color_all_norm,
             &by_color_cand_norm,
-            &relics_normal,
-            &relics_deep,
+            relics_normal,
+            relics_deep,
             false,
             nightfarer,
-            &selected_bitmap_shared,
-            &recommended_bitmap_shared,
+            &selected_bitmap,
+            &recommended_bitmap,
         );
         checked_local += checked_norm;
 
@@ -416,12 +414,12 @@ pub fn search_combinations(input: JsValue) -> JsValue {
             deep_slots,
             &by_color_all_deep,
             &by_color_cand_deep,
-            &relics_normal,
-            &relics_deep,
+            relics_normal,
+            relics_deep,
             true,
             nightfarer,
-            &selected_bitmap_shared,
-            &recommended_bitmap_shared,
+            &selected_bitmap,
+            &recommended_bitmap,
         );
         checked_local += checked_deep;
 
@@ -439,11 +437,11 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                     &mut local_seen,
                     v_i,
                     relic_indices6,
-                    &relics_normal,
-                    &relics_deep,
+                    relics_normal,
+                    relics_deep,
                     nightfarer,
-                    &selected_bitmap_shared,
-                    &recommended_bitmap_shared,
+                    &selected_bitmap,
+                    &recommended_bitmap,
                     &mut min_tracker,
                     &mut score_ctx,
                 );
