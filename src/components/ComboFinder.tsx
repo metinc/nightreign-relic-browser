@@ -19,9 +19,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EffectKey, type Effect } from "../resources/effects";
+import { EffectKey, EffectType, type Effect } from "../resources/effects";
 import { items, ItemType } from "../resources/items";
 import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
 import {
@@ -38,7 +38,6 @@ import { RelicCard } from "./RelicCard";
 
 // Persistent storage keys
 const SETTINGS_STORAGE_KEY = "comboFinder:settings:v3";
-const EFFECTS_STORAGE_KEY = "comboFinder:selectedEffects:v3";
 const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v3";
 
 interface ComboFinderProps {
@@ -50,18 +49,19 @@ interface ComboFinderProps {
 
 interface ComboFinderSettings {
   disabledVessels: number[];
+  selectedEffects: number[];
 }
 
 function createInitialSettings(): Record<Nightfarer, ComboFinderSettings> {
   return {
-    [Nightfarer.Wylder]: { disabledVessels: [] },
-    [Nightfarer.Guardian]: { disabledVessels: [] },
-    [Nightfarer.Ironeye]: { disabledVessels: [] },
-    [Nightfarer.Duchess]: { disabledVessels: [] },
-    [Nightfarer.Raider]: { disabledVessels: [] },
-    [Nightfarer.Revenant]: { disabledVessels: [] },
-    [Nightfarer.Recluse]: { disabledVessels: [] },
-    [Nightfarer.Executor]: { disabledVessels: [] },
+    [Nightfarer.Wylder]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Guardian]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Ironeye]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Duchess]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Raider]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Revenant]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Recluse]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Executor]: { disabledVessels: [], selectedEffects: [] },
   };
 }
 
@@ -95,17 +95,25 @@ export function ComboFinder(props: ComboFinderProps) {
         return base;
       }
       const parsed = JSON.parse(raw) as Partial<
-        Record<Nightfarer, { disabledVessels?: unknown }>
+        Record<
+          Nightfarer,
+          { disabledVessels?: unknown; selectedEffects?: unknown }
+        >
       >;
       Object.keys(base).forEach((k) => {
         const nf = Number(k) as Nightfarer;
         const val = parsed?.[nf];
-        if (val && Array.isArray(val.disabledVessels)) {
-          base[nf] = {
-            disabledVessels: (val.disabledVessels as unknown[])
+        if (val) {
+          if (Array.isArray(val.disabledVessels)) {
+            base[nf].disabledVessels = (val.disabledVessels as unknown[])
               .map((v) => (typeof v === "number" ? v : Number(v)))
-              .filter((v) => Number.isFinite(v)) as number[],
-          };
+              .filter((v) => Number.isFinite(v)) as number[];
+          }
+          if (Array.isArray(val.selectedEffects)) {
+            base[nf].selectedEffects = (val.selectedEffects as unknown[])
+              .map((v) => (typeof v === "number" ? v : Number(v)))
+              .filter((v) => Number.isFinite(v)) as number[];
+          }
         }
       });
       return base;
@@ -118,49 +126,22 @@ export function ComboFinder(props: ComboFinderProps) {
     Record<Nightfarer, ComboFinderSettings>
   >(() => loadSettingsFromStorage());
 
-  const [selectedEffects, setSelectedEffects] = useState<Effect[]>([]);
+  // Removed local selectedEffects state; now derived from settings per Nightfarer
+  const selectedEffects = useMemo(() => {
+    return (settings[selectedNightfarer].selectedEffects || [])
+      .map(getEffectByKey)
+      .filter((e): e is Effect => e !== undefined);
+  }, [settings, selectedNightfarer]);
 
-  // Load selected effects from storage once when availableEffects are ready
-  const loadedEffectsRef = useRef(false);
-  useEffect(() => {
-    if (loadedEffectsRef.current) {
-      return;
-    }
-    try {
-      const raw = localStorage.getItem(EFFECTS_STORAGE_KEY);
-      if (!raw) {
-        loadedEffectsRef.current = true;
-        return;
-      }
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) {
-        loadedEffectsRef.current = true;
-        return;
-      }
-      const effectKeys = (parsed as unknown[]).filter(
-        (k): k is number => typeof k === "number"
-      );
-
-      const restored = effectKeys
-        .map(getEffectByKey)
-        .filter((e) => e !== undefined);
-      if (restored.length) {
-        setSelectedEffects(restored);
-      }
-    } catch {
-      // ignore
-    } finally {
-      loadedEffectsRef.current = true;
-    }
-  }, [props.availableEffects]);
-
-  const selectableEffects = props.availableEffects.filter(
-    (effect) =>
-      effect.nightfarer === undefined ||
-      effect.nightfarer === selectedNightfarer ||
-      effect.key === EffectKey.improvedPoiseNearTotemStela ||
-      effect.key === EffectKey.defeatingEnemiesNearTotemStelaRestoresHP
-  );
+  const selectableEffects = useMemo(() => {
+    return props.availableEffects.filter(
+      (effect) =>
+        effect.nightfarer === undefined ||
+        effect.nightfarer === selectedNightfarer ||
+        effect.key === EffectKey.improvedPoiseNearTotemStela ||
+        effect.key === EffectKey.defeatingEnemiesNearTotemStelaRestoresHP
+    );
+  }, [props.availableEffects, selectedNightfarer]);
 
   // Persist settings and selected effects
   useEffect(() => {
@@ -170,15 +151,6 @@ export function ComboFinder(props: ComboFinderProps) {
       // ignore
     }
   }, [settings]);
-
-  useEffect(() => {
-    try {
-      const keys = selectedEffects.map((e) => e.key);
-      localStorage.setItem(EFFECTS_STORAGE_KEY, JSON.stringify(keys));
-    } catch {
-      // ignore
-    }
-  }, [selectedEffects]);
 
   useEffect(() => {
     try {
@@ -309,43 +281,59 @@ export function ComboFinder(props: ComboFinderProps) {
         setNotice("You can't select more than 9 effects.");
         return;
       }
-
       if (!newEffect) {
         return;
       }
-
-      const effectAlreadyAdded = selectedEffects.some(
-        (effect) => effect === newEffect
-      );
-      if (!effectAlreadyAdded) {
-        setSelectedEffects((prev) => [
-          ...prev.filter((effect) => {
-            if (
-              effect.group !== undefined &&
-              effect.group === newEffect.group
-            ) {
-              return false;
-            }
-            if (
-              effect.startingBonus !== undefined &&
-              effect.startingBonus === newEffect.startingBonus
-            ) {
-              return false;
-            }
-            return true;
-          }),
-          newEffect,
-        ]);
+      const effectAlreadyAdded = selectedEffects.some((e) => e === newEffect);
+      if (effectAlreadyAdded) {
+        return;
       }
+
+      setSettings((prevSettings) => {
+        const current = prevSettings[selectedNightfarer];
+        const currentEffects = current.selectedEffects
+          .map(getEffectByKey)
+          .filter((e): e is Effect => e !== undefined);
+        const filtered = currentEffects.filter((effect) => {
+          if (effect.group !== undefined && effect.group === newEffect.group) {
+            return false;
+          }
+          if (
+            effect.startingBonus !== undefined &&
+            effect.startingBonus === newEffect.startingBonus
+          ) {
+            return false;
+          }
+          return true;
+        });
+        const updated = [...filtered, newEffect];
+        return {
+          ...prevSettings,
+          [selectedNightfarer]: {
+            ...current,
+            selectedEffects: updated.map((e) => e.key),
+          },
+        };
+      });
     },
-    [selectedEffects]
+    [selectedEffects, selectedNightfarer]
   );
 
-  const removeEffect = useCallback((effectToRemove: Effect) => {
-    setSelectedEffects((prev) =>
-      prev.filter((effect) => effect.key !== effectToRemove.key)
-    );
-  }, []);
+  const removeEffect = useCallback(
+    (effectToRemove: Effect) => {
+      setSettings((prevSettings) => {
+        const current = prevSettings[selectedNightfarer];
+        const updated = current.selectedEffects.filter(
+          (k) => k !== effectToRemove.key
+        );
+        return {
+          ...prevSettings,
+          [selectedNightfarer]: { ...current, selectedEffects: updated },
+        };
+      });
+    },
+    [selectedNightfarer]
+  );
 
   const toggleVessel = useCallback(
     (nightfarer: Nightfarer, vesselIndex: number) => {
@@ -524,7 +512,14 @@ export function ComboFinder(props: ComboFinderProps) {
                   },
                 }}
               >
-                <ListItemText primary={t(`effects.${effect.key}`)} />
+                <ListItemText
+                  primary={t(`effects.${effect.key}`)}
+                  sx={{
+                    ...(effect.type === EffectType.Debuff && {
+                      color: "#76adde",
+                    }),
+                  }}
+                />
               </ListItem>
             ))}
           </List>

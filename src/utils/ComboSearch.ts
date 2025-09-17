@@ -259,25 +259,17 @@ export function buildWorkerInput(
   const expandedSelectedEffects = selectedEffects.flatMap(
     getStackableHigherLevelEffects
   );
+  const filteredRecommendedEffects = filterRecommendedEffects(
+    nightfarer,
+    expandedSelectedEffects
+  );
+  const effects = [...expandedSelectedEffects, ...filteredRecommendedEffects];
   return {
     nightfarer,
     selectedEffects: expandedSelectedEffects,
-    recommendedEffects: filterRecommendedEffects(
-      nightfarer,
-      expandedSelectedEffects
-    ),
-    relics: filterRelics(
-      relics,
-      expandedSelectedEffects,
-      enabledVessels,
-      false
-    ),
-    deepRelics: filterRelics(
-      deepRelics,
-      expandedSelectedEffects,
-      enabledVessels,
-      true
-    ),
+    recommendedEffects: filteredRecommendedEffects,
+    relics: filterRelics(relics, effects, enabledVessels, false),
+    deepRelics: filterRelics(deepRelics, effects, enabledVessels, true),
     enabledVessels,
   };
 }
