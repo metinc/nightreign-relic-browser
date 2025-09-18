@@ -1,9 +1,10 @@
+import { items, ItemType } from "../resources/items";
 import type {
   BND4Entry,
   EffectWithOptionalDebuff,
   RelicSlot,
 } from "../types/SaveFile";
-import { getEffect, getItemName, getRelicColor } from "./DataUtils";
+import { getEffect, getRelicColor } from "./DataUtils";
 import { RelicSlotColor, type RelicColor } from "./RelicColor";
 
 export class RelicParser {
@@ -258,10 +259,10 @@ export class RelicParser {
 
   public static setCoordinates(relics: RelicSlot[]): RelicSlot[] {
     const normalRelics = relics.filter(
-      ({ itemId }) => !getItemName(itemId).startsWith("Deep")
+      ({ itemId }) => items.get(itemId)?.type === ItemType.Relic
     );
-    const deepRelics = relics.filter(({ itemId }) =>
-      getItemName(itemId).startsWith("Deep")
+    const deepRelics = relics.filter(
+      ({ itemId }) => items.get(itemId)?.type === ItemType.DeepRelic
     );
     const relicsByColor: Record<RelicColor, RelicSlot[]> = {
       [RelicSlotColor.Red]: normalRelics.filter(
