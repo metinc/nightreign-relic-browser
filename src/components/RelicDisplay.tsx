@@ -1,7 +1,10 @@
-import { Box, Grid, Paper, Typography, useMediaQuery } from "@mui/material";
+import { Alert, Box, Grid, useMediaQuery } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { ItemType } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
+import type { ColorFilterOption } from "../utils/ColorFilterOptions";
 import { RelicSlotColor } from "../utils/RelicColor";
 import { RelicCard } from "./RelicCard";
 
@@ -10,20 +13,19 @@ const COLUMNS_PER_RELIC = 6;
 const COLUMNS = RELICS_PER_ROW * COLUMNS_PER_RELIC;
 
 interface RelicDisplayProps {
-  allRelics: RelicSlot[];
   matchingRelics: RelicSlot[];
   searchTerm: string;
-  selectedColor: RelicSlotColor;
+  colorFilter: ColorFilterOption;
   onMatchCountChange?: (count: number) => void;
 }
 
 export const RelicDisplay: React.FC<RelicDisplayProps> = ({
-  allRelics,
   matchingRelics,
   searchTerm,
-  selectedColor,
+  colorFilter,
   onMatchCountChange,
 }) => {
+  const { t } = useTranslation();
   const parentRef = useRef<HTMLDivElement>(null);
 
   const bigScreen = useMediaQuery((theme) => theme.breakpoints.up("md"));
@@ -57,13 +59,20 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
     },
   });
 
-  if (allRelics.length === 0) {
+  if (matchingRelicsCount === 0) {
     return (
-      <Paper sx={{ p: 3, textAlign: "center" }}>
-        <Typography variant="h6" color="text.secondary">
-          No relics found in this slot
-        </Typography>
-      </Paper>
+      <Box
+        sx={{
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "black",
+          px: 2,
+        }}
+      >
+        <Alert severity="info">{`No ${colorFilter.color !== RelicSlotColor.Any ? t(`colors.${colorFilter.color}`).toLowerCase() : ""} ${colorFilter.type === ItemType.DeepRelic ? "deep relics" : "relics"} found.`}</Alert>
+      </Box>
     );
   }
 
@@ -126,9 +135,9 @@ export const RelicDisplay: React.FC<RelicDisplayProps> = ({
                       <RelicCard
                         relic={relic}
                         searchTerm={searchTerm}
-                        selectedColor={selectedColor}
+                        selectedColor={colorFilter.color}
                         coordinatesByColor={
-                          selectedColor !== RelicSlotColor.Any
+                          colorFilter.color !== RelicSlotColor.Any
                         }
                       />
                     </Grid>

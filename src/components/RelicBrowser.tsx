@@ -1,10 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 import type { Effect } from "../resources/effects";
-import { unsellableItemIds } from "../resources/items";
+import { items, unsellableItemIds } from "../resources/items";
 import type { CharacterSlot } from "../types/SaveFile";
+import {
+  colorFilterOptions,
+  type ColorFilterOption,
+} from "../utils/ColorFilterOptions";
 import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
-import { RelicSlotColor, type RelicColor } from "../utils/RelicColor";
+import { RelicSlotColor } from "../utils/RelicColor";
 import { doesRelicColorMatch, doesRelicMatch } from "../utils/SearchUtils";
 import { RelicDisplay } from "./RelicDisplay";
 import { SearchInput } from "./SearchInput";
@@ -14,8 +18,6 @@ interface RelicBrowserProps {
   currentSlot: CharacterSlot;
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
-  selectedColor: RelicSlotColor;
-  setSelectedColor: (color: RelicColor) => void;
   handleMatchingRelicsCountChange: (count: number) => void;
 }
 
@@ -24,16 +26,17 @@ export function RelicBrowser({
   currentSlot,
   searchTerm,
   setSearchTerm,
-  selectedColor,
-  setSelectedColor,
   handleMatchingRelicsCountChange,
 }: RelicBrowserProps) {
   const [filterSell, setFilterSell] = useState(false);
+  const [colorFilter, setColorFilter] = useState<ColorFilterOption>(
+    colorFilterOptions[0]
+  );
 
   const matchingRelics = useMemo(() => {
     if (
       !searchTerm.trim() &&
-      selectedColor === RelicSlotColor.Any &&
+      colorFilter.color === RelicSlotColor.Any &&
       !filterSell
     ) {
       return currentSlot.relics;
@@ -48,6 +51,13 @@ export function RelicBrowser({
       ) {
         return false;
       }
+
+      const item = items.get(itemId);
+
+      if (item !== undefined && item.type !== colorFilter.type) {
+        return false;
+      }
+
       const itemName = getItemName(itemId);
       const effectNames = effects.flatMap(([effect, debuff]) =>
         debuff !== undefined
@@ -56,13 +66,19 @@ export function RelicBrowser({
       );
       const itemColor = getRelicColor(itemId);
 
-      if (!doesRelicColorMatch(itemColor, selectedColor)) {
+      if (!doesRelicColorMatch(itemColor, colorFilter.color)) {
         return false;
       }
 
       return doesRelicMatch(itemName, effectNames, searchTerm);
     });
-  }, [currentSlot.relics, filterSell, searchTerm, selectedColor]);
+  }, [
+    searchTerm,
+    colorFilter.color,
+    colorFilter.type,
+    filterSell,
+    currentSlot.relics,
+  ]);
 
   return (
     <Box
@@ -77,8 +93,8 @@ export function RelicBrowser({
     >
       <SearchInput
         onSearchChange={setSearchTerm}
-        selectedColor={selectedColor}
-        onColorChange={setSelectedColor}
+        selectedColor={colorFilter}
+        onColorChange={setColorFilter}
         availableEffects={availableEffects}
         filterSell={filterSell}
         onFilterSellChange={setFilterSell}
@@ -97,10 +113,9 @@ export function RelicBrowser({
           aria-label="Relic display"
         >
           <RelicDisplay
-            allRelics={currentSlot.relics}
             matchingRelics={matchingRelics}
             searchTerm={searchTerm}
-            selectedColor={selectedColor}
+            colorFilter={colorFilter}
             onMatchCountChange={handleMatchingRelicsCountChange}
           />
         </Box>

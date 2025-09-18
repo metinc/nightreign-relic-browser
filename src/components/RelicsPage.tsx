@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { SaveFileData } from "../types/SaveFile";
-import type { RelicColor, RelicSlotColor } from "../utils/RelicColor";
 import { CharacterSlotSelect } from "./CharacterSlotSelect";
 import { ComboFinder } from "./ComboFinder";
 import { RelicBrowser } from "./RelicBrowser";
@@ -20,8 +19,6 @@ interface RelicsPageProps {
   selectSlot: (index: number) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  selectedColor: RelicSlotColor;
-  setSelectedColor: (color: RelicColor) => void;
   matchingRelicsCount: number;
   handleMatchingRelicsCountChange: (count: number) => void;
   clearSaveFile: () => void;
@@ -34,8 +31,6 @@ export function RelicsPage({
   selectSlot,
   searchTerm,
   setSearchTerm,
-  selectedColor,
-  setSelectedColor,
   handleMatchingRelicsCountChange,
   clearSaveFile,
 }: RelicsPageProps) {
@@ -126,8 +121,6 @@ export function RelicsPage({
           currentSlot={currentSlot}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
           handleMatchingRelicsCountChange={handleMatchingRelicsCountChange}
         />
       )}

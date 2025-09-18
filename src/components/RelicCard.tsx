@@ -20,6 +20,7 @@ import type { RelicSlot } from "../types/SaveFile";
 import { getEffectName, getItemName, getRelicColor } from "../utils/DataUtils";
 import { getChipColor, type RelicSlotColor } from "../utils/RelicColor";
 import { highlightSearchTerm } from "../utils/SearchUtils";
+import { RelicColorChip } from "./RelicColorChip";
 import { RelicComparisonModal } from "./RelicComparisonModal";
 
 interface RelicCardProps {
@@ -56,12 +57,11 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
   const { itemId, effects } = relic;
   const itemName = getItemName(itemId);
   const itemColor = getRelicColor(itemId);
-  const chipColor = getChipColor(itemColor);
   const backgroundColor = getBackgroundColor(effects.length);
   const isUniqueRelic = uniqueItemIds.includes(itemId);
   const itemNameHighlight = highlightSearchTerm(itemName, searchTerm);
   const selectedChipColor = getChipColor(selectedColor);
-  const isDeepRelic = items.get(itemId)?.type === ItemType.DeepRelic;
+  const itemType = items.get(itemId)?.type ?? ItemType.Relic;
   const { t } = useTranslation();
 
   const handleSellMeClick = () => {
@@ -86,12 +86,12 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
       </Typography>{" "}
       and type{" "}
       <Typography
-        color={isDeepRelic ? "#76adde" : "text.primary"}
+        color={itemType === ItemType.DeepRelic ? "#76adde" : "text.primary"}
         fontWeight="bold"
         component="span"
         variant="inherit"
       >
-        {isDeepRelic ? "Depths Relic" : "Relic"}
+        {itemType === ItemType.DeepRelic ? "Depths Relic" : "Relic"}
       </Typography>
       .
     </Typography>
@@ -150,7 +150,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
                     padding: "8px 8px",
                     margin: "-8px -8px",
                   }
-                : isDeepRelic
+                : itemType === ItemType.DeepRelic
                   ? { color: "#457cacff" }
                   : {
                       color: "text.secondary",
@@ -174,12 +174,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
               onClick={handleSellMeClick}
             />
           )}
-          <Chip
-            label={t(`colors.${itemColor}`)}
-            size="small"
-            color={chipColor}
-            sx={{ overflow: "clip" }}
-          />
+          <RelicColorChip color={itemColor} type={itemType} />
         </Box>
 
         <List sx={{ listStyleType: "disc", pl: 2, py: 0 }}>

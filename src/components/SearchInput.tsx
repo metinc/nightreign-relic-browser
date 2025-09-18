@@ -1,19 +1,17 @@
 import { Box, Chip, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import React, { type Dispatch, type SetStateAction } from "react";
-import { useTranslation } from "react-i18next";
-import type { Effect } from "../resources/effects";
+import { type Effect } from "../resources/effects";
 import {
-  getChipColor,
-  RelicSlotColor,
-  relicSlotColors,
-  type RelicColor,
-} from "../utils/RelicColor";
+  colorFilterOptions,
+  type ColorFilterOption,
+} from "../utils/ColorFilterOptions";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
+import { RelicColorChip } from "./RelicColorChip";
 
 interface SearchInputProps {
   onSearchChange: (searchTerm: string) => void;
-  selectedColor: RelicSlotColor;
-  onColorChange: (color: RelicColor) => void;
+  selectedColor: ColorFilterOption;
+  onColorChange: (colorFilter: ColorFilterOption) => void;
   availableEffects: Effect[];
   filterSell: boolean;
   onFilterSellChange: Dispatch<SetStateAction<boolean>>;
@@ -27,7 +25,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   filterSell,
   onFilterSellChange,
 }) => {
-  const { t } = useTranslation();
   return (
     <Box
       sx={{
@@ -55,17 +52,13 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           }
         }}
       >
-        {relicSlotColors.map((color) => (
+        {colorFilterOptions.map((option) => (
           <ToggleButton
-            key={color}
-            value={color}
+            key={option.color}
+            value={option}
             sx={{ textTransform: "none" }}
           >
-            <Chip
-              label={t(`colors.${color}`)}
-              size="small"
-              color={getChipColor(color) ?? "default"}
-            />
+            <RelicColorChip color={option.color} type={option.type} />
           </ToggleButton>
         ))}
       </ToggleButtonGroup>

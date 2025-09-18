@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   Checkbox,
-  Chip,
   Divider,
   FormControlLabel,
   IconButton,
@@ -32,9 +31,10 @@ import {
 } from "../utils/ComboSearch";
 import { getEffectByKey, getRelicColor } from "../utils/DataUtils";
 import { isNightfarer, Nightfarer, nightfarers } from "../utils/Nightfarers";
-import { getChipColor, RelicSlotColor } from "../utils/RelicColor";
+import { RelicSlotColor } from "../utils/RelicColor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
+import { RelicColorChip } from "./RelicColorChip";
 
 // Persistent storage keys
 const SETTINGS_STORAGE_KEY = "comboFinder:settings:v3";
@@ -442,7 +442,7 @@ export function ComboFinder(props: ComboFinderProps) {
                                 flex: "0 0 33.333%",
                                 display: "flex",
                                 justifyContent: "center",
-                                pb: 0.5,
+                                pb: 0.8,
                               },
                             }}
                           >
@@ -451,11 +451,13 @@ export function ComboFinder(props: ComboFinderProps) {
                                 key={slotIndex}
                                 className="vessel-slot-chip-wrapper"
                               >
-                                <Chip
-                                  label={t(`colors.${slotColor}`)}
-                                  size="small"
-                                  color={getChipColor(slotColor)}
-                                  variant={disabled ? "outlined" : "filled"}
+                                <RelicColorChip
+                                  color={slotColor}
+                                  type={
+                                    slotIndex < 3
+                                      ? ItemType.Relic
+                                      : ItemType.DeepRelic
+                                  }
                                   disabled={disabled}
                                 />
                               </Box>

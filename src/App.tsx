@@ -20,8 +20,6 @@ function App() {
     selectSlot,
     searchTerm,
     setSearchTerm,
-    selectedColor,
-    setSelectedColor,
     matchingRelicsCount,
     setMatchingRelicsCount,
     clearSaveFile,
@@ -95,8 +93,6 @@ function App() {
                   selectSlot={selectSlot}
                   searchTerm={searchTerm}
                   setSearchTerm={setSearchTerm}
-                  selectedColor={selectedColor}
-                  setSelectedColor={setSelectedColor}
                   matchingRelicsCount={matchingRelicsCount}
                   handleMatchingRelicsCountChange={setMatchingRelicsCount}
                   clearSaveFile={clearSaveFile}
@@ -114,8 +110,6 @@ function App() {
                   selectSlot={selectSlot}
                   searchTerm={searchTerm}
                   setSearchTerm={setSearchTerm}
-                  selectedColor={selectedColor}
-                  setSelectedColor={setSelectedColor}
                   matchingRelicsCount={matchingRelicsCount}
                   handleMatchingRelicsCountChange={setMatchingRelicsCount}
                   clearSaveFile={clearSaveFile}
