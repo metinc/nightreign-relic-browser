@@ -54,7 +54,11 @@ export function RelicBrowser({
 
       const item = items.get(itemId);
 
-      if (item !== undefined && item.type !== colorFilter.type) {
+      if (
+        colorFilter.type !== undefined &&
+        item !== undefined &&
+        item.type !== colorFilter.type
+      ) {
         return false;
       }
 
