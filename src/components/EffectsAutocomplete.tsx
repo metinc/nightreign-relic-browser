@@ -2,7 +2,7 @@ import { Search } from "@mui/icons-material";
 import { InputAdornment, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   EffectType,
@@ -18,6 +18,7 @@ interface EffectsAutocompleteProps {
   availableEffects: Effect[];
   placeholder: string;
   showOrBetterLabels?: boolean;
+  clearOnSelect?: boolean;
 }
 
 export function EffectsAutocomplete({
@@ -26,8 +27,10 @@ export function EffectsAutocomplete({
   availableEffects,
   placeholder,
   showOrBetterLabels = false,
+  clearOnSelect = false,
 }: EffectsAutocompleteProps) {
   const { t } = useTranslation();
+  const [inputValue, setInputValue] = useState("");
 
   const getOptionLabel = useCallback(
     (option: string) => {
@@ -53,7 +56,12 @@ export function EffectsAutocomplete({
       options={availableEffects.map((effect) => String(effect.key))}
       freeSolo
       sx={{ width: 350 }}
-      onInputChange={(_e, value) => onSearchChange(value)}
+      value={null}
+      inputValue={inputValue}
+      onInputChange={(_e, value) => {
+        setInputValue(value);
+        onSearchChange(value);
+      }}
       onChange={(_e, value) => {
         if (onChange === undefined || value === null) {
           return;
@@ -63,6 +71,10 @@ export function EffectsAutocomplete({
           const effect = getEffectByKey(effectKey);
           if (effect) {
             onChange(effect);
+            if (clearOnSelect) {
+              setInputValue("");
+              onSearchChange("");
+            }
           }
         }
       }}

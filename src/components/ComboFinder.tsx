@@ -491,6 +491,7 @@ export function ComboFinder(props: ComboFinderProps) {
           availableEffects={selectableEffects}
           placeholder="Search effects..."
           showOrBetterLabels
+          clearOnSelect
         />
 
         {selectedEffects.length > 0 && (
