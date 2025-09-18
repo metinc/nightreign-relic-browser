@@ -49,6 +49,7 @@ export function EffectsAutocomplete({
     <Autocomplete
       disablePortal
       autoHighlight
+      clearOnEscape
       options={availableEffects.map((effect) => String(effect.key))}
       freeSolo
       sx={{ width: 350 }}
