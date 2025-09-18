@@ -74,7 +74,7 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
 
   const tooltipContent = coordinatesByColor ? (
     <Typography component="span" variant="inherit">
-      These coordinates can be used ingame to find the relic when sorted by
+      These coordinates can be used to find the relic ingame when sorted by
       'Order Found' and filtered by{" "}
       <Typography
         color={selectedChipColor}
@@ -83,11 +83,20 @@ const RelicCardComponent: React.FC<RelicCardProps> = ({
         variant="inherit"
       >
         {t(`colors.${selectedColor}`)}
+      </Typography>{" "}
+      and type{" "}
+      <Typography
+        color={isDeepRelic ? "#76adde" : "text.primary"}
+        fontWeight="bold"
+        component="span"
+        variant="inherit"
+      >
+        {isDeepRelic ? "Depths Relic" : "Relic"}
       </Typography>
       .
     </Typography>
   ) : (
-    "These coordinates can be used ingame to find the relic when sorted by 'Order Found'."
+    "These coordinates can be used to find the relic ingame when sorted by 'Order Found'."
   );
 
   const [row, column] = coordinatesByColor
