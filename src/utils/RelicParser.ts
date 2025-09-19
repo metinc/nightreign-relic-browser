@@ -259,7 +259,7 @@ export class RelicParser {
 
   public static setCoordinates(relics: RelicSlot[]): RelicSlot[] {
     const normalRelics = relics.filter(
-      ({ itemId }) => items.get(itemId)?.type === ItemType.Relic
+      ({ itemId }) => items.get(itemId)?.type !== ItemType.DeepRelic
     );
     const deepRelics = relics.filter(
       ({ itemId }) => items.get(itemId)?.type === ItemType.DeepRelic
