@@ -3,6 +3,7 @@ import { Nightfarer } from "../utils/Nightfarers";
 interface EffectArrayElement {
   key: EffectKey;
   ids: number[];
+  type?: EffectType;
   nightfarer?: Nightfarer;
   stacks?: boolean;
   startingBonus?: StartingBonus;
@@ -57,6 +58,7 @@ export const enum EffectGroup {
 }
 
 export const enum EffectType {
+  Buff,
   Debuff,
 }
 

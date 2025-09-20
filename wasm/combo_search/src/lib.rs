@@ -6,6 +6,8 @@ use std::collections::HashSet;
 use rayon::prelude::*;
 // Re-export for JS thread pool init
 pub use wasm_bindgen_rayon::init_thread_pool;
+// Added: represent EffectType as numeric enum like TS const enum
+use serde_repr::{Serialize_repr, Deserialize_repr};
 
 // Constants for scoring
 const POINTS_FOR_SELECTED_EFFECT: f32 = 1.0;
@@ -51,6 +53,13 @@ impl ScoreContext {
     #[inline(always)] fn set_group(&mut self, g: usize) { if g < EFFECT_GROUP_SPACE { unsafe { *self.satisfied_groups_gen.get_unchecked_mut(g) = self.current_gen; } } }
 }
 
+#[derive(Serialize_repr, Deserialize_repr, Debug, Copy, Clone, PartialEq, Eq)]
+#[repr(u8)]
+pub enum EffectType {
+    Buff = 0,
+    Debuff = 1,
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct Effect {
     pub key: u32,
@@ -59,6 +68,7 @@ pub struct Effect {
     pub group: Option<u8>,
     pub level: Option<u8>,
     pub startingBonus: Option<u8>,
+    pub r#type: Option<EffectType>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -137,7 +147,7 @@ fn add_combination_if_unique6(
     let unique_key = generate_unique_key6(relic_indices6);
     if !seen_combinations.insert(unique_key) { return; }
 
-    let points = calc_points6(nightfarer, relic_indices6, relics_normal, relics_deep, selected_keys, recommended_bitmap, score_ctx);
+    let points = calc_points(nightfarer, relic_indices6, relics_normal, relics_deep, selected_keys, recommended_bitmap, score_ctx);
 
     if results.len() < TOP_RESULTS {
         results.push(VesselCombinationResultEntry { vessel_index, relic_indices: relic_indices6, points });
@@ -163,7 +173,7 @@ fn add_combination_if_unique6(
 }
 
 #[inline(always)]
-fn calc_points6(
+fn calc_points(
     nightfarer: u8,
     relic_indices6: [Option<usize>; 6],
     relics_normal: &[RelicSlot],
@@ -208,15 +218,18 @@ fn calc_points6(
                     Some(l) => { debug_assert!(l <= 3); let missing: i32 = 3 - l as i32; 1.0 + (missing as f32) * PENALTY_FOR_MISSING_LEVEL },
                     None => 1.0
                 };
-                if is_selected_effect {
-                    if is_duplicate { points += POINTS_FOR_SELECTED_DUPLICATE_EFFECT * level_points_multiplier; }
-                    else { points += POINTS_FOR_SELECTED_EFFECT * level_points_multiplier; }
-                } else if is_usable_character_effect && !is_duplicate {
-                    points += POINTS_FOR_RANDOM_CHARACTER_EFFECT * level_points_multiplier;
-                } else if !is_character_effect {
-                    let is_recommended = is_recommended_effect(effect, recommended_bitmap);
-                    if is_recommended { points += POINTS_FOR_RANDOM_RECOMMENDED_EFFECT * level_points_multiplier; }
-                    else { points += POINTS_FOR_RANDOM_EFFECT * level_points_multiplier; }
+                let is_debuff = matches!(effect.r#type, Some(EffectType::Debuff));
+                if !(is_debuff && !is_selected_effect) {
+                    if is_selected_effect {
+                        if is_duplicate { points += POINTS_FOR_SELECTED_DUPLICATE_EFFECT * level_points_multiplier; }
+                        else { points += POINTS_FOR_SELECTED_EFFECT * level_points_multiplier; }
+                    } else if is_usable_character_effect && !is_duplicate {
+                        points += POINTS_FOR_RANDOM_CHARACTER_EFFECT * level_points_multiplier;
+                    } else if !is_character_effect {
+                        let is_recommended = is_recommended_effect(effect, recommended_bitmap);
+                        if is_recommended { points += POINTS_FOR_RANDOM_RECOMMENDED_EFFECT * level_points_multiplier; }
+                        else { points += POINTS_FOR_RANDOM_EFFECT * level_points_multiplier; }
+                    }
                 }
                 ctx.set_key(k);
                 if let Some(g) = effect.group { let gu = g as usize; ctx.set_group(gu); }
@@ -279,7 +292,7 @@ fn search_group_triples(
                 if is_deep_group { full_indices6[3] = group_indices[0]; full_indices6[4] = group_indices[1]; full_indices6[5] = group_indices[2]; }
                 else { full_indices6[0] = group_indices[0]; full_indices6[1] = group_indices[1]; full_indices6[2] = group_indices[2]; }
 
-                let points = calc_points6(
+                let points = calc_points(
                     nightfarer,
                     full_indices6,
                     relics_normal,
