@@ -14,6 +14,7 @@ import {
   ListItemText,
   Radio,
   RadioGroup,
+  Slider,
   Snackbar,
   Stack,
   Typography,
@@ -37,7 +38,7 @@ import { RelicCard } from "./RelicCard";
 import { RelicColorChip } from "./RelicColorChip";
 
 // Persistent storage keys
-const SETTINGS_STORAGE_KEY = "comboFinder:settings:v3";
+const SETTINGS_STORAGE_KEY = "comboFinder:settings:v4";
 const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v3";
 
 interface ComboFinderProps {
@@ -49,7 +50,11 @@ interface ComboFinderProps {
 
 interface ComboFinderSettings {
   disabledVessels: number[];
-  selectedEffects: number[];
+  selectedEffects: {
+    effectKey: number;
+    minStacks: number;
+    maxStacks: number;
+  }[];
 }
 
 function createInitialSettings(): Record<Nightfarer, ComboFinderSettings> {
@@ -97,7 +102,10 @@ export function ComboFinder(props: ComboFinderProps) {
       const parsed = JSON.parse(raw) as Partial<
         Record<
           Nightfarer,
-          { disabledVessels?: unknown; selectedEffects?: unknown }
+          {
+            disabledVessels?: unknown;
+            selectedEffects?: unknown;
+          }
         >
       >;
       Object.keys(base).forEach((k) => {
@@ -110,9 +118,52 @@ export function ComboFinder(props: ComboFinderProps) {
               .filter((v) => Number.isFinite(v)) as number[];
           }
           if (Array.isArray(val.selectedEffects)) {
-            base[nf].selectedEffects = (val.selectedEffects as unknown[])
-              .map((v) => (typeof v === "number" ? v : Number(v)))
-              .filter((v) => Number.isFinite(v)) as number[];
+            const arr = val.selectedEffects as unknown[];
+            const entries = arr
+              .map((entry) => {
+                if (typeof entry === "number") {
+                  const eff = getEffectByKey(entry);
+                  const maxDefault = eff?.stacks ? 10 : 1;
+                  return {
+                    effectKey: entry,
+                    minStacks: 0,
+                    maxStacks: maxDefault,
+                  };
+                }
+                if (typeof entry === "object" && entry !== null) {
+                  const obj = entry as {
+                    effectKey?: unknown;
+                    minStacks?: unknown;
+                    maxStacks?: unknown;
+                  };
+                  if (typeof obj.effectKey === "number") {
+                    const ek = obj.effectKey;
+                    const eff = getEffectByKey(ek);
+                    const maxDefault = eff?.stacks ? 10 : 1;
+                    const min =
+                      typeof obj.minStacks === "number" ? obj.minStacks : 0;
+                    const max =
+                      typeof obj.maxStacks === "number"
+                        ? obj.maxStacks
+                        : maxDefault;
+                    const a = Math.max(0, Math.min(min, maxDefault));
+                    const b = Math.max(0, Math.min(max, maxDefault));
+                    const [minStacks, maxStacks] = a <= b ? [a, b] : [b, a];
+                    return { effectKey: ek, minStacks, maxStacks };
+                  }
+                }
+                return undefined;
+              })
+              .filter(
+                (
+                  x
+                ): x is {
+                  effectKey: number;
+                  minStacks: number;
+                  maxStacks: number;
+                } => x !== undefined
+              );
+            base[nf].selectedEffects = entries;
           }
         }
       });
@@ -126,10 +177,10 @@ export function ComboFinder(props: ComboFinderProps) {
     Record<Nightfarer, ComboFinderSettings>
   >(() => loadSettingsFromStorage());
 
-  // Removed local selectedEffects state; now derived from settings per Nightfarer
+  // Derive Effect objects from selected effect entries
   const selectedEffects = useMemo(() => {
     return (settings[selectedNightfarer].selectedEffects || [])
-      .map(getEffectByKey)
+      .map((e) => getEffectByKey(e.effectKey))
       .filter((e): e is Effect => e !== undefined);
   }, [settings, selectedNightfarer]);
 
@@ -277,6 +328,12 @@ export function ComboFinder(props: ComboFinderProps) {
 
   const handleEffectChange = useCallback(
     (newEffect: Effect) => {
+      const already = settings[selectedNightfarer].selectedEffects.some(
+        (e) => e.effectKey === newEffect.key
+      );
+      if (already) {
+        return;
+      }
       if (selectedEffects.length >= 9) {
         setNotice("You can't select more than 9 effects.");
         return;
@@ -284,51 +341,58 @@ export function ComboFinder(props: ComboFinderProps) {
       if (!newEffect) {
         return;
       }
-      const effectAlreadyAdded = selectedEffects.some((e) => e === newEffect);
-      if (effectAlreadyAdded) {
-        return;
-      }
 
       setSettings((prevSettings) => {
         const current = prevSettings[selectedNightfarer];
-        const currentEffects = current.selectedEffects
-          .map(getEffectByKey)
-          .filter((e): e is Effect => e !== undefined);
-        const filtered = currentEffects.filter((effect) => {
-          if (effect.group !== undefined && effect.group === newEffect.group) {
+        const existingEntries = current.selectedEffects ?? [];
+        const filteredEntries = existingEntries.filter((se) => {
+          const eff = getEffectByKey(se.effectKey);
+          if (!eff) {
+            // drop invalid entries
+            return false;
+          }
+          if (eff.group !== undefined && eff.group === newEffect.group) {
             return false;
           }
           if (
-            effect.startingBonus !== undefined &&
-            effect.startingBonus === newEffect.startingBonus
+            eff.startingBonus !== undefined &&
+            eff.startingBonus === newEffect.startingBonus
           ) {
             return false;
           }
           return true;
         });
-        const updated = [...filtered, newEffect];
+        const newEntry = {
+          effectKey: newEffect.key,
+          minStacks: 0,
+          maxStacks: newEffect.stacks ? 10 : 1,
+        };
+        const updatedEntries = [...filteredEntries, newEntry];
         return {
           ...prevSettings,
           [selectedNightfarer]: {
             ...current,
-            selectedEffects: updated.map((e) => e.key),
+            selectedEffects: updatedEntries,
           },
         };
       });
     },
-    [selectedEffects, selectedNightfarer]
+    [selectedEffects.length, selectedNightfarer, settings, setNotice]
   );
 
   const removeEffect = useCallback(
     (effectToRemove: Effect) => {
       setSettings((prevSettings) => {
         const current = prevSettings[selectedNightfarer];
-        const updated = current.selectedEffects.filter(
-          (k) => k !== effectToRemove.key
+        const updated = (current.selectedEffects || []).filter(
+          (e) => e.effectKey !== effectToRemove.key
         );
         return {
           ...prevSettings,
-          [selectedNightfarer]: { ...current, selectedEffects: updated },
+          [selectedNightfarer]: {
+            ...current,
+            selectedEffects: updated,
+          },
         };
       });
     },
@@ -496,35 +560,90 @@ export function ComboFinder(props: ComboFinderProps) {
 
         {selectedEffects.length > 0 && (
           <List>
-            {selectedEffects.map((effect) => (
-              <ListItem
-                key={effect.key}
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="remove"
-                    onClick={() => removeEffect(effect)}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                }
-                sx={{
-                  "&:not(:last-of-type)": {
-                    borderBottom: 1,
-                    borderColor: "divider",
-                  },
-                }}
-              >
-                <ListItemText
-                  primary={t(`effects.${effect.key}`)}
+            {selectedEffects.map((effect) => {
+              const entry = settings[selectedNightfarer].selectedEffects.find(
+                (e) => e.effectKey === effect.key
+              );
+              const maxVal = effect.stacks ? 10 : 1;
+              const value: [number, number] = [
+                entry?.minStacks ?? 0,
+                entry?.maxStacks ?? maxVal,
+              ];
+              return (
+                <ListItem
+                  key={effect.key}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="remove"
+                      onClick={() => removeEffect(effect)}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  }
                   sx={{
-                    ...(effect.type === EffectType.Debuff && {
-                      color: "#76adde",
-                    }),
+                    "&:not(:last-of-type)": {
+                      borderBottom: 1,
+                      borderColor: "divider",
+                    },
                   }}
-                />
-              </ListItem>
-            ))}
+                >
+                  <Box
+                    sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+                  >
+                    <ListItemText
+                      primary={t(`effects.${effect.key}`)}
+                      sx={{
+                        ...(effect.type === EffectType.Debuff && {
+                          color: "#76adde",
+                        }),
+                      }}
+                    />
+                    <Slider
+                      min={0}
+                      step={1}
+                      max={maxVal}
+                      value={value}
+                      onChange={(_, v) => {
+                        if (Array.isArray(v)) {
+                          const start = Math.max(
+                            0,
+                            Math.min((v[0] ?? 0) as number, maxVal)
+                          );
+                          const end = Math.max(
+                            0,
+                            Math.min((v[1] ?? maxVal) as number, maxVal)
+                          );
+                          const [a, b] =
+                            start <= end ? [start, end] : [end, start];
+                          setSettings((prev) => {
+                            const current = prev[selectedNightfarer];
+                            const updated = (current.selectedEffects || []).map(
+                              (se) =>
+                                se.effectKey === effect.key
+                                  ? { ...se, minStacks: a, maxStacks: b }
+                                  : se
+                            );
+                            return {
+                              ...prev,
+                              [selectedNightfarer]: {
+                                ...current,
+                                selectedEffects: updated,
+                              },
+                            };
+                          });
+                        }
+                      }}
+                      marks={[
+                        { value: 0, label: 0 },
+                        { value: maxVal, label: maxVal },
+                      ]}
+                      valueLabelDisplay="auto"
+                    />
+                  </Box>
+                </ListItem>
+              );
+            })}
           </List>
         )}
       </Box>
