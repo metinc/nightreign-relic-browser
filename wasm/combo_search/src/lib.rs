@@ -92,12 +92,20 @@ pub struct SearchInput {
     pub deepRelics: Vec<RelicSlot>,
     pub enabled_vessels: Vec<[u8;6]>,
     pub recommended_effects: Vec<Effect>,
+    pub selected_effect_ranges: Option<Vec<SelectedEffectRange>>, // new optional
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct SearchOutput {
     pub combinations: Vec<VesselCombinationResultEntry>,
     pub total_combinations_checked: u32,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy)]
+pub struct SelectedEffectRange {
+    pub effect_key: u32,
+    pub min_stacks: u8,
+    pub max_stacks: u8,
 }
 
 #[inline(always)]
@@ -140,12 +148,18 @@ fn add_combination_if_unique6(
     recommended_bitmap: &[bool; EFFECT_KEY_SPACE],
     min_tracker: &mut (usize, f32),
     score_ctx: &mut ScoreContext,
+    ranges: &[(u32,u8,u8)],
+    selected_groups_by_key: &[u8; EFFECT_KEY_SPACE],
+    selected_levels_by_key: &[u8; EFFECT_KEY_SPACE],
 ) {
     // Skip combos where all 6 slots are empty
     if relic_indices6.iter().all(|x| x.is_none()) { return; }
 
     let unique_key = generate_unique_key6(relic_indices6);
     if !seen_combinations.insert(unique_key) { return; }
+
+    // Drop if out of requested stack ranges
+    if !combination_satisfies_ranges(&relic_indices6, relics_normal, relics_deep, nightfarer, ranges, selected_groups_by_key, selected_levels_by_key) { return; }
 
     let points = calc_points(nightfarer, relic_indices6, relics_normal, relics_deep, selected_keys, recommended_bitmap, score_ctx);
 
@@ -207,7 +221,7 @@ fn calc_points(
                 }
 
                 let k = effect.key as usize;
-                if k >= EFFECT_KEY_SPACE { continue; } // CRASH GUARD: skip unknown effect key
+                if k >= EFFECT_KEY_SPACE { continue; }
                 let key_duplicate = ctx.is_key(k);
                 let group_duplicate = match effect.group { Some(g) => { let gu = g as usize; ctx.is_group(gu) }, None => false };
                 let is_duplicate = key_duplicate || group_duplicate;
@@ -237,6 +251,62 @@ fn calc_points(
         }
     }
     points
+}
+
+#[inline(always)]
+fn combination_satisfies_ranges(
+    relic_indices6: &[Option<usize>;6],
+    relics_normal: &[RelicSlot],
+    relics_deep: &[RelicSlot],
+    nightfarer: u8,
+    ranges: &[(u32, u8, u8)],
+    selected_groups_by_key: &[u8; EFFECT_KEY_SPACE],
+    selected_levels_by_key: &[u8; EFFECT_KEY_SPACE],
+) -> bool {
+    if ranges.is_empty() { return true; }
+    // One counter per requested range entry, in order
+    let mut counts: Vec<u8> = vec![0u8; ranges.len()];
+
+    for (slot_i, opt_idx) in relic_indices6.iter().enumerate() {
+        if let Some(idx) = opt_idx {
+            let relic = if slot_i < 3 { unsafe { relics_normal.get_unchecked(*idx) } } else { unsafe { relics_deep.get_unchecked(*idx) } };
+            for effect in &relic.effects {
+                // Skip effects not usable by this nightfarer if character bound
+                if let Some(nf) = effect.nightfarer { if nf != nightfarer { continue; } }
+
+                let eff_group = effect.group;
+                let eff_level = effect.level;
+
+                // Check this effect against each requested range key
+                for (i, (key, _min_s, _max_s)) in ranges.iter().enumerate() {
+                    let mut matches = effect.key == *key;
+                    if !matches {
+                        let k_usize = *key as usize;
+                        if k_usize < EFFECT_KEY_SPACE {
+                            // selected group/level metadata for this requested key
+                            let sel_g = unsafe { *selected_groups_by_key.get_unchecked(k_usize) };
+                            let sel_l = unsafe { *selected_levels_by_key.get_unchecked(k_usize) };
+                            if sel_g != u8::MAX && sel_l != u8::MAX {
+                                if let (Some(eg), Some(el)) = (eff_group, eff_level) {
+                                    if eg == sel_g && el >= sel_l { matches = true; }
+                                }
+                            }
+                        }
+                    }
+                    if matches {
+                        let c = unsafe { counts.get_unchecked_mut(i) };
+                        if *c < u8::MAX { *c += 1; }
+                    }
+                }
+            }
+        }
+    }
+    // Now validate counts fall within the ranges
+    for (i, (_key, min_s, max_s)) in ranges.iter().enumerate() {
+        let c = unsafe { *counts.get_unchecked(i) };
+        if c < *min_s || c > *max_s { return false; }
+    }
+    true
 }
 
 fn search_group_triples(
@@ -271,7 +341,8 @@ fn search_group_triples(
         } else if color_req_anchor < COLOR_SPACE {
             unsafe { by_color_all.get_unchecked(color_req_anchor) }
         } else { &EMPTY_VEC };
-        let anchor_candidates: &Vec<usize> = if anchor_candidates_cand.is_empty() { anchor_candidates_all } else { anchor_candidates_cand };
+        // Change: always use all relics, not only candidates
+        let anchor_candidates: &Vec<usize> = anchor_candidates_all;
         if anchor_candidates.is_empty() { continue; }
         let other_slots: [usize; 2] = match anchor_slot { 0 => [1,2], 1 => [0,2], _ => [0,1] };
         let list_a: &Vec<usize> = { let c = group_slots[other_slots[0]] as usize; if c == ANY_COLOR { unsafe { by_color_all.get_unchecked(ANY_COLOR) } } else if c < COLOR_SPACE { unsafe { by_color_all.get_unchecked(c) } } else { &EMPTY_VEC } };
@@ -331,7 +402,7 @@ fn search_group_triples(
         }
     }
 
-    // Ensure at least an empty triple so merging can still happen
+    // Ensure at least an empty triple so merging can still happen when this group has no relics
     if local_results.is_empty() { local_results.push(([None, None, None], 0.0)); }
 
     (local_results, checked_local)
@@ -348,6 +419,23 @@ pub fn search_combinations(input: JsValue) -> JsValue {
 
     let mut selected_bitmap = [false; EFFECT_KEY_SPACE];
     for e in &input.selected_effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE { unsafe { *selected_bitmap.get_unchecked_mut(k) = true; } } }
+
+    // Build fast lookup arrays for selected effect group/level by key
+    let mut selected_groups_by_key = [u8::MAX; EFFECT_KEY_SPACE];
+    let mut selected_levels_by_key = [u8::MAX; EFFECT_KEY_SPACE];
+    for e in &input.selected_effects {
+        let k = e.key as usize;
+        if k < EFFECT_KEY_SPACE {
+            if let Some(g) = e.group { unsafe { *selected_groups_by_key.get_unchecked_mut(k) = g; } }
+            if let Some(l) = e.level { unsafe { *selected_levels_by_key.get_unchecked_mut(k) = l; } }
+        }
+    }
+
+    // Precompute ranges as tuples for faster checks
+    let ranges_vec: Vec<(u32,u8,u8)> = match &input.selected_effect_ranges {
+        Some(v) => v.iter().map(|r| (r.effect_key, r.min_stacks, r.max_stacks)).collect(),
+        None => Vec::new(),
+    };
 
     // Build candidate bitmaps for normal and deep relics
     let mut effect_candidates_norm: Vec<usize> = Vec::new();
@@ -457,6 +545,9 @@ pub fn search_combinations(input: JsValue) -> JsValue {
                     &recommended_bitmap,
                     &mut min_tracker,
                     &mut score_ctx,
+                    &ranges_vec,
+                    &selected_groups_by_key,
+                    &selected_levels_by_key,
                 );
             }
         }

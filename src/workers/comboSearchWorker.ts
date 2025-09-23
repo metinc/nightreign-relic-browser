@@ -8,6 +8,12 @@ import { getRelicColor } from "../utils/DataUtils.js";
 import { Nightfarer } from "../utils/Nightfarers";
 import type { Vessel } from "../utils/Vessels";
 
+export interface SelectedEffectEntry {
+  effectKey: number;
+  minStacks: number;
+  maxStacks: number;
+}
+
 export interface ComboSearchWorkerInput {
   nightfarer: Nightfarer;
   selectedEffects: Effect[];
@@ -15,6 +21,7 @@ export interface ComboSearchWorkerInput {
   relics: RelicSlot[];
   deepRelics: RelicSlot[];
   enabledVessels: Vessel[];
+  selectedEffectRanges: SelectedEffectEntry[];
 }
 
 export interface ComboSearchWorkerProgress {
@@ -99,6 +106,7 @@ export function buildWasmInput({
   relics,
   deepRelics,
   enabledVessels,
+  selectedEffectRanges,
 }: ComboSearchWorkerInput) {
   return {
     nightfarer,
@@ -115,6 +123,11 @@ export function buildWasmInput({
     })),
     enabled_vessels: enabledVessels.map(({ slots }) => slots),
     recommended_effects: recommendedEffects,
+    selected_effect_ranges: selectedEffectRanges.map((e) => ({
+      effect_key: e.effectKey,
+      min_stacks: e.minStacks,
+      max_stacks: e.maxStacks,
+    })),
   };
 }
 

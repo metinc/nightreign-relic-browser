@@ -1,4 +1,4 @@
-import type { Effect } from "../resources/effects";
+import type { Effect, EffectKey } from "../resources/effects";
 import { items } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
 import type {
@@ -8,6 +8,7 @@ import type {
 import { getStackableHigherLevelEffects, relicHasEffect } from "./DataUtils";
 import { Nightfarer } from "./Nightfarers";
 import { recommendedEffectsByCharacter } from "./RecommendedEffects";
+import { RelicSlotColor } from "./RelicColor";
 import { sortRelicsByColor } from "./RelicProcessor";
 import type { Vessel } from "./Vessels";
 
@@ -37,6 +38,12 @@ export interface ComboSearchResult {
   availableRelicsCount: number;
 }
 
+export type SelectedEffectEntry = {
+  effectKey: number;
+  minStacks: number;
+  maxStacks: number;
+};
+
 // Global worker instance and cancellation tracking
 let currentWorker: Worker | null = null;
 let currentSearchId = 0;
@@ -55,6 +62,7 @@ export async function searchCombinations(
   relics: RelicSlot[],
   deepRelics: RelicSlot[],
   enabledVessels: Vessel[],
+  selectedEffectEntries: SelectedEffectEntry[],
   onProgress?: (progress: ComboSearchProgress) => void
 ): Promise<ComboSearchResult> {
   return new Promise((resolve, reject) => {
@@ -84,7 +92,8 @@ export async function searchCombinations(
       selectedEffects,
       relics,
       deepRelics,
-      enabledVessels
+      enabledVessels,
+      selectedEffectEntries
     );
 
     worker.onmessage = (event: MessageEvent<ComboSearchWorkerMessage>) => {
@@ -176,13 +185,14 @@ function filterRelics(
   relics: RelicSlot[],
   effects: Effect[],
   enabledVessels: Vessel[],
-  deepRelics: boolean
+  deepRelics: boolean,
+  blockedEffectKeys: EffectKey[]
 ): RelicSlot[] {
-  const vesselSlots = deepRelics
-    ? enabledVessels.slice(3)
-    : enabledVessels.slice(0, 3);
+  const vesselSlotIndices = deepRelics ? [3, 4, 5] : [0, 1, 2];
   const enabledRelicColors = new Set(
-    vesselSlots.flatMap((vessel) => vessel.slots)
+    vesselSlotIndices.flatMap((index) =>
+      enabledVessels.map((v) => v.slots[index])
+    )
   );
 
   const filteredRelics = relics.filter((relic) => {
@@ -190,11 +200,16 @@ function filterRelics(
     if (
       item === undefined ||
       item?.color === null ||
-      !enabledRelicColors.has(item.color)
+      (!enabledRelicColors.has(item.color) &&
+        !enabledRelicColors.has(RelicSlotColor.Any))
     ) {
       return false;
     }
-    return effects.some((effect) => relicHasEffect(relic, effect));
+    return effects.some(
+      (effect) =>
+        relicHasEffect(relic, effect) &&
+        blockedEffectKeys.indexOf(effect.key) < 0
+    );
   });
 
   const relicsByColor = sortRelicsByColor(filteredRelics);
@@ -208,7 +223,13 @@ function filterRelics(
         const item = items.get(relic.itemId);
         return (
           item?.color === Number(color) &&
-          !filteredRelicsByColor.includes(relic)
+          !filteredRelicsByColor.includes(relic) &&
+          !blockedEffectKeys.some((blockedKey) =>
+            relic.effects.some(
+              ([e, debuff]) =>
+                e.key === blockedKey || debuff?.key === blockedKey
+            )
+          )
         );
       })
       .map(({ relic, index }) => ({
@@ -254,7 +275,8 @@ export function buildWorkerInput(
   selectedEffects: Effect[],
   relics: RelicSlot[],
   deepRelics: RelicSlot[],
-  enabledVessels: Vessel[]
+  enabledVessels: Vessel[],
+  selectedEffectEntries: SelectedEffectEntry[]
 ): ComboSearchWorkerInput {
   const expandedSelectedEffects = selectedEffects.flatMap(
     getStackableHigherLevelEffects
@@ -264,12 +286,29 @@ export function buildWorkerInput(
     expandedSelectedEffects
   );
   const effects = [...expandedSelectedEffects, ...filteredRecommendedEffects];
+
+  const blockedEffectKeys = selectedEffectEntries
+    .filter(({ maxStacks }) => maxStacks === 0)
+    .map(({ effectKey }) => effectKey);
   return {
     nightfarer,
     selectedEffects: expandedSelectedEffects,
     recommendedEffects: filteredRecommendedEffects,
-    relics: filterRelics(relics, effects, enabledVessels, false),
-    deepRelics: filterRelics(deepRelics, effects, enabledVessels, true),
+    relics: filterRelics(
+      relics,
+      effects,
+      enabledVessels,
+      false,
+      blockedEffectKeys
+    ),
+    deepRelics: filterRelics(
+      deepRelics,
+      effects,
+      enabledVessels,
+      true,
+      blockedEffectKeys
+    ),
     enabledVessels,
+    selectedEffectRanges: selectedEffectEntries,
   };
 }

@@ -23,16 +23,22 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EffectKey, EffectType, type Effect } from "../resources/effects";
 import { items, ItemType } from "../resources/items";
-import type { CharacterSlot, SaveFileData } from "../types/SaveFile";
+import type { CharacterSlot, RelicSlot, SaveFileData } from "../types/SaveFile";
 import {
   cancelCurrentSearch,
   searchCombinations,
   type ComboSearchProgress,
   type ComboSearchResult,
 } from "../utils/ComboSearch";
-import { getEffectByKey, getRelicColor } from "../utils/DataUtils";
+import {
+  getEffectByKey,
+  getRelicColor,
+  relicEffectCount,
+  relicHasEffect,
+} from "../utils/DataUtils";
 import { isNightfarer, Nightfarer, nightfarers } from "../utils/Nightfarers";
 import { RelicSlotColor } from "../utils/RelicColor";
+import { sortRelicsByColor } from "../utils/RelicProcessor";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
 import { RelicColorChip } from "./RelicColorChip";
@@ -184,6 +190,77 @@ export function ComboFinder(props: ComboFinderProps) {
       .filter((e): e is Effect => e !== undefined);
   }, [settings, selectedNightfarer]);
 
+  const effectsMaxStacksMap = useMemo(() => {
+    const map = new Map<Effect, number>();
+    selectedEffects.forEach((effect) => {
+      if (effect.stacks !== true) {
+        map.set(effect, 1);
+        return;
+      }
+      const matchingRelics = props.currentSlot.relics.filter(
+        (relic) =>
+          items.get(relic.itemId)?.type !== ItemType.DeepRelic &&
+          relicHasEffect(relic, effect)
+      );
+      const matchingDeepRelics = props.currentSlot.relics.filter(
+        (relic) =>
+          items.get(relic.itemId)?.type === ItemType.DeepRelic &&
+          relicHasEffect(relic, effect)
+      );
+      const matchingRelicsByColor = sortRelicsByColor(matchingRelics);
+      const matchingDeepRelicsByColor = sortRelicsByColor(matchingDeepRelics);
+      const { vessels } = nightfarers[selectedNightfarer];
+      const enabledVessels = vessels.filter(
+        (_, index) =>
+          !settings[selectedNightfarer].disabledVessels.includes(index)
+      );
+
+      let maxStacks = 0;
+      for (const vessel of enabledVessels) {
+        const { slots } = vessel;
+        const relicsWithMostStacks: RelicSlot[] = [];
+        let stacksOnVessel = 0;
+        for (let i = 0; i < slots.length; i++) {
+          const slot = slots[i];
+          const isDeepSlot = i >= 3;
+          let relicWithMostStacks: RelicSlot | undefined;
+          let relics: RelicSlot[];
+          if (isDeepSlot) {
+            if (slot === RelicSlotColor.Any) {
+              relics = matchingDeepRelics;
+            } else {
+              relics = matchingDeepRelicsByColor[slot];
+            }
+          } else {
+            if (slot === RelicSlotColor.Any) {
+              relics = matchingRelics;
+            } else {
+              relics = matchingRelicsByColor[slot];
+            }
+          }
+          const slotMaxStacks = relics.reduce((max, relic) => {
+            if (relicsWithMostStacks.includes(relic)) {
+              return max;
+            }
+            const stacks = relicEffectCount(relic, effect);
+            if (stacks > max) {
+              relicWithMostStacks = relic;
+              return stacks;
+            }
+            return max;
+          }, 0);
+          stacksOnVessel += slotMaxStacks;
+          if (relicWithMostStacks !== undefined) {
+            relicsWithMostStacks.push(relicWithMostStacks);
+          }
+        }
+        maxStacks = Math.max(maxStacks, stacksOnVessel);
+      }
+      map.set(effect, maxStacks);
+    });
+    return map;
+  }, [selectedEffects, props.currentSlot.relics, selectedNightfarer, settings]);
+
   const selectableEffects = useMemo(() => {
     return props.availableEffects.filter(
       (effect) =>
@@ -276,6 +353,7 @@ export function ComboFinder(props: ComboFinderProps) {
         availableRelics,
         availableDeepRelics,
         enabledVessels,
+        settings[selectedNightfarer].selectedEffects,
         (progress: ComboSearchProgress) => {
           // Only update progress if this is still the current search
           if (myRunId === runIdRef.current) {
@@ -302,7 +380,13 @@ export function ComboFinder(props: ComboFinderProps) {
         setSearchResults(null);
       }
     }
-  }, [selectedEffects, selectedNightfarer, settings, saveFileData, runIdRef]);
+  }, [
+    selectedNightfarer,
+    saveFileData.slots,
+    saveFileData.currentSlot,
+    selectedEffects,
+    settings,
+  ]);
 
   // Automatically perform a search when selectedEffects changes
   useEffect(() => {
@@ -377,7 +461,7 @@ export function ComboFinder(props: ComboFinderProps) {
         };
       });
     },
-    [selectedEffects.length, selectedNightfarer, settings, setNotice]
+    [settings, selectedNightfarer, selectedEffects.length]
   );
 
   const removeEffect = useCallback(
@@ -561,13 +645,13 @@ export function ComboFinder(props: ComboFinderProps) {
         {selectedEffects.length > 0 && (
           <List>
             {selectedEffects.map((effect) => {
-              const entry = settings[selectedNightfarer].selectedEffects.find(
-                (e) => e.effectKey === effect.key
-              );
-              const maxVal = effect.stacks ? 10 : 1;
+              const settingsEntry = settings[
+                selectedNightfarer
+              ].selectedEffects.find((e) => e.effectKey === effect.key);
+              const maxStacks = effectsMaxStacksMap.get(effect) ?? 1;
               const value: [number, number] = [
-                entry?.minStacks ?? 0,
-                entry?.maxStacks ?? maxVal,
+                settingsEntry?.minStacks ?? 0,
+                settingsEntry?.maxStacks ?? maxStacks,
               ];
               return (
                 <ListItem
@@ -602,17 +686,21 @@ export function ComboFinder(props: ComboFinderProps) {
                     <Slider
                       min={0}
                       step={1}
-                      max={maxVal}
+                      max={maxStacks}
                       value={value}
+                      marks={Array.from({ length: maxStacks + 1 }, (_, i) => ({
+                        value: i,
+                        label: i,
+                      }))}
                       onChange={(_, v) => {
                         if (Array.isArray(v)) {
                           const start = Math.max(
                             0,
-                            Math.min((v[0] ?? 0) as number, maxVal)
+                            Math.min((v[0] ?? 0) as number, maxStacks)
                           );
                           const end = Math.max(
                             0,
-                            Math.min((v[1] ?? maxVal) as number, maxVal)
+                            Math.min((v[1] ?? maxStacks) as number, maxStacks)
                           );
                           const [a, b] =
                             start <= end ? [start, end] : [end, start];
@@ -634,11 +722,6 @@ export function ComboFinder(props: ComboFinderProps) {
                           });
                         }
                       }}
-                      marks={[
-                        { value: 0, label: 0 },
-                        { value: maxVal, label: maxVal },
-                      ]}
-                      valueLabelDisplay="auto"
                     />
                   </Box>
                 </ListItem>
