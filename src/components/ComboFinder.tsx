@@ -703,6 +703,14 @@ export function ComboFinder(props: ComboFinderProps) {
                         value: i,
                         label: i,
                       }))}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={(v) =>
+                        v === value[0] && v !== value[1]
+                          ? `Minimum stacks`
+                          : v === value[1] && v !== value[0]
+                            ? `Maximum stacks`
+                            : `Stacks`
+                      }
                       onChange={(_, v) => {
                         if (Array.isArray(v)) {
                           const start = Math.max(
