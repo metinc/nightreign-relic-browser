@@ -1,7 +1,8 @@
 import assert from "assert";
 import { describe, expect, it } from "vitest";
 import { getEffectByKey, getEffectName } from "../utils/DataUtils";
-import { EffectKey, effectsArray } from "./effects";
+import { EffectKey } from "./effectKeys";
+import { effectsArray } from "./effects";
 
 describe("effects", () => {
   it("should have all effects in effects array", () => {

@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
-import { EffectKey } from "./resources/effects";
+import { EffectKey } from "./resources/effectKeys";
 import { Nightfarer } from "./utils/Nightfarers";
 import { RelicSlotColor } from "./utils/RelicColor";
 

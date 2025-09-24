@@ -1,11 +1,11 @@
 import i18n from "../i18n";
+import type { EffectKey } from "../resources/effectKeys";
 import {
   EffectGroup,
   effects,
   effectsArray,
   isSameGroupAndEqualOrBetter,
   type Effect,
-  type EffectKey,
 } from "../resources/effects";
 import { items } from "../resources/items";
 import type {

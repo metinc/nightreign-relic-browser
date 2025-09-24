@@ -1,5 +1,5 @@
 import { assert, describe, expect, it } from "vitest";
-import { EffectKey } from "../resources/effects";
+import { EffectKey } from "../resources/effectKeys";
 import {
   getEffectByKey,
   getStackableHigherLevelEffects,

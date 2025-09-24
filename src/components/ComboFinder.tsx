@@ -22,7 +22,8 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EffectKey, EffectType, type Effect } from "../resources/effects";
+import { EffectKey } from "../resources/effectKeys";
+import { EffectType, type Effect } from "../resources/effects";
 import { items, ItemType } from "../resources/items";
 import type { CharacterSlot, RelicSlot, SaveFileData } from "../types/SaveFile";
 import {

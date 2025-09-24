@@ -1,5 +1,5 @@
+import { EffectKey } from "../resources/effectKeys";
 import type { Effect } from "../resources/effects";
-import { EffectKey } from "../resources/effects";
 import { getEffectByKey, getStackableHigherLevelEffects } from "./DataUtils";
 import { Nightfarer } from "./Nightfarers";
 

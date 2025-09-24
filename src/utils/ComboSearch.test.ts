@@ -4,7 +4,8 @@ import { assert, beforeAll, describe, expect, it } from "vitest";
 import init, {
   search_combinations,
 } from "../../wasm/combo_search/pkg/combo_search.js";
-import { EffectKey, type Effect } from "../resources/effects";
+import { EffectKey } from "../resources/effectKeys.js";
+import { type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
 import { anyoneVessels, wylderVessels } from "../utils/Vessels";
 import { buildWasmInput } from "../workers/comboSearchWorker.js";

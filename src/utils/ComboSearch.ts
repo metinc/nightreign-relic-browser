@@ -1,4 +1,5 @@
-import type { Effect, EffectKey } from "../resources/effects";
+import type { EffectKey } from "../resources/effectKeys";
+import type { Effect } from "../resources/effects";
 import { items } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
 import type {
