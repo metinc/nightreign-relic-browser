@@ -134,5 +134,25 @@ export const getStackableHigherLevelEffects = (
 };
 
 export function relicHasEffect(relic: RelicSlot, effect: Effect): boolean {
-  return relic.effects.some(([relicEffect]) => relicEffect === effect);
+  return relic.effects.some(
+    ([relicEffect, debuff]) =>
+      relicEffect === effect ||
+      debuff === effect ||
+      isSameGroupAndEqualOrBetter(effect, relicEffect)
+  );
+}
+
+export function relicEffectCount(relic: RelicSlot, effect: Effect): number {
+  return relic.effects.reduce((sum, [relicEffect, relicDebuff]) => {
+    if (effect === relicEffect) {
+      return sum + 1;
+    }
+    if (effect === relicDebuff) {
+      return sum + 1;
+    }
+    if (isSameGroupAndEqualOrBetter(effect, relicEffect)) {
+      return sum + 1;
+    }
+    return sum;
+  }, 0);
 }

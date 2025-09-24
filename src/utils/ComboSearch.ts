@@ -1,13 +1,15 @@
-import type { Effect } from "../resources/effects";
+import type { Effect, EffectKey } from "../resources/effects";
 import { items } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
 import type {
+  ComboSearchWorkerError,
   ComboSearchWorkerInput,
   ComboSearchWorkerMessage,
 } from "../workers/comboSearchWorker";
 import { getStackableHigherLevelEffects, relicHasEffect } from "./DataUtils";
 import { Nightfarer } from "./Nightfarers";
 import { recommendedEffectsByCharacter } from "./RecommendedEffects";
+import { RelicSlotColor } from "./RelicColor";
 import { sortRelicsByColor } from "./RelicProcessor";
 import type { Vessel } from "./Vessels";
 
@@ -37,16 +39,131 @@ export interface ComboSearchResult {
   availableRelicsCount: number;
 }
 
-// Global worker instance and cancellation tracking
-let currentWorker: Worker | null = null;
-let currentSearchId = 0;
+export type SelectedEffectEntry = {
+  effectKey: number;
+  minStacks: number;
+  maxStacks: number;
+};
+
+// Persistent worker and request handling
+let workerSingleton: Worker | null = null;
+let nextRequestId = 0;
+const pending = new Map<
+  number,
+  {
+    resolve: (r: ComboSearchResult) => void;
+    reject: (e: unknown) => void;
+    onProgress?: (p: ComboSearchProgress) => void;
+    context: {
+      enabledVessels: Vessel[];
+      data: ReturnType<typeof buildWorkerInput>;
+    };
+  }
+>();
+
+function getWorker(): Worker {
+  if (workerSingleton) {
+    return workerSingleton;
+  }
+  workerSingleton = new Worker(
+    new URL("../workers/comboSearchWorker.ts", import.meta.url),
+    { type: "module" }
+  );
+
+  workerSingleton.onmessage = (
+    event: MessageEvent<ComboSearchWorkerMessage>
+  ) => {
+    const msg = event.data as ComboSearchWorkerMessage;
+    const entry = pending.get(msg.id);
+    if (!entry) {
+      return; // stale or already handled
+    }
+
+    switch (msg.type) {
+      case "progress": {
+        entry.onProgress?.({
+          totalCombinationsChecked: msg.totalCombinationsChecked,
+          availableRelicsCount: msg.availableRelicsCount,
+          stage: msg.stage,
+        });
+        break;
+      }
+      case "result": {
+        const { enabledVessels, data } = entry.context;
+        const combinations: VesselCombination[] = msg.combinations.map((e) => {
+          const vessel = enabledVessels[e.vessel_index];
+          const relicCombination: [
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+          ] = [
+            e.relic_indices[0] === null
+              ? undefined
+              : data.relics[e.relic_indices[0]],
+            e.relic_indices[1] === null
+              ? undefined
+              : data.relics[e.relic_indices[1]],
+            e.relic_indices[2] === null
+              ? undefined
+              : data.relics[e.relic_indices[2]],
+            e.relic_indices[3] === null
+              ? undefined
+              : data.deepRelics[e.relic_indices[3]],
+            e.relic_indices[4] === null
+              ? undefined
+              : data.deepRelics[e.relic_indices[4]],
+            e.relic_indices[5] === null
+              ? undefined
+              : data.deepRelics[e.relic_indices[5]],
+          ];
+          return { vessel, relicCombination, points: e.points };
+        });
+        pending.delete(msg.id);
+        entry.resolve({
+          combinations,
+          searchTime: msg.searchTime,
+          totalCombinationsChecked: msg.totalCombinationsChecked,
+          availableRelicsCount: msg.availableRelicsCount,
+        });
+        break;
+      }
+      case "error": {
+        const err = msg as ComboSearchWorkerError;
+        pending.delete(msg.id);
+        entry.reject(new Error(err.error));
+        break;
+      }
+    }
+  };
+
+  workerSingleton.onerror = (err) => {
+    // reject all pending
+    for (const [id, p] of pending) {
+      p.reject(err);
+      pending.delete(id);
+    }
+    // reset worker
+    workerSingleton?.terminate();
+    workerSingleton = null;
+  };
+
+  return workerSingleton;
+}
 
 export function cancelCurrentSearch(): void {
-  if (currentWorker) {
-    currentWorker.terminate();
-    currentWorker = null;
+  // Reject all pending requests and notify worker (best-effort)
+  for (const [id, p] of pending) {
+    p.reject(new Error("Search cancelled"));
+    pending.delete(id);
   }
-  currentSearchId++;
+  try {
+    workerSingleton?.postMessage({ type: "cancel" });
+  } catch {
+    // ignore
+  }
 }
 
 export async function searchCombinations(
@@ -55,120 +172,34 @@ export async function searchCombinations(
   relics: RelicSlot[],
   deepRelics: RelicSlot[],
   enabledVessels: Vessel[],
+  selectedEffectEntries: SelectedEffectEntry[],
   onProgress?: (progress: ComboSearchProgress) => void
 ): Promise<ComboSearchResult> {
+  const worker = getWorker();
+
+  const data = buildWorkerInput(
+    nightfarer,
+    selectedEffects,
+    relics,
+    deepRelics,
+    enabledVessels,
+    selectedEffectEntries
+  );
+
   return new Promise((resolve, reject) => {
-    // Cancel any existing search
-    cancelCurrentSearch();
-
-    // Assign a unique ID to this search
-    const searchId = ++currentSearchId;
-
-    // Create new worker
-    const worker = new Worker(
-      new URL("../workers/comboSearchWorker.ts", import.meta.url),
-      { type: "module" }
-    );
-
-    currentWorker = worker;
-
-    const cleanup = () => {
-      if (currentWorker === worker) {
-        currentWorker = null;
-      }
-      worker.terminate();
-    };
-
-    const data = buildWorkerInput(
-      nightfarer,
-      selectedEffects,
-      relics,
-      deepRelics,
-      enabledVessels
-    );
-
-    worker.onmessage = (event: MessageEvent<ComboSearchWorkerMessage>) => {
-      // Check if this search was cancelled
-      if (searchId !== currentSearchId) {
-        cleanup();
-        reject(new Error("Search cancelled"));
-        return;
-      }
-
-      const message = event.data;
-
-      switch (message.type) {
-        case "progress": {
-          if (onProgress) {
-            onProgress({
-              totalCombinationsChecked: message.totalCombinationsChecked,
-              availableRelicsCount: message.availableRelicsCount,
-              stage: message.stage,
-            });
-          }
-          break;
-        }
-
-        case "result": {
-          // Transform the raw WASM result back to VesselCombination format
-          const combinations: VesselCombination[] = message.combinations.map(
-            (entry) => {
-              const vessel = enabledVessels[entry.vessel_index];
-              const relicCombination: [
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-              ] = [
-                entry.relic_indices[0] === null
-                  ? undefined
-                  : data.relics[entry.relic_indices[0]],
-                entry.relic_indices[1] === null
-                  ? undefined
-                  : data.relics[entry.relic_indices[1]],
-                entry.relic_indices[2] === null
-                  ? undefined
-                  : data.relics[entry.relic_indices[2]],
-                entry.relic_indices[3] === null
-                  ? undefined
-                  : data.deepRelics[entry.relic_indices[3]],
-                entry.relic_indices[4] === null
-                  ? undefined
-                  : data.deepRelics[entry.relic_indices[4]],
-                entry.relic_indices[5] === null
-                  ? undefined
-                  : data.deepRelics[entry.relic_indices[5]],
-              ];
-              return { vessel, relicCombination, points: entry.points };
-            }
-          );
-
-          cleanup();
-          resolve({
-            combinations,
-            searchTime: message.searchTime,
-            totalCombinationsChecked: message.totalCombinationsChecked,
-            availableRelicsCount: message.availableRelicsCount,
-          });
-          break;
-        }
-
-        case "error": {
-          cleanup();
-          reject(new Error(message.error));
-          break;
-        }
-      }
-    };
-
-    worker.onerror = (error) => {
-      cleanup();
-      reject(error);
-    };
-
-    worker.postMessage(data);
+    const id = ++nextRequestId;
+    pending.set(id, {
+      resolve,
+      reject,
+      onProgress,
+      context: { enabledVessels, data },
+    });
+    try {
+      worker.postMessage({ type: "search", id, payload: data });
+    } catch (e) {
+      pending.delete(id);
+      reject(e);
+    }
   });
 }
 
@@ -176,13 +207,14 @@ function filterRelics(
   relics: RelicSlot[],
   effects: Effect[],
   enabledVessels: Vessel[],
-  deepRelics: boolean
+  deepRelics: boolean,
+  blockedEffectKeys: EffectKey[]
 ): RelicSlot[] {
-  const vesselSlots = deepRelics
-    ? enabledVessels.slice(3)
-    : enabledVessels.slice(0, 3);
+  const vesselSlotIndices = deepRelics ? [3, 4, 5] : [0, 1, 2];
   const enabledRelicColors = new Set(
-    vesselSlots.flatMap((vessel) => vessel.slots)
+    vesselSlotIndices.flatMap((index) =>
+      enabledVessels.map((v) => v.slots[index])
+    )
   );
 
   const filteredRelics = relics.filter((relic) => {
@@ -190,11 +222,16 @@ function filterRelics(
     if (
       item === undefined ||
       item?.color === null ||
-      !enabledRelicColors.has(item.color)
+      (!enabledRelicColors.has(item.color) &&
+        !enabledRelicColors.has(RelicSlotColor.Any))
     ) {
       return false;
     }
-    return effects.some((effect) => relicHasEffect(relic, effect));
+    return effects.some(
+      (effect) =>
+        relicHasEffect(relic, effect) &&
+        blockedEffectKeys.indexOf(effect.key) < 0
+    );
   });
 
   const relicsByColor = sortRelicsByColor(filteredRelics);
@@ -208,7 +245,13 @@ function filterRelics(
         const item = items.get(relic.itemId);
         return (
           item?.color === Number(color) &&
-          !filteredRelicsByColor.includes(relic)
+          !filteredRelicsByColor.includes(relic) &&
+          !blockedEffectKeys.some((blockedKey) =>
+            relic.effects.some(
+              ([e, debuff]) =>
+                e.key === blockedKey || debuff?.key === blockedKey
+            )
+          )
         );
       })
       .map(({ relic, index }) => ({
@@ -254,7 +297,8 @@ export function buildWorkerInput(
   selectedEffects: Effect[],
   relics: RelicSlot[],
   deepRelics: RelicSlot[],
-  enabledVessels: Vessel[]
+  enabledVessels: Vessel[],
+  selectedEffectEntries: SelectedEffectEntry[]
 ): ComboSearchWorkerInput {
   const expandedSelectedEffects = selectedEffects.flatMap(
     getStackableHigherLevelEffects
@@ -264,12 +308,29 @@ export function buildWorkerInput(
     expandedSelectedEffects
   );
   const effects = [...expandedSelectedEffects, ...filteredRecommendedEffects];
+
+  const blockedEffectKeys = selectedEffectEntries
+    .filter(({ maxStacks }) => maxStacks === 0)
+    .map(({ effectKey }) => effectKey);
   return {
     nightfarer,
     selectedEffects: expandedSelectedEffects,
     recommendedEffects: filteredRecommendedEffects,
-    relics: filterRelics(relics, effects, enabledVessels, false),
-    deepRelics: filterRelics(deepRelics, effects, enabledVessels, true),
+    relics: filterRelics(
+      relics,
+      effects,
+      enabledVessels,
+      false,
+      blockedEffectKeys
+    ),
+    deepRelics: filterRelics(
+      deepRelics,
+      effects,
+      enabledVessels,
+      true,
+      blockedEffectKeys
+    ),
     enabledVessels,
+    selectedEffectRanges: selectedEffectEntries,
   };
 }
