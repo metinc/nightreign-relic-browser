@@ -419,10 +419,6 @@ export function ComboFinder(props: ComboFinderProps) {
       if (already) {
         return;
       }
-      if (selectedEffects.length >= 9) {
-        setNotice("You can't select more than 9 effects.");
-        return;
-      }
       if (!newEffect) {
         return;
       }
