@@ -19,6 +19,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EffectKey, EffectType, type Effect } from "../resources/effects";
@@ -508,6 +509,16 @@ export function ComboFinder(props: ComboFinderProps) {
 
   const selectedNightfarerData = nightfarers[selectedNightfarer];
 
+  // Virtualizer for results list
+  const resultsParentRef = useRef<HTMLDivElement | null>(null);
+  const resultsCount = searchResults?.combinations.length ?? 0;
+  const resultsVirtualizer = useVirtualizer({
+    count: resultsCount,
+    getScrollElement: () => resultsParentRef.current,
+    estimateSize: () => 385, // rough estimate; actual measured via measureElement
+    overscan: 8,
+  });
+
   return (
     <Box sx={{ display: "flex", gap: 2, m: 3 }}>
       <Box>
@@ -766,68 +777,103 @@ export function ComboFinder(props: ComboFinderProps) {
                 <Typography gutterBottom>
                   {`Showing the best ${searchResults.combinations.length} combos`}
                 </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  {searchResults.combinations.map((combo) => (
-                    <Card
-                      key={combo.relicCombination.map((r) => r?.id).join("-")}
-                      elevation={2}
-                    >
-                      <CardContent>
-                        <Typography fontWeight="bold" gutterBottom>
-                          {combo.vessel.name}
-                          {import.meta.env.DEV &&
-                            ` (${combo.points.toFixed(2)} points)`}
-                        </Typography>
 
+                {/* Virtualized results list */}
+                <Box
+                  ref={resultsParentRef}
+                  sx={{ height: "70vh", overflow: "auto" }}
+                >
+                  <Box
+                    sx={{
+                      height: resultsVirtualizer.getTotalSize(),
+                      width: "100%",
+                      position: "relative",
+                    }}
+                  >
+                    {resultsVirtualizer.getVirtualItems().map((virtualRow) => {
+                      const combo =
+                        searchResults.combinations[virtualRow.index];
+                      return (
                         <Box
+                          key={virtualRow.key}
+                          data-index={virtualRow.index}
+                          ref={resultsVirtualizer.measureElement}
                           sx={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(3, 1fr)",
-                            gap: 2,
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            transform: `translateY(${virtualRow.start}px)`,
                           }}
                         >
-                          {combo.relicCombination.map((relic, index) => (
-                            <Box key={relic?.id ?? index}>
-                              {relic ? (
-                                <RelicCard
-                                  relic={relic}
-                                  searchTerm=""
-                                  selectedColor={getRelicColor(relic.itemId)}
-                                  highlightedEffects={selectedEffects}
-                                  coordinatesByColor={
-                                    combo.vessel.slots[index] !==
-                                    RelicSlotColor.Any
-                                  }
-                                />
-                              ) : (
-                                <Card
-                                  variant="outlined"
+                          <Box sx={{ pb: 2 }}>
+                            <Card elevation={2}>
+                              <CardContent>
+                                <Typography fontWeight="bold" gutterBottom>
+                                  {combo.vessel.name}
+                                  {import.meta.env.DEV &&
+                                    ` (${combo.points.toFixed(2)} points)`}
+                                </Typography>
+
+                                <Box
                                   sx={{
-                                    height: "100%",
-                                    transition: "0.3s ease",
-                                    overflow: "hidden",
-                                    position: "relative",
-                                    borderRadius: 3,
-                                    display: "flex",
-                                    justifyContent: "center",
+                                    display: "grid",
+                                    gridTemplateColumns: "repeat(3, 1fr)",
+                                    gap: 2,
                                   }}
                                 >
-                                  <CardContent>
-                                    <Typography
-                                      fontStyle="italic"
-                                      color="text.secondary"
-                                    >
-                                      {index < 3 ? "No Relic" : "No Deep Relic"}
-                                    </Typography>
-                                  </CardContent>
-                                </Card>
-                              )}
-                            </Box>
-                          ))}
+                                  {combo.relicCombination.map(
+                                    (relic, index) => (
+                                      <Box key={relic?.id ?? index}>
+                                        {relic ? (
+                                          <RelicCard
+                                            relic={relic}
+                                            searchTerm=""
+                                            selectedColor={getRelicColor(
+                                              relic.itemId
+                                            )}
+                                            highlightedEffects={selectedEffects}
+                                            coordinatesByColor={
+                                              combo.vessel.slots[index] !==
+                                              RelicSlotColor.Any
+                                            }
+                                          />
+                                        ) : (
+                                          <Card
+                                            variant="outlined"
+                                            sx={{
+                                              height: "100%",
+                                              transition: "0.3s ease",
+                                              overflow: "hidden",
+                                              position: "relative",
+                                              borderRadius: 3,
+                                              display: "flex",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <CardContent>
+                                              <Typography
+                                                fontStyle="italic"
+                                                color="text.secondary"
+                                              >
+                                                {index < 3
+                                                  ? "No Relic"
+                                                  : "No Deep Relic"}
+                                              </Typography>
+                                            </CardContent>
+                                          </Card>
+                                        )}
+                                      </Box>
+                                    )
+                                  )}
+                                </Box>
+                              </CardContent>
+                            </Card>
+                          </Box>
                         </Box>
-                      </CardContent>
-                    </Card>
-                  ))}
+                      );
+                    })}
+                  </Box>
                 </Box>
               </>
             )}
