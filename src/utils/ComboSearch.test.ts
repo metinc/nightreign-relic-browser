@@ -58,7 +58,8 @@ describe("ComboSearch", () => {
         selectedEffects,
         relics,
         [],
-        wylderVessels
+        wylderVessels,
+        []
       );
       const input = buildWasmInput(workerInput);
 
@@ -87,7 +88,8 @@ describe("ComboSearch", () => {
         selectedEffects,
         relics,
         [],
-        wylderVessels
+        wylderVessels,
+        []
       );
       const input = buildWasmInput(workerInput);
 
@@ -114,7 +116,8 @@ describe("ComboSearch", () => {
         [selectedEffect],
         relics,
         [],
-        [anyoneVessels[2]]
+        [anyoneVessels[2]],
+        []
       );
       const input = buildWasmInput(workerInput);
 
@@ -152,7 +155,8 @@ describe("ComboSearch", () => {
         [selectedEffect],
         relics,
         [],
-        [anyoneVessels[2]]
+        [anyoneVessels[2]],
+        []
       );
       const input = buildWasmInput(workerInput);
 
@@ -192,7 +196,8 @@ describe("ComboSearch", () => {
         [selectedEffect],
         relics,
         [],
-        [anyoneVessels[2]]
+        [anyoneVessels[2]],
+        []
       );
       const input = buildWasmInput(workerInput);
 
@@ -231,7 +236,8 @@ describe("ComboSearch", () => {
         [selectedEffect],
         relics,
         [],
-        [anyoneVessels[2], wylderVessels[1]]
+        [anyoneVessels[2], wylderVessels[1]],
+        []
       );
       const input = buildWasmInput(workerInput);
 
@@ -263,7 +269,8 @@ describe("ComboSearch", () => {
         [selectedEffect],
         relics,
         [],
-        [anyoneVessels[2]]
+        [anyoneVessels[2]],
+        []
       );
       const input = buildWasmInput(workerInput);
 
@@ -296,7 +303,8 @@ describe("ComboSearch", () => {
         [selectedEffect],
         relics,
         [],
-        [anyoneVessels[2]]
+        [anyoneVessels[2]],
+        []
       );
       const input = buildWasmInput(workerInput);
 
@@ -344,7 +352,8 @@ describe("ComboSearch", () => {
               RelicSlotColor.Yellow,
             ],
           },
-        ]
+        ],
+        []
       );
       const input = buildWasmInput(workerInput);
 
