@@ -26,6 +26,7 @@ export interface ComboSearchWorkerInput {
 
 export interface ComboSearchWorkerProgress {
   type: "progress";
+  id: number;
   totalCombinationsChecked: number;
   availableRelicsCount: number;
   stage: "main" | "done";
@@ -33,6 +34,7 @@ export interface ComboSearchWorkerProgress {
 
 export interface ComboSearchWorkerResult {
   type: "result";
+  id: number;
   combinations: Array<{
     vessel_index: number;
     relic_indices: [
@@ -52,6 +54,7 @@ export interface ComboSearchWorkerResult {
 
 export interface ComboSearchWorkerError {
   type: "error";
+  id: number;
   error: string;
 }
 
@@ -59,6 +62,10 @@ export type ComboSearchWorkerMessage =
   | ComboSearchWorkerProgress
   | ComboSearchWorkerResult
   | ComboSearchWorkerError;
+
+export type ComboSearchWorkerRequest =
+  | { type: "search"; id: number; payload: ComboSearchWorkerInput }
+  | { type: "cancel"; id?: number };
 
 let initialized: Promise<boolean> | undefined;
 
@@ -132,15 +139,26 @@ export function buildWasmInput({
 }
 
 // Worker script
-self.onmessage = async (event: MessageEvent<ComboSearchWorkerInput>) => {
+self.onmessage = async (event: MessageEvent<ComboSearchWorkerRequest>) => {
   try {
-    const { relics, deepRelics } = event.data;
+    const data = event.data;
+
+    if (data.type === "cancel") {
+      // No-op: current WASM search is synchronous and cannot be interrupted.
+      // The main thread will ignore out-of-date results.
+      return;
+    }
+
+    const { id, payload } = data; // type === "search"
+
+    const { relics, deepRelics } = payload;
     const startTime = Date.now();
     const availableRelicsCount = relics.length + deepRelics.length;
 
     // Send initial progress
     const progressMessage: ComboSearchWorkerProgress = {
       type: "progress",
+      id,
       totalCombinationsChecked: 0,
       availableRelicsCount,
       stage: "main",
@@ -151,7 +169,7 @@ self.onmessage = async (event: MessageEvent<ComboSearchWorkerInput>) => {
     await initComboSearchWasm();
 
     // Prepare input for WASM
-    const input = buildWasmInput(event.data);
+    const input = buildWasmInput(payload);
 
     // Perform the search
     const wasmResult = search_combinations(input) as {
@@ -175,6 +193,7 @@ self.onmessage = async (event: MessageEvent<ComboSearchWorkerInput>) => {
     // Send final result
     const resultMessage: ComboSearchWorkerResult = {
       type: "result",
+      id,
       combinations: wasmResult.combinations,
       searchTime,
       totalCombinationsChecked: wasmResult.total_combinations_checked,
@@ -183,8 +202,10 @@ self.onmessage = async (event: MessageEvent<ComboSearchWorkerInput>) => {
 
     self.postMessage(resultMessage);
   } catch (error) {
+    const id = (event.data as { id?: number }).id ?? -1;
     const errorMessage: ComboSearchWorkerError = {
       type: "error",
+      id,
       error: error instanceof Error ? error.message : String(error),
     };
     self.postMessage(errorMessage);

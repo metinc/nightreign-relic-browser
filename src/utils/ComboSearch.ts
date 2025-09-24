@@ -2,6 +2,7 @@ import type { Effect, EffectKey } from "../resources/effects";
 import { items } from "../resources/items";
 import type { RelicSlot } from "../types/SaveFile";
 import type {
+  ComboSearchWorkerError,
   ComboSearchWorkerInput,
   ComboSearchWorkerMessage,
 } from "../workers/comboSearchWorker";
@@ -44,16 +45,125 @@ export type SelectedEffectEntry = {
   maxStacks: number;
 };
 
-// Global worker instance and cancellation tracking
-let currentWorker: Worker | null = null;
-let currentSearchId = 0;
+// Persistent worker and request handling
+let workerSingleton: Worker | null = null;
+let nextRequestId = 0;
+const pending = new Map<
+  number,
+  {
+    resolve: (r: ComboSearchResult) => void;
+    reject: (e: unknown) => void;
+    onProgress?: (p: ComboSearchProgress) => void;
+    context: {
+      enabledVessels: Vessel[];
+      data: ReturnType<typeof buildWorkerInput>;
+    };
+  }
+>();
+
+function getWorker(): Worker {
+  if (workerSingleton) {
+    return workerSingleton;
+  }
+  workerSingleton = new Worker(
+    new URL("../workers/comboSearchWorker.ts", import.meta.url),
+    { type: "module" }
+  );
+
+  workerSingleton.onmessage = (
+    event: MessageEvent<ComboSearchWorkerMessage>
+  ) => {
+    const msg = event.data as ComboSearchWorkerMessage;
+    const entry = pending.get(msg.id);
+    if (!entry) {
+      return; // stale or already handled
+    }
+
+    switch (msg.type) {
+      case "progress": {
+        entry.onProgress?.({
+          totalCombinationsChecked: msg.totalCombinationsChecked,
+          availableRelicsCount: msg.availableRelicsCount,
+          stage: msg.stage,
+        });
+        break;
+      }
+      case "result": {
+        const { enabledVessels, data } = entry.context;
+        const combinations: VesselCombination[] = msg.combinations.map((e) => {
+          const vessel = enabledVessels[e.vessel_index];
+          const relicCombination: [
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+            RelicSlot | undefined,
+          ] = [
+            e.relic_indices[0] === null
+              ? undefined
+              : data.relics[e.relic_indices[0]],
+            e.relic_indices[1] === null
+              ? undefined
+              : data.relics[e.relic_indices[1]],
+            e.relic_indices[2] === null
+              ? undefined
+              : data.relics[e.relic_indices[2]],
+            e.relic_indices[3] === null
+              ? undefined
+              : data.deepRelics[e.relic_indices[3]],
+            e.relic_indices[4] === null
+              ? undefined
+              : data.deepRelics[e.relic_indices[4]],
+            e.relic_indices[5] === null
+              ? undefined
+              : data.deepRelics[e.relic_indices[5]],
+          ];
+          return { vessel, relicCombination, points: e.points };
+        });
+        pending.delete(msg.id);
+        entry.resolve({
+          combinations,
+          searchTime: msg.searchTime,
+          totalCombinationsChecked: msg.totalCombinationsChecked,
+          availableRelicsCount: msg.availableRelicsCount,
+        });
+        break;
+      }
+      case "error": {
+        const err = msg as ComboSearchWorkerError;
+        pending.delete(msg.id);
+        entry.reject(new Error(err.error));
+        break;
+      }
+    }
+  };
+
+  workerSingleton.onerror = (err) => {
+    // reject all pending
+    for (const [id, p] of pending) {
+      p.reject(err);
+      pending.delete(id);
+    }
+    // reset worker
+    workerSingleton?.terminate();
+    workerSingleton = null;
+  };
+
+  return workerSingleton;
+}
 
 export function cancelCurrentSearch(): void {
-  if (currentWorker) {
-    currentWorker.terminate();
-    currentWorker = null;
+  // Reject all pending requests and notify worker (best-effort)
+  for (const [id, p] of pending) {
+    p.reject(new Error("Search cancelled"));
+    pending.delete(id);
   }
-  currentSearchId++;
+  try {
+    workerSingleton?.postMessage({ type: "cancel" });
+  } catch {
+    // ignore
+  }
 }
 
 export async function searchCombinations(
@@ -65,119 +175,31 @@ export async function searchCombinations(
   selectedEffectEntries: SelectedEffectEntry[],
   onProgress?: (progress: ComboSearchProgress) => void
 ): Promise<ComboSearchResult> {
+  const worker = getWorker();
+
+  const data = buildWorkerInput(
+    nightfarer,
+    selectedEffects,
+    relics,
+    deepRelics,
+    enabledVessels,
+    selectedEffectEntries
+  );
+
   return new Promise((resolve, reject) => {
-    // Cancel any existing search
-    cancelCurrentSearch();
-
-    // Assign a unique ID to this search
-    const searchId = ++currentSearchId;
-
-    // Create new worker
-    const worker = new Worker(
-      new URL("../workers/comboSearchWorker.ts", import.meta.url),
-      { type: "module" }
-    );
-
-    currentWorker = worker;
-
-    const cleanup = () => {
-      if (currentWorker === worker) {
-        currentWorker = null;
-      }
-      worker.terminate();
-    };
-
-    const data = buildWorkerInput(
-      nightfarer,
-      selectedEffects,
-      relics,
-      deepRelics,
-      enabledVessels,
-      selectedEffectEntries
-    );
-
-    worker.onmessage = (event: MessageEvent<ComboSearchWorkerMessage>) => {
-      // Check if this search was cancelled
-      if (searchId !== currentSearchId) {
-        cleanup();
-        reject(new Error("Search cancelled"));
-        return;
-      }
-
-      const message = event.data;
-
-      switch (message.type) {
-        case "progress": {
-          if (onProgress) {
-            onProgress({
-              totalCombinationsChecked: message.totalCombinationsChecked,
-              availableRelicsCount: message.availableRelicsCount,
-              stage: message.stage,
-            });
-          }
-          break;
-        }
-
-        case "result": {
-          // Transform the raw WASM result back to VesselCombination format
-          const combinations: VesselCombination[] = message.combinations.map(
-            (entry) => {
-              const vessel = enabledVessels[entry.vessel_index];
-              const relicCombination: [
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-                RelicSlot | undefined,
-              ] = [
-                entry.relic_indices[0] === null
-                  ? undefined
-                  : data.relics[entry.relic_indices[0]],
-                entry.relic_indices[1] === null
-                  ? undefined
-                  : data.relics[entry.relic_indices[1]],
-                entry.relic_indices[2] === null
-                  ? undefined
-                  : data.relics[entry.relic_indices[2]],
-                entry.relic_indices[3] === null
-                  ? undefined
-                  : data.deepRelics[entry.relic_indices[3]],
-                entry.relic_indices[4] === null
-                  ? undefined
-                  : data.deepRelics[entry.relic_indices[4]],
-                entry.relic_indices[5] === null
-                  ? undefined
-                  : data.deepRelics[entry.relic_indices[5]],
-              ];
-              return { vessel, relicCombination, points: entry.points };
-            }
-          );
-
-          cleanup();
-          resolve({
-            combinations,
-            searchTime: message.searchTime,
-            totalCombinationsChecked: message.totalCombinationsChecked,
-            availableRelicsCount: message.availableRelicsCount,
-          });
-          break;
-        }
-
-        case "error": {
-          cleanup();
-          reject(new Error(message.error));
-          break;
-        }
-      }
-    };
-
-    worker.onerror = (error) => {
-      cleanup();
-      reject(error);
-    };
-
-    worker.postMessage(data);
+    const id = ++nextRequestId;
+    pending.set(id, {
+      resolve,
+      reject,
+      onProgress,
+      context: { enabledVessels, data },
+    });
+    try {
+      worker.postMessage({ type: "search", id, payload: data });
+    } catch (e) {
+      pending.delete(id);
+      reject(e);
+    }
   });
 }
 
