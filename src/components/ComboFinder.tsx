@@ -517,7 +517,16 @@ export function ComboFinder(props: ComboFinderProps) {
   });
 
   return (
-    <Box sx={{ display: "flex", gap: 2, m: 3 }}>
+    <Box
+      sx={{
+        display: "flex",
+        gap: 2,
+        pt: 3,
+        px: 3,
+        minHeight: 0,
+        boxSizing: "border-box",
+      }}
+    >
       <Box>
         <Typography variant="h6" gutterBottom noWrap>
           1. Select Nightfarer
@@ -749,12 +758,20 @@ export function ComboFinder(props: ComboFinderProps) {
 
       <Divider orientation="vertical" flexItem />
 
-      <Box sx={{ flexGrow: 1, minHeight: 0 }}>
-        <Typography variant="h6" gutterBottom noWrap>
+      <Box
+        sx={{
+          flexGrow: 1,
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
+        <Typography variant="h6" gutterBottom noWrap sx={{ flexShrink: 0 }}>
           4. Check Results
         </Typography>
         {selectedEffects.length > 0 && (
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: 2, flexShrink: 0 }}>
             <LinearProgress
               variant={
                 progress?.stage === "main" ? "indeterminate" : "determinate"
@@ -774,19 +791,27 @@ export function ComboFinder(props: ComboFinderProps) {
 
         {/* Search Results */}
         {searchResults && (
-          <Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+              flex: 1,
+              overflow: "hidden",
+            }}
+          >
             {searchResults.combinations.length === 0 ? (
               <Alert severity="info">No combinations found.</Alert>
             ) : (
               <>
-                <Typography gutterBottom>
+                <Typography gutterBottom sx={{ flexShrink: 0 }}>
                   {`Showing the best ${searchResults.combinations.length} combos`}
                 </Typography>
 
                 {/* Virtualized results list */}
                 <Box
                   ref={resultsParentRef}
-                  sx={{ height: "70vh", overflow: "auto" }}
+                  sx={{ flex: 1, minHeight: 0, overflow: "auto" }}
                 >
                   <Box
                     sx={{
