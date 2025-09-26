@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 import type { Effect } from "../resources/effects";
-import { items, unsellableItemIds } from "../resources/items";
+import { items, ItemType, unsellableItemIds } from "../resources/items";
 import type { CharacterSlot } from "../types/SaveFile";
 import {
   colorFilterOptions,
@@ -84,6 +84,18 @@ export function RelicBrowser({
     currentSlot.relics,
   ]);
 
+  const normalRelicsCount = useMemo(() => {
+    return matchingRelics.filter(
+      ({ itemId }) => items.get(itemId)?.type !== ItemType.DeepRelic
+    ).length;
+  }, [matchingRelics]);
+
+  const deepRelicsCount = useMemo(() => {
+    return matchingRelics.filter(
+      ({ itemId }) => items.get(itemId)?.type === ItemType.DeepRelic
+    ).length;
+  }, [matchingRelics]);
+
   return (
     <Box
       component="section"
@@ -106,8 +118,8 @@ export function RelicBrowser({
 
       <Typography variant="subtitle2" textAlign="center" gutterBottom>
         {currentSlot.relics.length === matchingRelics.length
-          ? `Showing all ${currentSlot.relics.length} relics on character ${currentSlot.name}`
-          : `Showing ${matchingRelics.length} matching relics out of ${currentSlot.relics.length} on character ${currentSlot.name}`}
+          ? `Showing all ${normalRelicsCount} relics and ${deepRelicsCount} deep relics on character ${currentSlot.name}`
+          : `Showing ${normalRelicsCount} matching relics and ${deepRelicsCount} matching deep relics out of ${currentSlot.relics.length} on character ${currentSlot.name}`}
       </Typography>
 
       {currentSlot && (
