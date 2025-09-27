@@ -459,7 +459,7 @@ export function ComboFinder(props: ComboFinderProps) {
         };
       });
     },
-    [settings, selectedNightfarer, selectedEffects.length]
+    [settings, selectedNightfarer]
   );
 
   const removeEffect = useCallback(
