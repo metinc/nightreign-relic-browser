@@ -520,147 +520,182 @@ export function ComboFinder(props: ComboFinderProps) {
     <Box
       sx={{
         display: "flex",
-        gap: 2,
         pt: 3,
         px: 3,
+        flex: 1,
         minHeight: 0,
+        overflow: "hidden",
         boxSizing: "border-box",
       }}
     >
-      <Box>
+      <Box
+        sx={{
+          maxHeight: "100%",
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          px: 2,
+        }}
+      >
         <Typography variant="h6" gutterBottom noWrap>
           1. Select Nightfarer
         </Typography>
-        <RadioGroup
-          value={selectedNightfarer}
-          onChange={(e) => {
-            const v = parseInt(e.target.value);
-            if (isNightfarer(v)) {
-              setSelectedNightfarer(v);
-            }
-          }}
-        >
-          {Object.keys(nightfarers).map((key) => {
-            const k = Number(key) as Nightfarer;
-            return (
-              <FormControlLabel
-                key={key}
-                value={k}
-                control={<Radio />}
-                label={t(`nightfarers.${k}`)}
-              />
-            );
-          })}
-        </RadioGroup>
+        <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+          <RadioGroup
+            value={selectedNightfarer}
+            onChange={(e) => {
+              const v = parseInt(e.target.value);
+              if (isNightfarer(v)) {
+                setSelectedNightfarer(v);
+              }
+            }}
+          >
+            {Object.keys(nightfarers).map((key) => {
+              const k = Number(key) as Nightfarer;
+              return (
+                <FormControlLabel
+                  key={key}
+                  value={k}
+                  control={<Radio />}
+                  label={t(`nightfarers.${k}`)}
+                />
+              );
+            })}
+          </RadioGroup>
+        </Box>
       </Box>
 
       <Divider orientation="vertical" flexItem />
 
-      <Box>
+      <Box
+        sx={{
+          maxHeight: "100%",
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          px: 2,
+        }}
+      >
         {selectedNightfarerData && (
           <>
             <Typography variant="h6" gutterBottom noWrap>
               2. Select Vessels
             </Typography>
-            <Stack gap={1}>
-              {selectedNightfarerData.vessels.map((vessel, index) => {
-                const disabled =
-                  settings[selectedNightfarer].disabledVessels.includes(index);
-                return (
-                  <Card
-                    key={index}
-                    onClick={() => toggleVessel(selectedNightfarer, index)}
-                    elevation={disabled ? 1 : 2}
-                    sx={{ cursor: "pointer", minWidth: 270, m: 0, p: 0 }}
-                  >
-                    <CardContent
-                      sx={{
-                        p: 1.5,
-                        "&:last-child": {
-                          paddingBottom: 1.5,
-                        },
-                      }}
+            <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+              <Stack gap={1}>
+                {selectedNightfarerData.vessels.map((vessel, index) => {
+                  const disabled =
+                    settings[selectedNightfarer].disabledVessels.includes(
+                      index
+                    );
+                  return (
+                    <Card
+                      key={index}
+                      onClick={() => toggleVessel(selectedNightfarer, index)}
+                      elevation={disabled ? 1 : 2}
+                      sx={{ cursor: "pointer", minWidth: 270, m: 0, p: 0 }}
                     >
-                      <Typography
-                        fontWeight="bold"
-                        gutterBottom
-                        color={disabled ? "text.disabled" : "text.primary"}
+                      <CardContent
+                        sx={{
+                          p: 1.5,
+                          "&:last-child": {
+                            paddingBottom: 1.5,
+                          },
+                        }}
                       >
-                        {vessel.name}
-                      </Typography>
-                      <Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: 1,
-                          }}
+                        <Typography
+                          fontWeight="bold"
+                          gutterBottom
+                          color={disabled ? "text.disabled" : "text.primary"}
                         >
+                          {vessel.name}
+                        </Typography>
+                        <Box>
                           <Box
                             sx={{
                               display: "flex",
-                              flexWrap: "wrap",
-                              width: "180px",
-                              // Ensure 3 chips per row
-                              "& > .vessel-slot-chip-wrapper": {
-                                flex: "0 0 33.333%",
-                                display: "flex",
-                                justifyContent: "center",
-                                pb: 0.8,
-                              },
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              gap: 1,
                             }}
                           >
-                            {vessel.slots.map((slotColor, slotIndex) => (
-                              <Box
-                                key={slotIndex}
-                                className="vessel-slot-chip-wrapper"
-                              >
-                                <RelicColorChip
-                                  color={slotColor}
-                                  type={
-                                    slotIndex < 3
-                                      ? ItemType.Relic
-                                      : ItemType.DeepRelic
-                                  }
-                                  disabled={disabled}
-                                />
-                              </Box>
-                            ))}
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                width: "180px",
+                                // Ensure 3 chips per row
+                                "& > .vessel-slot-chip-wrapper": {
+                                  flex: "0 0 33.333%",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  pb: 0.8,
+                                },
+                              }}
+                            >
+                              {vessel.slots.map((slotColor, slotIndex) => (
+                                <Box
+                                  key={slotIndex}
+                                  className="vessel-slot-chip-wrapper"
+                                >
+                                  <RelicColorChip
+                                    color={slotColor}
+                                    type={
+                                      slotIndex < 3
+                                        ? ItemType.Relic
+                                        : ItemType.DeepRelic
+                                    }
+                                    disabled={disabled}
+                                  />
+                                </Box>
+                              ))}
+                            </Box>
+                            <Checkbox
+                              checked={!disabled}
+                              size="large"
+                              sx={{ m: -1 }}
+                            />
                           </Box>
-                          <Checkbox
-                            checked={!disabled}
-                            size="large"
-                            sx={{ m: -1 }}
-                          />
                         </Box>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </Stack>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </Stack>
+            </Box>
           </>
         )}
       </Box>
 
       <Divider orientation="vertical" flexItem />
 
-      <Box sx={{ width: "350px" }}>
-        <Typography variant="h6" gutterBottom noWrap>
-          3. Select Effects
-        </Typography>
-        <EffectsAutocomplete
-          onSearchChange={() => {}}
-          onChange={handleEffectChange}
-          availableEffects={selectableEffects}
-          placeholder="Search effects..."
-          showOrBetterLabels
-          clearOnSelect
-        />
+      <Box
+        sx={{
+          width: "382px",
+          maxHeight: "100%",
+          flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Box sx={{ px: 2 }}>
+          <Typography variant="h6" gutterBottom noWrap>
+            3. Select Effects
+          </Typography>
+          <EffectsAutocomplete
+            onSearchChange={() => {}}
+            onChange={handleEffectChange}
+            availableEffects={selectableEffects}
+            placeholder="Search effects..."
+            showOrBetterLabels
+            clearOnSelect
+          />
+        </Box>
 
         {selectedEffects.length > 0 && (
-          <List>
+          <List sx={{ flex: 1, minHeight: 0, overflowY: "auto", px: 2 }}>
             {selectedEffects.map((effect) => {
               const settingsEntry = settings[
                 selectedNightfarer
@@ -697,6 +732,7 @@ export function ComboFinder(props: ComboFinderProps) {
                       sx={{
                         ...(effect.type === EffectType.Debuff && {
                           color: "#76adde",
+                          mb: 0,
                         }),
                       }}
                     />
@@ -710,11 +746,12 @@ export function ComboFinder(props: ComboFinderProps) {
                         label: i,
                       }))}
                       valueLabelDisplay="auto"
+                      size="small"
                       valueLabelFormat={(v) =>
                         v === value[0] && v !== value[1]
-                          ? `Minimum stacks`
+                          ? `Min stacks`
                           : v === value[1] && v !== value[0]
-                            ? `Maximum stacks`
+                            ? `Max stacks`
                             : `Stacks`
                       }
                       onChange={(_, v) => {
@@ -765,6 +802,7 @@ export function ComboFinder(props: ComboFinderProps) {
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
+          px: 2,
         }}
       >
         <Typography variant="h6" gutterBottom noWrap sx={{ flexShrink: 0 }}>
