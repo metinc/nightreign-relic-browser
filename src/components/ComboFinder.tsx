@@ -46,7 +46,7 @@ import { RelicCard } from "./RelicCard";
 import { RelicColorChip } from "./RelicColorChip";
 
 // Persistent storage keys
-const SETTINGS_STORAGE_KEY = "comboFinder:settings:v4";
+const SETTINGS_STORAGE_KEY = "comboFinder:settings:v5";
 const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v3";
 
 interface ComboFinderProps {

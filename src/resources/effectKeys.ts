@@ -507,7 +507,6 @@ export const enum EffectKey {
   raisesPhysicalDamageNegationPlus1,
   raisesResistanceToAllAilments,
   raisesSorceryIncantationPotency,
-  reducedFpConsumption,
   reducedSkillFpCost,
   reducedSpellFpCost,
   reducedStaminaConsumption,
