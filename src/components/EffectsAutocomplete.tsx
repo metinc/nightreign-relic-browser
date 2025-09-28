@@ -38,7 +38,12 @@ export function EffectsAutocomplete({
       if (isEffectKey(effectKey)) {
         const label = t(`effects.${effectKey}`);
         const effect = getEffectByKey(effectKey);
-        if (showOrBetterLabels && effect !== undefined && !isMaxLevel(effect)) {
+        if (
+          showOrBetterLabels &&
+          effect !== undefined &&
+          !isMaxLevel(effect) &&
+          effect.stacks
+        ) {
           return label + " (or better)";
         }
         return label;

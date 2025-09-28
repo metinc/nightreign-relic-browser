@@ -23,7 +23,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EffectKey } from "../resources/effectKeys";
-import { EffectType, type Effect } from "../resources/effects";
+import { EffectType, isSameGroup, type Effect } from "../resources/effects";
 import { items, ItemType } from "../resources/items";
 import type { CharacterSlot, RelicSlot, SaveFileData } from "../types/SaveFile";
 import {
@@ -433,7 +433,11 @@ export function ComboFinder(props: ComboFinderProps) {
             // drop invalid entries
             return false;
           }
-          if (eff.group !== undefined && eff.group === newEffect.group) {
+          if (
+            isSameGroup(eff, newEffect) &&
+            eff.stacks === true &&
+            newEffect.stacks === true
+          ) {
             return false;
           }
           if (

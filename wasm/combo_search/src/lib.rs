@@ -288,7 +288,11 @@ fn combination_satisfies_ranges(
                             let sel_l = unsafe { *selected_levels_by_key.get_unchecked(k_usize) };
                             if sel_g != u8::MAX && sel_l != u8::MAX {
                                 if let (Some(eg), Some(el)) = (eff_group, eff_level) {
-                                    if eg == sel_g && el >= sel_l { matches = true; }
+                                    // Only match by group/level if the effect has stacks=true
+                                    let is_stackable = effect.stacks.unwrap_or(false);
+                                    if is_stackable && eg == sel_g && el >= sel_l { 
+                                        matches = true; 
+                                    }
                                 }
                             }
                         }
