@@ -1900,6 +1900,8 @@ export const effectsArray = [
     key: EffectKey.improvedGuardCounters,
     ids: [322000, 7040100, 8420000],
     stacks: true,
+    group: EffectGroup.improvedGuardCounters,
+    level: 0,
   },
   {
     key: EffectKey.improvedGuardingAbility,
