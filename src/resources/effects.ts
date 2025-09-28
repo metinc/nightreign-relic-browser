@@ -100,6 +100,15 @@ export const enum EffectType {
   Debuff,
 }
 
+/**
+ * Effect stacking behavior:
+ * - group undefined, stacks undefined: Effect does not stack. For example, character-specific effects.
+ * - group   defined, stacks true: Effect can stack with itself at any level. For example, Arcane +1 can be stacked with Arcane +1, +2, and +3.
+ * - group   defined, stacks false: Effect can stack with other effects in the same group, but not with itself.
+ *   For example, "HP Restoration upon Thrusting Counterattack +1" can stack with "HP Restoration upon Thrusting Counterattack +2",
+ *   but not with another "HP Restoration upon Thrusting Counterattack +1".
+ */
+
 export const effectsArray = [
   {
     key: EffectKey.duchessBecomeStealthyAfterCritFromBehind,
