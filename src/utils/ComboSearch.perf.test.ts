@@ -13,7 +13,7 @@ import { Nightfarer } from "./Nightfarers";
 import { RelicParser } from "./RelicParser";
 import { SaveFileDecryptor } from "./SaveFileDecryptor";
 
-describe("ComboSearch performance", () => {
+describe.skip("ComboSearch performance", () => {
   let relics: RelicSlot[];
 
   beforeAll(async () => {

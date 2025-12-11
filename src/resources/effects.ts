@@ -488,7 +488,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.wylderCharacterSkillInflictsBloodLoss,
-    ids: [7011500, 6500000],
+    ids: [6500000, 7011500],
     nightfarer: Nightfarer.Wylder,
     stacks: false,
   },
@@ -648,7 +648,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.attackUpWhenWieldingTwoArmaments,
-    ids: [8310000],
+    ids: [8310000, 8310001, 8310002],
   },
   {
     key: EffectKey.attacksCreateMagicBurstsVersusSleepingEnemies,
@@ -984,7 +984,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.criticalHitBoostsStaminaRecoverySpeed,
-    ids: [7035100],
+    ids: [6035101, 7035100],
     group: EffectGroup.criticalHitBoostsStaminaRecoverySpeed,
     level: 0,
   },
@@ -1010,7 +1010,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.criticalHitsEarnRunes,
-    ids: [7031900],
+    ids: [6031900, 6031901, 7031900],
   },
   {
     key: EffectKey.criticalHitsInflictBloodLoss,
@@ -1051,11 +1051,11 @@ export const effectsArray = [
   },
   {
     key: EffectKey.defeatingEnemiesRestoresFP,
-    ids: [361100, 8630100],
+    ids: [361100, 8630100, 8630101, 8630102],
   },
   {
     key: EffectKey.defeatingEnemiesRestoresHP,
-    ids: [350300, 8630000],
+    ids: [350300, 8630000, 8630001, 8630002],
   },
   {
     key: EffectKey.defeatingEnemiesRestoresHPForAlliesButNotForSelf,
@@ -1108,11 +1108,11 @@ export const effectsArray = [
   },
   {
     key: EffectKey.dmgNegationUpWhileCastingSpells,
-    ids: [8330900],
+    ids: [8330900, 8330901, 8330902],
   },
   {
     key: EffectKey.dmgNegationUpWhileChargingAttacks,
-    ids: [8320400],
+    ids: [8320400, 8320401, 8320402],
   },
   {
     key: EffectKey.drawEnemyAttentionWhileGuarding,
@@ -1141,7 +1141,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.extendedSpellDuration,
-    ids: [330600, 8330500],
+    ids: [330600, 7006400, 8330500],
   },
   {
     key: EffectKey.failingToCastSorceryRestoresFP,
@@ -1230,7 +1230,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.fpRestorationUponAttacks,
-    ids: [8600200],
+    ids: [8600200, 8600201, 8600202],
   },
   {
     key: EffectKey.fpRestorationUponAxeAttacks,
@@ -1585,15 +1585,15 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedAttackPowerAtFullHP,
-    ids: [320500, 8670000],
+    ids: [320500, 8670000, 8670001, 8670002],
   },
   {
     key: EffectKey.improvedAttackPowerAtLowHP,
-    ids: [320400, 8660000],
+    ids: [320400, 8660000, 8660001, 8660002],
   },
   {
     key: EffectKey.improvedAttackPowerWhenTwoHanding,
-    ids: [8300000],
+    ids: [8300000, 8300001, 8300002],
   },
   {
     key: EffectKey.improvedAttackPowerWith3PlusAxesEquipped,
@@ -1707,7 +1707,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedBloodLossResistance,
-    ids: [311600, 7003100, 8210100],
+    ids: [311600, 7003100, 8210100, 8210101, 8210102],
     stacks: true,
     group: EffectGroup.improvedBloodLossResistance,
     level: 0,
@@ -1724,15 +1724,15 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedChainAttackFinishers,
-    ids: [321200, 8320000],
+    ids: [321200, 8320000, 8320001, 8320002],
   },
   {
     key: EffectKey.improvedChargeAttacks,
-    ids: [321300, 8320100],
+    ids: [321300, 8320100, 8320101, 8320102],
   },
   {
     key: EffectKey.improvedChargedIncantation,
-    ids: [8330300],
+    ids: [8330300, 8330301, 8330302],
   },
   {
     key: EffectKey.improvedChargedSkillAttackPower,
@@ -1740,7 +1740,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedChargedSorceries,
-    ids: [8330200],
+    ids: [8330200, 8330201, 8330202],
   },
   {
     key: EffectKey.improvedChargedSpellsAndSkills,
@@ -1763,7 +1763,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedCriticalHits,
-    ids: [320900, 7040200, 8130000],
+    ids: [320900, 7040200, 8130000, 8130001, 8130002, 8130003],
     group: EffectGroup.improvedCriticalHits,
     level: 0,
     stacks: true,
@@ -1801,12 +1801,12 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedDamageNegationAtLowHP,
-    ids: [340800, 7012300, 8660101],
+    ids: [340800, 6012300, 6012301, 7012300, 8660101],
     stacks: true,
   },
   {
     key: EffectKey.improvedDeathBlightResistance,
-    ids: [311900, 7003300, 8210300],
+    ids: [311900, 7003300, 8210300, 8210301, 8210302],
     stacks: true,
     group: EffectGroup.improvedDeathBlightResistance,
     level: 0,
@@ -1829,12 +1829,12 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedFireAttackPower,
-    ids: [320200, 8100200],
+    ids: [320200, 8100200, 8100201],
     stacks: true,
   },
   {
     key: EffectKey.improvedFireDamageNegation,
-    ids: [340200, 8200200],
+    ids: [340200, 8200200, 8200201, 8200202],
     group: EffectGroup.improvedFireDamageNegation,
     level: 0,
   },
@@ -1854,7 +1854,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedFrostResistance,
-    ids: [311601, 7003500, 8210500],
+    ids: [311601, 7003500, 8210500, 8210501, 8210502],
     stacks: true,
     group: EffectGroup.improvedFrostResistance,
     level: 0,
@@ -1903,11 +1903,11 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedGuardBreaking,
-    ids: [320700, 8140000],
+    ids: [320700, 8140000, 8140001, 8140002],
   },
   {
     key: EffectKey.improvedGuardCounters,
-    ids: [322000, 7040100, 8420000],
+    ids: [322000, 7040100, 8420000, 8420001, 8420002],
     stacks: true,
     group: EffectGroup.improvedGuardCounters,
     level: 0,
@@ -1947,23 +1947,23 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedHolyAttackPower,
-    ids: [320300, 8100400],
+    ids: [320300, 8100400, 8100401],
   },
   {
     key: EffectKey.improvedHolyDamageNegation,
-    ids: [340400, 8200400],
+    ids: [340400, 8200400, 8200401, 8200402],
     group: EffectGroup.improvedHolyDamageNegation,
     level: 0,
   },
   {
     key: EffectKey.improvedIncantations,
-    ids: [330400, 8330100, 6611300],
+    ids: [330400, 6611300, 8330100],
     group: EffectGroup.improvedIncantations,
     level: 0,
   },
   {
     key: EffectKey.improvedInitialStandardAttack,
-    ids: [7040000],
+    ids: [6040000, 6040001, 7040000],
     stacks: true,
   },
   {
@@ -1973,11 +1973,11 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedItemDiscovery,
-    ids: [311000, 370000, 8510000],
+    ids: [311000, 370000, 8510000, 8510001, 8510002],
   },
   {
     key: EffectKey.improvedJumpAttacks,
-    ids: [321800, 8320300],
+    ids: [321800, 8320300, 8320301, 8320302],
   },
   {
     key: EffectKey.improvedKatanaAttackPower,
@@ -1986,28 +1986,28 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedLightningAttackPower,
-    ids: [320100, 8100300],
+    ids: [320100, 8100300, 8100301],
   },
   {
     key: EffectKey.improvedLightningDamageNegation,
-    ids: [340300, 8200300],
+    ids: [340300, 8200300, 8200301, 8200302],
     group: EffectGroup.improvedLightningDamageNegation,
     level: 0,
   },
   {
     key: EffectKey.improvedMadnessResistance,
-    ids: [311801, 7003600, 8210600],
+    ids: [311801, 7003600, 8210600, 8210601, 8210602],
     stacks: true,
     group: EffectGroup.improvedMadnessResistance,
     level: 0,
   },
   {
     key: EffectKey.improvedMagicAttackPower,
-    ids: [320000, 8100100],
+    ids: [320000, 8100100, 8100101],
   },
   {
     key: EffectKey.improvedMagicDamageNegation,
-    ids: [340100, 8200100],
+    ids: [340100, 8200100, 8200101, 8200102],
     group: EffectGroup.improvedMagicDamageNegation,
     level: 0,
   },
@@ -2018,7 +2018,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedNonPhysicalAttackPower,
-    ids: [8920100],
+    ids: [8920100, 8920101, 8920102],
   },
   {
     key: EffectKey.improvedNonPhysicalDamageNegation,
@@ -2036,7 +2036,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedPhysicalDamageNegation,
-    ids: [340000, 7006200, 8200000],
+    ids: [340000, 6611000, 7006200, 8200000],
     group: EffectGroup.improvedPhysicalDamageNegation,
     level: 0,
   },
@@ -2047,7 +2047,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedPoise,
-    ids: [312100, 8230000],
+    ids: [312100, 8230000, 8230001],
   },
   {
     key: EffectKey.improvedPoiseDamageNegationWhenKnockedBackByDamage,
@@ -2066,14 +2066,14 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedPoisonResistance,
-    ids: [311700, 7003000, 8210000],
+    ids: [311700, 7003000, 8210000, 8210001, 8210002],
     stacks: true,
     group: EffectGroup.improvedPoisonResistance,
     level: 0,
   },
   {
     key: EffectKey.improvedRangedWeaponAttacks,
-    ids: [321500, 8340000],
+    ids: [321500, 8340000, 8340001, 8340002],
   },
   {
     key: EffectKey.improvedReaperAttackPower,
@@ -2089,14 +2089,14 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedRotResistance,
-    ids: [311701, 7003400, 8210400],
+    ids: [311701, 7003400, 8210400, 8210401, 8210402],
     stacks: true,
     group: EffectGroup.improvedRotResistance,
     level: 0,
   },
   {
     key: EffectKey.improvedSkillAttackPower,
-    ids: [312300, 8350000],
+    ids: [312300, 7006700, 8350000, 8350001, 8350002],
   },
   {
     key: EffectKey.improvedSleepMadnessResistance,
@@ -2105,14 +2105,14 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedSleepResistance,
-    ids: [311800, 7003200, 8210200],
+    ids: [311800, 7003200, 8210200, 8210201, 8210202],
     stacks: true,
     group: EffectGroup.improvedSleepResistance,
     level: 0,
   },
   {
     key: EffectKey.improvedSorceries,
-    ids: [330000, 8330000, 6611200],
+    ids: [330000, 6611200, 8330000],
     group: EffectGroup.improvedSorceries,
     level: 0,
   },
@@ -2123,7 +2123,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedSpellCastingSpeed,
-    ids: [330700, 8330400],
+    ids: [330700, 8330400, 8330401],
   },
   {
     key: EffectKey.improvedStaminaRecovery,
@@ -2139,16 +2139,16 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedStanceBreaking,
-    ids: [8120000],
+    ids: [8120000, 8120001],
   },
   {
     key: EffectKey.improvedStanceBreakingWhenTwoHanding,
-    ids: [7006000, 7006001, 8300100],
+    ids: [6006000, 6006001, 7006000, 7006001, 8300100, 8300101],
     stacks: true,
   },
   {
     key: EffectKey.improvedStanceBreakingWhenWieldingTwoArmaments,
-    ids: [7006100, 7006101, 8310100],
+    ids: [6006100, 6006101, 7006100, 7006101, 8310100, 8310101],
     stacks: true,
   },
   {
@@ -2216,17 +2216,17 @@ export const effectsArray = [
   },
   {
     key: EffectKey.increasedMaximumFP,
-    ids: [310100, 7000190, 8010000, 6610500],
+    ids: [310100, 6610500, 7000190, 8010000],
     stacks: false,
   },
   {
     key: EffectKey.increasedMaximumHP,
-    ids: [310000, 310400, 7000090, 8000000, 6610400],
+    ids: [310000, 310400, 6610400, 7000090, 8000000, 8000001],
     stacks: false,
   },
   {
     key: EffectKey.increasedMaximumStamina,
-    ids: [310200, 310401, 7000290, 8020000, 6610600],
+    ids: [310200, 310401, 6610600, 7000290, 8020000, 8020001],
     stacks: false,
   },
   {
@@ -2517,7 +2517,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.physicalAttackUp,
-    ids: [7001400],
+    ids: [7001400, 7001409],
     group: EffectGroup.physicalAttackUp,
     level: 0,
     stacks: true,
@@ -2538,7 +2538,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.physicalAttackUpPlus3,
-    ids: [7001403, 6001400],
+    ids: [6001400, 7001403],
     group: EffectGroup.physicalAttackUp,
     level: 3,
     stacks: true,
@@ -2699,7 +2699,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.projectileDamageDropOffReduced,
-    ids: [321000, 8340100],
+    ids: [321000, 8340100, 8340101],
     group: EffectGroup.projectileDamageDropOffReduced,
     level: 0,
   },
@@ -2756,11 +2756,11 @@ export const effectsArray = [
   },
   {
     key: EffectKey.reducedSkillFpCost,
-    ids: [360200, 8350200],
+    ids: [360200, 8350200, 8350201, 8350202],
   },
   {
     key: EffectKey.reducedSpellFpCost,
-    ids: [330800, 8330600, 8330602],
+    ids: [330800, 8330600, 8330601, 8330602],
   },
   {
     key: EffectKey.reducedStaminaConsumption,
@@ -2841,7 +2841,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.smallPouchInPossessionAtStartOfExpedition,
-    ids: [7121000],
+    ids: [7121000, 7121001],
     stacks: true,
   },
   {
@@ -2955,11 +2955,11 @@ export const effectsArray = [
   },
   {
     key: EffectKey.successfulGuardingUpsDmgNegation,
-    ids: [8652100],
+    ids: [8652100, 8652101, 8652102],
   },
   {
     key: EffectKey.successfulGuardingUpsPoise,
-    ids: [8652000],
+    ids: [8652000, 8652001, 8652002],
   },
   {
     key: EffectKey.successiveAttackHpRestoration,
@@ -2967,11 +2967,11 @@ export const effectsArray = [
   },
   {
     key: EffectKey.successiveAttacksBoostAttackPower,
-    ids: [312501, 320800, 8610200],
+    ids: [312501, 320800, 7037600, 8610200],
   },
   {
     key: EffectKey.successiveAttacksNegateDamage,
-    ids: [8610700],
+    ids: [8610700, 8610701, 8610702],
   },
   {
     key: EffectKey.suddenEnemyDeathUponAttacks,
@@ -2991,15 +2991,15 @@ export const effectsArray = [
   },
   {
     key: EffectKey.takingAttacksImprovesAttackPower,
-    ids: [10001, 100000, 7032200],
+    ids: [10001, 100000, 6032200, 6032201, 7032200],
   },
   {
     key: EffectKey.takingDamageBoostsDamageNegation,
-    ids: [8620100],
+    ids: [8620100, 8620101, 8620102],
   },
   {
     key: EffectKey.takingDamageRestoresFp,
-    ids: [8620000],
+    ids: [8620000, 8620001, 8620002],
   },
   {
     key: EffectKey.theDuchessGrief,
@@ -3007,31 +3007,31 @@ export const effectsArray = [
   },
   {
     key: EffectKey.theExecutorsGrief,
-    ids: [9990800],
+    ids: [9990800, 9990801, 9990802],
   },
   {
     key: EffectKey.theGuardiansGrief,
-    ids: [9990200],
+    ids: [9990200, 9990201, 9990202],
   },
   {
     key: EffectKey.theIroneyesGrief,
-    ids: [9990300],
+    ids: [9990300, 9990301, 9990302],
   },
   {
     key: EffectKey.theRaidersGrief,
-    ids: [9990500],
+    ids: [9990500, 9990501, 9990502],
   },
   {
     key: EffectKey.theReclusesGrief,
-    ids: [9990700],
+    ids: [9990700, 9990701, 9990702],
   },
   {
     key: EffectKey.theRevenantsGrief,
-    ids: [9990600],
+    ids: [9990600, 9990601, 9990602],
   },
   {
     key: EffectKey.theWyldersGrief,
-    ids: [9990100],
+    ids: [9990100, 9990101, 9990102],
   },
   {
     key: EffectKey.throwingDaggersInPossessionAtStartOfExpedition,
@@ -3655,7 +3655,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.reducedFPConsumption,
-    ids: [6610700, 8010100],
+    ids: [6610700, 8010100, 8010101],
     stacks: true,
     group: EffectGroup.reducedFPConsumption,
     level: 0,
@@ -3711,7 +3711,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedAffinityDamageNegation,
-    ids: [6611100],
+    ids: [6611100, 7006300],
     stacks: true,
     group: EffectGroup.improvedAffinityDamageNegation,
     level: 0,
@@ -3760,7 +3760,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.improvedFlaskHPRestoration,
-    ids: [8851900, 6611400, 350000, 8440000],
+    ids: [350000, 6611400, 8440000, 8440001, 8851900],
     stacks: true,
   },
   {
@@ -4190,7 +4190,7 @@ export const effectsArray = [
   },
   {
     key: EffectKey.continuousHPLoss,
-    ids: [370002, 8766000, 6850500],
+    ids: [370002, 6850500, 8766000],
     stacks: true,
     type: EffectType.Debuff,
   },
@@ -4385,6 +4385,138 @@ export const effectsArray = [
     key: EffectKey.increasedSorceryAndIncantationDuration,
     ids: [8851300],
     stacks: true,
+  },
+  {
+    key: EffectKey.scholarAlliesTargetedByCharacterSkillGainBoostedAttack,
+    ids: [19001, 7036300],
+  },
+  {
+    key: EffectKey.scholarReducedFpConsumptionWhenUsingCharacterSkillOnSelf,
+    ids: [6500800],
+  },
+  {
+    key: EffectKey.undertakerExecutingArtReadiesCharacterSkill,
+    ids: [6500900],
+  },
+  {
+    key: EffectKey.greenspillCrystalTearInPossessionAtStartOfExpedition,
+    ids: [6623200],
+  },
+  {
+    key: EffectKey.scholarImprovedMindReducedVigor,
+    ids: [6647200],
+  },
+  {
+    key: EffectKey.scholarImprovedEnduranceAndDexterityReducedIntelligenceAndArcane,
+    ids: [6647300],
+  },
+  {
+    key: EffectKey.undertakerImprovedDexterityReducedVigorAndFaith,
+    ids: [6647400],
+  },
+  {
+    key: EffectKey.undertakerImprovedMindAndFaithReducedStrength,
+    ids: [6647500],
+  },
+  {
+    key: EffectKey.continuousFpRecovery,
+    ids: [7006500],
+  },
+  {
+    key: EffectKey.improvedMeleeAttackPower,
+    ids: [7006600],
+  },
+  {
+    key: EffectKey.scholarPreventSlowingOfCharacterSkillProgress,
+    ids: [7036200],
+  },
+  {
+    key: EffectKey.scholarContinuousDamageInflictedOnTargetsThreadedByUltimateArt,
+    ids: [7036400],
+  },
+  {
+    key: EffectKey.scholarEarnRunesForEachAdditionalSpecimenAcquiredWithCharacterSkill,
+    ids: [7036500],
+  },
+  {
+    key: EffectKey.undertakerActivatingUltimateArtIncreasesAttackPower,
+    ids: [7036800],
+  },
+  {
+    key: EffectKey.undertakerAttackPowerIncreasedByLandingTheFinalBlowOfAChainAttack,
+    ids: [7036900],
+  },
+  {
+    key: EffectKey.undertakerPhysicalAttacksBoostedWhileAssistEffectFromIncantationIsActiveForSelf,
+    ids: [7037000],
+  },
+  {
+    key: EffectKey.undertakerContactWithAlliesRestoresTheirHpWhileUltimateArtIsActivated,
+    ids: [7037300],
+  },
+  {
+    key: EffectKey.statusAilmentGaugesSlowlyIncreaseAttackPower,
+    ids: [7037700],
+  },
+  {
+    key: EffectKey.occasionallyNullifyAttacksWhenDamageNegationsIsLowered,
+    ids: [7037800],
+  },
+  {
+    key: EffectKey.attacksInflictRotWhenDamageIsTaken,
+    ids: [7170100],
+  },
+  {
+    key: EffectKey.rotInVicinityCausesContinuoushpRecovery,
+    ids: [7260900],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsSorceryToMagicGlintbladeAtStartOfExpedition,
+    ids: [7360600],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsSorceryToCarianGreatswordAtStartOfExpedition,
+    ids: [7360900],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsSorceryToNightShardAtStartOfExpedition,
+    ids: [7361200],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsSorceryToMagmaShotAtStartOfExpedition,
+    ids: [7361300],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsSorceryToBriarsOfPunishmentAtStartOfExpedition,
+    ids: [7362100],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsIncantationToWrathOfGoldAtStartOfExpedition,
+    ids: [7370300],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsIncantationToLightningSpearAtStartOfExpedition,
+    ids: [7370400],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsIncantationToOFlameAtStartOfExpedition,
+    ids: [7370600],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsIncantationToBeastClawAtStartOfExpedition,
+    ids: [7370900],
+  },
+  {
+    key: EffectKey.changesCompatibleArmamentsIncantationToDragonfireAtStartOfExpedition,
+    ids: [7371500],
+  },
+  {
+    key: EffectKey.allResistanceUp,
+    ids: [8210701],
+  },
+  {
+    key: EffectKey.runeOfTheStrong,
+    ids: [8500100, 8500101],
   },
 ] as const satisfies (EffectArrayElement | EffectWithGroupArrayElement)[];
 

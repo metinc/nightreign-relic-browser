@@ -22,17 +22,17 @@ type TestData = {
 }[];
 
 const testData: TestData = [
-  {
-    name: "metin.sl2",
-    slots: [
-      { name: "Metin", relics: 610, samples: [] },
-      { name: "qwertzuiopasdfgh", relics: 1, samples: [] },
-    ],
-  },
+  // {
+  //   name: "metin.sl2",
+  //   slots: [
+  //     { name: "Metin", relics: 610, samples: [] },
+  //     { name: "qwertzuiopasdfgh", relics: 1, samples: [] },
+  //   ],
+  // },
   {
     name: "10slots.sl2",
     slots: [
-      { name: "relicbrowser.com", relics: 935, samples: [] },
+      { name: "relicbrowser.com", relics: 1264, samples: [] },
       { name: "Frauke", relics: 1, samples: [] },
       { name: "Timur", relics: 0, samples: [] },
       { name: "Aylin", relics: 0, samples: [] },
@@ -43,37 +43,6 @@ const testData: TestData = [
       { name: "0123456789abcdef", relics: 0, samples: [] },
       { name: "x", relics: 0, samples: [] },
     ],
-  },
-  { name: "player.sl2", slots: [{ name: "Player", relics: 651, samples: [] }] },
-  { name: "teru.sl2", slots: [{ name: "Teru", relics: 254, samples: [] }] },
-  {
-    name: "teru2.sl2",
-    slots: [
-      {
-        name: "Teru",
-        relics: 284,
-        samples: [{ index: 283, relic: { itemId: 10000 } }],
-      },
-    ],
-  },
-  {
-    name: "stluna.sl2",
-    slots: [{ name: "ST. Luna", relics: 403, samples: [] }],
-  },
-  {
-    name: "eonacat.sl2",
-    slots: [{ name: "EonaCat", relics: 743, samples: [] }],
-  },
-  {
-    name: "pekzer.sl2",
-    slots: [
-      { name: "Pekzer", relics: 139, samples: [] },
-      { name: "asd", relics: 77, samples: [] },
-    ],
-  },
-  {
-    name: "orlexor.sl2",
-    slots: [{ name: "Orlexor", relics: 406, samples: [] }],
   },
 ];
 

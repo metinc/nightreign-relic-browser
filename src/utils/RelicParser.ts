@@ -71,7 +71,7 @@ export class RelicParser {
     const getSlotSize = (b4: number): number | null => {
       switch (b4) {
         case 0xc0:
-          return 72;
+          return 80;
         case 0x90:
           return 16;
         case 0x80:
