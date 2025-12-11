@@ -99,8 +99,9 @@ export function HomePage({ onLoadDemo, loading }: HomePageProps) {
                 >
                   {"New: "}
                 </Typography>
-                Deep of Night relic support with full effect details
+                The Forsaken Hollows DLC support
               </li>
+              <li>Deep of Night relic support with full effect details</li>
               <li>Browse all relics across multiple character slots</li>
               <li>
                 Find the best relics for the effects you are looking for using
