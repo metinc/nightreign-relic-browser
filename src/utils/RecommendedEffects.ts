@@ -116,8 +116,21 @@ const executorEffects: EffectKey[] = [
   EffectKey.dexterityPlus1,
   EffectKey.arcanePlus1,
 ];
-const scholarEffects: EffectKey[] = [];
-const undertakerEffects: EffectKey[] = [];
+const scholarEffects: EffectKey[] = [
+  EffectKey.characterSkillCooldownReduction,
+  EffectKey.ultimateArtGaugePlus1,
+  EffectKey.increasedMaximumHP,
+  EffectKey.defeatingEnemiesFillsMoreOfTheArtGauge,
+  EffectKey.scholarImprovedEnduranceAndDexterityReducedIntelligenceAndArcane,
+  EffectKey.wraithCallingBellInPossessionAtStartOfExpedition,
+];
+const undertakerEffects: EffectKey[] = [
+  EffectKey.partialHpRestorationUponPostDamageAttacks,
+  EffectKey.ultimateArtGaugePlus1,
+  EffectKey.characterSkillCooldownReduction,
+  EffectKey.undertakerActivatingUltimateArtIncreasesAttackPower,
+  EffectKey.undertakerAttackPowerIncreasedByLandingTheFinalBlowOfAChainAttack,
+];
 
 export const recommendedEffectsByCharacter: Record<Nightfarer, Effect[]> = {
   [Nightfarer.Wylder]: wylderEffects
