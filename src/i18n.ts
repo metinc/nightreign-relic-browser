@@ -1500,6 +1500,68 @@ const resources = {
           "Improved Sorceries & Incantations",
         [EffectKey.increasedSorceryAndIncantationDuration]:
           "Increased Sorcery & Incantation Duration",
+        [EffectKey.scholarAlliesTargetedByCharacterSkillGainBoostedAttack]:
+          "[Scholar] Allies Targeted by Character Skill gain boosted attack",
+        [EffectKey.scholarReducedFpConsumptionWhenUsingCharacterSkillOnSelf]:
+          "[Scholar] Reduced FP consumption when using Character Skill on self",
+        [EffectKey.undertakerExecutingArtReadiesCharacterSkill]:
+          "[Undertaker] Executing Art readies Character Skill",
+        [EffectKey.greenspillCrystalTearInPossessionAtStartOfExpedition]:
+          "Greenspill Crystal Tear in possession at start of expedition",
+        [EffectKey.scholarImprovedMindReducedVigor]:
+          "[Scholar] Improved Mind, Reduced Vigor",
+        [EffectKey.scholarImprovedEnduranceAndDexterityReducedIntelligenceAndArcane]:
+          "[Scholar] Improved Endurance and Dexterity, Reduced Intelligence and Arcane",
+        [EffectKey.undertakerImprovedDexterityReducedVigorAndFaith]:
+          "[Undertaker] Improved Dexterity, Reduced Vigor and Faith",
+        [EffectKey.undertakerImprovedMindAndFaithReducedStrength]:
+          "[Undertaker] Improved Mind and Faith, Reduced Strength",
+        [EffectKey.continuousFpRecovery]: "Continuous FP Recovery",
+        [EffectKey.improvedMeleeAttackPower]: "Improved Melee Attack Power",
+        [EffectKey.scholarPreventSlowingOfCharacterSkillProgress]:
+          "[Scholar] Prevent slowing of Character Skill Progress",
+        [EffectKey.scholarContinuousDamageInflictedOnTargetsThreadedByUltimateArt]:
+          "[Scholar] Continuous damage inflicted on targets threaded by Ultimate Art",
+        [EffectKey.scholarEarnRunesForEachAdditionalSpecimenAcquiredWithCharacterSkill]:
+          "[Scholar] Earn runes for each additional specimen acquired with Character Skill",
+        [EffectKey.undertakerActivatingUltimateArtIncreasesAttackPower]:
+          "[Undertaker] Activating Ultimate Art increases attack power",
+        [EffectKey.undertakerAttackPowerIncreasedByLandingTheFinalBlowOfAChainAttack]:
+          "[Undertaker] Attack power increased by landing the final blow of a chain attack",
+        [EffectKey.undertakerPhysicalAttacksBoostedWhileAssistEffectFromIncantationIsActiveForSelf]:
+          "[Undertaker] Physical attacks boosted while assist effect from incantation is active for self",
+        [EffectKey.undertakerContactWithAlliesRestoresTheirHpWhileUltimateArtIsActivated]:
+          "[Undertaker] Contact with allies restores their HP while Ultimate Art is activated",
+        [EffectKey.statusAilmentGaugesSlowlyIncreaseAttackPower]:
+          "Status Ailment Gauges Slowly Increase Attack Power",
+        [EffectKey.occasionallyNullifyAttacksWhenDamageNegationsIsLowered]:
+          "Occasionally Nullify Attacks When Damage Negation is Lowered",
+        [EffectKey.attacksInflictRotWhenDamageIsTaken]:
+          "Attacks Inflict Rot when Damage is Taken",
+        [EffectKey.rotInVicinityCausesContinuoushpRecovery]:
+          "Rot in Vicinity Causes Continuous HP Recovery",
+        [EffectKey.changesCompatibleArmamentsSorceryToMagicGlintbladeAtStartOfExpedition]:
+          "Changes compatible armament's sorcery to Magic Glintblade at start of expedition",
+        [EffectKey.changesCompatibleArmamentsSorceryToCarianGreatswordAtStartOfExpedition]:
+          "Changes compatible armament's sorcery to Carian Greatsword at start of expedition",
+        [EffectKey.changesCompatibleArmamentsSorceryToNightShardAtStartOfExpedition]:
+          "Changes compatible armament's sorcery to Night Shard at start of expedition",
+        [EffectKey.changesCompatibleArmamentsSorceryToMagmaShotAtStartOfExpedition]:
+          "Changes compatible armament's sorcery to Magma Shot at start of expedition",
+        [EffectKey.changesCompatibleArmamentsSorceryToBriarsOfPunishmentAtStartOfExpedition]:
+          "Changes compatible armament's sorcery to Briars of Punishment at start of expedition",
+        [EffectKey.changesCompatibleArmamentsIncantationToWrathOfGoldAtStartOfExpedition]:
+          "Changes compatible armament's incantation to Wrath of Gold at start of expedition",
+        [EffectKey.changesCompatibleArmamentsIncantationToLightningSpearAtStartOfExpedition]:
+          "Changes compatible armament's incantation to Lightning Spear at start of expedition",
+        [EffectKey.changesCompatibleArmamentsIncantationToOFlameAtStartOfExpedition]:
+          "Changes compatible armament's incantation to O, Flame! at start of expedition",
+        [EffectKey.changesCompatibleArmamentsIncantationToBeastClawAtStartOfExpedition]:
+          "Changes compatible armament's incantation to Beast Claw at start of expedition",
+        [EffectKey.changesCompatibleArmamentsIncantationToDragonfireAtStartOfExpedition]:
+          "Changes compatible armament's incantation to Dragonfire at start of expedition",
+        [EffectKey.allResistanceUp]: "All Resistance Up",
+        [EffectKey.runeOfTheStrong]: "Rune of the Strong",
       },
     },
   },
