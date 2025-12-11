@@ -34,7 +34,7 @@ describe("ComboSearch", () => {
 
     beforeAll(async () => {
       // Load the test save file directly from filesystem
-      const filePath = path.join(__dirname, "..", "test", "metin.sl2");
+      const filePath = path.join(__dirname, "..", "test", "10slots.sl2");
       const fileBuffer = fs.readFileSync(filePath);
       const saveFileBuffer = fileBuffer.buffer.slice(
         fileBuffer.byteOffset,
