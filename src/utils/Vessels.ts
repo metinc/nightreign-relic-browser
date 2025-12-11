@@ -46,6 +46,17 @@ export const anyoneVessels: Vessel[] = [
       RelicSlotColor.Green,
     ],
   },
+  {
+    name: "Scadutree Grail",
+    slots: [
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+    ],
+  },
 ] as const;
 
 export const duchessVessels: Vessel[] = [
@@ -520,6 +531,164 @@ export const wylderVessels: Vessel[] = [
   ...anyoneVessels,
 ] as const;
 
-export const scholarVessels: Vessel[] = [] as const;
+export const scholarVessels: Vessel[] = [
+  {
+    name: "Scholar's Chalice",
+    slots: [
+      RelicSlotColor.Red,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Any,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Scholar's Goblet",
+    slots: [
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Scholar's Urn",
+    slots: [
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Sealed Scholar's Urn",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Blue,
+    ],
+  },
+  {
+    name: "Soot-Covered Scholar's Urn",
+    slots: [
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+    ],
+  },
+  {
+    name: "Decrepit Scholar's Goblet",
+    slots: [
+      RelicSlotColor.Blue,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+    ],
+  },
+  {
+    name: "Forgotten Scholar's Goblet",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Red,
+      RelicSlotColor.Green,
+      RelicSlotColor.Any,
+    ],
+  },
+  ...anyoneVessels,
+] as const;
 
-export const undertakerVessels: Vessel[] = [] as const;
+export const undertakerVessels: Vessel[] = [
+  {
+    name: "Undertaker's Chalice",
+    slots: [
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Any,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Undertaker's Goblet",
+    slots: [
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Undertaker's Urn",
+    slots: [
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+    ],
+  },
+  {
+    name: "Sealed Undertaker's Urn",
+    slots: [
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+    ],
+  },
+  {
+    name: "Soot-Covered Undertaker's Urn",
+    slots: [
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Blue,
+    ],
+  },
+  {
+    name: "Decrepit Undertaker's Goblet",
+    slots: [
+      RelicSlotColor.Red,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Red,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Blue,
+    ],
+  },
+  {
+    name: "Forgotten Undertaker's Goblet",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+    ],
+  },
+  ...anyoneVessels,
+] as const;
