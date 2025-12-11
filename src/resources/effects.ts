@@ -4389,14 +4389,20 @@ export const effectsArray = [
   {
     key: EffectKey.scholarAlliesTargetedByCharacterSkillGainBoostedAttack,
     ids: [19001, 7036300],
+    nightfarer: Nightfarer.Scholar,
+    stacks: false,
   },
   {
     key: EffectKey.scholarReducedFpConsumptionWhenUsingCharacterSkillOnSelf,
     ids: [6500800],
+    nightfarer: Nightfarer.Scholar,
+    stacks: false,
   },
   {
     key: EffectKey.undertakerExecutingArtReadiesCharacterSkill,
     ids: [6500900],
+    nightfarer: Nightfarer.Undertaker,
+    stacks: false,
   },
   {
     key: EffectKey.greenspillCrystalTearInPossessionAtStartOfExpedition,
@@ -4405,18 +4411,26 @@ export const effectsArray = [
   {
     key: EffectKey.scholarImprovedMindReducedVigor,
     ids: [6647200],
+    nightfarer: Nightfarer.Scholar,
+    stacks: false,
   },
   {
     key: EffectKey.scholarImprovedEnduranceAndDexterityReducedIntelligenceAndArcane,
     ids: [6647300],
+    nightfarer: Nightfarer.Scholar,
+    stacks: false,
   },
   {
     key: EffectKey.undertakerImprovedDexterityReducedVigorAndFaith,
     ids: [6647400],
+    nightfarer: Nightfarer.Undertaker,
+    stacks: false,
   },
   {
     key: EffectKey.undertakerImprovedMindAndFaithReducedStrength,
     ids: [6647500],
+    nightfarer: Nightfarer.Undertaker,
+    stacks: false,
   },
   {
     key: EffectKey.continuousFpRecovery,
@@ -4429,30 +4443,44 @@ export const effectsArray = [
   {
     key: EffectKey.scholarPreventSlowingOfCharacterSkillProgress,
     ids: [7036200],
+    nightfarer: Nightfarer.Scholar,
+    stacks: false,
   },
   {
     key: EffectKey.scholarContinuousDamageInflictedOnTargetsThreadedByUltimateArt,
     ids: [7036400],
+    nightfarer: Nightfarer.Scholar,
+    stacks: false,
   },
   {
     key: EffectKey.scholarEarnRunesForEachAdditionalSpecimenAcquiredWithCharacterSkill,
     ids: [7036500],
+    nightfarer: Nightfarer.Scholar,
+    stacks: false,
   },
   {
     key: EffectKey.undertakerActivatingUltimateArtIncreasesAttackPower,
     ids: [7036800],
+    nightfarer: Nightfarer.Undertaker,
+    stacks: false,
   },
   {
     key: EffectKey.undertakerAttackPowerIncreasedByLandingTheFinalBlowOfAChainAttack,
     ids: [7036900],
+    nightfarer: Nightfarer.Undertaker,
+    stacks: false,
   },
   {
     key: EffectKey.undertakerPhysicalAttacksBoostedWhileAssistEffectFromIncantationIsActiveForSelf,
     ids: [7037000],
+    nightfarer: Nightfarer.Undertaker,
+    stacks: false,
   },
   {
     key: EffectKey.undertakerContactWithAlliesRestoresTheirHpWhileUltimateArtIsActivated,
     ids: [7037300],
+    nightfarer: Nightfarer.Undertaker,
+    stacks: false,
   },
   {
     key: EffectKey.statusAilmentGaugesSlowlyIncreaseAttackPower,
@@ -4473,42 +4501,62 @@ export const effectsArray = [
   {
     key: EffectKey.changesCompatibleArmamentsSorceryToMagicGlintbladeAtStartOfExpedition,
     ids: [7360600],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsSorceryToCarianGreatswordAtStartOfExpedition,
     ids: [7360900],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsSorceryToNightShardAtStartOfExpedition,
     ids: [7361200],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsSorceryToMagmaShotAtStartOfExpedition,
     ids: [7361300],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsSorceryToBriarsOfPunishmentAtStartOfExpedition,
     ids: [7362100],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsIncantationToWrathOfGoldAtStartOfExpedition,
     ids: [7370300],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsIncantationToLightningSpearAtStartOfExpedition,
     ids: [7370400],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsIncantationToOFlameAtStartOfExpedition,
     ids: [7370600],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsIncantationToBeastClawAtStartOfExpedition,
     ids: [7370900],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.changesCompatibleArmamentsIncantationToDragonfireAtStartOfExpedition,
     ids: [7371500],
+    stacks: false,
+    startingBonus: StartingBonus.ArmamentsSkill,
   },
   {
     key: EffectKey.allResistanceUp,
