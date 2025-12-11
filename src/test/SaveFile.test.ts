@@ -44,37 +44,6 @@ const testData: TestData = [
       { name: "x", relics: 0, samples: [] },
     ],
   },
-  // { name: "player.sl2", slots: [{ name: "Player", relics: 651, samples: [] }] },
-  // { name: "teru.sl2", slots: [{ name: "Teru", relics: 254, samples: [] }] },
-  // {
-  //   name: "teru2.sl2",
-  //   slots: [
-  //     {
-  //       name: "Teru",
-  //       relics: 284,
-  //       samples: [{ index: 283, relic: { itemId: 10000 } }],
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: "stluna.sl2",
-  //   slots: [{ name: "ST. Luna", relics: 403, samples: [] }],
-  // },
-  // {
-  //   name: "eonacat.sl2",
-  //   slots: [{ name: "EonaCat", relics: 743, samples: [] }],
-  // },
-  // {
-  //   name: "pekzer.sl2",
-  //   slots: [
-  //     { name: "Pekzer", relics: 139, samples: [] },
-  //     { name: "asd", relics: 77, samples: [] },
-  //   ],
-  // },
-  // {
-  //   name: "orlexor.sl2",
-  //   slots: [{ name: "Orlexor", relics: 406, samples: [] }],
-  // },
 ];
 
 describe("Save File Processing", () => {
