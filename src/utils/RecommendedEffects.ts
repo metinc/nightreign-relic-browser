@@ -101,7 +101,7 @@ const recluseEffects: EffectKey[] = [
   EffectKey.improvedStonediggerSorcery,
   EffectKey.improvedThornSorcery,
   EffectKey.magicAttackPowerUp,
-  EffectKey.ultimateArtGaugePlus1,
+  EffectKey.ultimateArtAutoChargePlus1,
   EffectKey.intelligencePlus1,
   EffectKey.mindPlus1,
 ];
@@ -118,7 +118,7 @@ const executorEffects: EffectKey[] = [
 ];
 const scholarEffects: EffectKey[] = [
   EffectKey.characterSkillCooldownReduction,
-  EffectKey.ultimateArtGaugePlus1,
+  EffectKey.ultimateArtAutoChargePlus1,
   EffectKey.increasedMaximumHP,
   EffectKey.defeatingEnemiesFillsMoreOfTheArtGauge,
   EffectKey.scholarImprovedEnduranceAndDexterityReducedIntelligenceAndArcane,
@@ -126,7 +126,7 @@ const scholarEffects: EffectKey[] = [
 ];
 const undertakerEffects: EffectKey[] = [
   EffectKey.partialHpRestorationUponPostDamageAttacks,
-  EffectKey.ultimateArtGaugePlus1,
+  EffectKey.ultimateArtAutoChargePlus1,
   EffectKey.characterSkillCooldownReduction,
   EffectKey.undertakerActivatingUltimateArtIncreasesAttackPower,
   EffectKey.undertakerAttackPowerIncreasedByLandingTheFinalBlowOfAChainAttack,

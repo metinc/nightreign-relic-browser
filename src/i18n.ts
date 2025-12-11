@@ -1065,9 +1065,9 @@ const resources = {
         [EffectKey.throwingDaggersInPossessionAtStartOfExpedition]:
           "Throwing Daggers in possession at start of expedition",
         [EffectKey.treasureMarkedUponMap]: "Treasure marked upon map",
-        [EffectKey.ultimateArtGaugePlus1]: "Ultimate Art Gauge +1",
-        [EffectKey.ultimateArtGaugePlus2]: "Ultimate Art Gauge +2",
-        [EffectKey.ultimateArtGaugePlus3]: "Ultimate Art Gauge +3",
+        [EffectKey.ultimateArtAutoChargePlus1]: "Ultimate Art Auto Charge +1",
+        [EffectKey.ultimateArtAutoChargePlus2]: "Ultimate Art Auto Charge +2",
+        [EffectKey.ultimateArtAutoChargePlus3]: "Ultimate Art Auto Charge +3",
         [EffectKey.ultimateArtGaugeChargeSpeedUp]:
           "Ultimate Art Gauge Charge Speed Up",
         [EffectKey.viciousStarRainPoursWhileWalking]:
@@ -1083,8 +1083,8 @@ const resources = {
           "Character Skill Cooldown Reduction +4",
         [EffectKey.characterSkillCooldownReductionPlus5]:
           "Character Skill Cooldown Reduction +5",
-        [EffectKey.ultimateArtGaugePlus4]: "Ultimate Art Gauge +4",
-        [EffectKey.ultimateArtGaugePlus5]: "Ultimate Art Gauge +5",
+        [EffectKey.ultimateArtAutoChargePlus4]: "Ultimate Art Auto Charge +4",
+        [EffectKey.ultimateArtAutoChargePlus5]: "Ultimate Art Auto Charge +5",
         [EffectKey.poisePlus4]: "Poise +4",
         [EffectKey.poisePlus5]: "Poise +5",
         [EffectKey.physicalAttackUpPlus4]: "Physical Attack Up +4",
