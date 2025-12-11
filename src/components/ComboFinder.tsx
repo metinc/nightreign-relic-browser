@@ -46,7 +46,7 @@ import { RelicCard } from "./RelicCard";
 import { RelicColorChip } from "./RelicColorChip";
 
 // Persistent storage keys
-const SETTINGS_STORAGE_KEY = "comboFinder:settings:v5";
+const SETTINGS_STORAGE_KEY = "comboFinder:settings:v6";
 const SELECTED_NIGHTFARER_STORAGE_KEY = "comboFinder:selectedNightfarer:v3";
 
 interface ComboFinderProps {
@@ -75,6 +75,8 @@ function createInitialSettings(): Record<Nightfarer, ComboFinderSettings> {
     [Nightfarer.Revenant]: { disabledVessels: [], selectedEffects: [] },
     [Nightfarer.Recluse]: { disabledVessels: [], selectedEffects: [] },
     [Nightfarer.Executor]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Scholar]: { disabledVessels: [], selectedEffects: [] },
+    [Nightfarer.Undertaker]: { disabledVessels: [], selectedEffects: [] },
   };
 }
 

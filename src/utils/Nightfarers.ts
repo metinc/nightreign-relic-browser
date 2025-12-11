@@ -6,6 +6,8 @@ import {
   raiderVessels,
   recluseVessels,
   revenantVessels,
+  scholarVessels,
+  undertakerVessels,
   wylderVessels,
 } from "./Vessels";
 
@@ -49,6 +51,16 @@ const wylder = {
   vessels: wylderVessels,
 } as const;
 
+const scholar = {
+  name: "Scholar",
+  vessels: scholarVessels,
+} as const;
+
+const undertaker = {
+  name: "Undertaker",
+  vessels: undertakerVessels,
+} as const;
+
 export const enum Nightfarer {
   Wylder,
   Guardian,
@@ -58,6 +70,8 @@ export const enum Nightfarer {
   Revenant,
   Recluse,
   Executor,
+  Scholar,
+  Undertaker,
 }
 
 export const nightfarers = {
@@ -69,6 +83,8 @@ export const nightfarers = {
   [Nightfarer.Revenant]: revenant,
   [Nightfarer.Recluse]: recluse,
   [Nightfarer.Executor]: executor,
+  [Nightfarer.Scholar]: scholar,
+  [Nightfarer.Undertaker]: undertaker,
 } as const;
 
 export const isNightfarer = (value: unknown): value is Nightfarer => {

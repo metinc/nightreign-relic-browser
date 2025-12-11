@@ -116,6 +116,8 @@ const executorEffects: EffectKey[] = [
   EffectKey.dexterityPlus1,
   EffectKey.arcanePlus1,
 ];
+const scholarEffects: EffectKey[] = [];
+const undertakerEffects: EffectKey[] = [];
 
 export const recommendedEffectsByCharacter: Record<Nightfarer, Effect[]> = {
   [Nightfarer.Wylder]: wylderEffects
@@ -140,6 +142,12 @@ export const recommendedEffectsByCharacter: Record<Nightfarer, Effect[]> = {
     .map(getEffectByKeyOrThrow)
     .flatMap(getStackableHigherLevelEffects),
   [Nightfarer.Executor]: executorEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  [Nightfarer.Scholar]: scholarEffects
+    .map(getEffectByKeyOrThrow)
+    .flatMap(getStackableHigherLevelEffects),
+  [Nightfarer.Undertaker]: undertakerEffects
     .map(getEffectByKeyOrThrow)
     .flatMap(getStackableHigherLevelEffects),
 };

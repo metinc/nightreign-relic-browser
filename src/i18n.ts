@@ -23,6 +23,8 @@ const resources = {
         [Nightfarer.Revenant]: "Revenant",
         [Nightfarer.Recluse]: "Recluse",
         [Nightfarer.Executor]: "Executor",
+        [Nightfarer.Scholar]: "Scholar",
+        [Nightfarer.Undertaker]: "Undertaker",
       },
 
       colors: {

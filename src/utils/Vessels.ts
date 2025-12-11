@@ -519,3 +519,7 @@ export const wylderVessels: Vessel[] = [
   },
   ...anyoneVessels,
 ] as const;
+
+export const scholarVessels: Vessel[] = [] as const;
+
+export const undertakerVessels: Vessel[] = [] as const;
