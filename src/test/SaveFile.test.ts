@@ -32,7 +32,7 @@ const testData: TestData = [
   {
     name: "10slots.sl2",
     slots: [
-      { name: "relicbrowser.com", relics: 1264, samples: [] },
+      { name: "relicbrowser.com", relics: 1289, samples: [] },
       { name: "Frauke", relics: 1, samples: [] },
       { name: "Timur", relics: 0, samples: [] },
       { name: "Aylin", relics: 0, samples: [] },

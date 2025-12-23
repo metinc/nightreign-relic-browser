@@ -110,6 +110,9 @@ const resources = {
         deepDelicateTranquilScene: "Deep Delicate Tranquil Scene",
         deepPolishedTranquilScene: "Deep Polished Tranquil Scene",
         deepGrandTranquilScene: "Deep Grand Tranquil Scene",
+        theWillOfTheBalance: "The Will of the Balance",
+        leatherMonocleCase: "Leather Monocle Case",
+        glassNecklace: "Glass Necklace",
       },
 
       effects: {
