@@ -29,7 +29,7 @@ function makeRelic(itemId: number, effect: Effect): RelicSlot {
 }
 
 describe("ComboSearch", () => {
-  describe("searchCombinations", () => {
+  describe("searchCombinations 10slots.sl2", () => {
     let relics: RelicSlot[];
 
     beforeAll(async () => {
@@ -63,15 +63,7 @@ describe("ComboSearch", () => {
         []
       );
       const input = buildWasmInput(workerInput);
-
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       expect(relics.length).toBeGreaterThan(0);
       expect(result.combinations.length).toBeGreaterThan(0);
@@ -93,15 +85,7 @@ describe("ComboSearch", () => {
         []
       );
       const input = buildWasmInput(workerInput);
-
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       expect(relics.length).toBeGreaterThan(0);
       expect(result.combinations.length).toBeGreaterThan(0);
@@ -121,15 +105,7 @@ describe("ComboSearch", () => {
         []
       );
       const input = buildWasmInput(workerInput);
-
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
@@ -160,15 +136,7 @@ describe("ComboSearch", () => {
         []
       );
       const input = buildWasmInput(workerInput);
-
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       for (const combo of result.combinations[0].relic_indices) {
         assert(combo !== null);
@@ -201,15 +169,7 @@ describe("ComboSearch", () => {
         []
       );
       const input = buildWasmInput(workerInput);
-
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       let stacks = 0;
       for (const combo of result.combinations[0].relic_indices) {
@@ -241,15 +201,7 @@ describe("ComboSearch", () => {
         []
       );
       const input = buildWasmInput(workerInput);
-
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       expect(result.combinations.length).toBe(1);
     });
@@ -274,15 +226,7 @@ describe("ComboSearch", () => {
         []
       );
       const input = buildWasmInput(workerInput);
-
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       expect(result.combinations.length).toBeGreaterThan(0);
     });
@@ -308,15 +252,7 @@ describe("ComboSearch", () => {
         []
       );
       const input = buildWasmInput(workerInput);
-
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       expect(result.combinations.length).toBe(1);
     });
@@ -331,10 +267,10 @@ describe("ComboSearch", () => {
       );
       assert(overridingEffect !== undefined);
 
-      const relics = [
+      const relics: RelicSlot[] = [
         makeRelic(120, selectedEffect), // yellow
         makeRelic(102, overridingEffect), // red
-      ] as RelicSlot[];
+      ];
 
       const workerInput = buildWorkerInput(
         Nightfarer.Wylder,
@@ -358,17 +294,59 @@ describe("ComboSearch", () => {
       );
       const input = buildWasmInput(workerInput);
 
-      const result = search_combinations(input) as {
-        combinations: Array<{
-          vessel_index: number;
-          relic_indices: [number | null, number | null, number | null];
-          points: number;
-        }>;
-        total_combinations_checked: number;
-      };
+      const result = search_combinations(input);
 
       expect(result.combinations.length).toBe(1);
       expect(result.combinations[0].points).toBeCloseTo(0.1);
     });
+  });
+
+  describe("searchCombinations allen.sl2", () => {
+    let relics: RelicSlot[];
+
+    beforeAll(async () => {
+      // Load the test save file directly from filesystem
+      const filePath = path.join(__dirname, "..", "test", "allen.sl2");
+      const fileBuffer = fs.readFileSync(filePath);
+      const saveFileBuffer = fileBuffer.buffer.slice(
+        fileBuffer.byteOffset,
+        fileBuffer.byteOffset + fileBuffer.byteLength
+      );
+
+      // Decrypt the save file
+      const bnd4Entries =
+        await SaveFileDecryptor.decryptSaveFile(saveFileBuffer);
+      const names = RelicParser.getNames(bnd4Entries[10]);
+      relics = RelicParser.parseCharacterSlot(names[0], bnd4Entries[0]).relics;
+
+      // Initialize WASM once for all tests
+      await init();
+    });
+
+    it.for([
+      EffectKey.startingArmamentDealsHolyDamage,
+      EffectKey.changesCompatibleArmamentsIncantationToWrathOfGoldAtStartOfExpedition,
+    ])(
+      "should find valid combinations of relics and vessels for a starting bonus effect %i",
+      async (effectKey) => {
+        const selectedEffect = getEffectByKey(effectKey);
+        assert(selectedEffect !== undefined);
+
+        const workerInput = buildWorkerInput(
+          Nightfarer.Revenant,
+          [selectedEffect],
+          relics,
+          [],
+          anyoneVessels,
+          [{ effectKey: selectedEffect.key, minStacks: 1, maxStacks: 1 }]
+        );
+        const wasmInput = buildWasmInput(workerInput);
+        const result = search_combinations(wasmInput);
+
+        expect(relics.length).toBeGreaterThan(0);
+        expect(result.combinations.length).toBeGreaterThan(0);
+        expect(result.total_combinations_checked).toBeGreaterThan(0);
+      }
+    );
   });
 });
