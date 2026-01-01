@@ -122,7 +122,7 @@ export function buildWasmInput({
       color: getRelicColor(r.itemId),
       effects: r.effects.map(([effect]) => effect),
     })),
-    deepRelics: deepRelics.map((r) => ({
+    deep_relics: deepRelics.map((r) => ({
       color: getRelicColor(r.itemId),
       effects: r.effects.flatMap(([effect, debuff]) =>
         debuff !== undefined ? [effect, debuff] : [effect]

@@ -89,7 +89,7 @@ pub struct SearchInput {
     pub nightfarer: u8,
     pub selected_effects: Vec<Effect>,
     pub relics: Vec<RelicSlot>,
-    pub deepRelics: Vec<RelicSlot>,
+    pub deep_relics: Vec<RelicSlot>,
     pub enabled_vessels: Vec<[u8;6]>,
     pub recommended_effects: Vec<Effect>,
     pub selected_effect_ranges: Option<Vec<SelectedEffectRange>>, // new optional
@@ -452,9 +452,9 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     }
 
     let mut effect_candidates_deep: Vec<usize> = Vec::new();
-    effect_candidates_deep.reserve(input.deepRelics.len());
-    let mut is_candidate_deep: Vec<bool> = vec![false; input.deepRelics.len()];
-    for (idx, relic) in input.deepRelics.iter().enumerate() {
+    effect_candidates_deep.reserve(input.deep_relics.len());
+    let mut is_candidate_deep: Vec<bool> = vec![false; input.deep_relics.len()];
+    for (idx, relic) in input.deep_relics.iter().enumerate() {
         let mut any_selected = false;
         for e in &relic.effects { let k = e.key as usize; if k < EFFECT_KEY_SPACE && unsafe { *selected_bitmap.get_unchecked(k) } { any_selected = true; break; } }
         if any_selected { effect_candidates_deep.push(idx); unsafe { *is_candidate_deep.get_unchecked_mut(idx) = true; } }
@@ -475,10 +475,10 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     for c in 1usize..COLOR_SPACE { let list = &by_color_all_norm[c]; if list.is_empty() { continue; } let mut v = Vec::with_capacity(list.len()); for &idx in list { if unsafe { *is_candidate_norm.get_unchecked(idx) } { v.push(idx); } } by_color_cand_norm[c] = v; }
 
     // Build by-color indices for deep relics
-    let deep_len = input.deepRelics.len();
+    let deep_len = input.deep_relics.len();
     let all_indices_deep: Vec<usize> = (0..deep_len).collect();
     let mut by_color_all_deep: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
-    for (idx, relic) in input.deepRelics.iter().enumerate() { if let Some(color) = relic.color { let c = color as usize; if c != ANY_COLOR && c < COLOR_SPACE { by_color_all_deep[c].push(idx); } } }
+    for (idx, relic) in input.deep_relics.iter().enumerate() { if let Some(color) = relic.color { let c = color as usize; if c != ANY_COLOR && c < COLOR_SPACE { by_color_all_deep[c].push(idx); } } }
     by_color_all_deep[ANY_COLOR] = all_indices_deep.clone();
 
     let mut by_color_cand_deep: Vec<Vec<usize>> = vec![Vec::new(); COLOR_SPACE];
@@ -488,7 +488,7 @@ pub fn search_combinations(input: JsValue) -> JsValue {
     // Parallelize over vessels (avoid cloning large vectors)
     let enabled_vessels = &input.enabled_vessels;
     let relics_normal: &[RelicSlot] = &input.relics;
-    let relics_deep: &[RelicSlot] = &input.deepRelics;
+    let relics_deep: &[RelicSlot] = &input.deep_relics;
     let nightfarer = input.nightfarer;
 
     let per_vessel: Vec<(Vec<VesselCombinationResultEntry>, u32)> = enabled_vessels.par_iter().enumerate().map(|(v_i, vessel_slots)| {
