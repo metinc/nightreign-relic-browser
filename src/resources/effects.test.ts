@@ -48,4 +48,11 @@ describe("effects", () => {
       `Missing English translations for effect keys (numeric): ${missingTranslations.join(", ")}`
     ).toHaveLength(0);
   });
+
+  it("should have exactly 850 effects", () => {
+    expect(
+      EffectKey.LENGTH,
+      "EffectKey.LENGTH has changed. This is just a reminder to update EFFECT_KEY_SPACE in WASM code"
+    ).toBe(850);
+  });
 });
