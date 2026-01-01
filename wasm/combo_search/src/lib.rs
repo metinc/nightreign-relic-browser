@@ -19,7 +19,7 @@ const PENALTY_FOR_MISSING_LEVEL: f32 = -0.1;
 
 const SELECTED_EFFECTS_SPACE: usize = 9*3;
 const RECOMMENDED_EFFECTS_SPACE: usize = 35;
-const EFFECT_KEY_SPACE: usize = 818;
+const EFFECT_KEY_SPACE: usize = 850;
 const EFFECT_GROUP_SPACE: usize = 30;
 // Color domain: 0=Any, 1=Red, 2=Blue, 3=Yellow, 4=Green
 const COLOR_SPACE: usize = 5;
