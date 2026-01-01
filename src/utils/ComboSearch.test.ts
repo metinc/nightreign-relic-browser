@@ -7,7 +7,11 @@ import init, {
 import { EffectKey } from "../resources/effectKeys.js";
 import { type Effect } from "../resources/effects";
 import type { RelicSlot } from "../types/SaveFile";
-import { anyoneVessels, wylderVessels } from "../utils/Vessels";
+import {
+  anyoneVessels,
+  revenantVessels,
+  wylderVessels,
+} from "../utils/Vessels";
 import { buildWasmInput } from "../workers/comboSearchWorker.js";
 import { buildWorkerInput } from "./ComboSearch.js";
 import { getEffect, getEffectByKey } from "./DataUtils";
@@ -29,7 +33,7 @@ function makeRelic(itemId: number, effect: Effect): RelicSlot {
 }
 
 describe("ComboSearch", () => {
-  describe("searchCombinations", () => {
+  describe("searchCombinations 10slots.sl2", () => {
     let relics: RelicSlot[];
 
     beforeAll(async () => {
@@ -370,5 +374,56 @@ describe("ComboSearch", () => {
       expect(result.combinations.length).toBe(1);
       expect(result.combinations[0].points).toBeCloseTo(0.1);
     });
+  });
+
+  describe("searchCombinations allen.sl2", () => {
+    let relics: RelicSlot[];
+
+    beforeAll(async () => {
+      // Load the test save file directly from filesystem
+      const filePath = path.join(__dirname, "..", "test", "allen.sl2");
+      const fileBuffer = fs.readFileSync(filePath);
+      const saveFileBuffer = fileBuffer.buffer.slice(
+        fileBuffer.byteOffset,
+        fileBuffer.byteOffset + fileBuffer.byteLength
+      );
+
+      // Decrypt the save file
+      const bnd4Entries =
+        await SaveFileDecryptor.decryptSaveFile(saveFileBuffer);
+      const names = RelicParser.getNames(bnd4Entries[10]);
+      relics = RelicParser.parseCharacterSlot(names[0], bnd4Entries[0]).relics;
+
+      // Initialize WASM once for all tests
+      await init();
+    });
+
+    it.for([
+      EffectKey.startingArmamentDealsHolyDamage,
+      EffectKey.changesCompatibleArmamentsIncantationToWrathOfGoldAtStartOfExpedition,
+    ])(
+      "should find valid combinations of relics and vessels for a starting bonus effect %i",
+      { timeout: 10000 },
+      async (effectKey) => {
+        const selectedEffect = getEffectByKey(effectKey);
+        assert(selectedEffect !== undefined);
+
+        // Now verify it survives into the WASM input (normal or deep relics).
+        const workerInput = buildWorkerInput(
+          Nightfarer.Revenant,
+          [selectedEffect],
+          relics,
+          [],
+          revenantVessels,
+          [{ effectKey: selectedEffect.key, minStacks: 1, maxStacks: 1 }]
+        );
+        const wasmInput = buildWasmInput(workerInput);
+        const result = search_combinations(wasmInput);
+
+        expect(relics.length).toBeGreaterThan(0);
+        expect(result.combinations.length).toBeGreaterThan(0);
+        expect(result.total_combinations_checked).toBeGreaterThan(0);
+      }
+    );
   });
 });
