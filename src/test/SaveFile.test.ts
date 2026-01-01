@@ -22,13 +22,6 @@ type TestData = {
 }[];
 
 const testData: TestData = [
-  // {
-  //   name: "metin.sl2",
-  //   slots: [
-  //     { name: "Metin", relics: 610, samples: [] },
-  //     { name: "qwertzuiopasdfgh", relics: 1, samples: [] },
-  //   ],
-  // },
   {
     name: "10slots.sl2",
     slots: [
@@ -43,6 +36,10 @@ const testData: TestData = [
       { name: "0123456789abcdef", relics: 0, samples: [] },
       { name: "x", relics: 0, samples: [] },
     ],
+  },
+  {
+    name: "allen.sl2",
+    slots: [{ name: "AllenAlchemy", relics: 1839, samples: [] }],
   },
 ];
 
