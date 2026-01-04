@@ -2097,6 +2097,7 @@ export const effectsArray = [
   {
     key: EffectKey.improvedSkillAttackPower,
     ids: [312300, 7006700, 8350000, 8350001, 8350002],
+    stacks: true,
   },
   {
     key: EffectKey.improvedSleepMadnessResistance,
@@ -4439,6 +4440,7 @@ export const effectsArray = [
   {
     key: EffectKey.improvedMeleeAttackPower,
     ids: [7006600],
+    stacks: true,
   },
   {
     key: EffectKey.scholarPreventSlowingOfCharacterSkillProgress,
