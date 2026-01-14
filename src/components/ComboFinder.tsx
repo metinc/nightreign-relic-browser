@@ -41,6 +41,7 @@ import {
 import { isNightfarer, Nightfarer, nightfarers } from "../utils/Nightfarers";
 import { RelicSlotColor } from "../utils/RelicColor";
 import { sortRelicsByColor } from "../utils/RelicProcessor";
+import { IncludeDeepRelicsSwitch } from "./ComboFinderSettingsBar";
 import { EffectsAutocomplete } from "./EffectsAutocomplete";
 import { RelicCard } from "./RelicCard";
 import { RelicColorChip } from "./RelicColorChip";
@@ -63,6 +64,7 @@ interface ComboFinderSettings {
     minStacks: number;
     maxStacks: number;
   }[];
+  excludeDeepEffects?: boolean;
 }
 
 function createInitialSettings(): Record<Nightfarer, ComboFinderSettings> {
@@ -115,6 +117,7 @@ export function ComboFinder(props: ComboFinderProps) {
           {
             disabledVessels?: unknown;
             selectedEffects?: unknown;
+            excludeDeepEffects?: unknown;
           }
         >
       >;
@@ -175,6 +178,10 @@ export function ComboFinder(props: ComboFinderProps) {
               );
             base[nf].selectedEffects = entries;
           }
+
+          if (typeof val.excludeDeepEffects === "boolean") {
+            base[nf].excludeDeepEffects = val.excludeDeepEffects;
+          }
         }
       });
       return base;
@@ -186,6 +193,24 @@ export function ComboFinder(props: ComboFinderProps) {
   const [settings, setSettings] = useState<
     Record<Nightfarer, ComboFinderSettings>
   >(() => loadSettingsFromStorage());
+
+  const excludeDeepEffects =
+    settings[selectedNightfarer].excludeDeepEffects ?? false;
+  const setExcludeDeepEffects = useCallback(
+    (exclude: boolean) => {
+      setSettings((prev) => {
+        const current = prev[selectedNightfarer];
+        return {
+          ...prev,
+          [selectedNightfarer]: {
+            ...current,
+            excludeDeepEffects: exclude,
+          },
+        };
+      });
+    },
+    [selectedNightfarer]
+  );
 
   // Derive Effect objects from selected effect entries
   const selectedEffects = useMemo(() => {
@@ -339,12 +364,14 @@ export function ComboFinder(props: ComboFinderProps) {
         return itemType === ItemType.Relic || itemType === ItemType.UniqueRelic;
       });
 
-      const availableDeepRelics = saveFileData.slots[
-        saveFileData.currentSlot
-      ].relics.filter((relic) => {
-        const itemType = items.get(relic.itemId)?.type;
-        return itemType === ItemType.DeepRelic;
-      });
+      const availableDeepRelics = excludeDeepEffects
+        ? []
+        : saveFileData.slots[saveFileData.currentSlot].relics.filter(
+            (relic) => {
+              const itemType = items.get(relic.itemId)?.type;
+              return itemType === ItemType.DeepRelic;
+            }
+          );
 
       const enabledVessels = selectedNightfarerData.vessels.filter(
         (_, index) =>
@@ -389,6 +416,7 @@ export function ComboFinder(props: ComboFinderProps) {
     saveFileData.slots,
     saveFileData.currentSlot,
     selectedEffects,
+    excludeDeepEffects,
     settings,
   ]);
 
@@ -589,6 +617,12 @@ export function ComboFinder(props: ComboFinderProps) {
             <Typography variant="h6" gutterBottom noWrap>
               2. Select Vessels
             </Typography>
+
+            <IncludeDeepRelicsSwitch
+              excludeDeepEffects={excludeDeepEffects}
+              setExcludeDeepEffects={setExcludeDeepEffects}
+            />
+
             <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
               <Stack gap={1}>
                 {selectedNightfarerData.vessels.map((vessel, index) => {
@@ -641,22 +675,25 @@ export function ComboFinder(props: ComboFinderProps) {
                                 },
                               }}
                             >
-                              {vessel.slots.map((slotColor, slotIndex) => (
-                                <Box
-                                  key={slotIndex}
-                                  className="vessel-slot-chip-wrapper"
-                                >
-                                  <RelicColorChip
-                                    color={slotColor}
-                                    type={
-                                      slotIndex < 3
-                                        ? ItemType.Relic
-                                        : ItemType.DeepRelic
-                                    }
-                                    disabled={disabled}
-                                  />
-                                </Box>
-                              ))}
+                              {vessel.slots.map(
+                                (slotColor, slotIndex) =>
+                                  (slotIndex < 3 || !excludeDeepEffects) && (
+                                    <Box
+                                      key={slotIndex}
+                                      className="vessel-slot-chip-wrapper"
+                                    >
+                                      <RelicColorChip
+                                        color={slotColor}
+                                        type={
+                                          slotIndex < 3
+                                            ? ItemType.Relic
+                                            : ItemType.DeepRelic
+                                        }
+                                        disabled={disabled}
+                                      />
+                                    </Box>
+                                  )
+                              )}
                             </Box>
                             <Checkbox
                               checked={!disabled}
@@ -690,6 +727,7 @@ export function ComboFinder(props: ComboFinderProps) {
           <Typography variant="h6" gutterBottom noWrap>
             3. Select Effects
           </Typography>
+
           <EffectsAutocomplete
             onSearchChange={() => {}}
             onChange={handleEffectChange}
@@ -897,48 +935,51 @@ export function ComboFinder(props: ComboFinderProps) {
                                   }}
                                 >
                                   {combo.relicCombination.map(
-                                    (relic, index) => (
-                                      <Box key={relic?.id ?? index}>
-                                        {relic ? (
-                                          <RelicCard
-                                            relic={relic}
-                                            searchTerm=""
-                                            selectedColor={getRelicColor(
-                                              relic.itemId
-                                            )}
-                                            highlightedEffects={selectedEffects}
-                                            coordinatesByColor={
-                                              combo.vessel.slots[index] !==
-                                              RelicSlotColor.Any
-                                            }
-                                          />
-                                        ) : (
-                                          <Card
-                                            variant="outlined"
-                                            sx={{
-                                              height: "100%",
-                                              transition: "0.3s ease",
-                                              overflow: "hidden",
-                                              position: "relative",
-                                              borderRadius: 3,
-                                              display: "flex",
-                                              justifyContent: "center",
-                                            }}
-                                          >
-                                            <CardContent>
-                                              <Typography
-                                                fontStyle="italic"
-                                                color="text.secondary"
-                                              >
-                                                {index < 3
-                                                  ? "No Relic"
-                                                  : "No Deep Relic"}
-                                              </Typography>
-                                            </CardContent>
-                                          </Card>
-                                        )}
-                                      </Box>
-                                    )
+                                    (relic, index) =>
+                                      (index < 3 || !excludeDeepEffects) && (
+                                        <Box key={relic?.id ?? index}>
+                                          {relic ? (
+                                            <RelicCard
+                                              relic={relic}
+                                              searchTerm=""
+                                              selectedColor={getRelicColor(
+                                                relic.itemId
+                                              )}
+                                              highlightedEffects={
+                                                selectedEffects
+                                              }
+                                              coordinatesByColor={
+                                                combo.vessel.slots[index] !==
+                                                RelicSlotColor.Any
+                                              }
+                                            />
+                                          ) : (
+                                            <Card
+                                              variant="outlined"
+                                              sx={{
+                                                height: "100%",
+                                                transition: "0.3s ease",
+                                                overflow: "hidden",
+                                                position: "relative",
+                                                borderRadius: 3,
+                                                display: "flex",
+                                                justifyContent: "center",
+                                              }}
+                                            >
+                                              <CardContent>
+                                                <Typography
+                                                  fontStyle="italic"
+                                                  color="text.secondary"
+                                                >
+                                                  {index < 3
+                                                    ? "No Relic"
+                                                    : "No Deep Relic"}
+                                                </Typography>
+                                              </CardContent>
+                                            </Card>
+                                          )}
+                                        </Box>
+                                      )
                                   )}
                                 </Box>
                               </CardContent>
