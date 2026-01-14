@@ -49,6 +49,10 @@ export type SelectedEffectEntry = {
 // Persistent worker and request handling
 let workerSingleton: Worker | null = null;
 let nextRequestId = 0;
+// Monotonically increasing epoch used to ignore stale messages from terminated/replaced workers.
+let workerEpoch = 0;
+// Track the currently running request id (single-flight).
+let activeRequestId: number | null = null;
 const pending = new Map<
   number,
   {
@@ -66,6 +70,7 @@ function getWorker(): Worker {
   if (workerSingleton) {
     return workerSingleton;
   }
+  const epochAtCreation = ++workerEpoch;
   workerSingleton = new Worker(
     new URL("../workers/comboSearchWorker.ts", import.meta.url),
     { type: "module" }
@@ -74,6 +79,10 @@ function getWorker(): Worker {
   workerSingleton.onmessage = (
     event: MessageEvent<ComboSearchWorkerMessage>
   ) => {
+    // If the worker was replaced/terminated and recreated, ignore late messages.
+    if (epochAtCreation !== workerEpoch) {
+      return;
+    }
     const msg = event.data as ComboSearchWorkerMessage;
     const entry = pending.get(msg.id);
     if (!entry) {
@@ -123,6 +132,9 @@ function getWorker(): Worker {
           return { vessel, relicCombination, points: e.points };
         });
         pending.delete(msg.id);
+        if (activeRequestId === msg.id) {
+          activeRequestId = null;
+        }
         entry.resolve({
           combinations,
           searchTime: msg.searchTime,
@@ -134,6 +146,9 @@ function getWorker(): Worker {
       case "error": {
         const err = msg as ComboSearchWorkerError;
         pending.delete(msg.id);
+        if (activeRequestId === msg.id) {
+          activeRequestId = null;
+        }
         entry.reject(new Error(err.error));
         break;
       }
@@ -146,6 +161,7 @@ function getWorker(): Worker {
       p.reject(err);
       pending.delete(id);
     }
+    activeRequestId = null;
     // reset worker
     workerSingleton?.terminate();
     workerSingleton = null;
@@ -155,15 +171,23 @@ function getWorker(): Worker {
 }
 
 export function cancelCurrentSearch(): void {
-  // Reject all pending requests and notify worker (best-effort)
+  // Reject all pending requests.
   for (const [id, p] of pending) {
     p.reject(new Error("Search cancelled"));
     pending.delete(id);
   }
-  try {
-    workerSingleton?.postMessage({ type: "cancel" });
-  } catch {
-    // ignore
+  activeRequestId = null;
+
+  // Important: the WASM search inside the worker is synchronous, so it can't be interrupted
+  // with a "cancel" message. To ensure only one search runs at a time, terminate the worker.
+  // Any late messages from that worker will be ignored due to workerEpoch.
+  if (workerSingleton) {
+    try {
+      workerSingleton.terminate();
+    } catch {
+      // ignore
+    }
+    workerSingleton = null;
   }
 }
 
@@ -176,6 +200,8 @@ export async function searchCombinations(
   selectedEffectEntries: SelectedEffectEntry[],
   onProgress?: (progress: ComboSearchProgress) => void
 ): Promise<ComboSearchResult> {
+  // Single-flight: cancel any previous run before starting a new one.
+  cancelCurrentSearch();
   const worker = getWorker();
 
   const data = buildWorkerInput(
@@ -189,6 +215,7 @@ export async function searchCombinations(
 
   return new Promise((resolve, reject) => {
     const id = ++nextRequestId;
+    activeRequestId = id;
     pending.set(id, {
       resolve,
       reject,
@@ -199,6 +226,9 @@ export async function searchCombinations(
       worker.postMessage({ type: "search", id, payload: data });
     } catch (e) {
       pending.delete(id);
+      if (activeRequestId === id) {
+        activeRequestId = null;
+      }
       reject(e);
     }
   });
