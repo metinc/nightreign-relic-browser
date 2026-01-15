@@ -293,12 +293,13 @@ export function ComboFinder(props: ComboFinderProps) {
   const selectableEffects = useMemo(() => {
     return props.availableEffects.filter(
       (effect) =>
-        effect.nightfarer === undefined ||
-        effect.nightfarer === selectedNightfarer ||
-        effect.key === EffectKey.improvedPoiseNearTotemStela ||
-        effect.key === EffectKey.defeatingEnemiesNearTotemStelaRestoresHP
+        (effect.nightfarer === undefined ||
+          effect.nightfarer === selectedNightfarer ||
+          effect.key === EffectKey.improvedPoiseNearTotemStela ||
+          effect.key === EffectKey.defeatingEnemiesNearTotemStelaRestoresHP) &&
+        (!excludeDeepEffects || effect.type !== EffectType.Debuff)
     );
-  }, [props.availableEffects, selectedNightfarer]);
+  }, [excludeDeepEffects, props.availableEffects, selectedNightfarer]);
 
   // Persist settings and selected effects
   useEffect(() => {
