@@ -1699,6 +1699,7 @@ export const effectsArray = [
   {
     key: EffectKey.improvedBestialIncantations,
     ids: [7044400],
+    stacks: true,
   },
   {
     key: EffectKey.improvedBloodLossAndFrostResistance,
@@ -1822,10 +1823,12 @@ export const effectsArray = [
   {
     key: EffectKey.improvedDragonCommunionIncantations,
     ids: [7044600],
+    stacks: true,
   },
   {
     key: EffectKey.improvedDragonCultIncantations,
     ids: [7044100],
+    stacks: true,
   },
   {
     key: EffectKey.improvedFireAttackPower,
@@ -1851,6 +1854,7 @@ export const effectsArray = [
   {
     key: EffectKey.improvedFrenziedFlameIncantations,
     ids: [7044500],
+    stacks: true,
   },
   {
     key: EffectKey.improvedFrostResistance,
@@ -1862,10 +1866,12 @@ export const effectsArray = [
   {
     key: EffectKey.improvedFundamentalistIncantations,
     ids: [7044000],
+    stacks: true,
   },
   {
     key: EffectKey.improvedGiantsFlameIncantations,
     ids: [7044200],
+    stacks: true,
   },
   {
     key: EffectKey.improvedGlintbladeSorcery,
@@ -1875,6 +1881,7 @@ export const effectsArray = [
   {
     key: EffectKey.improvedGodslayerIncantations,
     ids: [7044300],
+    stacks: true,
   },
   {
     key: EffectKey.improvedGravitySorcery,
