@@ -183,6 +183,16 @@ describe("Save File Processing", () => {
               expect(itemColor).toBeDefined();
               expect(itemColor).toBeTypeOf("number");
 
+              for (const [effect, deepEffect] of effects) {
+                expect(
+                  effect.stacks,
+                  `stacks is undefined for effect "${getEffectName(effect)}"`
+                ).toBeDefined();
+                if (deepEffect !== undefined) {
+                  expect(deepEffect.stacks).toBeDefined();
+                }
+              }
+
               const effectNames = effects.map(([effect]) =>
                 getEffectName(effect)
               );
