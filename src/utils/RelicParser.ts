@@ -244,7 +244,7 @@ export class RelicParser {
         validSlots.push(slot as RelicSlot);
       } else {
         // maybe the relic was sold?!
-        console.warn(`Sort key for slot ${slot.id} not found`);
+        // console.warn(`Sort key for slot ${slot.id} not found`);
       }
     }
 
