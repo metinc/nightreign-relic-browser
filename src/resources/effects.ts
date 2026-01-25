@@ -628,28 +628,33 @@ export const effectsArray = [
   {
     key: EffectKey.attackPowerUpAfterDefeatingANightInvader,
     ids: [7060200],
+    stacks: false,
   },
   {
     key: EffectKey.attackPowerUpWhenFacingFrostbiteAfflictedEnemy,
     ids: [7260400],
+    stacks: false,
     group: EffectGroup.attackPowerUpWhenFacingFrostbiteAfflictedEnemy,
     level: 0,
   },
   {
     key: EffectKey.attackPowerUpWhenFacingPoisonAfflictedEnemy,
     ids: [7260000],
+    stacks: false,
     group: EffectGroup.attackPowerUpWhenFacingPoisonAfflictedEnemy,
     level: 0,
   },
   {
     key: EffectKey.attackPowerUpWhenFacingScarletRotAfflictedEnemy,
     ids: [7260300],
+    stacks: false,
     group: EffectGroup.attackPowerUpWhenFacingScarletRotAfflictedEnemy,
     level: 0,
   },
   {
     key: EffectKey.attackPowerUpWhenFacingSleepAfflictedEnemy,
     ids: [7260200],
+    stacks: false,
     group: EffectGroup.attackPowerUpWhenFacingSleepAfflictedEnemy,
     level: 0,
   },
@@ -995,8 +1000,9 @@ export const effectsArray = [
     ids: [7035200],
   },
   {
-    key: EffectKey.continuousHPRecovery,
+    key: EffectKey.continuousHpRecovery,
     ids: [350200, 7001100, 8540000],
+    stacks: false,
   },
   {
     key: EffectKey.createsHolyGroundAtLowHP,
@@ -1009,6 +1015,7 @@ export const effectsArray = [
   {
     key: EffectKey.criticalHitBoostsStaminaRecoverySpeed,
     ids: [6035101, 7035100],
+    stacks: false,
     group: EffectGroup.criticalHitBoostsStaminaRecoverySpeed,
     level: 0,
   },
@@ -1035,6 +1042,7 @@ export const effectsArray = [
   {
     key: EffectKey.criticalHitsEarnRunes,
     ids: [6031900, 6031901, 7031900],
+    stacks: false,
   },
   {
     key: EffectKey.criticalHitsInflictBloodLoss,
@@ -1143,6 +1151,7 @@ export const effectsArray = [
   {
     key: EffectKey.drawEnemyAttentionWhileGuarding,
     ids: [7030700],
+    stacks: false,
   },
   {
     key: EffectKey.endurancePlus1,
@@ -1168,6 +1177,7 @@ export const effectsArray = [
   {
     key: EffectKey.extendedSpellDuration,
     ids: [330600, 7006400, 8330500],
+    stacks: true, // need to verify
   },
   {
     key: EffectKey.failingToCastSorceryRestoresFP,
@@ -1245,6 +1255,7 @@ export const effectsArray = [
   {
     key: EffectKey.flaskAlsoHealsAllies,
     ids: [7010200, 8440100],
+    stacks: false,
   },
   {
     key: EffectKey.flaskHealingAlsoRestoresFP,
@@ -1399,6 +1410,7 @@ export const effectsArray = [
   {
     key: EffectKey.gestureCrossedLegsBuildsUpMadness,
     ids: [7035400, 7035410],
+    stacks: false,
   },
   {
     key: EffectKey.glintstoneScrapsInPossessionAtStartOfExpedition,
@@ -1417,6 +1429,7 @@ export const effectsArray = [
   {
     key: EffectKey.guardCounterIsGivenABoostBasedOnCurrentHP,
     ids: [7150000],
+    stacks: false,
   },
   {
     key: EffectKey.guardCountersActivateHolyAttacks,
@@ -1481,10 +1494,12 @@ export const effectsArray = [
   {
     key: EffectKey.hpRecoveryFromSuccessfulGuarding,
     ids: [7036100],
+    stacks: false,
   },
   {
     key: EffectKey.hpRecoveryFromSuccessfulGuardingPlus,
     ids: [8650000],
+    stacks: false,
   },
   {
     key: EffectKey.hpRestorationUponAttacks,
@@ -2156,6 +2171,7 @@ export const effectsArray = [
   {
     key: EffectKey.improvedPhysicalDamageNegation,
     ids: [340000, 6611000, 7006200, 8200000],
+    stacks: true,
     group: EffectGroup.improvedPhysicalDamageNegation,
     level: 0,
   },
@@ -2540,6 +2556,7 @@ export const effectsArray = [
   {
     key: EffectKey.maxFpPermanentlyIncreasedAfterReleasingSorcerersRiseMechanism,
     ids: [7060100],
+    stacks: false,
   },
   {
     key: EffectKey.maxFpUpWith3PlusSacredSealsEquipped,
@@ -2602,6 +2619,7 @@ export const effectsArray = [
   {
     key: EffectKey.nearbyFrostbiteConcealsSelf,
     ids: [7260700],
+    stacks: false,
   },
   {
     key: EffectKey.noRuneLossOrLevelDownUponDeath,
@@ -2698,6 +2716,7 @@ export const effectsArray = [
   {
     key: EffectKey.poisonAndRotInVicinityIncreasesAttackPower,
     ids: [7260710, 7260800],
+    stacks: false,
   },
   {
     key: EffectKey.poisonIncreasesAttackPower,
@@ -2967,6 +2986,7 @@ export const effectsArray = [
   {
     key: EffectKey.slowlyRestoreHpForSelfAndNearbyAlliesWhenHpIsLow,
     ids: [7012200],
+    stacks: false,
   },
   {
     key: EffectKey.smallPouchInPossessionAtStartOfExpedition,
@@ -3097,6 +3117,7 @@ export const effectsArray = [
   {
     key: EffectKey.successiveAttacksBoostAttackPower,
     ids: [312501, 320800, 7037600, 8610200],
+    stacks: false,
   },
   {
     key: EffectKey.successiveAttacksNegateDamage,
@@ -3113,10 +3134,12 @@ export const effectsArray = [
   {
     key: EffectKey.switchingWeaponsAddsAnAffinityAttack,
     ids: [7035700],
+    stacks: false,
   },
   {
     key: EffectKey.switchingWeaponsBoostsAttackPower,
     ids: [10002, 7035900],
+    stacks: false,
   },
   {
     key: EffectKey.takingAttacksImprovesAttackPower,
@@ -3179,6 +3202,7 @@ export const effectsArray = [
   {
     key: EffectKey.treasureMarkedUponMap,
     ids: [7070000],
+    stacks: false,
   },
   {
     key: EffectKey.ultimateArtAutoChargePlus1,
@@ -4546,6 +4570,7 @@ export const effectsArray = [
   {
     key: EffectKey.greenspillCrystalTearInPossessionAtStartOfExpedition,
     ids: [6623200],
+    stacks: true,
   },
   {
     key: EffectKey.scholarImprovedMindReducedVigor,
@@ -4626,6 +4651,7 @@ export const effectsArray = [
   {
     key: EffectKey.statusAilmentGaugesSlowlyIncreaseAttackPower,
     ids: [7037700],
+    stacks: false,
   },
   {
     key: EffectKey.occasionallyNullifyAttacksWhenDamageNegationsIsLowered,
@@ -4635,10 +4661,12 @@ export const effectsArray = [
   {
     key: EffectKey.attacksInflictRotWhenDamageIsTaken,
     ids: [7170100],
+    stacks: false,
   },
   {
-    key: EffectKey.rotInVicinityCausesContinuoushpRecovery,
+    key: EffectKey.rotInVicinityCausesContinuousHpRecovery,
     ids: [7260900],
+    stacks: false,
   },
   {
     key: EffectKey.changesCompatibleArmamentsSorceryToMagicGlintbladeAtStartOfExpedition,

@@ -348,7 +348,7 @@ const resources = {
           "Communion Grants Anti-Dragon Effect",
         [EffectKey.consecutiveGuardsHardenSkin]:
           "Consecutive Guards Harden Skin",
-        [EffectKey.continuousHPRecovery]: "Continuous HP Recovery",
+        [EffectKey.continuousHpRecovery]: "Continuous HP Recovery",
         [EffectKey.createsHolyGroundAtLowHP]: "Creates Holy Ground at Low HP",
         [EffectKey.criticalHitAddsLightningEffect]:
           "Critical Hit Adds Lightning Effect",
@@ -1541,7 +1541,7 @@ const resources = {
           "Occasionally Nullify Attacks When Damage Negation is Lowered",
         [EffectKey.attacksInflictRotWhenDamageIsTaken]:
           "Attacks Inflict Rot when Damage is Taken",
-        [EffectKey.rotInVicinityCausesContinuoushpRecovery]:
+        [EffectKey.rotInVicinityCausesContinuousHpRecovery]:
           "Rot in Vicinity Causes Continuous HP Recovery",
         [EffectKey.changesCompatibleArmamentsSorceryToMagicGlintbladeAtStartOfExpedition]:
           "Changes compatible armament's sorcery to Magic Glintblade at start of expedition",
