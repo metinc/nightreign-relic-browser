@@ -625,7 +625,7 @@ export function ComboFinder(props: ComboFinderProps) {
             />
 
             <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
-              <Stack gap={1}>
+              <Stack gap={0.5}>
                 {selectedNightfarerData.vessels.map((vessel, index) => {
                   const disabled =
                     settings[selectedNightfarer].disabledVessels.includes(
@@ -640,9 +640,10 @@ export function ComboFinder(props: ComboFinderProps) {
                     >
                       <CardContent
                         sx={{
-                          p: 1.5,
+                          px: 1.5,
+                          py: 0.5,
                           "&:last-child": {
-                            paddingBottom: 1.5,
+                            paddingBottom: 0.5,
                           },
                         }}
                       >

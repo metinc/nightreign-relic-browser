@@ -23,6 +23,7 @@ export const RelicColorChip = ({
       sx={{
         outline: type === ItemType.DeepRelic ? "3px solid #4800ff" : "none",
         overflow: "clip",
+        height: 18,
       }}
       disabled={disabled}
     />
