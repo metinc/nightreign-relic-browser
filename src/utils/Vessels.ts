@@ -115,6 +115,28 @@ export const duchessVessels: Vessel[] = [
       RelicSlotColor.Yellow,
     ],
   },
+  {
+    name: "Decrepit Duchess' Goblet",
+    slots: [
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+    ],
+  },
+  {
+    name: "Forgotten Duchess' Goblet",
+    slots: [
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Green,
+      RelicSlotColor.Any,
+    ],
+  },
   ...anyoneVessels,
 ] as const;
 
@@ -172,6 +194,28 @@ export const executorVessels: Vessel[] = [
       RelicSlotColor.Green,
       RelicSlotColor.Green,
       RelicSlotColor.Blue,
+    ],
+  },
+  {
+    name: "Decrepit Executor's Goblet",
+    slots: [
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Forgotten Executor's Goblet",
+    slots: [
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+      RelicSlotColor.Any,
     ],
   },
   ...anyoneVessels,
@@ -233,6 +277,28 @@ export const guardianVessels: Vessel[] = [
       RelicSlotColor.Blue,
     ],
   },
+  {
+    name: "Decrepit Guardian's Goblet",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+    ],
+  },
+  {
+    name: "Forgotten Guardian's Goblet",
+    slots: [
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Red,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Any,
+    ],
+  },
   ...anyoneVessels,
 ] as const;
 
@@ -290,6 +356,28 @@ export const ironeyeVessels: Vessel[] = [
       RelicSlotColor.Blue,
       RelicSlotColor.Blue,
       RelicSlotColor.Red,
+    ],
+  },
+  {
+    name: "Decrepit Ironeye's Goblet",
+    slots: [
+      RelicSlotColor.Blue,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+    ],
+  },
+  {
+    name: "Forgotten Ironeye's Goblet",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+      RelicSlotColor.Any,
     ],
   },
   ...anyoneVessels,
@@ -351,6 +439,28 @@ export const raiderVessels: Vessel[] = [
       RelicSlotColor.Blue,
     ],
   },
+  {
+    name: "Decrepit Raider's Goblet",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+    ],
+  },
+  {
+    name: "Forgotten Raider's Goblet",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Green,
+      RelicSlotColor.Any,
+    ],
+  },
   ...anyoneVessels,
 ] as const;
 
@@ -408,6 +518,28 @@ export const recluseVessels: Vessel[] = [
       RelicSlotColor.Yellow,
       RelicSlotColor.Yellow,
       RelicSlotColor.Red,
+    ],
+  },
+  {
+    name: "Decrepit Recluse's Goblet",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Blue,
+    ],
+  },
+  {
+    name: "Forgotten Recluse's Goblet",
+    slots: [
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Red,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Any,
     ],
   },
   ...anyoneVessels,
@@ -469,6 +601,28 @@ export const revenantVessels: Vessel[] = [
       RelicSlotColor.Red,
     ],
   },
+  {
+    name: "Decrepit Revenant's Goblet",
+    slots: [
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Forgotten Revenant's Goblet",
+    slots: [
+      RelicSlotColor.Green,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Green,
+      RelicSlotColor.Any,
+    ],
+  },
   ...anyoneVessels,
 ] as const;
 
@@ -526,6 +680,28 @@ export const wylderVessels: Vessel[] = [
       RelicSlotColor.Green,
       RelicSlotColor.Yellow,
       RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Decrepit Wylder's Goblet",
+    slots: [
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Blue,
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+    ],
+  },
+  {
+    name: "Forgotten Wylder's Goblet",
+    slots: [
+      RelicSlotColor.Green,
+      RelicSlotColor.Green,
+      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Green,
+      RelicSlotColor.Any,
     ],
   },
   ...anyoneVessels,
