@@ -54,12 +54,19 @@ export function RelicBrowser({
 
       const item = items.get(itemId);
 
-      if (
-        colorFilter.type !== undefined &&
-        item !== undefined &&
-        item.type !== colorFilter.type
-      ) {
-        return false;
+      if (colorFilter.type !== undefined && item !== undefined) {
+        if (
+          colorFilter.type === ItemType.DeepRelic &&
+          item.type !== ItemType.DeepRelic
+        ) {
+          return false;
+        }
+        if (
+          colorFilter.type !== ItemType.DeepRelic &&
+          item.type === ItemType.DeepRelic
+        ) {
+          return false;
+        }
       }
 
       const itemName = getItemName(itemId);
