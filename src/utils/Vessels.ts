@@ -523,11 +523,11 @@ export const recluseVessels: Vessel[] = [
   {
     name: "Decrepit Recluse's Goblet",
     slots: [
-      RelicSlotColor.Yellow,
-      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
       RelicSlotColor.Blue,
-      RelicSlotColor.Yellow,
-      RelicSlotColor.Yellow,
+      RelicSlotColor.Red,
+      RelicSlotColor.Red,
       RelicSlotColor.Blue,
     ],
   },
